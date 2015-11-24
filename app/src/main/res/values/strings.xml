@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="local_service_started">local_service_started</string>
     <string name="local_service_label">local_service_label</string>
-    <string name="username">username</string>
+    <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="title_activity_login">Sign in</string>
 
@@ -16,13 +16,31 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."
     </string>
     <string name="login_text">Login</string>
     <string name="register_text">Register</string>
     <string name="forgot_text">Forgot Password?</string>
     <string name="jenjobs_logo">JenJOBS Logo</string>
-    <string name="no_value">edit button</string>
+    <string name="no_value">no_value</string>
     <string name="fullname">Full Name</string>
+    <string name="email">Email</string>
+    <string name="icno">I/C</string>
+    <string name="mobile">Mobile</string>
+    <string name="gender">Gender</string>
+    <string name="dob">DoB</string>
+    <string name="country">Country</string>
+    <string name="online_resume">Online Resume</string>
+    <string name="resume_visibility">Resume Visibility</string>
+    <string name="jobseeking_information">Jobseeking Information</string>
+    <string name="job_preferences">Job Preferences</string>
+    <string name="work_experience">Work Experience</string>
+    <string name="highest_education">Highest Education</string>
+    <string name="skill">Skills</string>
+    <string name="languages">Languages</string>
+    <string name="attached_resume">Attached Resume</string>
+    <string name="additional_info">Additional Info</string>
+    <string name="open">Open</string>
+    <string name="hidden">Hidden</string>
+    <string name="limited">Limited</string>
 </resources>
