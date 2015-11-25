@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,6 +74,15 @@ public class MainActivity extends Activity {
 
             }
         });
+
+        // check for sharedPreference data
+        String accessToken = sharedPref.getString("access_token", null);
+        if( accessToken != null ){
+            Intent intent = new Intent();
+            intent.setClass(getApplicationContext(), ProfileActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
 
@@ -106,10 +116,14 @@ public class MainActivity extends Activity {
 
             JenHttpRequest jenReq = new JenHttpRequest(JenHttpRequest.POST_REQUEST, "http://api.jenjobs.com/oauth2/token", intent);
             while( jenReq.response == null ){
-                Log.e("response2", "" + jenReq.response);
-                return (JSONObject)jenReq.response;
+                // keep waiting
             }
 
+            Log.e("response2", "" + jenReq.response);
+
+            if( jenReq.response != null ){
+                return (JSONObject)jenReq.response;
+            }
             return null;
         }
 
@@ -121,23 +135,30 @@ public class MainActivity extends Activity {
                 Log.e("finished", ""+success);
                 mProgress.setVisibility(View.INVISIBLE);
 
-                try {
-                    if( success.getString("error") != null ){
+                Log.e("finished3", ""+success.optString("name"));
 
-                    }else if( success.getString("access_token") != null ){
-                        SharedPreferences.Editor spEdit = sharedPref.edit();
-                        spEdit.putString("access_token", success.getString("access_token"));
-                        spEdit.commit();
+                if( success.optString("access_token") != null ){
+                    SharedPreferences.Editor spEdit = sharedPref.edit();
+                    spEdit.putString("access_token", success.optString("access_token"));
+                    spEdit.putString("email", mEmail);
+                    spEdit.commit();
 
-                        Intent intent2 = new Intent();
-                        intent2.setClass(getApplicationContext(), ProfileActivity.class);
-                        startActivity(intent2);
+                    Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG).show();
+
+                    Intent intent2 = new Intent();
+                    intent2.putExtra("downloadData", true);
+                    intent2.setClass(getApplicationContext(), ProfileActivity.class);
+                    startActivity(intent2);
+                    finish();
+                }else{
+                    if( success.optString("error") != null ){
+                        Toast.makeText(getApplicationContext(), success.optString("error"), Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Unknown error!", Toast.LENGTH_LONG).show();
                     }
-                } catch (JSONException e) {
-                    Log.e("jsonExc", e.getMessage());
                 }
 
-                finish();
+                mProgress.setVisibility(View.INVISIBLE);
             }
         }
 

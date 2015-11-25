@@ -12,10 +12,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
         android:indeterminate="true"
-        android:indeterminateBehavior="cycle"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="false" />
+        android:indeterminateBehavior="cycle" />
 
     <LinearLayout
         android:orientation="vertical"
