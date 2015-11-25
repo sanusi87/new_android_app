@@ -54,4 +54,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_example">Example action</string>
+    <string name="request_password_reset">Request Password Reset</string>
+    <string name="password_repeat">Password Repeat</string>
+    <string name="forgot_password_text">Forgot Password</string>
 </resources>
