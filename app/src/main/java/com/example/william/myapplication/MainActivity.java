@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends Activity {
 
     SharedPreferences sharedPref;
@@ -82,7 +85,7 @@ public class MainActivity extends Activity {
     }
 
 
-    public class UserLoginTask extends AsyncTask<Void, Void, String> {
+    public class UserLoginTask extends AsyncTask<Void, Void, JSONObject> {
 
         private final String mEmail;
         private final String mPassword;
@@ -93,7 +96,7 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected JSONObject doInBackground(Void... params) {
             Intent intent = new Intent();
             intent.putExtra("username", mEmail);
             intent.putExtra("password", mPassword);
@@ -102,24 +105,38 @@ public class MainActivity extends Activity {
             intent.putExtra("client_secret", "testpass");
 
             JenHttpRequest jenReq = new JenHttpRequest(JenHttpRequest.POST_REQUEST, "http://api.jenjobs.com/oauth2/token", intent);
-            int i =0;
             while( jenReq.response == null ){
                 Log.e("response2", "" + jenReq.response);
-                i++;
-
-                return jenReq.response.toString();
+                return (JSONObject)jenReq.response;
             }
 
             return null;
         }
 
         @Override
-        protected void onPostExecute(final String success) {
+        protected void onPostExecute(final JSONObject success) {
             mAuthTask = null;
 
             if (success != null) {
                 Log.e("finished", ""+success);
                 mProgress.setVisibility(View.INVISIBLE);
+
+                try {
+                    if( success.getString("error") != null ){
+
+                    }else if( success.getString("access_token") != null ){
+                        SharedPreferences.Editor spEdit = sharedPref.edit();
+                        spEdit.putString("access_token", success.getString("access_token"));
+                        spEdit.commit();
+
+                        Intent intent2 = new Intent();
+                        intent2.setClass(getApplicationContext(), ProfileActivity.class);
+                        startActivity(intent2);
+                    }
+                } catch (JSONException e) {
+                    Log.e("jsonExc", e.getMessage());
+                }
+
                 finish();
             }
         }
