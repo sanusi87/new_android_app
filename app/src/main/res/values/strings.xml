@@ -47,4 +47,7 @@
     <string name="my_profile">My Profile</string>
     <string name="job_search">Job Search</string>
     <string name="application">Application</string>
+    <string name="request_password_reset">Request Password Reset</string>
+    <string name="password_repeat">Password Repeat</string>
+    <string name="forgot_password_text">Forgot Password</string>
 </resources>

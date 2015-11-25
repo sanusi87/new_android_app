@@ -29,10 +29,9 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".ProfileActivity"
-            android:label="@string/title_activity_profile" >
-        </activity>
+        <activity android:name=".ProfileActivity" android:label="@string/title_activity_profile"></activity>
+        <activity android:name=".RegisterActivity" android:label="@string/register_text"></activity>
+        <activity android:name=".ForgotPasswordActivity" android:label="@string/forgot_password_text"></activity>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
