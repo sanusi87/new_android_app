@@ -16,295 +16,197 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
                     android:visibility="visible"
-                    android:padding="10dp">
-
+                    style="@style/AppThemePadding10">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/resume_visibility"
-                        android:textSize="15sp"
                         android:id="@+id/resume_visibility_title"
-                        android:textColor="@android:color/holo_blue_dark" />
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp" />
-
+                        style="@style/AppThemeBaseLabel" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/no_value"
-                        android:id="@+id/resume_visibility" />
-
+                        android:id="@+id/resume_visibility"
+                        style="@style/AppThemeBaseTextValue" />
                 </LinearLayout>
 
+                <View style="@style/AppThemeBorderBottom" />
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
                     android:visibility="visible"
-                    android:padding="10dp">
-
+                    style="@style/AppThemePadding10">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/jobseeking_information"
-                        android:textSize="15sp"
-                        android:id="@+id/jobseeking_information_title"
-                        android:textColor="@android:color/holo_blue_dark"/>
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp" />
-
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/jobseeking_information_title" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/no_value"
-                        android:id="@+id/jobseeking_information" />
-
+                        android:id="@+id/jobseeking_information"
+                        style="@style/AppThemeBaseTextValue" />
                 </LinearLayout>
 
+                <View style="@style/AppThemeBorderBottom" />
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
                     android:visibility="visible"
-                    android:padding="10dp">
-
+                    style="@style/AppThemePadding10">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/job_preferences"
-                        android:textSize="15sp"
-                        android:id="@+id/job_preferences_title"
-                        android:textColor="@android:color/holo_blue_dark"/>
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp" />
-
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/job_preferences_title" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/no_value"
-                        android:id="@+id/job_preferences" />
-
+                        android:id="@+id/job_preferences"
+                        style="@style/AppThemeBaseTextValue" />
                 </LinearLayout>
 
+                <View style="@style/AppThemeBorderBottom" />
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
                     android:visibility="visible"
-                    android:padding="10dp">
-
+                    style="@style/AppThemePadding10">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/work_experience"
-                        android:textSize="15sp"
-                        android:id="@+id/work_experience_title"
-                        android:textColor="@android:color/holo_blue_dark"/>
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp" />
-
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/work_experience_title" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/no_value"
-                        android:id="@+id/work_experience" />
-
+                        android:id="@+id/work_experience"
+                        style="@style/AppThemeBaseTextValue" />
                 </LinearLayout>
 
+                <View style="@style/AppThemeBorderBottom" />
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:padding="10dp">
-
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/highest_education"
-                        android:textSize="15sp"
-                        android:id="@+id/highest_education_title"
-                        android:textColor="@android:color/holo_blue_dark"/>
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp" />
-
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/highest_education_title" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/no_value"
-                        android:id="@+id/highest_education" />
-
+                        android:id="@+id/highest_education"
+                        style="@style/AppThemeBaseTextValue" />
                 </LinearLayout>
 
-
+                <View style="@style/AppThemeBorderBottom" />
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:padding="10dp">
-
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/skill"
-                        android:textSize="15sp"
-                        android:id="@+id/skill_title"
-                        android:textColor="@android:color/holo_blue_dark"/>
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp" />
-
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/skill_title" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/no_value"
-                        android:id="@+id/skill" />
-
+                        android:id="@+id/skill"
+                        style="@style/AppThemeBaseTextValue" />
                 </LinearLayout>
 
+                <View style="@style/AppThemeBorderBottom" />
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:padding="10dp">
-
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/languages"
-                        android:textSize="15sp"
-                        android:id="@+id/languages_title"
-                        android:textColor="@android:color/holo_blue_dark"/>
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp" />
-
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/languages_title" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/no_value"
-                        android:id="@+id/languages" />
-
+                        android:id="@+id/languages"
+                        style="@style/AppThemeBaseTextValue" />
                 </LinearLayout>
 
+                <View style="@style/AppThemeBorderBottom" />
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:padding="10dp">
-
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/attached_resume"
-                        android:textSize="15sp"
-                        android:id="@+id/attached_resume_title"
-                        android:textColor="@android:color/holo_blue_dark"/>
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp" />
-
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/attached_resume_title" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/no_value"
-                        android:id="@+id/attached_resume" />
-
+                        android:id="@+id/attached_resume"
+                        style="@style/AppThemeBaseTextValue" />
                 </LinearLayout>
 
+                <View style="@style/AppThemeBorderBottom" />
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:padding="10dp">
-
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/additional_info"
-                        android:textSize="15sp"
-                        android:id="@+id/additional_info_title"
-                        android:textColor="@android:color/holo_blue_dark"/>
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp" />
-
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/additional_info_title" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/no_value"
-                        android:id="@+id/additional_info" />
-
+                        android:id="@+id/additional_info"
+                        style="@style/AppThemeBaseTextValue"/>
                 </LinearLayout>
             </LinearLayout>
-
     </ScrollView>
-
 </LinearLayout>

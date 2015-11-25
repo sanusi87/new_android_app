@@ -2,20 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:theme="@style/AppTheme">
+
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar3"
         android:visibility="invisible" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
-
-
+        style="@style/AppThemePadding10">
 
         <EditText
             android:layout_width="fill_parent"
@@ -25,7 +26,9 @@
             android:id="@+id/fullname"
             android:hint="@string/fullname"
             android:layout_marginBottom="10dp"
-            style="@android:style/TextAppearance.DeviceDefault.Small" />
+            style="@android:style/TextAppearance.DeviceDefault.Small"
+            android:elegantTextHeight="false"
+            android:theme="@style/AppTheme" />
 
         <EditText
             android:layout_width="fill_parent"

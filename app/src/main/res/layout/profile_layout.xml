@@ -26,7 +26,7 @@
                 android:id="@+id/fullName"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:textIsSelectable="true" />
 
         </LinearLayout>
@@ -62,7 +62,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -70,14 +71,16 @@
                 android:text="@string/username"
                 android:id="@+id/username2"
                 android:layout_weight="0"
-                android:width="100dp" />
+                android:width="100dp"
+                style="@style/AppThemeBaseLabel" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/username2_text"
-                android:layout_weight="0" />
+                android:layout_weight="0"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
 
@@ -86,7 +89,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -94,14 +98,16 @@
                 android:text="@string/email"
                 android:id="@+id/email2"
                 android:layout_weight="0"
-                android:width="100dp" />
+                android:width="100dp"
+                style="@style/AppThemeBaseLabel" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/email2_text"
-                android:layout_weight="0" />
+                android:layout_weight="0"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
 
@@ -110,7 +116,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -118,14 +125,16 @@
                 android:text="@string/mobile"
                 android:id="@+id/mobile2"
                 android:layout_weight="0"
-                android:width="100dp" />
+                android:width="100dp"
+                style="@style/AppThemeBaseLabel" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/mobile2_text"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
 
@@ -134,7 +143,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -142,14 +152,16 @@
                 android:text="@string/icno"
                 android:id="@+id/icno2"
                 android:layout_weight="0"
-                android:width="100dp" />
+                android:width="100dp"
+                style="@style/AppThemeBaseLabel" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/icno2_text"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <LinearLayout
@@ -157,7 +169,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -165,14 +178,16 @@
                 android:text="@string/gender"
                 android:id="@+id/gender2"
                 android:layout_weight="0"
-                android:width="100dp" />
+                android:width="100dp"
+                style="@style/AppThemeBaseLabel" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/gender2_text"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <LinearLayout
@@ -180,7 +195,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -188,14 +204,16 @@
                 android:text="@string/dob"
                 android:id="@+id/dob2"
                 android:layout_weight="0"
-                android:width="100dp" />
+                android:width="100dp"
+                style="@style/AppThemeBaseLabel" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/dob2_text"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <LinearLayout
@@ -203,7 +221,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -211,14 +230,16 @@
                 android:text="@string/country"
                 android:id="@+id/country2"
                 android:layout_weight="0"
-                android:width="100dp" />
+                android:width="100dp"
+                style="@style/AppThemeBaseLabel" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/country2_text"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <LinearLayout
@@ -229,7 +250,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/online_resume"
-                android:id="@+id/online_resume_button" />
+                android:id="@+id/online_resume_button"
+                android:theme="@style/AppTheme" />
         </LinearLayout>
     </LinearLayout>
 
