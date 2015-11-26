@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -187,7 +186,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 sectionLabel.setText("xxx="+sectionNumber);
             }
 
-
+            JobSearchAdapter jobSearchAdapter = new JobSearchAdapter(getActivity());
+            jobSearchAdapter.searchJob();
         }
 
         private void setupApplicationFragment(View rootView) {
