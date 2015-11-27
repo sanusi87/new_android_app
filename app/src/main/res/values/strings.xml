@@ -62,4 +62,14 @@
     <string name="filter_job">Filter</string>
     <string name="cancel">Cancel</string>
     <string name="search">Search</string>
+    <string name="search_keyword_by">Search keyword by</string>
+    <string name="keyword">Keyword</string>
+    <string name="mininum">Minimum</string>
+    <string name="maximum">Maximum</string>
+    <string name="spec_and_role">Specialisation and Role</string>
+    <string name="location">Location</string>
+    <string name="position_level">Position Level</string>
+    <string name="posted_by">Posted By</string>
+    <string name="direct_employer">Direct Employer</string>
+    <string name="ra">Company Undisclosed / Recruitment Agency</string>
 </resources>
