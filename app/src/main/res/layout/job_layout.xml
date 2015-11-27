@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/job_list">
+    android:id="@+id/job_list"
+    android:orientation="vertical">
 
-</ScrollView>
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/job_list_view" />
+</LinearLayout>

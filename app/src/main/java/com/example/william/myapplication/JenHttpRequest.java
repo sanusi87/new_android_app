@@ -1,6 +1,7 @@
 package com.example.william.myapplication;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -71,7 +72,7 @@ public class JenHttpRequest {
     }
 
     // used to decode json object
-    public JSONObject decodeJsonObjectString(String json){
+    public static JSONObject decodeJsonObjectString(String json){
         Log.e("jsonResp", json);
 
         try {
@@ -85,7 +86,7 @@ public class JenHttpRequest {
     }
 
     // used to decode json array
-    public JSONArray decodeJsonArrayString(String json){
+    public static JSONArray decodeJsonArrayString(String json){
         try {
             JSONArray ja = new JSONArray(json);
             return ja;
@@ -127,6 +128,7 @@ public class JenHttpRequest {
                     }else{
                         response = decodeJsonObjectString(responseString);
                     }
+                    response.notify();
                     is.close();
                 }catch (Exception e){
                     Log.e("test", e.getMessage());
@@ -149,20 +151,19 @@ public class JenHttpRequest {
             @Override
             public void run() {
                 try {
-                    //Log.e("get", "trying...");
+                    //wait();
                     HttpResponse _response = httpclient.execute(httpget);
                     HttpEntity _entity = _response.getEntity();
                     InputStream is = _entity.getContent();
 
                     String responseString = readInputStreamAsString(is);
-                    //Log.e("responseStr", responseString.substring(0));
-                    //Log.e("responseStr", responseString.substring(0,1));
                     if( responseString.substring(0,1).equals("[") ){
                         response = decodeJsonArrayString(responseString);
                         OBJECT_TYPE = JenHttpRequest.JSON_ARRAY;
                     }else{
                         response = decodeJsonObjectString(responseString);
                     }
+                    //notify();
                     is.close();
                 }catch (IOException e) {
                     Log.e("sendGet", "IOExcp=" + e.getMessage());
@@ -221,5 +222,6 @@ public class JenHttpRequest {
         return buf.toString();
     }
 
+    // AsyncTask<Parameter, Progress, Result>
 
 }

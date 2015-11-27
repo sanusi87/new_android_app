@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:background="#f3f3f3"
-    android:padding="5dp">
+    android:padding="10dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,23 +35,70 @@
         android:layout_height="wrap_content"
         style="@style/AppThemePadding5">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/job_location"
-            android:id="@+id/job_location" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/job_type"
-            android:id="@+id/job_type" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/job_location"
+                android:id="@+id/textView7"
+                android:layout_marginRight="5dp"
+                android:textSize="12sp"
+                android:textStyle="italic" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/date_closed"
-            android:id="@+id/date_closed" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/job_location"
+                android:id="@+id/job_location" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/job_type"
+                android:id="@+id/textView8"
+                android:layout_marginRight="5dp"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/job_type"
+                android:id="@+id/job_type" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date_closed"
+                android:id="@+id/textView9"
+                android:layout_marginRight="5dp"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date_closed"
+                android:id="@+id/date_closed" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <TextView

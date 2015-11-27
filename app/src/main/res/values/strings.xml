@@ -59,4 +59,7 @@
     <string name="date_closed">Date Closed</string>
     <string name="job_type">Job Type</string>
     <string name="job_location">Location</string>
+    <string name="filter_job">Filter</string>
+    <string name="cancel">Cancel</string>
+    <string name="search">Search</string>
 </resources>
