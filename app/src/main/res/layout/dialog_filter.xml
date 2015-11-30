@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:text="@string/search_keyword_by"
             android:id="@+id/textView10"
-            android:labelFor="@id/country_spinner"
+            android:labelFor="@id/keyword_filter_spinner"
             style="@style/AppThemeBaseLabel" />
 
         <LinearLayout
@@ -28,7 +28,7 @@
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/country_spinner"
+                android:id="@+id/keyword_filter_spinner"
                 android:spinnerMode="dropdown"
                 android:gravity="right" />
         </LinearLayout>
@@ -220,7 +220,7 @@
         <View
             style="@style/AppThemeBorderBottom"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"></View>
+            android:layout_marginBottom="10dp" />
 
         <LinearLayout
             android:orientation="horizontal"

@@ -41,7 +41,7 @@ public class JobSearchFilterDialog extends DialogFragment{
     jobSearch.setPage(); // int
     */
 
-    public String keywordFilter;
+    public int keywordFilter;
     public String keyword;
     public int salaryMin;
     public int salaryMax;
@@ -65,14 +65,25 @@ public class JobSearchFilterDialog extends DialogFragment{
         View view = inflater.inflate(R.layout.dialog_filter, null);
 
         // form inputs
+        final Spinner keywordFilterInput = (Spinner)view.findViewById(R.id.keyword_filter_spinner);
+        keywordFilterInput.setAdapter(new ArrayAdapter<KeywordFilter>(
+                this.getActivity(),
+                android.R.layout.simple_list_item_1,
+                KeywordFilterArray.populate()
+        ));
+
         final EditText keywordInput = (EditText)view.findViewById(R.id.keyword);
-        EditText salaryMinInput = (EditText)view.findViewById(R.id.minimum_salary);
-        EditText salaryMaxInput = (EditText)view.findViewById(R.id.maximum_salary);
-        Spinner countryInput = (Spinner)view.findViewById(R.id.country_spinner);
+        final EditText salaryMinInput = (EditText)view.findViewById(R.id.minimum_salary);
+        final EditText salaryMaxInput = (EditText)view.findViewById(R.id.maximum_salary);
 
-        ArrayAdapter<Country> countryAdapter = new ArrayAdapter<Country>(this.getActivity(), R.layout.country_spinner, CountryArray.populateCountry());
+        /*
+        final Spinner countryInput = (Spinner)view.findViewById(R.id.country_spinner);
+        ArrayAdapter<Country> countryAdapter = new ArrayAdapter<Country>(
+                this.getActivity(),
+                R.layout.country_spinner,
+                CountryArray.populateCountry());
         countryInput.setAdapter(countryAdapter);
-
+        */
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -82,6 +93,9 @@ public class JobSearchFilterDialog extends DialogFragment{
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
                     keyword = keywordInput.getText().toString();
+                    keywordFilter = ((Country)countryInput.getSelectedItem()).id;
+                    salaryMin = Integer.valueOf(salaryMinInput.getText().toString());
+                    salaryMax = Integer.valueOf(salaryMaxInput.getText().toString());
                     
                     // Send the positive button event back to the host activity
                     mListener.onDialogPositiveClick(JobSearchFilterDialog.this);
