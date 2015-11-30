@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.lang.reflect.Array;
+
 public class JobSearchFilterDialog extends DialogFragment{
     /* The activity that creates an instance of this dialog fragment must
      * implement this interface in order to receive event callbacks.
@@ -66,11 +68,12 @@ public class JobSearchFilterDialog extends DialogFragment{
 
         // form inputs
         final Spinner keywordFilterInput = (Spinner)view.findViewById(R.id.keyword_filter_spinner);
-        keywordFilterInput.setAdapter(new ArrayAdapter<KeywordFilter>(
+        ArrayAdapter<KeywordFilter> keywordFilterArrayAdapter = new ArrayAdapter<>(
                 this.getActivity(),
                 android.R.layout.simple_list_item_1,
                 KeywordFilterArray.populate()
-        ));
+        );
+        keywordFilterInput.setAdapter(keywordFilterArrayAdapter);
 
         final EditText keywordInput = (EditText)view.findViewById(R.id.keyword);
         final EditText salaryMinInput = (EditText)view.findViewById(R.id.minimum_salary);
@@ -93,7 +96,7 @@ public class JobSearchFilterDialog extends DialogFragment{
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
                     keyword = keywordInput.getText().toString();
-                    keywordFilter = ((Country)countryInput.getSelectedItem()).id;
+                    keywordFilter = ((KeywordFilter)keywordFilterInput.getSelectedItem()).id;
                     salaryMin = Integer.valueOf(salaryMinInput.getText().toString());
                     salaryMax = Integer.valueOf(salaryMaxInput.getText().toString());
                     
