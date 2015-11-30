@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollView" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/resume_visibility"
+                        android:id="@+id/resume_visibility_title"
+                        style="@style/AppThemeBaseLabel" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_value"
+                        android:id="@+id/resume_visibility"
+                        style="@style/AppThemeBaseTextValue" />
+                </LinearLayout>
+
+                <View style="@style/AppThemeBorderBottom" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/jobseeking_information"
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/jobseeking_information_title" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_value"
+                        android:id="@+id/jobseeking_information"
+                        style="@style/AppThemeBaseTextValue" />
+                </LinearLayout>
+
+                <View style="@style/AppThemeBorderBottom" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/job_preferences"
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/job_preferences_title" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_value"
+                        android:id="@+id/job_preferences"
+                        style="@style/AppThemeBaseTextValue" />
+                </LinearLayout>
+
+                <View style="@style/AppThemeBorderBottom" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/work_experience"
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/work_experience_title" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_value"
+                        android:id="@+id/work_experience"
+                        style="@style/AppThemeBaseTextValue" />
+                </LinearLayout>
+
+                <View style="@style/AppThemeBorderBottom" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/highest_education"
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/highest_education_title" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_value"
+                        android:id="@+id/highest_education"
+                        style="@style/AppThemeBaseTextValue" />
+                </LinearLayout>
+
+                <View style="@style/AppThemeBorderBottom" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skill"
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/skill_title" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_value"
+                        android:id="@+id/skill"
+                        style="@style/AppThemeBaseTextValue" />
+                </LinearLayout>
+
+                <View style="@style/AppThemeBorderBottom" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/languages"
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/languages_title" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_value"
+                        android:id="@+id/languages"
+                        style="@style/AppThemeBaseTextValue" />
+                </LinearLayout>
+
+                <View style="@style/AppThemeBorderBottom" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/attached_resume"
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/attached_resume_title" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_value"
+                        android:id="@+id/attached_resume"
+                        style="@style/AppThemeBaseTextValue" />
+                </LinearLayout>
+
+                <View style="@style/AppThemeBorderBottom" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    style="@style/AppThemePadding10">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/additional_info"
+                        style="@style/AppThemeBaseLabel"
+                        android:id="@+id/additional_info_title" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_value"
+                        android:id="@+id/additional_info"
+                        style="@style/AppThemeBaseTextValue"/>
+                </LinearLayout>
+            </LinearLayout>
+    </ScrollView>
+</LinearLayout>

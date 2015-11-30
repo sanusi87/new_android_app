@@ -6,6 +6,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:indeterminate="true"
+        android:indeterminateBehavior="cycle" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -100,5 +108,7 @@
 
 
     </LinearLayout>
+
+
 
 </RelativeLayout>

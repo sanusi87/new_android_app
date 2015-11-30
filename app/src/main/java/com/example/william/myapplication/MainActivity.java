@@ -1,11 +1,30 @@
 package com.example.william.myapplication;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
-public class MainActivity extends ActionBarActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class MainActivity extends Activity {
+
+    SharedPreferences sharedPref;
+    public static String JENJOBS_SHARED_PREFERENCE = "jenjobs";
+
+    private EditText emailView;
+    private EditText passwordView;
+    private UserLoginTask mAuthTask = null;
+    private ProgressBar mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,36 +35,136 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void setup() {
+        sharedPref = this.getSharedPreferences(JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        mProgress = (ProgressBar) findViewById(R.id.progressBar);
+        mProgress.setVisibility(View.INVISIBLE);
 
+        emailView = (EditText) findViewById(R.id.username_input);
+        passwordView = (EditText) findViewById(R.id.password_input);
 
-    }
+        Button loginButton = (Button) findViewById(R.id.login_button);
+        Button registerButton = (Button) findViewById(R.id.register_button);
+        Button forgotButton = (Button) findViewById(R.id.forgot_button);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+        // handle login button click
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProgress.setVisibility(View.VISIBLE);
+                String email = emailView.getText().toString();
+                String password = passwordView.getText().toString();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+                mAuthTask = new UserLoginTask(email, password);
+                mAuthTask.execute((Void) null);
+            }
+        });
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        // handle register button click
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        // handle forgot password button click
+        forgotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        // check for sharedPreference data
+        String accessToken = sharedPref.getString("access_token", null);
+        if( accessToken != null ){
+            Intent intent = new Intent();
+            intent.setClass(getApplicationContext(), ProfileActivity.class);
+            startActivity(intent);
+            finish();
         }
-
-        return super.onOptionsItemSelected(item);
     }
+
+
 
     // onPause event
     @Override
     public void onPause() {
         super.onPause();
 
+    }
+
+
+    public class UserLoginTask extends AsyncTask<Void, Void, JSONObject> {
+
+        private final String mEmail;
+        private final String mPassword;
+
+        UserLoginTask(String email, String password) {
+            mEmail = email;
+            mPassword = password;
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+            Intent intent = new Intent();
+            intent.putExtra("username", mEmail);
+            intent.putExtra("password", mPassword);
+            intent.putExtra("grant_type", "password");
+            intent.putExtra("client_id", "testclient");
+            intent.putExtra("client_secret", "testpass");
+
+            JenHttpRequest jenReq = new JenHttpRequest(JenHttpRequest.POST_REQUEST, "http://api.jenjobs.com/oauth2/token", intent);
+            while( jenReq.response == null ){
+                // keep waiting
+            }
+
+            Log.e("response2", "" + jenReq.response);
+
+            if( jenReq.response != null ){
+                return (JSONObject)jenReq.response;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject success) {
+            mAuthTask = null;
+
+            if (success != null) {
+                Log.e("finished", ""+success);
+                mProgress.setVisibility(View.INVISIBLE);
+
+                Log.e("finished3", ""+success.optString("name"));
+
+                if( success.optString("access_token") != null ){
+                    SharedPreferences.Editor spEdit = sharedPref.edit();
+                    spEdit.putString("access_token", success.optString("access_token"));
+                    spEdit.putString("email", mEmail);
+                    spEdit.commit();
+
+                    Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG).show();
+
+                    Intent intent2 = new Intent();
+                    intent2.putExtra("downloadData", true);
+                    intent2.setClass(getApplicationContext(), ProfileActivity.class);
+                    startActivity(intent2);
+                    finish();
+                }else{
+                    if( success.optString("error") != null ){
+                        Toast.makeText(getApplicationContext(), success.optString("error"), Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Unknown error!", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                mProgress.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
+        }
     }
 }
