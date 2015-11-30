@@ -3,7 +3,7 @@ package com.example.william.myapplication;
 import java.util.ArrayList;
 
 public class KeywordFilterArray {
-    public static KeywordFilter[] populate(){
+    public static ArrayList<KeywordFilter> populate(){
         ArrayList<KeywordFilter> c = new ArrayList<>();
 
         c.add(new KeywordFilter(1,"Position Title"));
@@ -11,6 +11,6 @@ public class KeywordFilterArray {
         c.add(new KeywordFilter(3,"Skills"));
         c.add(new KeywordFilter(4,"Job Description"));
 
-        return (KeywordFilter[]) c.toArray();
+        return c;
     }
 }
