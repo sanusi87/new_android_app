@@ -1,14 +1,14 @@
 package com.example.william.myapplication;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -68,11 +68,8 @@ public class JobSearchFilterDialog extends DialogFragment{
 
         // form inputs
         final Spinner keywordFilterInput = (Spinner)view.findViewById(R.id.keyword_filter_spinner);
-        ArrayAdapter<KeywordFilter> keywordFilterArrayAdapter = new ArrayAdapter<>(
-                this.getActivity(),
-                android.R.layout.simple_list_item_1,
-                KeywordFilterArray.populate()
-        );
+        KeywordFilterAdapter kwa = new KeywordFilterAdapter(getActivity());
+        keywordFilterInput.setAdapter(kwa);
         keywordFilterInput.setAdapter(keywordFilterArrayAdapter);
 
         final EditText keywordInput = (EditText)view.findViewById(R.id.keyword);
@@ -97,6 +94,7 @@ public class JobSearchFilterDialog extends DialogFragment{
                 public void onClick(DialogInterface dialog, int id) {
                     keyword = keywordInput.getText().toString();
                     keywordFilter = ((KeywordFilter)keywordFilterInput.getSelectedItem()).id;
+                    Log.e("keywordFilter", String.valueOf(keywordFilter));
                     salaryMin = Integer.valueOf(salaryMinInput.getText().toString());
                     salaryMax = Integer.valueOf(salaryMaxInput.getText().toString());
                     
