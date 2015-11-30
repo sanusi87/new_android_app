@@ -26,7 +26,11 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
         if( this.jobList == null ){
             this.jobList = jobList;
         }else{
-            this.jobList.addAll(jobList);
+            if(jobList == null ){
+                this.jobList.clear();
+            }else{
+                this.jobList.addAll(jobList);
+            }
         }
     }
 

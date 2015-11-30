@@ -22,7 +22,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, JobSearchFilterDialog.NoticeDialogListener {
+public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, JobSearchFilterDialog.JobSearchFilterListener {
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     /**
@@ -121,12 +121,36 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
      * A placeholder fragment containing a simple view.
      */
     private static int sectionNumber;
-
+    private static JobSearch jobSearch;
+    /*
+    * filter dialog: job search button clicked
+    * */
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
+        /*
+        jobSearch.setAdvertiser(); // boolean
+        jobSearch.setDirectEmployer(); //boolean
+        jobSearch.setJobLevel(); // string[]
+        jobSearch.setJobSpec(); // string[]
+        jobSearch.setJobRole(); // string[]
+        jobSearch.setJobType(); // string[]
+        jobSearch.setKeyword(); // string
+        jobSearch.setKeywordFilter(); // string
+        jobSearch.setSalaryMin(); // int
+        jobSearch.setSalaryMax(); // int
+        jobSearch.setCountry(); // string[]
+        jobSearch.setState(); // string[]
+        jobSearch.setOrderPreference(); // string
+        jobSearch.setPage(); // int
+        */
 
+
+        jobSearch.search();
     }
 
+    /*
+    * filter dialog: cancel button clicked
+    * */
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
 
@@ -206,8 +230,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             ListView lv = (ListView) rootView.findViewById(R.id.job_list_view);
             JobSearchAdapter jobSearchAdapter = new JobSearchAdapter(getActivity());
 
-            final JobSearch js = new JobSearch(jobSearchAdapter);
-            js.search();
+            jobSearch = new JobSearch(jobSearchAdapter);
+            jobSearch.search();
 
             lv.setAdapter(jobSearchAdapter);
             lv.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -225,8 +249,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         if (previousLastPosition != lastPosition) {
                             Log.e("load", "more more");
                             //APPLY YOUR LOGIC HERE
-                            js.page += 1;
-                            js.search();
+                            jobSearch.page += 1;
+                            jobSearch.search();
                         }
                         previousLastPosition = lastPosition;
                     } else if (lastPosition < previousLastPosition - 5) {

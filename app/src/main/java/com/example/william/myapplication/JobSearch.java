@@ -32,6 +32,8 @@ public class JobSearch {
     }
 
     public void search(){
+        adapter.setJob(null);
+        this.page = 1;
         GetRequest gr = new GetRequest( getSearchUrl() );
         gr.execute();
     }
@@ -138,8 +140,6 @@ public class JobSearch {
     public void resetFilter(){
         filters.clear();
     }
-
-
 
     // async task
     public class GetRequest extends AsyncTask<Void, Void, Object> {
