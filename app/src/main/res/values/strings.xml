@@ -36,10 +36,6 @@
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dignissim, lacus ac semper varius, leo mi hendrerit leo, vitae ornare quam ipsum condimentum diam.</string>
     <string name="title_activity_profile">ProfileActivity</string>
 
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -74,13 +70,13 @@
     <string name="ra">Company Undisclosed / Recruitment Agency</string>
     <string name="Other_Preferred_Countries">Other Preferred Countries</string>
     <string name="experience_info">Describe your experience (Optional but important to employer)</string>
-    <string name="work_location">Prefered Working Location in Malaysia</string>
+    <string name="work_location">Preferred Working Location in Malaysia</string>
     <string name="internship">Internship</string>
     <string name="part_time">Part-Time/Temporary</string>
     <string name="contract">Contract</string>
     <string name="permanent">Permanent</string>
-    <string name="salary">Expected Salary</string>
-    <string name="job_type">Preferred Job Type</string>
+    <string name="expected_salary">Expected Salary</string>
+    <string name="preferred_job_type">Preferred Job Type</string>
     <string name="resume">Please upload your resume</string>
     <string name="file_supported">File supported : doc, docx, pdf, odt, ppt, txt</string>
     <string name="file_size">File Size Limit : 5 MB</string>
@@ -98,7 +94,6 @@
     <string name="license">Have a valid license to drive in Malaysia</string>
     <string name="transport">own_transport</string>
     <string name="save_info">Save Information</string>
-    <string name="job_title">Job Title</string>
     <string name="company_name">Company Name</string>
     <string name="employment_type">Employment Type</string>
     <string name="job_level">Job Level</string>
@@ -130,11 +125,9 @@
     <string name="save_language">Save Language</string>
     <string name="fullname_profile">Full Name</string>
     <string name="nationality">Nationality</string>
-    <string name="dob">Date of Birthday</string>
-    <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="email">Email, also your Login ID</string>
+    <string name="email2">Email, also your Login ID</string>
     <string name="changeEmail">To change email, please go to My Account</string>
     <string name="dial_code">Country Dial Code</string>
     <string name="mobile_number">Mobile Number</string>
