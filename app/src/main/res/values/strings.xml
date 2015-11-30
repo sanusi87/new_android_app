@@ -1,30 +1,77 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">JenJOBS</string>
     <string name="action_settings">Settings</string>
     <string name="local_service_started">local_service_started</string>
     <string name="local_service_label">local_service_label</string>
-    <string name="username">username</string>
+    <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
     <string name="login_text">Login</string>
     <string name="register_text">Register</string>
     <string name="forgot_text">Forgot Password?</string>
     <string name="jenjobs_logo">JenJOBS Logo</string>
-    <string name="no_value">edit button</string>
+    <string name="no_value">no_value</string>
     <string name="fullname">Full Name</string>
+    <string name="email">Email</string>
+    <string name="icno">I/C</string>
+    <string name="mobile">Mobile</string>
+    <string name="gender">Gender</string>
+    <string name="dob">DoB</string>
+    <string name="country">Country</string>
+    <string name="online_resume">Online Resume</string>
+    <string name="resume_visibility">Resume Visibility</string>
+    <string name="jobseeking_information">Jobseeking Information</string>
+    <string name="job_preferences">Job Preferences</string>
+    <string name="work_experience">Work Experience</string>
+    <string name="highest_education">Highest Education</string>
+    <string name="skill">Skills</string>
+    <string name="languages">Languages</string>
+    <string name="attached_resume">Attached Resume</string>
+    <string name="additional_info">Additional Info</string>
+    <string name="open">Open</string>
+    <string name="hidden">Hidden</string>
+    <string name="limited">Limited</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dignissim, lacus ac semper varius, leo mi hendrerit leo, vitae ornare quam ipsum condimentum diam.</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+    <string name="my_profile">My Profile</string>
+    <string name="job_search">Job Search</string>
+    <string name="application">Application</string>
+    <string name="request_password_reset">Request Password Reset</string>
+    <string name="password_repeat">Password Repeat</string>
+    <string name="forgot_password_text">Forgot Password</string>
+    <string name="profile_image">Profile image</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="job_description">Job Description</string>
+    <string name="job_title">Job Title</string>
+    <string name="company">Company</string>
+    <string name="salary">Salary</string>
+    <string name="date_closed">Date Closed</string>
+    <string name="job_type">Job Type</string>
+    <string name="job_location">Location</string>
+    <string name="filter_job">Filter</string>
+    <string name="cancel">Cancel</string>
+    <string name="search">Search</string>
+    <string name="search_keyword_by">Search keyword by</string>
+    <string name="keyword">Keyword</string>
+    <string name="mininum">Minimum</string>
+    <string name="maximum">Maximum</string>
+    <string name="spec_and_role">Specialisation and Role</string>
+    <string name="location">Location</string>
+    <string name="position_level">Position Level</string>
+    <string name="posted_by">Posted By</string>
+    <string name="direct_employer">Direct Employer</string>
+    <string name="ra">Company Undisclosed / Recruitment Agency</string>
     <string name="Other_Preferred_Countries">Other Preferred Countries</string>
     <string name="experience_info">Describe your experience (Optional but important to employer)</string>
     <string name="work_location">Prefered Working Location in Malaysia</string>
