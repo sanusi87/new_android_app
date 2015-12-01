@@ -134,4 +134,6 @@
     <string name="sms_job_alert">SMS me exclusive job alert</string>
     <string name="save_profile">Save Profile</string>
     <string name="skills">Provide up to 10 skills, qualifications or licences that qualify you for a job.</string>
+    <string name="malaysia">Malaysia</string>
+    <string name="other">Other</string>
 </resources>
