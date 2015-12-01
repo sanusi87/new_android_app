@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -38,39 +38,49 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:weightSum="2"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/spoken"
-            android:id="@+id/spoken" />
+            android:id="@+id/spoken"
+            android:layout_weight="1" />
 
         <EditText
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/spoken_text" />
+            android:id="@+id/spoken_text"
+            android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:weightSum="2">
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/written_text"
-            android:id="@+id/written" />
+            android:id="@+id/written"
+            android:layout_weight="1" />
 
         <EditText
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/written_id" />
+            android:id="@+id/written_id"
+            android:layout_weight="1" />
     </LinearLayout>
 
     <Button
