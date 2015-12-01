@@ -13,8 +13,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import java.lang.reflect.Array;
-
 public class JobSearchFilterDialog extends DialogFragment{
     /* The activity that creates an instance of this dialog fragment must
      * implement this interface in order to receive event callbacks.
@@ -67,21 +65,25 @@ public class JobSearchFilterDialog extends DialogFragment{
 
         View view = inflater.inflate(R.layout.dialog_filter, null);
 
-        // form inputs
+        // keyword filter
         final Spinner keywordFilterInput = (Spinner)view.findViewById(R.id.keyword_filter_spinner);
         KeywordFilterAdapter kwa = new KeywordFilterAdapter(getActivity());
         keywordFilterInput.setAdapter(kwa);
-
+        // keyword
         final EditText keywordInput = (EditText)view.findViewById(R.id.keyword);
+        // min salary
         final EditText salaryMinInput = (EditText)view.findViewById(R.id.minimum_salary);
+        // max salary
         final EditText salaryMaxInput = (EditText)view.findViewById(R.id.maximum_salary);
-
+        // states
         final ListView malaysiaStates = (ListView)view.findViewById(R.id.malaysia_states);
         StateAdapter stateAdapter = new StateAdapter(getActivity());
         malaysiaStates.setAdapter(stateAdapter);
+        // position level
+        final ListView positionLevelInput = (ListView)view.findViewById(R.id.position_level);
+
 
         CountryAdapter countryAdapter = new CountryAdapter(getActivity());
-
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
