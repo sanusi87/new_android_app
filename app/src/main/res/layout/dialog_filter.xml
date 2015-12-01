@@ -1,290 +1,284 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/scrollView2">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/search_keyword_by"
-            android:id="@+id/textView10"
-            style="@style/AppThemeBaseLabel" />
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/keyword_filter_spinner"
-                android:spinnerMode="dropdown" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/keyword"
-            android:id="@+id/textView13"
-            style="@style/AppThemeBaseLabel" />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-
-            <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/keyword"
-                android:inputType="text"
-                android:hint="@string/keyword"
-                android:theme="@style/AppThemeBaseTextValue" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/salary"
-            android:id="@+id/textView12"
-            style="@style/AppThemeBaseLabel" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:weightSum="2"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/minimum_salary"
-                android:inputType="numberSigned"
-                android:layout_weight="1"
-                android:hint="@string/mininum"
-                style="@style/AppThemeBaseTextValue" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/maximum_salary"
-                android:inputType="numberSigned"
-                android:layout_weight="1"
-                android:hint="@string/maximum"
-                style="@style/AppThemeBaseTextValue" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/select_spec_and_role"
-        android:layout_margin="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/spec_and_role"
-            android:id="@+id/textView14"
-            style="@style/AppThemeBaseLabel" />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:layout_margin="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/no_value"
-                android:id="@+id/select_spec_and_role_value"
-                style="@style/AppThemeBaseTextValue" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/location"
-            android:id="@+id/textView16"
-            style="@style/AppThemeBaseLabel" />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                android:text="@string/search_keyword_by"
+                android:id="@+id/textView10"
+                style="@style/AppThemeBaseLabel" />
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <TextView
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <Spinner
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/malaysia"
-                    android:id="@+id/textView15" />
-
-                <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/malaysia_states"
-                    android:choiceMode="multipleChoice" />
-
+                    android:id="@+id/keyword_filter_spinner"
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/keyword"
+                android:id="@+id/textView13"
+                style="@style/AppThemeBaseLabel" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/keyword"
+                    android:inputType="text"
+                    android:hint="@string/keyword"
+                    android:theme="@style/AppThemeBaseTextValue" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/salary"
+                android:id="@+id/textView12"
+                style="@style/AppThemeBaseLabel" />
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:weightSum="12">
-                <TextView
+                android:weightSum="2"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/other"
-                    android:id="@+id/textView16"
-                    android:layout_weight="12" />
-                <CheckBox
+                    android:id="@+id/minimum_salary"
+                    android:inputType="numberSigned"
+                    android:layout_weight="1"
+                    android:hint="@string/mininum"
+                    style="@style/AppThemeBaseTextValue" />
+
+                <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/other_check"
-                    android:layout_weight="1" />
+                    android:id="@+id/maximum_salary"
+                    android:inputType="numberSigned"
+                    android:layout_weight="1"
+                    android:hint="@string/maximum"
+                    style="@style/AppThemeBaseTextValue" />
             </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/position_level"
-            android:id="@+id/textView11"
-            style="@style/AppThemeBaseLabel" />
-
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/position_level" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView18"
-            style="@style/AppThemeBaseLabel"
-            android:text="@string/posted_by" />
-
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:weightSum="12"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:id="@+id/select_spec_and_role"
+            android:layout_margin="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/direct_employer"
-                android:id="@+id/textView17"
-                style="@style/AppThemeBaseLabel"
-                android:gravity="center_vertical"
-                android:layout_weight="12"
-                android:textColor="@android:color/tertiary_text_light" />
+                android:text="@string/spec_and_role"
+                android:id="@+id/textView14"
+                style="@style/AppThemeBaseLabel" />
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/checkBox"
-                android:layout_weight="1" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_value"
+                    android:id="@+id/select_spec_and_role_value"
+                    style="@style/AppThemeBaseTextValue" />
+            </LinearLayout>
 
         </LinearLayout>
 
-        <View
-            style="@style/AppThemeBorderBottom"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp" />
-
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="12"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:layout_margin="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/ra"
-                android:id="@+id/textView17"
-                style="@style/AppThemeBaseLabel"
-                android:gravity="center_vertical"
-                android:layout_weight="12"
-                android:textColor="@android:color/tertiary_text_light" />
+                android:text="@string/location"
+                android:id="@+id/textView16"
+                style="@style/AppThemeBaseLabel" />
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/checkBox"
-                android:layout_weight="1" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/malaysia"
+                        android:id="@+id/textView15" />
+
+                    <ListView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/malaysia_states"
+                        android:choiceMode="multipleChoice" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="12">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/other"
+                        android:id="@+id/textView16"
+                        android:layout_weight="12" />
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/other_check"
+                        android:layout_weight="1" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/position_level"
+                android:id="@+id/textView11"
+                style="@style/AppThemeBaseLabel" />
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/position_level" />
+        </LinearLayout>
 
-</LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView18"
+                style="@style/AppThemeBaseLabel"
+                android:text="@string/posted_by" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:weightSum="12"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/direct_employer"
+                    android:id="@+id/textView17"
+                    style="@style/AppThemeBaseLabel"
+                    android:gravity="center_vertical"
+                    android:layout_weight="12"
+                    android:textColor="@android:color/tertiary_text_light" />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/checkBox"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <View style="@style/AppThemeBorderBottom" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="12"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ra"
+                    android:id="@+id/textView17"
+                    style="@style/AppThemeBaseLabel"
+                    android:gravity="center_vertical"
+                    android:layout_weight="12"
+                    android:textColor="@android:color/tertiary_text_light" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/checkBox"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+
+
