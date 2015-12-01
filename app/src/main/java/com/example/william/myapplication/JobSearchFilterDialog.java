@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.lang.reflect.Array;
@@ -70,20 +71,17 @@ public class JobSearchFilterDialog extends DialogFragment{
         final Spinner keywordFilterInput = (Spinner)view.findViewById(R.id.keyword_filter_spinner);
         KeywordFilterAdapter kwa = new KeywordFilterAdapter(getActivity());
         keywordFilterInput.setAdapter(kwa);
-        keywordFilterInput.setAdapter(keywordFilterArrayAdapter);
 
         final EditText keywordInput = (EditText)view.findViewById(R.id.keyword);
         final EditText salaryMinInput = (EditText)view.findViewById(R.id.minimum_salary);
         final EditText salaryMaxInput = (EditText)view.findViewById(R.id.maximum_salary);
 
-        /*
-        final Spinner countryInput = (Spinner)view.findViewById(R.id.country_spinner);
-        ArrayAdapter<Country> countryAdapter = new ArrayAdapter<Country>(
-                this.getActivity(),
-                R.layout.country_spinner,
-                CountryArray.populateCountry());
-        countryInput.setAdapter(countryAdapter);
-        */
+        final ListView malaysiaStates = (ListView)view.findViewById(R.id.malaysia_states);
+        StateAdapter stateAdapter = new StateAdapter(getActivity());
+        malaysiaStates.setAdapter(stateAdapter);
+
+        CountryAdapter countryAdapter = new CountryAdapter(getActivity());
+
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -95,9 +93,13 @@ public class JobSearchFilterDialog extends DialogFragment{
                     keyword = keywordInput.getText().toString();
                     keywordFilter = ((KeywordFilter)keywordFilterInput.getSelectedItem()).id;
                     Log.e("keywordFilter", String.valueOf(keywordFilter));
+                    String tempSalaryMax = salaryMaxInput.getText().toString();
+                    tempSalaryMax = tempSalaryMax.replaceAll("[^0-9\\.]", "");
+                    if( tempSalaryMax != "" ){
+                        salaryMax = Integer.valueOf( tempSalaryMax );
+                    }
                     salaryMin = Integer.valueOf(salaryMinInput.getText().toString());
-                    salaryMax = Integer.valueOf(salaryMaxInput.getText().toString());
-                    
+
                     // Send the positive button event back to the host activity
                     mListener.onDialogPositiveClick(JobSearchFilterDialog.this);
                 }

@@ -9,9 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class KeywordFilterAdapter extends BaseAdapter implements ListAdapter {
     private Context context;
-    private ArrayAdapter<KeywordFilter> keywordFilters;
+    private ArrayList<KeywordFilter> keywordFilters = new ArrayList<KeywordFilter>();
 
     public KeywordFilterAdapter(Context context){
         this.context = context;
@@ -23,12 +25,12 @@ public class KeywordFilterAdapter extends BaseAdapter implements ListAdapter {
 
     @Override
     public int getCount() {
-        return keywordFilters.getCount();
+        return keywordFilters.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return keywordFilters.getItem(position);
+        return keywordFilters.get(position);
     }
 
     @Override

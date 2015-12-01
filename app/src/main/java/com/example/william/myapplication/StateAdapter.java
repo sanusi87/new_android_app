@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -57,13 +58,24 @@ public class StateAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(R.layout.spinner_item, parent, false);
+            v = vi.inflate(R.layout.state_list_with_checkbox, parent, false);
         }
 
         State state = (State)getItem(position);
 
-        TextView tvName = (TextView) v.findViewById(R.id.spinner_item);
+        TextView tvName = (TextView) v.findViewById(R.id.state_name);
         tvName.setText(state.name);
+
+        CheckBox stateId = (CheckBox) v.findViewById(R.id.state_id);
+        stateId.setTag(state.id, state.name);
+        /*
+        stateId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // show what state name
+            }
+        });
+        */
 
         return v;
     }
