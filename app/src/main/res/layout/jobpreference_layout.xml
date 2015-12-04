@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/job_type"
-            android:id="@+id/job_type" />
+            android:id="@+id/date_closed" />
 
         <CheckBox
             android:layout_width="wrap_content"
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/work_location"
-            android:id="@+id/job_location" />
+            android:id="@+id/date_closed" />
 
         <EditText
             android:layout_width="match_parent"

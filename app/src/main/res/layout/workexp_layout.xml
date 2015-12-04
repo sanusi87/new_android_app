@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/job_title"
-            android:id="@+id/textView7" />
+            android:id="@+id/date_closed" />
 
         <EditText
             android:layout_width="fill_parent"

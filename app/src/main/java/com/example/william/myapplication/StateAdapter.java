@@ -1,11 +1,13 @@
 package com.example.william.myapplication;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ public class StateAdapter extends BaseAdapter implements ListAdapter{
 
     public ArrayList<State> listOfStates = new ArrayList<>();
     private Context context;
+    public ArrayList<Integer> selectedState = new ArrayList<>();
 
     public StateAdapter(Context context){
         this.context = context;
@@ -61,21 +64,27 @@ public class StateAdapter extends BaseAdapter implements ListAdapter{
             v = vi.inflate(R.layout.state_list_with_checkbox, parent, false);
         }
 
-        State state = (State)getItem(position);
+        final State state = (State)getItem(position);
 
         TextView tvName = (TextView) v.findViewById(R.id.state_name);
         tvName.setText(state.name);
 
         CheckBox stateId = (CheckBox) v.findViewById(R.id.state_id);
-        stateId.setTag(state.id, state.name);
-        /*
-        stateId.setOnClickListener(new View.OnClickListener() {
+        //stateId.setTag(state.id, state.name);
+
+        stateId.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                // show what state name
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    selectedState.add(state.id);
+                }else{
+                    selectedState.remove(selectedState.indexOf(state.id));
+                }
+                Log.e("selectedState", selectedState.toArray().toString());
             }
         });
-        */
+
+
 
         return v;
     }

@@ -245,6 +245,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                     final int lastPosition = firstVisibleItem + visibleItemCount;
+                    Log.e("lastposition", ""+lastPosition);
+                    Log.e("totalItemCount", ""+totalItemCount);
+                    Log.e("previousLastPosition", ""+previousLastPosition);
                     if (lastPosition == totalItemCount) {
                         if (previousLastPosition != lastPosition) {
                             Log.e("load", "more more");
