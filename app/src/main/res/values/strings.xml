@@ -135,5 +135,8 @@
     <string name="save_profile">Save Profile</string>
     <string name="skills">Provide up to 10 skills, qualifications or licences that qualify you for a job.</string>
     <string name="malaysia">Malaysia</string>
-    <string name="other">Other</string>
+    <string name="other">Other Countries</string>
+    <string name="title_activity_job_search_filter">JobSearchFilter</string>
+    <string name="Search">Search</string>
+    <string name="ok">OK</string>
 </resources>
