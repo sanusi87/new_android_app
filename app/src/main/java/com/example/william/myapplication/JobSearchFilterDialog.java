@@ -62,7 +62,7 @@ public class JobSearchFilterDialog extends DialogFragment{
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
-
+        /*
         View view = inflater.inflate(R.layout.dialog_filter, null);
 
         // keyword filter
@@ -75,12 +75,9 @@ public class JobSearchFilterDialog extends DialogFragment{
         final EditText salaryMinInput = (EditText)view.findViewById(R.id.minimum_salary);
         // max salary
         final EditText salaryMaxInput = (EditText)view.findViewById(R.id.maximum_salary);
-        // states
-        final ListView malaysiaStates = (ListView)view.findViewById(R.id.malaysia_states);
-        StateAdapter stateAdapter = new StateAdapter(getActivity());
-        malaysiaStates.setAdapter(stateAdapter);
         // position level
         final ListView positionLevelInput = (ListView)view.findViewById(R.id.position_level);
+
 
 
         CountryAdapter countryAdapter = new CountryAdapter(getActivity());
@@ -111,6 +108,11 @@ public class JobSearchFilterDialog extends DialogFragment{
                     JobSearchFilterDialog.this.getDialog().cancel();
                 }
             });
+        */
+
+
+
+
         return builder.create();
     }
 

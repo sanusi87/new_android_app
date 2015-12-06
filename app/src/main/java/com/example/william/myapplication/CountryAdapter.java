@@ -9,15 +9,26 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class CountryAdapter extends BaseAdapter implements ListAdapter {
 
-    public ArrayList<Country> country = new ArrayList<>();
+    private ArrayList<Country> country = new ArrayList<>();
     private Context context;
 
     public CountryAdapter(Context context){
         this.context = context;
 
+        HashMap<Integer, String> countries = Jenjobs.getCountry();
+
+        Iterator i = countries.entrySet().iterator();
+        while( i.hasNext() ){
+            HashMap.Entry e = (HashMap.Entry)i.next();
+            country.add(new Country( (int)e.getKey(), String.valueOf(e.getValue()) ));
+        }
+
+        /*
         country.add(new Country(1,"Afghanistan"));
         country.add(new Country(2,"Albania"));
         country.add(new Country(3,"Algeria"));
@@ -254,6 +265,7 @@ public class CountryAdapter extends BaseAdapter implements ListAdapter {
         country.add(new Country(237,"Zambia"));
         country.add(new Country(238,"Zimbabwe"));
         country.add(new Country(239,"Macedonia"));
+        */
     }
 
     @Override

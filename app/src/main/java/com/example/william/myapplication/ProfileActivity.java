@@ -22,7 +22,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, JobSearchFilterDialog.JobSearchFilterListener {
+public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     /**
@@ -33,6 +33,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     public static final int JOB_FRAGMENT = 2;
     public static final int APPLICATION_FRAGMENT = 3;
     public static final int SETTINGS_FRAGMENT = 4;
+
+    public static final int FETCH_FILTER_PARAM = 1;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -112,7 +114,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
@@ -122,39 +124,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
      */
     private static int sectionNumber;
     private static JobSearch jobSearch;
-    /*
-    * filter dialog: job search button clicked
-    * */
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        /*
-        jobSearch.setAdvertiser(); // boolean
-        jobSearch.setDirectEmployer(); //boolean
-        jobSearch.setJobLevel(); // string[]
-        jobSearch.setJobSpec(); // string[]
-        jobSearch.setJobRole(); // string[]
-        jobSearch.setJobType(); // string[]
-        jobSearch.setKeyword(); // string
-        jobSearch.setKeywordFilter(); // string
-        jobSearch.setSalaryMin(); // int
-        jobSearch.setSalaryMax(); // int
-        jobSearch.setCountry(); // string[]
-        jobSearch.setState(); // string[]
-        jobSearch.setOrderPreference(); // string
-        jobSearch.setPage(); // int
-        */
-
-
-        jobSearch.search();
-    }
-
-    /*
-    * filter dialog: cancel button clicked
-    * */
-    @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
-
-    }
 
     public static class PlaceholderFragment extends Fragment {
         /**
@@ -186,7 +155,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             switch (sectionNumber) {
                 case PROFILE_FRAGMENT:
                     rootView = inflater.inflate(R.layout.profile_layout, container, false);
-
                     setupProfileFragment(rootView);
                     break;
                 case JOB_FRAGMENT:
@@ -228,10 +196,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
         private void setupJobFragment(View rootView) {
             ListView lv = (ListView) rootView.findViewById(R.id.job_list_view);
-            JobSearchAdapter jobSearchAdapter = new JobSearchAdapter(getActivity());
+            final JobSearchAdapter jobSearchAdapter = new JobSearchAdapter(getActivity());
 
             jobSearch = new JobSearch(jobSearchAdapter);
-            jobSearch.search();
+            jobSearch.search(true);
 
             lv.setAdapter(jobSearchAdapter);
             lv.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -245,15 +213,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                     final int lastPosition = firstVisibleItem + visibleItemCount;
-                    Log.e("lastposition", ""+lastPosition);
-                    Log.e("totalItemCount", ""+totalItemCount);
-                    Log.e("previousLastPosition", ""+previousLastPosition);
                     if (lastPosition == totalItemCount) {
                         if (previousLastPosition != lastPosition) {
                             Log.e("load", "more more");
-                            //APPLY YOUR LOGIC HERE
-                            jobSearch.page += 1;
-                            jobSearch.search();
+                            jobSearch.setPage( jobSearch.getPage()+1 );
+                            jobSearch.search(false);
                         }
                         previousLastPosition = lastPosition;
                     } else if (lastPosition < previousLastPosition - 5) {
@@ -293,10 +257,13 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     }
 
 
-    // fragmant action bar
+    /*
+    * fragment action bar
+    * on fragment menu item selected
+    * */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.e("menu", ""+item.getGroupId());
+        //Log.e("menu", ""+item.getGroupId());
         int clickedItem = item.getItemId();
 
         switch (sectionNumber) {
@@ -304,7 +271,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 return super.onOptionsItemSelected(item);
             case JOB_FRAGMENT:
                 if( clickedItem == R.id.filter_job_button ){
-                    filterDialog.show(getSupportFragmentManager(), JOBFILTER);
+                    //filterDialog.show(getSupportFragmentManager(), JOBFILTER);
+                    Intent intent = new Intent();
+                    intent.setClass(getApplicationContext(), JobSearchFilter.class);
+                    startActivityForResult(intent, ProfileActivity.FETCH_FILTER_PARAM);
                     return true;
                 }else{
                     return super.onOptionsItemSelected(item);
@@ -319,6 +289,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         return true;
     }
 
+    /*
+    * inflate menu to each fragment
+    * */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -340,8 +313,21 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 break;
         }
 
-        Log.e("menu?", menu.toString()+", sectionNumber="+sectionNumber);
+        //Log.e("menu?", menu.toString()+", sectionNumber="+sectionNumber);
 
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == FETCH_FILTER_PARAM) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }
     }
 }

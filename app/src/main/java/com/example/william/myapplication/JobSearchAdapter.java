@@ -83,7 +83,8 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                 }
             });
 
-            if( position%2 == 1 ){
+            Log.e("position%2", ""+(position%2));
+            if( position%2 == 0 ){
                 v.setBackgroundColor( context.getResources().getColor(R.color.white));
             }
 

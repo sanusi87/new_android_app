@@ -23,7 +23,7 @@ public class JobSearch {
     private ArrayList<String> filters = new ArrayList<String>();
     private ArrayList<String> orders = new ArrayList<String>();
     private String defaultOrder = "o=date_posted";
-    public int page = 1;
+    private int page = 1;
     private JobSearchAdapter adapter;
 
     JobSearch(JobSearchAdapter adapter){
@@ -31,9 +31,12 @@ public class JobSearch {
         this.adapter = adapter;
     }
 
-    public void search(){
-        adapter.setJob(null);
-        this.page = 1;
+    public void search(boolean newSearch){
+        if( newSearch ){
+            adapter.setJob(null);
+            setPage(1);
+        }
+
         GetRequest gr = new GetRequest( getSearchUrl() );
         gr.execute();
     }
@@ -59,7 +62,12 @@ public class JobSearch {
     public void setPage( int page ){
         if( page >= 0 ){
             this.page = page;
+            //filters.add( "page="+page );
         }
+    }
+
+    public int getPage(){
+        return this.page;
     }
 
     public void setJobLevel( String[] jobLevel ){
@@ -132,7 +140,7 @@ public class JobSearch {
 
     // setup search URL
     private String getSearchUrl(){
-        String filterUrl = "?" + TextUtils.join("&", filters) + "&" + TextUtils.join("&", orders);
+        String filterUrl = "?page="+this.page + TextUtils.join("&", filters) + "&" + TextUtils.join("&", orders);
         Log.e("filter", filterUrl);
         return url+filterUrl;
     }
@@ -173,7 +181,6 @@ public class JobSearch {
                 }else{
                     _response = JenHttpRequest.decodeJsonObjectString(responseString);
                 }
-                //return _response;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -185,8 +192,6 @@ public class JobSearch {
         protected void onPostExecute(final Object success) {
             Log.e("onPostEx", "" + success);
             if( success != null ){
-                Log.e("onPostEx", ""+success);
-
                 ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
                 JSONObject jObj = (JSONObject) success;
                 if( jObj != null ){
