@@ -12,32 +12,43 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class StateAdapter extends BaseAdapter implements ListAdapter{
 
     public ArrayList<State> listOfStates = new ArrayList<>();
     private Context context;
-    public ArrayList<Integer> selectedState = new ArrayList<>();
 
     public StateAdapter(Context context){
         this.context = context;
 
-        listOfStates.add(new State(4, "Johor"));
-        listOfStates.add(new State(10,"Kedah"));
-        listOfStates.add(new State(22,"Kelantan"));
-        listOfStates.add(new State(28,"Melaka"));
-        listOfStates.add(new State(34,"Negeri Sembilan"));
-        listOfStates.add(new State(39,"Penang"));
-        listOfStates.add(new State(44,"Pahang"));
-        listOfStates.add(new State(48,"Perak"));
-        listOfStates.add(new State(52,"Perlis"));
-        listOfStates.add(new State(56,"Sabah"));
-        listOfStates.add(new State(60,"Selangor"));
-        listOfStates.add(new State(64,"Sarawak"));
-        listOfStates.add(new State(68,"Terengganu"));
-        listOfStates.add(new State(103,"Kuala Lumpur"));
-        listOfStates.add(new State(104,"Labuan"));
-        listOfStates.add(new State(365,"Putrajaya"));
+        HashMap<Integer, String> states = Jenjobs.getState();
+        ArrayList<State> tempArr = new ArrayList<>();
+
+        Iterator i = states.entrySet().iterator();
+        while( i.hasNext() ){
+            HashMap.Entry e = (HashMap.Entry)i.next();
+            tempArr.add(new State( (int)e.getKey(), String.valueOf(e.getValue()) ));
+        }
+
+        Collections.sort(tempArr, new Comparator<State>() {
+            @Override
+            public int compare(State lhs, State rhs) {
+                String[] t = {lhs.name, rhs.name};
+                Arrays.sort(t);
+                if (t[0] == lhs.name) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        });
+
+        listOfStates = tempArr;
     }
 
     @Override
@@ -61,30 +72,14 @@ public class StateAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(R.layout.state_list_with_checkbox, parent, false);
+            v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
         }
 
-        final State state = (State)getItem(position);
-
-        TextView tvName = (TextView) v.findViewById(R.id.state_name);
+        State state = (State) getItem(position);
+        TextView tvName = (TextView) v.findViewById(android.R.id.text1);
         tvName.setText(state.name);
-
-        CheckBox stateId = (CheckBox) v.findViewById(R.id.state_id);
-        //stateId.setTag(state.id, state.name);
-
-        stateId.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    selectedState.add(state.id);
-                }else{
-                    selectedState.remove(selectedState.indexOf(state.id));
-                }
-                Log.e("selectedState", selectedState.toArray().toString());
-            }
-        });
-
-
+        tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
+        v.setBackgroundColor(context.getResources().getColor(R.color.white));
 
         return v;
     }
