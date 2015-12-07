@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Layout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,13 +13,27 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
-public class JobSearchFilter extends ActionBarActivity {
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class JobSearchFilter extends Activity {
 
     private static int INTENT_GET_STATE = 1;
     private static int INTENT_GET_LEVEL = 2;
     private static int INTENT_GET_COUNTRY = 3;
     private static int INTENT_GET_SPECROLE = 4;
+
+    private TextView selectedOtherCountry;
+    private TextView selectedPositionLevel;
+    private TextView selectedMalaysiaState;
+    private TextView selectedSpecAndRole;
+
+    private ArrayList<Country> selectedOtherCountryValues = new ArrayList<>();
+    private ArrayList<Integer> selectedPositionLevelValues = new ArrayList<>();
+    private ArrayList<Integer> selectedMalaysiaStateValues = new ArrayList<>();
+    private ArrayList<Integer> selectedSpecAndRoleValues = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +52,12 @@ public class JobSearchFilter extends ActionBarActivity {
         EditText salaryMaxInput = (EditText)findViewById(R.id.maximum_salary);
         // position level
         //ListView positionLevelInput = (ListView)findViewById(R.id.position_level);
+
+        // selected labels
+        selectedOtherCountry = (TextView)findViewById(R.id.selectedOtherCountry);
+        selectedPositionLevel = (TextView)findViewById(R.id.selectedPositionLevel);
+        selectedMalaysiaState = (TextView)findViewById(R.id.selectedMalaysiaState);
+        selectedSpecAndRole = (TextView)findViewById(R.id.selectedSpecAndRole);
 
         Button searchButton = (Button)findViewById(R.id.startSearch);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -85,9 +106,13 @@ public class JobSearchFilter extends ActionBarActivity {
         selectOtherCountry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), SelectCountry.class);
-            // get a list of already selected states and update the Extra to be submitted to next activity
-            startActivityForResult(intent, INTENT_GET_COUNTRY);
+                Intent intent = new Intent(getApplicationContext(), SelectCountry.class);
+                // passed selected values if user want to reselect
+                if( selectedOtherCountryValues.size() > 0 ){
+                    intent.putExtra("country", selectedOtherCountryValues);
+                }
+                // get a list of already selected states and update the Extra to be submitted to next activity
+                startActivityForResult(intent, INTENT_GET_COUNTRY);
             }
         });
 
@@ -116,7 +141,21 @@ public class JobSearchFilter extends ActionBarActivity {
         }else if( requestCode == INTENT_GET_COUNTRY ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                Log.e("filterdata", "2"+filters.getString("result"));
+                Log.e("filterdata2", "2:"+filters.getIntegerArrayList("values"));
+
+                ArrayList<Country> selectedValues = (ArrayList<Country>) filters.get("country");
+                ArrayList<String> selectedLabels = new ArrayList<>();
+
+                if( selectedValues != null ){
+                    for( int i=0;i<selectedValues.size();i++ ){
+                        Log.e("filterdata3", ""+selectedValues.get(i));
+                        Country c = selectedValues.get(i);
+                        selectedLabels.add(c.name);
+                    }
+                    selectedOtherCountryValues = selectedValues;
+                    selectedOtherCountry.setText(TextUtils.join(",",selectedLabels));
+                }
+
                 Log.e("filterdata", filters.toString());
             }
         }else if( requestCode == INTENT_GET_LEVEL ){
