@@ -31,8 +31,8 @@ public class JobSearchFilter extends Activity {
     private TextView selectedSpecAndRole;
 
     private ArrayList<Country> selectedOtherCountryValues = new ArrayList<>();
-    private ArrayList<Integer> selectedPositionLevelValues = new ArrayList<>();
-    private ArrayList<Integer> selectedMalaysiaStateValues = new ArrayList<>();
+    private ArrayList<PositionLevel> selectedPositionLevelValues = new ArrayList<>();
+    private ArrayList<State> selectedMalaysiaStateValues = new ArrayList<>();
     private ArrayList<Integer> selectedSpecAndRoleValues = new ArrayList<>();
 
     @Override
@@ -95,9 +95,13 @@ public class JobSearchFilter extends Activity {
         selectMalaysiaState.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), SelectState.class);
-            // get a list of already selected states and update the Extra to be submitted to next activity
-            startActivityForResult(intent, INTENT_GET_STATE);
+                Intent intent = new Intent(getApplicationContext(), SelectState.class);
+                // passed selected values if user want to reselect
+                if( selectedMalaysiaStateValues.size() > 0 ){
+                    intent.putExtra("state", selectedMalaysiaStateValues);
+                }
+                // get a list of already selected states and update the Extra to be submitted to next activity
+                startActivityForResult(intent, INTENT_GET_STATE);
             }
         });
 
@@ -121,9 +125,13 @@ public class JobSearchFilter extends Activity {
         selectPositionLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), SelectPositionLevel.class);
-            // get a list of already selected states and update the Extra to be submitted to next activity
-            startActivityForResult(intent, INTENT_GET_LEVEL);
+                Intent intent = new Intent(getApplicationContext(), SelectPositionLevel.class);
+                // passed selected values if user want to reselect
+                if( selectedPositionLevelValues.size() > 0 ){
+                    intent.putExtra("positionlevel", selectedPositionLevelValues);
+                }
+                // get a list of already selected states and update the Extra to be submitted to next activity
+                startActivityForResult(intent, INTENT_GET_LEVEL);
             }
         });
     }
@@ -135,34 +143,47 @@ public class JobSearchFilter extends Activity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                Log.e("filterdata", "1"+filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                ArrayList<State> selectedValues = (ArrayList<State>) filters.get("state");
+                ArrayList<String> selectedLabels = new ArrayList<>();
+
+                if( selectedValues != null ){
+                    for( int i=0;i<selectedValues.size();i++ ){
+                        State c = selectedValues.get(i);
+                        selectedLabels.add(c.name);
+                    }
+                    selectedMalaysiaStateValues = selectedValues;
+                    selectedMalaysiaState.setText(TextUtils.join(",",selectedLabels));
+                }
             }
         }else if( requestCode == INTENT_GET_COUNTRY ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                Log.e("filterdata2", "2:"+filters.getIntegerArrayList("values"));
-
                 ArrayList<Country> selectedValues = (ArrayList<Country>) filters.get("country");
                 ArrayList<String> selectedLabels = new ArrayList<>();
 
                 if( selectedValues != null ){
                     for( int i=0;i<selectedValues.size();i++ ){
-                        Log.e("filterdata3", ""+selectedValues.get(i));
                         Country c = selectedValues.get(i);
                         selectedLabels.add(c.name);
                     }
                     selectedOtherCountryValues = selectedValues;
                     selectedOtherCountry.setText(TextUtils.join(",",selectedLabels));
                 }
-
-                Log.e("filterdata", filters.toString());
             }
         }else if( requestCode == INTENT_GET_LEVEL ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                Log.e("filterdata", "3"+filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                ArrayList<PositionLevel> selectedValues = (ArrayList<PositionLevel>) filters.get("positionlevel");
+                ArrayList<String> selectedLabels = new ArrayList<>();
+
+                if( selectedValues != null ){
+                    for( int i=0;i<selectedValues.size();i++ ){
+                        PositionLevel c = selectedValues.get(i);
+                        selectedLabels.add(c.name);
+                    }
+                    selectedPositionLevelValues = selectedValues;
+                    selectedPositionLevel.setText(TextUtils.join(",",selectedLabels));
+                }
             }
         }else if( requestCode == INTENT_GET_SPECROLE ){
             if (resultCode == RESULT_OK) {

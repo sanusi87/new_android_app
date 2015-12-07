@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res-auto"
     xmlns:android1="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/search"
+    <item android1:id="@+id/search"
         android1:title="@string/search"
         android:title="@string/search"
         android:icon="@android:drawable/ic_menu_search"
