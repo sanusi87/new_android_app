@@ -109,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
-                android:id="@+id/select_spec_and_role_value"
+                android:id="@+id/selectedSpecAndRole"
                 style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
