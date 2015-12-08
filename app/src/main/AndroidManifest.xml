@@ -63,7 +63,16 @@
             android:name=".SelectState"
             android:label="@string/job_search" />
         <activity android:name=".SelectJobSpec" />
-        <activity android:name=".SelectJobRole"></activity>
+        <activity android:name=".SelectJobRole" />
+        <activity
+            android:name=".UpdateEducation"
+            android:label="@string/title_activity_update_education" />
+        <activity
+            android:name=".UpdateJobPreference"
+            android:label="@string/title_activity_update_job_preference" />
+        <activity
+            android:name=".UpdateJobSeeking"
+            android:label="@string/title_activity_update_job_seeking"></activity>
     </application>
 
 </manifest>
