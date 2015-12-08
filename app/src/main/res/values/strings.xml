@@ -121,7 +121,7 @@
     <string name="native_language">Native</string>
     <string name="native_button">Native</string>
     <string name="spoken">Spoken</string>
-    <string name="add_language">Add More Language</string>
+    <string name="add_language">Add Language</string>
     <string name="written_text">Written</string>
     <string name="save_language">Save Language</string>
     <string name="fullname_profile">Full Name</string>
@@ -153,4 +153,11 @@
     <string name="weeks">Weeks(s)</string>
     <string name="months">Month(s)</string>
     <string name="immediately">Immediately</string>
+    <string name="add_education">Add Education</string>
+    <string name="no_work_experience">No work experience.</string>
+    <string name="no_education">No education record.</string>
+    <string name="add_skill">Add Skill</string>
+    <string name="no_skill">No skill added.</string>
+    <string name="no_language">No language added.</string>
+    <string name="title_activity_update_resume_visibility">UpdateResumeVisibility</string>
 </resources>
