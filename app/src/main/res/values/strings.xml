@@ -98,8 +98,8 @@
     <string name="employment_type">Employment Type</string>
     <string name="job_level">Job Level</string>
     <string name="month_salary">Monthly Salary</string>
-    <string name="specilization">Specialization</string>
-    <string name="sub_specilization">Sub Specialization</string>
+    <string name="specilisation">Specialisation</string>
+    <string name="sub_specilisation">Sub Specialisation</string>
     <string name="company_industry">Company Industry</string>
     <string name="date_start">Date Start</string>
     <string name="month_start">Month Start</string>
@@ -139,4 +139,8 @@
     <string name="title_activity_job_search_filter">JobSearchFilter</string>
     <string name="Search">Search</string>
     <string name="ok">OK</string>
+    <string name="title_activity_update_work_experience">UpdateWorkExperience</string>
+    <string name="amount">Amount</string>
+    <string name="currency">Currency</string>
+    <string name="add_work_exp">Add Work Experience</string>
 </resources>
