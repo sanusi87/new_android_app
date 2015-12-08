@@ -23,17 +23,20 @@ public class JobSearchFilter extends Activity {
     private static int INTENT_GET_STATE = 1;
     private static int INTENT_GET_LEVEL = 2;
     private static int INTENT_GET_COUNTRY = 3;
-    private static int INTENT_GET_SPECROLE = 4;
+    private static int INTENT_GET_SPEC = 4;
+    private static int INTENT_GET_ROLE = 5;
 
     private TextView selectedOtherCountry;
     private TextView selectedPositionLevel;
     private TextView selectedMalaysiaState;
-    private TextView selectedSpecAndRole;
+    private TextView selectedJobSpec;
+    private TextView selectedJobRole;
 
     private ArrayList<Country> selectedOtherCountryValues = new ArrayList<>();
     private ArrayList<PositionLevel> selectedPositionLevelValues = new ArrayList<>();
     private ArrayList<State> selectedMalaysiaStateValues = new ArrayList<>();
-    private ArrayList<Integer> selectedSpecAndRoleValues = new ArrayList<>();
+    private ArrayList<JobSpec> selectedJobSpecValues = new ArrayList<>();
+    private ArrayList<JobRole> selectedJobRoleValues = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,8 @@ public class JobSearchFilter extends Activity {
         selectedOtherCountry = (TextView)findViewById(R.id.selectedOtherCountry);
         selectedPositionLevel = (TextView)findViewById(R.id.selectedPositionLevel);
         selectedMalaysiaState = (TextView)findViewById(R.id.selectedMalaysiaState);
-        selectedSpecAndRole = (TextView)findViewById(R.id.selectedSpecAndRole);
+        selectedJobSpec = (TextView)findViewById(R.id.selectedSpec);
+        selectedJobRole = (TextView)findViewById(R.id.selectedRole);
 
         Button searchButton = (Button)findViewById(R.id.startSearch);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -80,13 +84,23 @@ public class JobSearchFilter extends Activity {
         });
 
         // select job spec and roles
-        LinearLayout selectSpecAndRole = (LinearLayout)findViewById(R.id.selectSpecAndRole);
-        selectSpecAndRole.setOnClickListener(new View.OnClickListener() {
+        LinearLayout selectSpec = (LinearLayout)findViewById(R.id.selectedSpec);
+        selectSpec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), SelectSpecAndRole.class);
-            // get a list of already selected states and update the Extra to be submitted to next activity
-            startActivityForResult(intent, INTENT_GET_SPECROLE);
+                Intent intent = new Intent(getApplicationContext(), SelectJobSpec.class);
+                // get a list of already selected states and update the Extra to be submitted to next activity
+                startActivityForResult(intent, INTENT_GET_SPEC);
+            }
+        });
+
+        LinearLayout selectRole = (LinearLayout)findViewById(R.id.selectedRole);
+        selectRole.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SelectJobRole.class);
+                // get a list of already selected states and update the Extra to be submitted to next activity
+                startActivityForResult(intent, INTENT_GET_ROLE);
             }
         });
 
@@ -185,11 +199,35 @@ public class JobSearchFilter extends Activity {
                     selectedPositionLevel.setText(TextUtils.join(",",selectedLabels));
                 }
             }
-        }else if( requestCode == INTENT_GET_SPECROLE ){
+        }else if( requestCode == INTENT_GET_SPEC ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                Log.e("filterdata", "4"+filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                ArrayList<JobSpec> selectedValues = (ArrayList<JobSpec>) filters.get("jobspec");
+                ArrayList<String> selectedLabels = new ArrayList<>();
+
+                if( selectedValues != null ){
+                    for( int i=0;i<selectedValues.size();i++ ){
+                        JobSpec c = selectedValues.get(i);
+                        selectedLabels.add(c.name);
+                    }
+                    selectedJobSpecValues = selectedValues;
+                    selectedJobSpec.setText(TextUtils.join(",",selectedLabels));
+                }
+            }
+        }else if( requestCode == INTENT_GET_ROLE ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                ArrayList<JobRole> selectedValues = (ArrayList<JobRole>) filters.get("jobrole");
+                ArrayList<String> selectedLabels = new ArrayList<>();
+
+                if( selectedValues != null ){
+                    for( int i=0;i<selectedValues.size();i++ ){
+                        JobRole c = selectedValues.get(i);
+                        selectedLabels.add(c.name);
+                    }
+                    selectedJobRoleValues = selectedValues;
+                    selectedJobRole.setText(TextUtils.join(",",selectedLabels));
+                }
             }
         }
     }

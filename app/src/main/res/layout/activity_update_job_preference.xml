@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent" android:layout_height="match_parent"
+android:orientation="vertical"
+android:padding="10dp"
+xmlns:tools="http://schemas.android.com/tools"
+tools:context="com.example.william.myapplication.UpdateJobPreference">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/salary"
+            style="@style/AppThemeBaseLabel" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/salary"
+            android:inputType="text"
+            style="@style/AppThemeBaseTextValue" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/job_type"
+            style="@style/AppThemeBaseLabel" />
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/selectJobType" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/selectMalaysiaState">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/work_location"
+            style="@style/AppThemeBaseLabel" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/no_value"
+            android:id="@+id/selectedMalaysiaState" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/selectOtherCountry">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/Other_Preferred_Countries"
+            style="@style/AppThemeBaseLabel" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/selectedOtherCountry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save_preference"
+        android:id="@+id/save_job_preferred" />
+    </LinearLayout>
+
+</LinearLayout>

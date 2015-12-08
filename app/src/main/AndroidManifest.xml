@@ -42,7 +42,7 @@
         <activity
             android:name=".ForgotPasswordActivity"
             android:label="@string/forgot_password_text" />
-        <activity android:name=".JobDetails"></activity>
+        <activity android:name=".JobDetails" />
         <activity
             android:name=".JobSearchFilter"
             android:label="@string/job_search" />
@@ -65,6 +65,17 @@
         <activity
             android:name=".UpdateWorkExperience"
             android:label="@string/title_activity_update_work_experience"></activity>
+        <activity android:name=".SelectJobSpec" />
+        <activity android:name=".SelectJobRole" />
+        <activity
+            android:name=".UpdateEducation"
+            android:label="@string/title_activity_update_education" />
+        <activity
+            android:name=".UpdateJobPreference"
+            android:label="@string/title_activity_update_job_preference" />
+        <activity
+            android:name=".UpdateJobSeeking"
+            android:label="@string/title_activity_update_job_seeking"></activity>
     </application>
 
 </manifest>

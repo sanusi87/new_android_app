@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/scrollView2"
+    tools:context="com.example.william.myapplication.UpdateEducation">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/education_level"
+                style="@style/AppThemeBaseLabel" />
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/education_level"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/school"
+                style="@style/AppThemeBaseLabel" />
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/school_text"
+                style="@style/AppThemeBaseTextValue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/education"
+                style="@style/AppThemeBaseLabel" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edu_major_text"
+                style="@style/AppThemeBaseTextValue" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/field_study"
+                style="@style/AppThemeBaseLabel" />
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/education_field"
+                android:spinnerMode="dropdown" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/grade"
+                style="@style/AppThemeBaseLabel" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/grade_text"
+                style="@style/AppThemeBaseTextValue" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/year_graduation"
+                style="@style/AppThemeBaseLabel" />
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/graduation_year"
+                android:spinnerMode="dropdown" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/education_info"
+                style="@style/AppThemeBaseLabel" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText3"
+                android:maxLines="10"
+                android:maxLength="3000"
+                android:inputType="text|textMultiLine"
+                android:lines="4"
+                style="@style/AppThemeBaseTextValue" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+                <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save_education"
+                android:id="@+id/save_education" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
