@@ -142,4 +142,11 @@
     <string name="ok">OK</string>
     <string name="role">Job Role</string>
     <string name="spec">Job Specialisation</string>
+    <string name="title_activity_update_education">UpdateEducation</string>
+    <string name="title_activity_update_job_preference">UpdateJobPreference</string>
+    <string name="title_activity_update_job_seeking">UpdateJobSeeking</string>
+    <string name="days">Days</string>
+    <string name="weeks">Weeks(s)</string>
+    <string name="months">Month(s)</string>
+    <string name="immediately">Immediately</string>
 </resources>
