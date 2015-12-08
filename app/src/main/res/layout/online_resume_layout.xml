@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="10dp">
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -88,14 +89,28 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/work_experience"
-                        style="@style/AppThemeBaseLabel"
-                        android:id="@+id/work_experience_title" />
+                        style="@style/AppThemeBaseLabel" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/no_value"
                         android:id="@+id/work_experience"
                         style="@style/AppThemeBaseTextValue" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+
+                        <Button
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_work_exp"
+                            android:id="@+id/add_work_exp"
+                            android:gravity="center|center_horizontal" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <View style="@style/AppThemeBorderBottom" />

@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,6 +36,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     public static final int SETTINGS_FRAGMENT = 4;
 
     public static final int FETCH_FILTER_PARAM = 1;
+    public static final int ADD_WORK_EXP = 10;
+    public static final int UPDATE_WORK_EXP = 11;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -251,7 +254,15 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
 
         private void setupOnlineResumeFragment(View rootView) {
-
+            Button addWorkExp = (Button)rootView.findViewById(R.id.add_work_exp);
+            addWorkExp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(),  UpdateWorkExperience.class);
+                    startActivityForResult(intent, ADD_WORK_EXP);
+                }
+            });
         }
 
     }
@@ -323,6 +334,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         // Check which request we're responding to
         if (requestCode == FETCH_FILTER_PARAM) {
             // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == ADD_WORK_EXP ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == UPDATE_WORK_EXP ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
                 Log.e("filterdata", filters.getString("result"));
