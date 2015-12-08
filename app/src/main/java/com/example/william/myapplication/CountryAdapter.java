@@ -1,7 +1,6 @@
 package com.example.william.myapplication;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +14,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 public class CountryAdapter extends BaseAdapter implements ListAdapter {
 
     public ArrayList<Country> country = new ArrayList<>();
     private Context context;
+    private boolean layoutSingle = false;
 
     public CountryAdapter(Context context){
         this.context = context;
@@ -72,7 +70,11 @@ public class CountryAdapter extends BaseAdapter implements ListAdapter {
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+            if( layoutSingle ){
+                v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+            }else{
+                v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+            }
         }
         Country c = (Country) getItem(position);
         TextView tvName = (TextView) v.findViewById(android.R.id.text1);
@@ -81,5 +83,9 @@ public class CountryAdapter extends BaseAdapter implements ListAdapter {
         v.setBackgroundColor(context.getResources().getColor(R.color.white));
 
         return v;
+    }
+
+    public void setLayoutSingle(boolean layoutSingle) {
+        this.layoutSingle = layoutSingle;
     }
 }

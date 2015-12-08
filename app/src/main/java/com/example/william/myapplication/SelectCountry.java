@@ -5,19 +5,15 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class SelectCountry extends Activity {
 
@@ -28,11 +24,15 @@ public class SelectCountry extends Activity {
 
         final ListView lv = (ListView)findViewById(R.id.listOfCountries);
         final CountryAdapter ca = new CountryAdapter(getApplicationContext());
-        lv.setAdapter(ca);
 
         Bundle extra = getIntent().getExtras();
         // checked selected index
         if( extra != null ){
+            Boolean single = (Boolean) extra.get("single");
+            if( single ){
+                ca.setLayoutSingle(true);
+            }
+
             ArrayList<Country> selectedCountries = (ArrayList<Country>) extra.get("country");
             if( selectedCountries != null && selectedCountries.size() > 0 ){
                 for(int i=0; i < selectedCountries.size();i++){
@@ -44,6 +44,7 @@ public class SelectCountry extends Activity {
                 }
             }
         }
+        lv.setAdapter(ca);
 
         Button okButton = (Button)findViewById(R.id.okButton);
         okButton.setOnClickListener(new View.OnClickListener() {
