@@ -79,7 +79,8 @@
         <activity
             android:name=".UpdateResumeVisibility"
             android:label="@string/title_activity_update_resume_visibility"
-            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar"></activity>
+            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar" />
+        <activity android:name=".SelectJobSeekingStatus"></activity>
     </application>
 
 </manifest>

@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/license"
                     android:layout_weight="3"
-                    android:labelFor="@id/license"
+                    android:labelFor="@+id/license"
                     style="@style/AppThemeBaseLabel" />
 
                 <CheckBox
@@ -143,7 +143,7 @@
                     android:text="@string/transport"
                     android:layout_weight="3"
                     style="@style/AppThemeBaseLabel"
-                    android:labelFor="@id/own_transport" />
+                    android:labelFor="@+id/own_transport" />
 
                 <CheckBox
                     android:layout_width="wrap_content"
