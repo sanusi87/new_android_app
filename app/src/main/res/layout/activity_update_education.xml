@@ -13,22 +13,27 @@
         android:padding="10dp">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:weightSum="3">
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/education_level"
-                style="@style/AppThemeBaseLabel" />
+                style="@style/AppThemeBaseLabel"
+                android:layout_weight="1"
+                android:gravity="center_vertical" />
 
             <Spinner
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/education_level"
-                android:spinnerMode="dropdown" />
+                android:spinnerMode="dropdown"
+                android:layout_weight="2"
+                android:layout_gravity="right" />
         </LinearLayout>
 
         <LinearLayout
@@ -71,23 +76,28 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:weightSum="3">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/field_study"
-                style="@style/AppThemeBaseLabel" />
+                style="@style/AppThemeBaseLabel"
+                android:layout_weight="1"
+                android:gravity="center_vertical" />
 
             <Spinner
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/education_field"
-                android:spinnerMode="dropdown" />
+                android:spinnerMode="dropdown"
+                android:layout_weight="2"
+                android:layout_gravity="right" />
 
         </LinearLayout>
 
@@ -113,23 +123,28 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:weightSum="3">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/year_graduation"
-                style="@style/AppThemeBaseLabel" />
+                style="@style/AppThemeBaseLabel"
+                android:layout_weight="1"
+                android:gravity="center_vertical" />
 
             <Spinner
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/graduation_year"
-                android:spinnerMode="dropdown" />
+                android:spinnerMode="dropdown"
+                android:layout_weight="2"
+                android:layout_gravity="right" />
 
         </LinearLayout>
 
@@ -149,7 +164,7 @@
             <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText3"
+                android:id="@+id/extra_info"
                 android:maxLines="10"
                 android:maxLength="3000"
                 android:inputType="text|textMultiLine"
