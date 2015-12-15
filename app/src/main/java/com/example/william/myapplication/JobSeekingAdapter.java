@@ -15,48 +15,47 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class CountryAdapter extends BaseAdapter implements ListAdapter {
+public class JobSeekingAdapter extends BaseAdapter implements ListAdapter{
 
-    public ArrayList<Country> country = new ArrayList<>();
+    public ArrayList<JobSeekingStatus> statuses = new ArrayList<>();
     private Context context;
-    private boolean layoutSingle = false;
 
-    public CountryAdapter(Context context){
+    public JobSeekingAdapter( Context context ){
         this.context = context;
 
-        HashMap<Integer, String> countries = Jenjobs.getCountry();
-        ArrayList<Country> tempArr = new ArrayList<>();
+        HashMap<Integer, String> fields = Jenjobs.getJobSeekingStatus();
+        ArrayList<JobSeekingStatus> tempArr = new ArrayList<>();
 
-        Iterator i = countries.entrySet().iterator();
+        Iterator i = fields.entrySet().iterator();
         while( i.hasNext() ){
             HashMap.Entry e = (HashMap.Entry)i.next();
-            tempArr.add(new Country( (int)e.getKey(), String.valueOf(e.getValue()) ));
+            tempArr.add(new JobSeekingStatus( (int)e.getKey(), String.valueOf(e.getValue()) ));
         }
 
-        Collections.sort(tempArr, new Comparator<Country>() {
+        Collections.sort(tempArr, new Comparator<JobSeekingStatus>() {
             @Override
-            public int compare(Country lhs, Country rhs) {
-                String[] t = {lhs.name,rhs.name};
-                 Arrays.sort(t);
-                if( t[0] == lhs.name ){
+            public int compare(JobSeekingStatus lhs, JobSeekingStatus rhs) {
+                String[] t = {lhs.name, rhs.name};
+                Arrays.sort(t);
+                if (t[0].equals(lhs.name)) {
                     return -1;
-                }else{
+                } else {
                     return 1;
                 }
             }
         });
 
-        country = tempArr;
+        statuses = tempArr;
     }
 
     @Override
     public int getCount() {
-        return country.size();
+        return statuses.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return country.get(position);
+        return statuses.get(position);
     }
 
     @Override
@@ -70,22 +69,14 @@ public class CountryAdapter extends BaseAdapter implements ListAdapter {
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            if( layoutSingle ){
-                v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
-            }else{
-                v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
-            }
+            v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
         }
-        Country c = (Country) getItem(position);
+        JobSeekingStatus c = (JobSeekingStatus) getItem(position);
         TextView tvName = (TextView) v.findViewById(android.R.id.text1);
         tvName.setText(c.name);
         tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
         v.setBackgroundColor(context.getResources().getColor(R.color.white));
 
         return v;
-    }
-
-    public void setLayoutSingle(boolean layoutSingle) {
-        this.layoutSingle = layoutSingle;
     }
 }

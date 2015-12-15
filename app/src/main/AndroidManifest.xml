@@ -50,6 +50,41 @@
         <activity android:name=".SelectCountry" />
         <activity android:name=".SelectPositionLevel" />
         <activity android:name=".SelectSpecAndRole"></activity>
+            android:label="@string/job_search" />
+        <activity
+            android:name=".SelectCountry"
+            android:label="@string/job_search">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_country" />
+        <activity
+            android:name=".SelectPositionLevel"
+            android:label="@string/job_search" />
+        <activity
+            android:name=".SelectSpecAndRole"
+            android:label="@string/job_search" />
+        <activity
+            android:name=".SelectState"
+            android:label="@string/job_search" />
+        <activity
+            android:name=".UpdateWorkExperience"
+            android:label="@string/title_activity_update_work_experience" />
+        <activity android:name=".SelectJobSpec" />
+        <activity android:name=".SelectJobRole" />
+        <activity
+            android:name=".UpdateEducation"
+            android:label="@string/title_activity_update_education" />
+        <activity
+            android:name=".UpdateJobPreference"
+            android:label="@string/title_activity_update_job_preference" />
+        <activity
+            android:name=".UpdateJobSeeking"
+            android:label="@string/title_activity_update_job_seeking" />
+        <activity
+            android:name=".UpdateResumeVisibility"
+            android:label="@string/title_activity_update_resume_visibility"
+            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar" />
+        <activity android:name=".SelectJobSeekingStatus"></activity>
     </application>
 
 </manifest>

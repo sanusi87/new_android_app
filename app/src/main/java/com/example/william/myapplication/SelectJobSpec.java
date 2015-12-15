@@ -11,25 +11,25 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class SelectState extends Activity {
+public class SelectJobSpec extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_state);
+        setContentView(R.layout.activity_select_job_spec);
 
-        final ListView lv = (ListView)findViewById(R.id.listOfStates);
-        final StateAdapter ca = new StateAdapter(getApplicationContext());
+        final ListView lv = (ListView)findViewById(R.id.listOfJobSpec);
+        final JobSpecAdapter ca = new JobSpecAdapter(getApplicationContext());
         lv.setAdapter(ca);
 
         Bundle extra = getIntent().getExtras();
         // checked selected index
         if( extra != null ){
-            ArrayList<State> selectedStates = (ArrayList<State>) extra.get("state");
-            if( selectedStates != null && selectedStates.size() > 0 ){
-                for(int i=0; i < selectedStates.size();i++){
-                    State value = selectedStates.get(i);
-                    int selectedIndex = ca.listOfStates.indexOf(value); // index of the selected value
+            ArrayList<JobSpec> selectedJobSpecs = (ArrayList<JobSpec>) extra.get("positionlevel");
+            if( selectedJobSpecs != null && selectedJobSpecs.size() > 0 ){
+                for(int i=0; i < selectedJobSpecs.size();i++){
+                    JobSpec value = selectedJobSpecs.get(i);
+                    int selectedIndex = ca.jobspec.indexOf(value); // index of the selected value
                     if( selectedIndex != -1 ){
                         lv.setItemChecked(selectedIndex, true);
                     }
@@ -42,16 +42,16 @@ public class SelectState extends Activity {
             @Override
             public void onClick(View v) {
                 SparseBooleanArray a = lv.getCheckedItemPositions();
-                ArrayList<State> values = new ArrayList<>();
+                ArrayList<JobSpec> values = new ArrayList<>();
                 for (int i = 0; i < a.size(); i++) {
                     if (a.valueAt(i) && a.keyAt(i) >= 0) {
-                        State c = (State) ca.getItem(a.keyAt(i));
+                        JobSpec c = (JobSpec) ca.getItem(a.keyAt(i));
                         values.add(c);
                     }
                 }
 
                 Intent intent = new Intent();
-                intent.putExtra("state", values);
+                intent.putExtra("jobspec", values);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }

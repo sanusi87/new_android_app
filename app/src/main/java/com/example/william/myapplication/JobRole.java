@@ -2,12 +2,11 @@ package com.example.william.myapplication;
 
 import java.io.Serializable;
 
-public class Country implements Serializable{
+public class JobRole implements Serializable{
     public int id;
     public String name;
-    //public String abbr;
 
-    public Country( int id, String name ){
+    public JobRole(int id, String name){
         this.id = id;
         this.name = name;
     }
@@ -23,7 +22,7 @@ public class Country implements Serializable{
             return false;
         }
 
-        final Country other = (Country) obj;
+        final JobRole other = (JobRole) obj;
         if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
             return false;
         }

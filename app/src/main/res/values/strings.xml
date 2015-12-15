@@ -90,6 +90,7 @@
     <string name="job_status">Current jobseeking status</string>
     <string name="current_stay_in">Current stay in</string>
     <string name="state">State</string>
+    <string name="malaysia_state">State in Malaysia</string>
     <string name="start_job">I can start new job after notice of</string>
     <string name="license">Have a valid license to drive in Malaysia</string>
     <string name="transport">own_transport</string>
@@ -98,8 +99,8 @@
     <string name="employment_type">Employment Type</string>
     <string name="job_level">Job Level</string>
     <string name="month_salary">Monthly Salary</string>
-    <string name="specilization">Specialization</string>
-    <string name="sub_specilization">Sub Specialization</string>
+    <string name="specilisation">Specialisation</string>
+    <string name="sub_specilisation">Sub Specialisation</string>
     <string name="company_industry">Company Industry</string>
     <string name="date_start">Date Start</string>
     <string name="month_start">Month Start</string>
@@ -120,7 +121,7 @@
     <string name="native_language">Native</string>
     <string name="native_button">Native</string>
     <string name="spoken">Spoken</string>
-    <string name="add_language">Add More Language</string>
+    <string name="add_language">Add Language</string>
     <string name="written_text">Written</string>
     <string name="save_language">Save Language</string>
     <string name="fullname_profile">Full Name</string>
@@ -139,4 +140,24 @@
     <string name="title_activity_job_search_filter">JobSearchFilter</string>
     <string name="Search">Search</string>
     <string name="ok">OK</string>
+    <string name="title_activity_update_work_experience">Update Work Experience</string>
+    <string name="amount">Amount</string>
+    <string name="currency">Currency</string>
+    <string name="add_work_exp">Add Work Experience</string>
+    <string name="role">Job Role</string>
+    <string name="spec">Job Specialisation</string>
+    <string name="title_activity_update_education">Update Education</string>
+    <string name="title_activity_update_job_preference">Update Job Preference</string>
+    <string name="title_activity_update_job_seeking">UpdateJobSeeking</string>
+    <string name="days">Days</string>
+    <string name="weeks">Weeks(s)</string>
+    <string name="months">Month(s)</string>
+    <string name="immediately">Immediately</string>
+    <string name="add_education">Add Education</string>
+    <string name="no_work_experience">No work experience.</string>
+    <string name="no_education">No education record.</string>
+    <string name="add_skill">Add Skill</string>
+    <string name="no_skill">No skill added.</string>
+    <string name="no_language">No language added.</string>
+    <string name="title_activity_update_resume_visibility">UpdateResumeVisibility</string>
 </resources>

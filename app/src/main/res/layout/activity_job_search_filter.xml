@@ -97,19 +97,39 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/selectSpecAndRole"
+            android:id="@+id/selectSpec"
             android:layout_margin="10dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/spec_and_role"
+                android:text="@string/spec"
                 android:id="@+id/textView14"
                 style="@style/AppThemeBaseLabel" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
-                android:id="@+id/select_spec_and_role_value"
+                android:id="@+id/selectedSpec"
+                style="@style/AppThemeBaseTextValue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/selectRole"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/role"
+                android:id="@+id/textView15"
+                style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/selectedRole"
                 style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
@@ -122,7 +142,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/malaysia"
+                android:text="@string/malaysia_state"
                 android:id="@+id/malaysiaText"
                 style="@style/AppThemeBaseLabel" />
             <TextView

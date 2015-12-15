@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,7 +36,27 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     public static final int APPLICATION_FRAGMENT = 3;
     public static final int SETTINGS_FRAGMENT = 4;
 
+    /*
+    * job search
+    * */
     public static final int FETCH_FILTER_PARAM = 1;
+
+    /*
+    * online resume
+    * */
+    public static final int ADD_WORK_EXP = 10;
+    public static final int UPDATE_WORK_EXP = 11;
+    public static final int ADD_EDU = 12;
+    public static final int UPDATE_EDU = 13;
+    public static final int UPDATE_RESUME_VISIBILITY = 14;
+    public static final int UPDATE_JOB_SEEKING = 15;
+    public static final int UPDATE_JOB_PREFERENCE = 16;
+    public static final int ADD_SKILL = 17;
+    public static final int UPDATE_SKILL = 18;
+    public static final int ADD_LANGUAGE = 19;
+    public static final int UPDATE_LANGUAGE = 20;
+    public static final int UPDATE_ATTACHED_RESUME = 21;
+    public static final int UPDATE_ADDITIONAL_INFO = 22;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -251,6 +273,75 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
 
         private void setupOnlineResumeFragment(View rootView) {
+            /*
+            * add work exp
+            * update work exp is from the dynamic content
+            * */
+            Button addWorkExp = (Button)rootView.findViewById(R.id.add_work_exp);
+            addWorkExp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(),  UpdateWorkExperience.class);
+                    startActivityForResult(intent, ADD_WORK_EXP);
+                }
+            });
+
+            /*
+            * add education
+            * */
+            Button addEdu = (Button)rootView.findViewById(R.id.add_education);
+            addEdu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(),  UpdateEducation.class);
+                    startActivityForResult(intent, ADD_EDU);
+                }
+            });
+
+            /*
+            * resume visibility
+            * */
+            LinearLayout updateResumeVisibility = (LinearLayout)rootView.findViewById(R.id.updateResumeVisibility);
+            updateResumeVisibility.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(),  UpdateResumeVisibility.class);
+                    startActivityForResult(intent, UPDATE_RESUME_VISIBILITY);
+                }
+            });
+
+            /*
+            * job seeking info
+            * */
+
+
+            /*
+            * job preference
+            * */
+
+
+            /*
+            * skills
+            * */
+
+
+            /*
+            * language
+            * */
+
+
+            /*
+            * attached resume
+            * */
+
+
+            /*
+            * additional info
+            * */
+
 
         }
 
@@ -313,8 +404,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 break;
         }
 
-        //Log.e("menu?", menu.toString()+", sectionNumber="+sectionNumber);
-
         return true;
     }
 
@@ -323,6 +412,84 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         // Check which request we're responding to
         if (requestCode == FETCH_FILTER_PARAM) {
             // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == ADD_WORK_EXP ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == UPDATE_WORK_EXP ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == ADD_EDU ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == UPDATE_EDU ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == UPDATE_RESUME_VISIBILITY ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == UPDATE_JOB_SEEKING ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == UPDATE_JOB_PREFERENCE ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == ADD_SKILL ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == UPDATE_SKILL ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == ADD_LANGUAGE ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == UPDATE_LANGUAGE ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == UPDATE_ATTACHED_RESUME ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.toString());
+            }
+        }else if( requestCode == UPDATE_ADDITIONAL_INFO ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
                 Log.e("filterdata", filters.getString("result"));

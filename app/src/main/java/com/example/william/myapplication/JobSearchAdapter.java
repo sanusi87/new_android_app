@@ -3,7 +3,6 @@ package com.example.william.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,9 +82,9 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                 }
             });
 
-            Log.e("position%2", ""+(position%2));
+            //Log.e("position%2", ""+(position%2));
             if( position%2 == 0 ){
-                v.setBackgroundColor( context.getResources().getColor(R.color.white));
+                v.setBackgroundColor( context.getResources().getColor(R.color.light_gray));
             }
 
             int showSalary = p.optInt( "salary_display" );

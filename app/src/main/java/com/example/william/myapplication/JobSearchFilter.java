@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Layout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,13 +13,30 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
-public class JobSearchFilter extends ActionBarActivity {
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class JobSearchFilter extends Activity {
 
     private static int INTENT_GET_STATE = 1;
     private static int INTENT_GET_LEVEL = 2;
     private static int INTENT_GET_COUNTRY = 3;
-    private static int INTENT_GET_SPECROLE = 4;
+    private static int INTENT_GET_SPEC = 4;
+    private static int INTENT_GET_ROLE = 5;
+
+    private TextView selectedOtherCountry;
+    private TextView selectedPositionLevel;
+    private TextView selectedMalaysiaState;
+    private TextView selectedJobSpec;
+    private TextView selectedJobRole;
+
+    private ArrayList<Country> selectedOtherCountryValues = new ArrayList<>();
+    private ArrayList<PositionLevel> selectedPositionLevelValues = new ArrayList<>();
+    private ArrayList<State> selectedMalaysiaStateValues = new ArrayList<>();
+    private ArrayList<JobSpec> selectedJobSpecValues = new ArrayList<>();
+    private ArrayList<JobRole> selectedJobRoleValues = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +55,13 @@ public class JobSearchFilter extends ActionBarActivity {
         EditText salaryMaxInput = (EditText)findViewById(R.id.maximum_salary);
         // position level
         //ListView positionLevelInput = (ListView)findViewById(R.id.position_level);
+
+        // selected labels
+        selectedOtherCountry = (TextView)findViewById(R.id.selectedOtherCountry);
+        selectedPositionLevel = (TextView)findViewById(R.id.selectedPositionLevel);
+        selectedMalaysiaState = (TextView)findViewById(R.id.selectedMalaysiaState);
+        selectedJobSpec = (TextView)findViewById(R.id.selectedSpec);
+        selectedJobRole = (TextView)findViewById(R.id.selectedRole);
 
         Button searchButton = (Button)findViewById(R.id.startSearch);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -59,13 +84,23 @@ public class JobSearchFilter extends ActionBarActivity {
         });
 
         // select job spec and roles
-        LinearLayout selectSpecAndRole = (LinearLayout)findViewById(R.id.selectSpecAndRole);
-        selectSpecAndRole.setOnClickListener(new View.OnClickListener() {
+        LinearLayout selectSpec = (LinearLayout)findViewById(R.id.selectedSpec);
+        selectSpec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), SelectSpecAndRole.class);
-            // get a list of already selected states and update the Extra to be submitted to next activity
-            startActivityForResult(intent, INTENT_GET_SPECROLE);
+                Intent intent = new Intent(getApplicationContext(), SelectJobSpec.class);
+                // get a list of already selected states and update the Extra to be submitted to next activity
+                startActivityForResult(intent, INTENT_GET_SPEC);
+            }
+        });
+
+        LinearLayout selectRole = (LinearLayout)findViewById(R.id.selectedRole);
+        selectRole.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SelectJobRole.class);
+                // get a list of already selected states and update the Extra to be submitted to next activity
+                startActivityForResult(intent, INTENT_GET_ROLE);
             }
         });
 
@@ -74,9 +109,13 @@ public class JobSearchFilter extends ActionBarActivity {
         selectMalaysiaState.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), SelectState.class);
-            // get a list of already selected states and update the Extra to be submitted to next activity
-            startActivityForResult(intent, INTENT_GET_STATE);
+                Intent intent = new Intent(getApplicationContext(), SelectState.class);
+                // passed selected values if user want to reselect
+                if( selectedMalaysiaStateValues.size() > 0 ){
+                    intent.putExtra("state", selectedMalaysiaStateValues);
+                }
+                // get a list of already selected states and update the Extra to be submitted to next activity
+                startActivityForResult(intent, INTENT_GET_STATE);
             }
         });
 
@@ -85,9 +124,13 @@ public class JobSearchFilter extends ActionBarActivity {
         selectOtherCountry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), SelectCountry.class);
-            // get a list of already selected states and update the Extra to be submitted to next activity
-            startActivityForResult(intent, INTENT_GET_COUNTRY);
+                Intent intent = new Intent(getApplicationContext(), SelectCountry.class);
+                // passed selected values if user want to reselect
+                if( selectedOtherCountryValues.size() > 0 ){
+                    intent.putExtra("country", selectedOtherCountryValues);
+                }
+                // get a list of already selected states and update the Extra to be submitted to next activity
+                startActivityForResult(intent, INTENT_GET_COUNTRY);
             }
         });
 
@@ -96,9 +139,13 @@ public class JobSearchFilter extends ActionBarActivity {
         selectPositionLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), SelectPositionLevel.class);
-            // get a list of already selected states and update the Extra to be submitted to next activity
-            startActivityForResult(intent, INTENT_GET_LEVEL);
+                Intent intent = new Intent(getApplicationContext(), SelectPositionLevel.class);
+                // passed selected values if user want to reselect
+                if( selectedPositionLevelValues.size() > 0 ){
+                    intent.putExtra("positionlevel", selectedPositionLevelValues);
+                }
+                // get a list of already selected states and update the Extra to be submitted to next activity
+                startActivityForResult(intent, INTENT_GET_LEVEL);
             }
         });
     }
@@ -110,26 +157,77 @@ public class JobSearchFilter extends ActionBarActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                Log.e("filterdata", "1"+filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                ArrayList<State> selectedValues = (ArrayList<State>) filters.get("state");
+                ArrayList<String> selectedLabels = new ArrayList<>();
+
+                if( selectedValues != null ){
+                    for( int i=0;i<selectedValues.size();i++ ){
+                        State c = selectedValues.get(i);
+                        selectedLabels.add(c.name);
+                    }
+                    selectedMalaysiaStateValues = selectedValues;
+                    selectedMalaysiaState.setText(TextUtils.join(",",selectedLabels));
+                }
             }
         }else if( requestCode == INTENT_GET_COUNTRY ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                Log.e("filterdata", "2"+filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                ArrayList<Country> selectedValues = (ArrayList<Country>) filters.get("country");
+                ArrayList<String> selectedLabels = new ArrayList<>();
+
+                if( selectedValues != null ){
+                    for( int i=0;i<selectedValues.size();i++ ){
+                        Country c = selectedValues.get(i);
+                        selectedLabels.add(c.name);
+                    }
+                    selectedOtherCountryValues = selectedValues;
+                    selectedOtherCountry.setText(TextUtils.join(",",selectedLabels));
+                }
             }
         }else if( requestCode == INTENT_GET_LEVEL ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                Log.e("filterdata", "3"+filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                ArrayList<PositionLevel> selectedValues = (ArrayList<PositionLevel>) filters.get("positionlevel");
+                ArrayList<String> selectedLabels = new ArrayList<>();
+
+                if( selectedValues != null ){
+                    for( int i=0;i<selectedValues.size();i++ ){
+                        PositionLevel c = selectedValues.get(i);
+                        selectedLabels.add(c.name);
+                    }
+                    selectedPositionLevelValues = selectedValues;
+                    selectedPositionLevel.setText(TextUtils.join(",",selectedLabels));
+                }
             }
-        }else if( requestCode == INTENT_GET_SPECROLE ){
+        }else if( requestCode == INTENT_GET_SPEC ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                Log.e("filterdata", "4"+filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                ArrayList<JobSpec> selectedValues = (ArrayList<JobSpec>) filters.get("jobspec");
+                ArrayList<String> selectedLabels = new ArrayList<>();
+
+                if( selectedValues != null ){
+                    for( int i=0;i<selectedValues.size();i++ ){
+                        JobSpec c = selectedValues.get(i);
+                        selectedLabels.add(c.name);
+                    }
+                    selectedJobSpecValues = selectedValues;
+                    selectedJobSpec.setText(TextUtils.join(",",selectedLabels));
+                }
+            }
+        }else if( requestCode == INTENT_GET_ROLE ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                ArrayList<JobRole> selectedValues = (ArrayList<JobRole>) filters.get("jobrole");
+                ArrayList<String> selectedLabels = new ArrayList<>();
+
+                if( selectedValues != null ){
+                    for( int i=0;i<selectedValues.size();i++ ){
+                        JobRole c = selectedValues.get(i);
+                        selectedLabels.add(c.name);
+                    }
+                    selectedJobRoleValues = selectedValues;
+                    selectedJobRole.setText(TextUtils.join(",",selectedLabels));
+                }
             }
         }
     }
