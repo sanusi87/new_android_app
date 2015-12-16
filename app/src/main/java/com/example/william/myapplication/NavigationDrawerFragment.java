@@ -106,7 +106,8 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.job_search),
                         getString(R.string.application),
                         getString(R.string.action_settings),
-                        getString(R.string.online_resume)
+                        getString(R.string.online_resume),
+                        getString(R.string.log_out)
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
