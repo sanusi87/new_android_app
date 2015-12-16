@@ -22,35 +22,30 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class TableApplication extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "application";
 
-    private static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableApplication.TABLE_NAME
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableApplication.TABLE_NAME
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "_id INTEGER, " +
             "post_id INTEGER, " +
             "status INTEGER(3), " +
             "date_created NUMERIC, date_updated NUMERIC, title TEXT, closed INTEGER(1));";
-    private static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableApplication.TABLE_NAME+"'";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableApplication.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
 
     public TableApplication(Context context) {
-        super(context, Jenjobs.DATABASE_NAME , null, 1);
+        super(context, Jenjobs.DATABASE_NAME , null, Jenjobs.DATABASE_VERSION);
         db = this.getReadableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        //db.execSQL(SQL_CREATE_ENTRIES);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_ENTRIES);
-        onCreate(db);
-    }
-
-    public void truncate() {
-        db.execSQL(SQL_DELETE_ENTRIES);
-        onCreate(db);
+        //db.execSQL(SQL_DELETE_ENTRIES);
+        //onCreate(db);
     }
 
     public Cursor getApplication(){

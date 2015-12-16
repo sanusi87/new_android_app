@@ -16,55 +16,29 @@ public class TableSubscription extends SQLiteOpenHelper{
         "status": true
     }
     */
-    private static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableSubscription.TABLE_NAME
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableSubscription.TABLE_NAME
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "subscription_name TEXT, " +
             "subscription_id INTEGER(4), " +
             "status INTEGER(1));";
-    private static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableSubscription.TABLE_NAME+"'";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableSubscription.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
 
     public TableSubscription(Context context){
-        super(context, Jenjobs.DATABASE_NAME , null, 1);
+        super(context, Jenjobs.DATABASE_NAME , null, Jenjobs.DATABASE_VERSION);
         db = this.getReadableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
-
-        // insert subscription
-        ContentValues cv1 = new ContentValues();
-        ContentValues cv2 = new ContentValues();
-        ContentValues cv3 = new ContentValues();
-
-        cv1.put("subscription_name", "Emails of newsletter, promotion, career advise from JenJOBS");
-        cv1.put("subscription_id", "1");
-        cv1.put("status", 1);
-
-        cv2.put("subscription_name", "Promotion emails from JenJOBS partners and affiliates");
-        cv2.put("subscription_id", "2");
-        cv2.put("status", 1);
-
-        cv3.put("subscription_name", "SMS Job Alert");
-        cv3.put("subscription_id", "3");
-        cv3.put("status", 1);
-
-        db.insert(TableSubscription.TABLE_NAME, null, cv1);
-        db.insert(TableSubscription.TABLE_NAME, null, cv2);
-        db.insert(TableSubscription.TABLE_NAME, null, cv3);
+        //db.execSQL(SQL_CREATE_ENTRIES);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_ENTRIES);
-        onCreate(db);
-    }
-
-    public void truncate() {
-        db.execSQL(SQL_DELETE_ENTRIES);
-        onCreate(db);
+        //db.execSQL(SQL_DELETE_ENTRIES);
+        //onCreate(db);
     }
 
     public Cursor getSubscription(){
