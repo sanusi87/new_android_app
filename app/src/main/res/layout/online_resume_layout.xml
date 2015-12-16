@@ -175,7 +175,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/no_skill"
-                            style="@style/AppThemeBaseTextValue" />
+                            style="@style/AppThemeBaseTextValue"
+                            android:id="@+id/emptyText" />
                     </LinearLayout>
 
                     <Button
