@@ -1,9 +1,11 @@
 package com.example.william.myapplication;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -24,6 +26,24 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.Set;
+
 public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
@@ -31,10 +51,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
      * list of fragment numbers
      */
     public static final int PROFILE_FRAGMENT = 1;
-    public static final int ONLINE_RESUME_FRAGMENT = 5;
     public static final int JOB_FRAGMENT = 2;
     public static final int APPLICATION_FRAGMENT = 3;
     public static final int SETTINGS_FRAGMENT = 4;
+    public static final int ONLINE_RESUME_FRAGMENT = 5;
+    public static final int LOG_OUT_FRAGMENT = 6;
 
     /*
     * job search
@@ -90,16 +111,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         mNavigationDrawerFragment.setHasOptionsMenu(true);
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            if (extras.getString("downloadData") != null) {
-                Log.e("start", "downloading data.");
-            }
-        }
-
         String accessToken = sharedPref.getString("access_token", null);
+
+        int jsProfileId = sharedPref.getInt("js_profile_id", 0);
+        Log.e("js_profile_id", ""+jsProfileId);
+
+        String emailAddress = sharedPref.getString("email", null);
+        Log.e("email", ""+emailAddress);
+
         // redirect to login if no access token found
         if (accessToken == null) {
             Intent intent2 = new Intent();
@@ -108,12 +127,25 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             finish();
         }
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.getBoolean("downloadData")) {
+                Log.e("start", "downloading data.");
+                new DownloadDataTask().execute();
+            }else{
+                Log.e("start", "downloadData not true");
+            }
+        }else{
+            Log.e("start", "downloadData is null");
+        }
+
         this.context = getApplicationContext();
     }
 
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+        Log.e("selectedPos", ""+position);
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -175,8 +207,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             return fragment;
         }
 
-        public PlaceholderFragment() {
-        }
+        public PlaceholderFragment() {}
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -203,6 +234,28 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     rootView = inflater.inflate(R.layout.online_resume_layout, container, false);
                     setupOnlineResumeFragment(rootView);
                     break;
+                case LOG_OUT_FRAGMENT:
+                    Intent _intent = new Intent(context, MainActivity.class);
+                    SharedPreferences pref = getActivity().getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+                    pref.edit().clear().commit();
+
+                    (new TableProfile(getActivity())).truncate();
+                    (new TableApplication(getActivity())).truncate();
+                    (new TableBookmark(getActivity())).truncate();
+                    (new TableEducation(getActivity())).truncate();
+                    (new TableJob(getActivity())).truncate();
+                    (new TableJobPreference(getActivity())).truncate();
+                    (new TableJobRole(getActivity())).truncate();
+                    (new TableJobSpec(getActivity())).truncate();
+                    (new TableLanguage(getActivity())).truncate();
+                    (new TableSkill(getActivity())).truncate();
+                    (new TableSubscription(getActivity())).truncate();
+                    (new TableWorkExperience(getActivity())).truncate();
+                    (new TableSettings(getActivity())).truncate();
+
+                    getActivity().startActivity(_intent);
+                    getActivity().finish();
+                    break;
             }
 
             return rootView;
@@ -220,7 +273,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
 
         private void setupProfileFragment(View rootView) {
-
+            
         }
 
 
@@ -390,7 +443,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     * */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //Log.e("menu", ""+item.getGroupId());
         int clickedItem = item.getItemId();
 
         switch (sectionNumber) {
@@ -541,4 +593,113 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
         }
     }
+
+    // download data after success login
+    public class DownloadDataTask extends AsyncTask<Void, Void, JSONObject> {
+
+        DownloadDataTask(){}
+
+        private String accessToken;
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+            Object _response = null;
+
+            accessToken = sharedPref.getString("access_token", null);
+            String url = "http://api.jenjobs.com/jobseeker/profile?access-token="+accessToken;
+
+            final HttpClient httpclient = new DefaultHttpClient();
+            final HttpGet httpget = new HttpGet( url );
+            httpget.addHeader("Content-Type", "application/json");
+            httpget.addHeader("Accept", "application/json");
+            HttpResponse _http_response = null;
+
+            try {
+                _http_response = httpclient.execute(httpget);
+                HttpEntity _entity = _http_response.getEntity();
+                InputStream is = _entity.getContent();
+                String responseString = JenHttpRequest.readInputStreamAsString(is);
+                _response = JenHttpRequest.decodeJsonObjectString(responseString);
+            } catch (ClientProtocolException e) {
+                Log.e("ClientProtocolException", e.getMessage());
+            } catch (UnsupportedEncodingException e) {
+                Log.e("UnsupportedEncoding", e.getMessage());
+            } catch (IOException e) {
+                Log.e("IOException", e.getMessage());
+            }
+
+            return (JSONObject) _response;
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject success) {
+            if( success != null ){
+                Log.e("success", success.toString());
+                int js_profile_id = 0;
+
+                // remove _link
+                success.remove("_link");
+
+                TableProfile tblProfile = new TableProfile(getApplicationContext());
+                ContentValues cv = new ContentValues();
+
+                /*
+                Iterator a = success.keys();
+                while ( a.hasNext() ){
+                    String key = String.valueOf(a.next());
+                    try {
+                        cv.put(key, String.valueOf(success.get(key)));
+                    } catch (JSONException e) {
+                        Log.e("jsonexc", e.getMessage());
+                    }
+                }
+
+                */
+
+                try {
+                    cv.put("access_token", String.valueOf(accessToken));
+                    cv.put("_id", String.valueOf(success.get("id")));
+
+                    cv.put("email", String.valueOf(success.get("email")));
+                    cv.put("username", String.valueOf(success.get("username")));
+                    cv.put("name", String.valueOf(success.get("name")));
+                    cv.put("ic_no", String.valueOf(success.get("ic_no")));
+                    cv.put("passport_no", String.valueOf(success.get("passport_no")));
+                    cv.put("mobile_no", String.valueOf(success.get("mobile_no")));
+                    cv.put("gender", String.valueOf(success.get("gender")));
+                    cv.put("dob", String.valueOf(success.get("dob")));
+                    cv.put("pr", String.valueOf(success.get("pr")));
+                    cv.put("resume_file", String.valueOf(success.get("resume_file")));
+                    cv.put("photo_file", String.valueOf(success.get("photo_file")));
+                    cv.put("access", String.valueOf(success.get("access")));
+                    cv.put("status", String.valueOf(success.get("status")));
+                    cv.put("country_id", String.valueOf(success.get("country_id")));
+                    cv.put("driving_license", String.valueOf(success.get("driving_license")));
+                    cv.put("transport", String.valueOf(success.get("transport")));
+                    cv.put("js_jobseek_status_id", String.valueOf(success.get("js_jobseek_status_id")));
+                    cv.put("availability", String.valueOf(success.get("availability")));
+                    cv.put("availability_unit", String.valueOf(success.get("availability_unit")));
+                    cv.put("address", String.valueOf(success.get("address")));
+                    cv.put("no_work_exp", String.valueOf(success.get("no_work_exp")));
+                    cv.put("additional_info", String.valueOf(success.get("info")));
+                    cv.put("created_at", String.valueOf(success.get("created_at")));
+                    cv.put("updated_at", String.valueOf(success.get("updated_at")));
+
+                } catch (JSONException e) {
+                    Log.e("jsonexc", e.getMessage());
+                }
+
+                Long newId = tblProfile.addProfile(cv);
+                js_profile_id = newId.intValue();
+                Log.e("js_profile_id", ""+js_profile_id);
+
+                SharedPreferences.Editor spEdit = sharedPref.edit();
+                spEdit.putInt("js_profile_id", js_profile_id);
+                spEdit.commit();
+            }else{
+                Log.e("success", "null");
+            }
+        }
+    }
+
 }
