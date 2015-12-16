@@ -58,6 +58,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     public static final int UPDATE_ATTACHED_RESUME = 21;
     public static final int UPDATE_ADDITIONAL_INFO = 22;
 
+    private static TextView resumeVisibility;
+    private static TextView jobSeeking;
+    private static TextView jobPreference;
+    private static LinearLayout skill;
+
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
@@ -67,6 +72,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     private DialogFragment filterDialog;
     private String JOBFILTER = "job_filter";
 
+    private static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +107,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             startActivity(intent2);
             finish();
         }
+
+        this.context = getApplicationContext();
     }
 
 
@@ -283,7 +291,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     intent.setClass(getActivity(),  UpdateWorkExperience.class);
-                    startActivityForResult(intent, ADD_WORK_EXP);
+                    getActivity().startActivityForResult(intent, ADD_WORK_EXP);
                 }
             });
 
@@ -296,37 +304,65 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     intent.setClass(getActivity(),  UpdateEducation.class);
-                    startActivityForResult(intent, ADD_EDU);
+                    getActivity().startActivityForResult(intent, ADD_EDU);
                 }
             });
 
             /*
             * resume visibility
             * */
+            resumeVisibility = (TextView)rootView.findViewById(R.id.resume_visibility);
             LinearLayout updateResumeVisibility = (LinearLayout)rootView.findViewById(R.id.updateResumeVisibility);
             updateResumeVisibility.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
-                    intent.setClass(getActivity(),  UpdateResumeVisibility.class);
-                    startActivityForResult(intent, UPDATE_RESUME_VISIBILITY);
+                    intent.setClass(getActivity(), UpdateResumeVisibility.class);
+                    getActivity().startActivityForResult(intent, UPDATE_RESUME_VISIBILITY);
                 }
             });
 
             /*
             * job seeking info
             * */
-
+            jobSeeking = (TextView) rootView.findViewById(R.id.jobseeking_information);
+            LinearLayout updateJobSeekingInformation = (LinearLayout)rootView.findViewById(R.id.updateJobSeekingInformation);
+            updateJobSeekingInformation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), UpdateJobSeeking.class);
+                    getActivity().startActivityForResult(intent, UPDATE_JOB_SEEKING);
+                }
+            });
 
             /*
             * job preference
             * */
-
+            jobPreference = (TextView) rootView.findViewById(R.id.job_preferences);
+            LinearLayout updateJobPreferences = (LinearLayout)rootView.findViewById(R.id.updateJobPreferences);
+            updateJobPreferences.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), UpdateJobPreference.class);
+                    getActivity().startActivityForResult(intent, UPDATE_JOB_PREFERENCE);
+                }
+            });
 
             /*
             * skills
             * */
-
+            skill = (LinearLayout) rootView.findViewById(R.id.listOfSkill);
+            Button addSkillButton = (Button)rootView.findViewById(R.id.add_skill);
+            addSkillButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), UpdateSkill.class);
+                    getActivity().startActivityForResult(intent, ADD_SKILL);
+                }
+            });
 
             /*
             * language
@@ -409,6 +445,12 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+
+        Log.e("requestCode", ""+requestCode);
+        Log.e("requestCode2", ""+UPDATE_RESUME_VISIBILITY);
+        Log.e("resultCode", ""+resultCode);
+
         // Check which request we're responding to
         if (requestCode == FETCH_FILTER_PARAM) {
             // Make sure the request was successful
@@ -444,8 +486,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }else if( requestCode == UPDATE_RESUME_VISIBILITY ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
+                Log.e("filterdata", filters.getString("selectedvisibility"));
                 Log.e("filterdata", filters.toString());
+
+                resumeVisibility.setText(filters.getString("selectedvisibility"));
             }
         }else if( requestCode == UPDATE_JOB_SEEKING ){
             if (resultCode == RESULT_OK) {

@@ -23,8 +23,15 @@ public class UpdateResumeVisibility extends ActionBarActivity {
         listOFResumeVisibility.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                /*
+                * save visibility first before finishing activity
+                * */
+
+                /*
+                * only then send the result back to the previous page
+                * */
                 Intent intent = new Intent();
-                Log.e("selectedvisibility", ""+position);
                 intent.putExtra("selectedvisibility", rvAdapter.visibility[position]);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
