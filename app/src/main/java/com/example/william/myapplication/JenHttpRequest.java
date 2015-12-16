@@ -73,8 +73,7 @@ public class JenHttpRequest {
 
     // used to decode json object
     public static JSONObject decodeJsonObjectString(String json){
-        Log.e("jsonResp", json);
-
+        //Log.e("jsonResp", json);
         try {
             JSONObject jo = new JSONObject(json);
             return jo;
