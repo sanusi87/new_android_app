@@ -50,9 +50,7 @@
         <activity android:name=".UpdateJobSeeking" android:label="@string/title_activity_update_job_seeking" />
         <activity android:name=".UpdateResumeVisibility" android:label="@string/title_activity_update_resume_visibility" />
         <activity android:name=".SelectJobSeekingStatus" />
-            android:label="@string/title_activity_update_resume_visibility" />
-        <activity android:name=".UpdateSkill" />
-        <activity android:name=".SelectJobSeekingStatus" />
+        <activity android:name=".UpdateSkill" android:theme="@android:style/Theme.Dialog" />
     </application>
 
 </manifest>
