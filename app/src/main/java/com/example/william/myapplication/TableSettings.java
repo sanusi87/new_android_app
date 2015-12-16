@@ -46,7 +46,8 @@ public class TableSettings  extends SQLiteOpenHelper {
 
     public boolean addSetting(String key, String value){
         ContentValues cv = new ContentValues();
-        cv.put(key, value);
+        cv.put("setting_key", key);
+        cv.put("setting_value", value);
         Long newId = db.insert(TableSettings.TABLE_NAME, null, cv);
         if( newId != null ){
             return true;
