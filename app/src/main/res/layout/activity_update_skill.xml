@@ -1,41 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     tools:context="com.example.william.myapplication.UpdateSkill"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    style="@style/AppThemePadding10">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/skills"
-            android:id="@+id/skills"
-            android:singleLine="false" />
-
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText4" />
+            android:id="@+id/skill"
+            android:inputType="text|textMultiLine"
+            android:lines="3"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:hint="@string/skill" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+        <Button
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/textView11" />
+            android:text="@string/save"
+            android:id="@+id/okButton"
+            android:layout_weight="1" />
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:id="@+id/cancelButton"
+            android:layout_weight="1" />
     </LinearLayout>
 
 </LinearLayout>
