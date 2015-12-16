@@ -29,6 +29,11 @@ public class TableJobRole extends SQLiteOpenHelper{
         onCreate(db);
     }
 
+    public void truncate() {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
+
     private void insertRecord() {
         // insert spec
 

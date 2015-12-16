@@ -34,6 +34,11 @@ public class TableLanguage extends SQLiteOpenHelper{
         onCreate(db);
     }
 
+    public void truncate() {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
+
     public Cursor getLanguage(){
         return db.rawQuery("SELECT * FROM "+TableLanguage.TABLE_NAME, null);
     }

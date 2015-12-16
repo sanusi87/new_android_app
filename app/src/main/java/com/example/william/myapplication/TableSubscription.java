@@ -43,13 +43,13 @@ public class TableSubscription extends SQLiteOpenHelper{
         cv1.put("subscription_id", "1");
         cv1.put("status", 1);
 
-        cv1.put("subscription_name", "Promotion emails from JenJOBS partners and affiliates");
-        cv1.put("subscription_id", "2");
-        cv1.put("status", 1);
+        cv2.put("subscription_name", "Promotion emails from JenJOBS partners and affiliates");
+        cv2.put("subscription_id", "2");
+        cv2.put("status", 1);
 
-        cv1.put("subscription_name", "SMS Job Alert");
-        cv1.put("subscription_id", "3");
-        cv1.put("status", 1);
+        cv3.put("subscription_name", "SMS Job Alert");
+        cv3.put("subscription_id", "3");
+        cv3.put("status", 1);
 
         db.insert(TableSubscription.TABLE_NAME, null, cv1);
         db.insert(TableSubscription.TABLE_NAME, null, cv2);
@@ -58,6 +58,11 @@ public class TableSubscription extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
+
+    public void truncate() {
         db.execSQL(SQL_DELETE_ENTRIES);
         onCreate(db);
     }

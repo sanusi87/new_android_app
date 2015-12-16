@@ -25,4 +25,10 @@ public class TableJobSpec extends SQLiteOpenHelper{
         db.execSQL(SQL_DELETE_ENTRIES);
         onCreate(db);
     }
+
+    public void truncate() {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
+
 }

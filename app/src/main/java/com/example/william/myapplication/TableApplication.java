@@ -48,6 +48,11 @@ public class TableApplication extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void truncate() {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
+
     public Cursor getApplication(){
         Cursor c = db.rawQuery("SELECT * FROM "+TableApplication.TABLE_NAME, null);
         return c;

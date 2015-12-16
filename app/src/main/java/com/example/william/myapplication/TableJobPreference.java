@@ -32,6 +32,11 @@ public class TableJobPreference extends SQLiteOpenHelper{
         onCreate(db);
     }
 
+    public void truncate() {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
+
     public boolean updateJobPreference(ContentValues cv){
         int affectedRows = db.update(TableJobPreference.TABLE_NAME, cv, null, null);
         if( affectedRows > 0 ){
