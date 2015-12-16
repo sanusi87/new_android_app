@@ -160,4 +160,5 @@
     <string name="no_skill">No skill added.</string>
     <string name="no_language">No language added.</string>
     <string name="title_activity_update_resume_visibility">UpdateResumeVisibility</string>
+    <string name="log_out">Log Out</string>
 </resources>

@@ -32,6 +32,11 @@ public class TableSkill extends SQLiteOpenHelper{
         onCreate(db);
     }
 
+    public void truncate() {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
+
     public Cursor getSkill(){
         return db.rawQuery("SELECT * FROM "+TableSkill.TABLE_NAME, null);
     }

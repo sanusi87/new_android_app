@@ -42,12 +42,16 @@
         <activity android:name=".SelectPositionLevel" />
         <activity android:name=".SelectSpecAndRole" />
         <activity android:name=".UpdateWorkExperience" android:label="@string/title_activity_update_work_experience" />
+        `
         <activity android:name=".SelectJobSpec" />
         <activity android:name=".SelectJobRole" />
         <activity android:name=".UpdateEducation" android:label="@string/title_activity_update_education" />
         <activity android:name=".UpdateJobPreference" android:label="@string/title_activity_update_job_preference" />
         <activity android:name=".UpdateJobSeeking" android:label="@string/title_activity_update_job_seeking" />
         <activity android:name=".UpdateResumeVisibility" android:label="@string/title_activity_update_resume_visibility" />
+        <activity android:name=".SelectJobSeekingStatus" />
+            android:label="@string/title_activity_update_resume_visibility" />
+        <activity android:name=".UpdateSkill" />
         <activity android:name=".SelectJobSeekingStatus" />
     </application>
 

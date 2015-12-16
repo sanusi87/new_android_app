@@ -1,10 +1,10 @@
 package com.example.william.myapplication;
 
 public class Profile {
-    public int id;
     public String email;
     public String username;
     public String name;
+    public int _id;
     public String ic;
     public String passport;
     public String mobile_no;
@@ -14,6 +14,7 @@ public class Profile {
     public String resume_file;
     public String photo_file;
     public String access; //Open, Limited, Hidden
+    public String access_token;
     public String status;
     public int country_id;
     public boolean driving_license;

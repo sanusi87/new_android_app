@@ -32,6 +32,11 @@ public class TableJob extends SQLiteOpenHelper{
         onCreate(db);
     }
 
+    public void truncate() {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
+
     public Long addJob(ContentValues cv){
         return db.insert(TableJob.TABLE_NAME, null, cv);
     }

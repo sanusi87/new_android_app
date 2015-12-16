@@ -13,8 +13,20 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 public class MainActivity extends Activity {
 
@@ -35,6 +47,21 @@ public class MainActivity extends Activity {
     }
 
     private void setup() {
+        // initialize table
+        new TableProfile(this);
+        new TableApplication(this);
+        new TableBookmark(this);
+        new TableEducation(this);
+        new TableJob(this);
+        new TableJobPreference(this);
+        new TableJobRole(this);
+        new TableJobSpec(this);
+        new TableLanguage(this);
+        new TableSkill(this);
+        new TableSubscription(this);
+        new TableWorkExperience(this);
+        new TableSettings(this);
+
         sharedPref = this.getSharedPreferences(JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         mProgress = (ProgressBar) findViewById(R.id.progressBar);
         mProgress.setVisibility(View.INVISIBLE);
@@ -107,13 +134,54 @@ public class MainActivity extends Activity {
 
         @Override
         protected JSONObject doInBackground(Void... params) {
+            /*
             Intent intent = new Intent();
             intent.putExtra("username", mEmail);
             intent.putExtra("password", mPassword);
             intent.putExtra("grant_type", "password");
             intent.putExtra("client_id", "testclient");
             intent.putExtra("client_secret", "testpass");
+            */
 
+            Object _response = null;
+
+            final HttpClient httpclient = new DefaultHttpClient();
+            final HttpPost httppost = new HttpPost( "http://api.jenjobs.com/oauth2/token" );
+            httppost.addHeader("Content-Type", "application/json");
+            httppost.addHeader("Accept", "application/json");
+            HttpResponse _http_response = null;
+
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("username", mEmail);
+                obj.put("password", mPassword);
+                obj.put("grant_type", "password");
+                obj.put("client_id", "testclient");
+                obj.put("client_secret", "testpass");
+
+                StringEntity entity = new StringEntity(obj.toString());
+                entity.setContentEncoding(HTTP.UTF_8);
+                entity.setContentType("application/json");
+                httppost.setEntity(entity);
+
+                _http_response = httpclient.execute(httppost);
+                HttpEntity _entity = _http_response.getEntity();
+                InputStream is = _entity.getContent();
+
+                String responseString = JenHttpRequest.readInputStreamAsString(is);
+                _response = JenHttpRequest.decodeJsonObjectString(responseString);
+
+            } catch (JSONException e) {
+                Log.e("JSONException", e.getMessage());
+            } catch (ClientProtocolException e) {
+                Log.e("ClientProtocolException", e.getMessage());
+            } catch (UnsupportedEncodingException e) {
+                Log.e("UnsupportedEncoding", e.getMessage());
+            } catch (IOException e) {
+                Log.e("IOException", e.getMessage());
+            }
+
+            /*
             JenHttpRequest jenReq = new JenHttpRequest(JenHttpRequest.POST_REQUEST, "http://api.jenjobs.com/oauth2/token", intent);
             while( jenReq.response == null ){
                 // keep waiting
@@ -124,7 +192,9 @@ public class MainActivity extends Activity {
             if( jenReq.response != null ){
                 return (JSONObject)jenReq.response;
             }
-            return null;
+            */
+
+            return (JSONObject) _response;
         }
 
         @Override
