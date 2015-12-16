@@ -63,8 +63,8 @@ public class TableProfile extends SQLiteOpenHelper{
             "email TEXT, " +
             "username TEXT, " +
             "name TEXT, " +
-            "ic TEXT, " +
-            "passport TEXT, " +
+            "ic_no TEXT, " +
+            "passport_no TEXT, " +
             "mobile_no TEXT, " +
             "gender TEXT, " +
             "dob TEXT, " +
