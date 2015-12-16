@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 public class Jenjobs {
     public static final String DATABASE_NAME = "jenjobs";
+    public static final int DATABASE_VERSION = 1;
 
     /*
     "jobType": {
