@@ -65,6 +65,7 @@
         <activity
             android:name=".UpdateWorkExperience"
             android:label="@string/title_activity_update_work_experience" />
+        `
         <activity android:name=".SelectJobSpec" />
         <activity android:name=".SelectJobRole" />
         <activity
@@ -78,8 +79,8 @@
             android:label="@string/title_activity_update_job_seeking" />
         <activity
             android:name=".UpdateResumeVisibility"
-            android:label="@string/title_activity_update_resume_visibility"
-            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar"></activity>
+            android:label="@string/title_activity_update_resume_visibility" />
+        <activity android:name=".UpdateSkill"></activity>
     </application>
 
 </manifest>
