@@ -130,7 +130,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (extras.getBoolean("downloadData")) {
-                Log.e("start", "downloading data.");
+                Log.e("start", "downloading data:"+extras.getBoolean("downloadData"));
                 new DownloadDataTask().execute();
             }else{
                 Log.e("start", "downloadData not true");
@@ -177,8 +177,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        if( actionBar != null ){
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(mTitle);
+        }
     }
 
     /**
@@ -240,18 +242,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     pref.edit().clear().commit();
 
                     (new TableProfile(getActivity())).truncate();
-                    (new TableApplication(getActivity())).truncate();
-                    (new TableBookmark(getActivity())).truncate();
-                    (new TableEducation(getActivity())).truncate();
-                    (new TableJob(getActivity())).truncate();
-                    (new TableJobPreference(getActivity())).truncate();
-                    (new TableJobRole(getActivity())).truncate();
-                    (new TableJobSpec(getActivity())).truncate();
-                    (new TableLanguage(getActivity())).truncate();
-                    (new TableSkill(getActivity())).truncate();
-                    (new TableSubscription(getActivity())).truncate();
-                    (new TableWorkExperience(getActivity())).truncate();
-                    (new TableSettings(getActivity())).truncate();
 
                     getActivity().startActivity(_intent);
                     getActivity().finish();
@@ -557,9 +547,26 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
         }else if( requestCode == ADD_SKILL ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                Bundle extra = data.getExtras();
+                String skillName = extra.getString("skill_name");
+                final int skillId = extra.getInt("skill_id");
+                Log.e("skill_id", ""+skillId);
+
+                if( skill.findViewById(R.id.emptyText) != null ){
+                    ((ViewGroup)skill).removeView(skill.findViewById(R.id.emptyText));
+                }
+
+                View v = getLayoutInflater().inflate(R.layout.each_skill, null);
+                skill.addView(v);
+
+                ((Button)v.findViewById(R.id.deleteSkillButton)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.e("clicked", "open edit modal:"+skillId);
+                    }
+                });
+                ((TextView)v.findViewById(R.id.skillText)).setText(skillName);
+
             }
         }else if( requestCode == UPDATE_SKILL ){
             if (resultCode == RESULT_OK) {
