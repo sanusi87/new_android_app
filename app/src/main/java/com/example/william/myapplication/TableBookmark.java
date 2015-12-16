@@ -47,6 +47,11 @@ public class TableBookmark extends SQLiteOpenHelper{
         onCreate(db);
     }
 
+    public void truncate() {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
+
     /*
     public Cursor getBookmark(){}
     public Long addBookmark(){}

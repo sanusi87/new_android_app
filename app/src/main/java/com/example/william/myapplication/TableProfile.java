@@ -63,8 +63,8 @@ public class TableProfile extends SQLiteOpenHelper{
             "email TEXT, " +
             "username TEXT, " +
             "name TEXT, " +
-            "ic TEXT, " +
-            "passport TEXT, " +
+            "ic_no TEXT, " +
+            "passport_no TEXT, " +
             "mobile_no TEXT, " +
             "gender TEXT, " +
             "dob TEXT, " +
@@ -72,6 +72,7 @@ public class TableProfile extends SQLiteOpenHelper{
             "resume_file TEXT, " +
             "photo_file TEXT, " +
             "access TEXT, " +
+            "access_token TEXT, " +
             "status TEXT, " +
             "country_id INTEGER(4), " +
             "driving_license INTEGER(2), " +
@@ -104,22 +105,29 @@ public class TableProfile extends SQLiteOpenHelper{
         onCreate(db);
     }
 
+    public void truncate() {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
+
     public Profile getProfile(){
         Profile profile = new Profile();
 
         Cursor c = db.rawQuery("SELECT * FROM "+TableProfile.TABLE_NAME, null);
         Bundle extras = c.getExtras();
 
+
         if( extras.size() > 0 ){
             String name = extras.getString("name");
             String email = extras.getString("email");
-
 
             Log.e("name", name);
             Log.e("email", email);
 
             profile.email = email;
             profile.name = name;
+
+            return profile;
         }
 
         return null;
@@ -147,5 +155,6 @@ public class TableProfile extends SQLiteOpenHelper{
         }
         return false;
     }
+
 
 }

@@ -23,7 +23,8 @@ public class TableWorkExperience  extends SQLiteOpenHelper {
             "experience TEXT, " +
             "salary INTEGER, " +
             "started_on NUMERIC, " +
-            "resigned_on NUMERIC);";
+            "resigned_on NUMERIC," +
+            "update_at NUMERIC);";
     private static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableWorkExperience.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
@@ -40,6 +41,11 @@ public class TableWorkExperience  extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
+
+    public void truncate() {
         db.execSQL(SQL_DELETE_ENTRIES);
         onCreate(db);
     }

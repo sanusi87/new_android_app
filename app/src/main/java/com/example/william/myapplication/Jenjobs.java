@@ -1,7 +1,12 @@
 package com.example.william.myapplication;
 
+import android.net.ParseException;
+
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Jenjobs {
@@ -667,5 +672,28 @@ public class Jenjobs {
         a.put(238,"Zimbabwe");
         a.put(239,"Macedonia");
         return a;
+    }
+
+
+    public static String date( String currentDate, String format ){
+        String newDate = "";
+        if( format == null ){
+            format = "dd MMM yyyy";
+        }
+        SimpleDateFormat newFormatter = new SimpleDateFormat(format);
+        try {
+            Date theDate;
+            if( currentDate == null ){
+                Calendar cal = Calendar.getInstance();
+                theDate = cal.getTime();
+            }else{
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                theDate = formatter.parse(currentDate);
+            }
+            newDate = newFormatter.format(theDate);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        return newDate;
     }
 }
