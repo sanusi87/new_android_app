@@ -81,6 +81,7 @@
             android:name=".UpdateResumeVisibility"
             android:label="@string/title_activity_update_resume_visibility" />
         <activity android:name=".UpdateSkill"></activity>
+        <activity android:name=".SelectJobSeekingStatus"></activity>
     </application>
 
 </manifest>
