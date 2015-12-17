@@ -31,18 +31,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
-import java.util.Set;
 
 public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -83,6 +78,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     private static TextView jobSeeking;
     private static TextView jobPreference;
     private static LinearLayout skill;
+    private static TextView additionalInfo;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -420,7 +416,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             /*
             * additional info
             * */
-
+            additionalInfo = (TextView) rootView.findViewById(R.id.additional_info);
 
         }
 
@@ -493,61 +489,55 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         Log.e("requestCode2", ""+UPDATE_RESUME_VISIBILITY);
         Log.e("resultCode", ""+resultCode);
 
+        Bundle extra = data.getExtras();
+
         // Check which request we're responding to
         if (requestCode == FETCH_FILTER_PARAM) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+
+                Log.e("filterdata", extra.getString("result"));
+                Log.e("filterdata", extra.toString());
             }
         }else if( requestCode == ADD_WORK_EXP ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                Log.e("filterdata", extra.getString("result"));
+                Log.e("filterdata", extra.toString());
             }
         }else if( requestCode == UPDATE_WORK_EXP ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                Log.e("filterdata", extra.getString("result"));
+                Log.e("filterdata", extra.toString());
             }
         }else if( requestCode == ADD_EDU ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                Log.e("filterdata", extra.getString("result"));
+                Log.e("filterdata", extra.toString());
             }
         }else if( requestCode == UPDATE_EDU ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                Log.e("filterdata", extra.getString("result"));
+                Log.e("filterdata", extra.toString());
             }
         }else if( requestCode == UPDATE_RESUME_VISIBILITY ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("selectedvisibility"));
-                Log.e("filterdata", filters.toString());
+                Log.e("filterdata", extra.getString("selectedvisibility"));
+                Log.e("filterdata", extra.toString());
 
-                resumeVisibility.setText(filters.getString("selectedvisibility"));
+                resumeVisibility.setText(extra.getString("selectedvisibility"));
             }
         }else if( requestCode == UPDATE_JOB_SEEKING ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                Log.e("filterdata", extra.getString("result"));
+                Log.e("filterdata", extra.toString());
             }
         }else if( requestCode == UPDATE_JOB_PREFERENCE ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                Log.e("filterdata", extra.getString("result"));
+                Log.e("filterdata", extra.toString());
             }
         }else if( requestCode == ADD_SKILL ){
             if (resultCode == RESULT_OK) {
-                Bundle extra = data.getExtras();
                 String skillName = extra.getString("skill_name");
                 final int skillId = extra.getInt("skill_id");
                 Log.e("skill_id", ""+skillId);
@@ -570,33 +560,28 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
         }else if( requestCode == UPDATE_SKILL ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                Log.e("filterdata", extra.getString("result"));
+                Log.e("filterdata", extra.toString());
             }
         }else if( requestCode == ADD_LANGUAGE ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                Log.e("filterdata", extra.getString("result"));
+                Log.e("filterdata", extra.toString());
             }
         }else if( requestCode == UPDATE_LANGUAGE ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                Log.e("filterdata", extra.getString("result"));
+                Log.e("filterdata", extra.toString());
             }
         }else if( requestCode == UPDATE_ATTACHED_RESUME ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                Log.e("filterdata", extra.getString("result"));
+                Log.e("filterdata", extra.toString());
             }
         }else if( requestCode == UPDATE_ADDITIONAL_INFO ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Log.e("filterdata", filters.getString("result"));
-                Log.e("filterdata", filters.toString());
+                Log.e("filterdata", extra.getString("info"));
+                additionalInfo.setText(extra.getString("info"));
             }
         }
     }

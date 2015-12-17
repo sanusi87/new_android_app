@@ -198,6 +198,7 @@ public class TableProfile extends SQLiteOpenHelper{
 
             profile.email = email;
             profile.name = name;
+            profile._id = extras.getInt("_id");
 
             return profile;
         }
