@@ -10,17 +10,27 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:id="@+id/fullNameContainer"
+            android:weightSum="6"
+            android:padding="3dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:text="@string/fullname"
                 android:id="@+id/fullName"
-                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:textSize="18sp"
-                android:textIsSelectable="true" />
+                android:layout_weight="6" />
+
+            <Button
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/buttonUpdateProfile"
+                android:layout_weight="1"
+                android:background="@android:drawable/ic_menu_edit"
+                 />
 
         </LinearLayout>
 
@@ -50,7 +60,8 @@
             android:layout_height="match_parent"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
