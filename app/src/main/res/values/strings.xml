@@ -163,4 +163,7 @@
     <string name="log_out">Log Out</string>
     <string name="save">save</string>
     <string name="close">x</string>
+    <string name="limit3000">Do not exceed 3000 characters</string>
+    <string name="limit3000hint">Highlight your unique experience,ambitions and strengths, such as training taken, commercial driving licenses,awards/prizes won and etc.</string>
+    <string name="summary">Summary</string>
 </resources>
