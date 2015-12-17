@@ -40,7 +40,7 @@ public class UpdateAdditionalInfo extends Activity {
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         tProfile = new TableProfile(getApplicationContext());
-        final Profile myProfile = tProfile.getProfile();
+        //final Profile myProfile = tProfile.getProfile();
 
         Button okButton = (Button)findViewById(R.id.okButton);
         Button cancelButton = (Button)findViewById(R.id.cancelButton);
@@ -51,11 +51,12 @@ public class UpdateAdditionalInfo extends Activity {
             @Override
             public void onClick(View v) {
                 String theInfo = info.getText().toString();
-
+                Log.e("info", theInfo);
+                Log.e("info2", ""+sharedPref.getInt("js_profile_id", 0));
                 // insert
                 ContentValues cv = new ContentValues();
-                cv.put("info", theInfo);
-                tProfile.updateProfile(cv, myProfile._id);
+                cv.put("additional_info", theInfo);
+                tProfile.updateProfile(cv, sharedPref.getInt("js_profile_id", 0));
 
                 // post
                 AsyncTask updateTask = new UpdateTask();

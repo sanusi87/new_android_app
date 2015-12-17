@@ -417,7 +417,15 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             * additional info
             * */
             additionalInfo = (TextView) rootView.findViewById(R.id.additional_info);
-
+            LinearLayout updateAdditionalInfo = (LinearLayout)rootView.findViewById(R.id.updateAdditionalInfo);
+            updateAdditionalInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), UpdateAdditionalInfo.class);
+                    getActivity().startActivityForResult(intent, UPDATE_ADDITIONAL_INFO);
+                }
+            });
         }
 
     }
@@ -489,7 +497,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         Log.e("requestCode2", ""+UPDATE_RESUME_VISIBILITY);
         Log.e("resultCode", ""+resultCode);
 
-        Bundle extra = data.getExtras();
+        Bundle extra = null;
+        if (resultCode == RESULT_OK) {
+            extra = data.getExtras();
+        }
+
 
         // Check which request we're responding to
         if (requestCode == FETCH_FILTER_PARAM) {
@@ -552,7 +564,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 ((Button)v.findViewById(R.id.deleteSkillButton)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.e("clicked", "open edit modal:"+skillId);
+                        Log.e("clicked", "open edit modal:" + skillId);
                     }
                 });
                 ((TextView)v.findViewById(R.id.skillText)).setText(skillName);

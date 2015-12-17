@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     tools:context="com.example.william.myapplication.UpdateAdditionalInfo"
-    style="@style/AppThemePadding10"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    style="@style/AppThemePadding10">
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="3dp">
+        android:layout_height="wrap_content">
 
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/theInfo"
-            android:digits="3000"
             android:inputType="text|textMultiLine"
             android:lines="6"
-            android:maxLines="20"
             android:hint="@string/summary"
-            style="@style/AppThemeBaseTextValue"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:layout_marginBottom="10dp" />
 
         <TextView
