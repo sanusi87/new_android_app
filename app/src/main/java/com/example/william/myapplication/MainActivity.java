@@ -49,18 +49,6 @@ public class MainActivity extends Activity {
     private void setup() {
         // initialize table
         new TableProfile(this);
-        new TableApplication(this);
-        new TableBookmark(this);
-        new TableEducation(this);
-        new TableJob(this);
-        new TableJobPreference(this);
-        new TableJobRole(this);
-        new TableJobSpec(this);
-        new TableLanguage(this);
-        new TableSkill(this);
-        new TableSubscription(this);
-        new TableWorkExperience(this);
-        new TableSettings(this);
 
         sharedPref = this.getSharedPreferences(JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         mProgress = (ProgressBar) findViewById(R.id.progressBar);

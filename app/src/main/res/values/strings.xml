@@ -26,7 +26,7 @@
     <string name="job_preferences">Job Preferences</string>
     <string name="work_experience">Work Experience</string>
     <string name="highest_education">Highest Education</string>
-    <string name="skill">Skills</string>
+    <string name="skill">Skill</string>
     <string name="languages">Languages</string>
     <string name="attached_resume">Attached Resume</string>
     <string name="additional_info">Additional Info</string>
@@ -161,4 +161,6 @@
     <string name="no_language">No language added.</string>
     <string name="title_activity_update_resume_visibility">UpdateResumeVisibility</string>
     <string name="log_out">Log Out</string>
+    <string name="save">save</string>
+    <string name="close">x</string>
 </resources>

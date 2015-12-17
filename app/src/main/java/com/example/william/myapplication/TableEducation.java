@@ -20,7 +20,7 @@ public class TableEducation extends SQLiteOpenHelper{
     "date_graduated": "0000-00-00",
     "info": "dddd"
     * */
-    private static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableEducation.TABLE_NAME
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableEducation.TABLE_NAME
             +"' (" +
             "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "_id INTEGER, "+
@@ -32,29 +32,24 @@ public class TableEducation extends SQLiteOpenHelper{
             "grade TEXT, " +
             "info TEXT, " +
             "date_graduated NUMERIC);";
-    private static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableEducation.TABLE_NAME+"'";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableEducation.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
 
     public TableEducation(Context context){
-        super(context, Jenjobs.DATABASE_NAME , null, 1);
+        super(context, Jenjobs.DATABASE_NAME , null, Jenjobs.DATABASE_VERSION);
         db = this.getReadableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        //db.execSQL(SQL_CREATE_ENTRIES);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_ENTRIES);
-        onCreate(db);
-    }
-
-    public void truncate() {
-        db.execSQL(SQL_DELETE_ENTRIES);
-        onCreate(db);
+        //db.execSQL(SQL_DELETE_ENTRIES);
+        //onCreate(db);
     }
 
     public Cursor getEducation(){
