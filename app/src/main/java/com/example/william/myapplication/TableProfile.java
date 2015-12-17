@@ -58,33 +58,34 @@ public class TableProfile extends SQLiteOpenHelper{
 }
     */
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableProfile.TABLE_NAME
-            +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-            "_id INTEGER, " +
-            "email TEXT, " +
-            "username TEXT, " +
-            "name TEXT, " +
-            "ic_no TEXT, " +
-            "passport_no TEXT, " +
-            "mobile_no TEXT, " +
-            "gender TEXT, " +
-            "dob TEXT, " +
-            "pr INTEGER(2), " +
-            "resume_file TEXT, " +
-            "photo_file TEXT, " +
-            "access TEXT, " +
-            "access_token TEXT, " +
-            "status TEXT, " +
-            "country_id INTEGER(4), " +
-            "driving_license INTEGER(2), " +
-            "transport INTEGER(2), " +
-            "js_jobseek_status_id INTEGER(2), " +
-            "availability INTEGER(2), " +
-            "availability_unit TEXT, " +
-            "address TEXT, " +
-            "no_work_exp TEXT, " + //1=no work, 0=got work
-            "additional_info TEXT, " +
-            "created_at NUMERIC, " +
-            "updated_at NUMERIC);";
+            +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //0
+            "_id INTEGER, " + //1
+            "email TEXT, " + //2
+            "username TEXT, " + //3
+            "name TEXT, " + //4
+            "ic_no TEXT, " + //5
+            "passport_no TEXT, " + //6
+            "dial_code TEXT, " + //7
+            "mobile_no TEXT, " + //8
+            "gender TEXT, " + //9
+            "dob TEXT, " + //10
+            "pr INTEGER(2), " + //11
+            "resume_file TEXT, " + //12
+            "photo_file TEXT, " + //13
+            "access TEXT, " + //14
+            "access_token TEXT, " + //15
+            "status TEXT, " + //16
+            "country_id INTEGER(4), " + //17
+            "driving_license INTEGER(2), " + //18
+            "transport INTEGER(2), " + //19
+            "js_jobseek_status_id INTEGER(2), " + //20
+            "availability INTEGER(2), " + //21
+            "availability_unit TEXT, " + //22
+            "address TEXT, " + //23
+            "no_work_exp TEXT, " + //1=no work, 0=got work //24
+            "additional_info TEXT, " + //25
+            "created_at NUMERIC, " + //26
+            "updated_at NUMERIC);"; //27
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableProfile.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
@@ -186,24 +187,45 @@ public class TableProfile extends SQLiteOpenHelper{
         Profile profile = new Profile();
 
         Cursor c = db.rawQuery("SELECT * FROM "+TableProfile.TABLE_NAME, null);
-        Bundle extras = c.getExtras();
-
-
-        if( extras.size() > 0 ){
-            String name = extras.getString("name");
-            String email = extras.getString("email");
+        c.moveToFirst();
+        while( !c.isAfterLast() ){
+            String name = c.getString(4);
+            String email = c.getString(2);
 
             Log.e("name", name);
             Log.e("email", email);
 
             profile.email = email;
+            profile.username = c.getString(3);
             profile.name = name;
-            profile._id = extras.getInt("_id");
+            profile._id = c.getInt(0);
+            profile.ic = c.getString(5);
+            profile.passport = c.getString(6);
+            profile.dial_code = c.getString(7);
+            profile.mobile_no = c.getString(8);
+            profile.gender = c.getString(9); //Male, Female
+            profile.dob = c.getString(10);
+            profile.pr = c.getInt(11) > 0;
+            profile.resume_file = c.getString(12);
+            profile.photo_file = c.getString(13);
+            profile.access = c.getString(14); //Open, Limited, Hidden
+            //profile.access_token = c.getString(15);
+            profile.status = c.getString(16);
+            profile.country_id = c.getInt(17);
+            profile.driving_license = c.getInt(18) > 0;
+            profile.transport = c.getInt(19) > 0;
+            profile.js_jobseek_status_id = c.getInt(20);
+            profile.availability = c.getInt(21);
+            profile.availability_unit = c.getString(22);
+            profile.address = c.getString(23);
+            profile.no_work_exp = c.getInt(24) > 0;
+            profile.additional_info = c.getString(25);
+            profile.created_at = c.getString(26);
+            profile.updated_at = c.getString(27);
 
-            return profile;
+            c.moveToNext();
         }
-
-        return null;
+        return profile;
     }
 
     public Long addProfile(ContentValues cv){

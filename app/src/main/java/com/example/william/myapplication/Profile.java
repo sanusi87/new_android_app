@@ -7,6 +7,7 @@ public class Profile {
     public int _id;
     public String ic;
     public String passport;
+    public String dial_code;
     public String mobile_no;
     public String gender; //Male, Female
     public String dob;
