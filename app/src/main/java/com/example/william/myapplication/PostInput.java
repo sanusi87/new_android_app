@@ -18,37 +18,36 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-public class PostInput extends AsyncTask<Void, Void, JSONObject> {
+/*
+*
+* new PostInput().execute(new String[]{url,json});
+*
+* */
 
-    private String url;
-    private String jsonObjectString;
+public class PostInput extends AsyncTask<String, Void, JSONObject> {
+
     private View v;
     private int viewType;
 
-    public PostInput( String url, String jsonObjectString ){
-        this.url = url;
-        this.jsonObjectString = jsonObjectString; // post data
-    }
+    public PostInput(){}
 
     public PostInput( String url, String jsonObjectString, View v, int viewType ){
-        this.url = url;
-        this.jsonObjectString = jsonObjectString; // post data
         this.v = v; // TextView, EditText
         this.viewType = viewType; // 1, 2
     }
 
     @Override
-    protected JSONObject doInBackground(Void... params) {
+    protected JSONObject doInBackground(String... params) {
         JSONObject _response = null;
 
         final HttpClient httpclient = new DefaultHttpClient();
-        final HttpPost httppost = new HttpPost( url );
+        final HttpPost httppost = new HttpPost( params[0] );
         httppost.addHeader("Content-Type", "application/json");
         httppost.addHeader("Accept", "application/json");
         HttpResponse _http_response = null;
 
         try {
-            StringEntity entity = new StringEntity(jsonObjectString);
+            StringEntity entity = new StringEntity(params[1]);
             entity.setContentEncoding(HTTP.UTF_8);
             entity.setContentType("application/json");
             httppost.setEntity(entity);

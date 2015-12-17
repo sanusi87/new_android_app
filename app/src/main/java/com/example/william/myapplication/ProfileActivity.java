@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -257,9 +258,17 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             sectionNumber = sectionNo;
         }
 
-
         private void setupProfileFragment(View rootView) {
-            
+            TableProfile tProfile = new TableProfile(getActivity());
+            Profile theProfile = tProfile.getProfile();
+            Log.e("profile", "" + theProfile);
+            TextView fullName = (TextView) rootView.findViewById(R.id.fullName);
+            fullName.setText( ""+theProfile.name );
+
+            ImageView profileImage = (ImageView) rootView.findViewById(R.id.profile_image);
+            if( theProfile.photo_file != null ){
+                new ImageLoad(theProfile.photo_file, profileImage).execute();
+            }
         }
 
 

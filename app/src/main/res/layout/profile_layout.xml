@@ -33,16 +33,15 @@
             android:layout_height="match_parent">
 
 
-            <ImageButton
+            <ImageView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageButton"
-                android:layout_gravity="center_horizontal"
+                android:id="@+id/profile_image"
                 android:src="@drawable/profile_image"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:layout_marginBottom="10dp"
-                android:contentDescription="@string/no_value"
-                android:background="#f3f3f3" />
+                android:contentDescription="@string/no_value" />
         </LinearLayout>
 
         <LinearLayout

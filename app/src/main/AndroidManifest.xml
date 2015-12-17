@@ -69,8 +69,13 @@
             android:name=".UpdateResumeVisibility"
             android:label="@string/title_activity_update_resume_visibility" />
         <activity android:name=".SelectJobSeekingStatus" />
-        <activity android:name=".UpdateSkill" android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".UpdateAdditionalInfo" android:theme="@android:style/Theme.Dialog"></activity>
+        <activity
+            android:name=".UpdateSkill"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".UpdateAdditionalInfo"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".UpdateName" android:theme="@android:style/Theme.Dialog" />
     </application>
 
 </manifest>
