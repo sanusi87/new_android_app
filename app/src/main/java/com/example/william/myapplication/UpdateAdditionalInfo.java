@@ -28,42 +28,42 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-public class UpdateSkill extends Activity {
+public class UpdateAdditionalInfo extends Activity {
 
     SharedPreferences sharedPref;
-    TableSkill tSkill;
+    TableProfile tProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_skill);
+        setContentView(R.layout.activity_update_additional_info);
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        tSkill = new TableSkill(getApplicationContext());
+        tProfile = new TableProfile(getApplicationContext());
+        final Profile myProfile = tProfile.getProfile();
 
         Button okButton = (Button)findViewById(R.id.okButton);
         Button cancelButton = (Button)findViewById(R.id.cancelButton);
 
-        final EditText skill = (EditText)findViewById(R.id.skill);
+        final EditText info = (EditText)findViewById(R.id.theInfo);
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String theSkill = skill.getText().toString();
+                String theInfo = info.getText().toString();
 
                 // insert
                 ContentValues cv = new ContentValues();
-                cv.put("name", theSkill);
-                int newId = tSkill.addSkill(cv).intValue();
+                cv.put("info", theInfo);
+                tProfile.updateProfile(cv, myProfile._id);
 
                 // post
-                AsyncTask updateTask = new UpdateTask(newId);
-                updateTask.execute(new String[]{theSkill});
+                AsyncTask updateTask = new UpdateTask();
+                updateTask.execute(new String[]{theInfo});
 
                 // finish the job
                 Intent intent = new Intent();
-                intent.putExtra("skill_name", theSkill);
-                intent.putExtra("skill_id", newId);
+                intent.putExtra("info", theInfo);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
@@ -90,18 +90,15 @@ public class UpdateSkill extends Activity {
     }
 
     public class UpdateTask extends AsyncTask<String, Void, JSONObject> {
-        int newId = 0;
 
-        UpdateTask( int newId ){
-            this.newId = newId;
-        }
+        UpdateTask(){ }
 
         @Override
         protected JSONObject doInBackground(String... params) {
             Object _response = null;
 
             String accessToken = sharedPref.getString("access_token", null);
-            String url = "http://api.jenjobs.com/jobseeker/skill";
+            String url = "http://api.jenjobs.com/jobseeker/additional-info";
             url += "?access-token="+accessToken;
 
             final HttpClient httpclient = new DefaultHttpClient();
@@ -112,7 +109,7 @@ public class UpdateSkill extends Activity {
 
             JSONObject obj = new JSONObject();
             try {
-                obj.put("skill", params[0]);
+                obj.put("info", params[0]);
 
                 StringEntity entity = new StringEntity(obj.toString());
                 entity.setContentEncoding(HTTP.UTF_8);
@@ -142,15 +139,9 @@ public class UpdateSkill extends Activity {
         @Override
         protected void onPostExecute(final JSONObject success) {
             if( success != null ){
-                try {
-                    //int status_code = (Integer) success.get("status_code");
-                    ContentValues cv = new ContentValues();
-                    cv.put("_id", (Integer) success.get("id"));
-                    tSkill.updateSkill(cv, newId);
-                } catch (JSONException e) {
-                    Log.e("JSONException", e.getMessage());
-                }
+                Log.e("JSONException", success.toString());
             }
         }
     }
+
 }
