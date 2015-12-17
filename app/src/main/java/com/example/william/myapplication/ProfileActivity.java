@@ -54,6 +54,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     public static final int LOG_OUT_FRAGMENT = 6;
 
     /*
+    * profile
+    * */
+
+    /*
     * job search
     * */
     public static final int FETCH_FILTER_PARAM = 1;
@@ -262,13 +266,25 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             TableProfile tProfile = new TableProfile(getActivity());
             Profile theProfile = tProfile.getProfile();
             Log.e("profile", "" + theProfile);
-            TextView fullName = (TextView) rootView.findViewById(R.id.fullName);
+            final TextView fullName = (TextView) rootView.findViewById(R.id.fullName);
             fullName.setText( ""+theProfile.name );
+
+            //LinearLayout fullNameContainer = (LinearLayout)rootView.findViewById(R.id.fullNameContainer);
+            Button buttonUpdateProfile = (Button)rootView.findViewById(R.id.buttonUpdateProfile);
+            buttonUpdateProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), UpdateProfile.class);
+                    getActivity().startActivityForResult(intent, ADD_WORK_EXP);
+                }
+            });
+
 
             ImageView profileImage = (ImageView) rootView.findViewById(R.id.profile_image);
             if( theProfile.photo_file != null ){
                 new ImageLoad(theProfile.photo_file, profileImage).execute();
             }
+
         }
 
 

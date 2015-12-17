@@ -675,6 +675,12 @@ public class Jenjobs {
         return a;
     }
 
+    public static HashMap getDialCode(){
+        HashMap a = new HashMap<Integer, String>();
+        a.put("(+60)","Malaysia");
+        a.put("(+44)","UK");
+        return a;
+    }
 
     public static String date( String currentDate, String format ){
         String newDate = "";
