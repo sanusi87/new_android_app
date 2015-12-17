@@ -164,6 +164,8 @@ public class UpdateJobSeeking extends ActionBarActivity {
 
         @Override
         protected Object doInBackground(ContentValues... params) {
+
+            ContentValues cv2 = params[0];
             Object _response = null;
 
             String accessToken = sharedPref.getString("access_token", null);
@@ -177,8 +179,6 @@ public class UpdateJobSeeking extends ActionBarActivity {
             HttpResponse _http_response = null;
 
             JSONObject obj = new JSONObject();
-            ContentValues cv2 = params[0];
-
             Iterator t = cv2.keySet().iterator();
             while( t.hasNext() ){
                 String key = String.valueOf(t.next());
