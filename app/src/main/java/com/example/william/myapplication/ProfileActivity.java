@@ -278,8 +278,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     getActivity().startActivityForResult(intent, ADD_WORK_EXP);
                 }
             });
-
-
+            
             ImageView profileImage = (ImageView) rootView.findViewById(R.id.profile_image);
             if( theProfile.photo_file != null ){
                 new ImageLoad(theProfile.photo_file, profileImage).execute();
