@@ -267,7 +267,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             Profile theProfile = tProfile.getProfile();
             Log.e("profile", "" + theProfile);
             final TextView fullName = (TextView) rootView.findViewById(R.id.fullName);
-            fullName.setText( ""+theProfile.name );
+            fullName.setText("" + theProfile.name);
 
             //LinearLayout fullNameContainer = (LinearLayout)rootView.findViewById(R.id.fullNameContainer);
             Button buttonUpdateProfile = (Button)rootView.findViewById(R.id.buttonUpdateProfile);
@@ -670,6 +670,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 success.remove("_link");
 
                 TableProfile tblProfile = new TableProfile(getApplicationContext());
+                TableAddress tblAddress = new TableAddress(getApplicationContext());
                 ContentValues cv = new ContentValues();
 
                 /*
@@ -708,12 +709,59 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     cv.put("js_jobseek_status_id", String.valueOf(success.get("js_jobseek_status_id")));
                     cv.put("availability", String.valueOf(success.get("availability")));
                     cv.put("availability_unit", String.valueOf(success.get("availability_unit")));
-                    cv.put("address", String.valueOf(success.get("address")));
+                    //cv.put("address", String.valueOf(success.get("address")));
                     cv.put("no_work_exp", String.valueOf(success.get("no_work_exp")));
                     cv.put("additional_info", String.valueOf(success.get("info")));
                     cv.put("created_at", String.valueOf(success.get("created_at")));
                     cv.put("updated_at", String.valueOf(success.get("updated_at")));
 
+                    // save address
+                    String address = String.valueOf(success.get("address"));
+                    ContentValues cv2 = new ContentValues();
+                    if( address != null ){
+                        JSONObject jsonAddr = new JSONObject(address);
+                        if( jsonAddr != null ){
+                            /*
+                            "address": {
+                                "country_id": 127,
+                                "state_id": 60,
+                                "city_id": 0,
+                                "address1": null,
+                                "address2": null,
+                                "postcode": null,
+                                "city_name": "Petaling Jaya",
+                                "state_name": null,
+                                "date_updated": "2015-12-18 10:49:46"
+                            }
+                            */
+
+                            cv2.put("address1", jsonAddr.getString("address1"));
+                            cv2.put("address2", jsonAddr.getString("address2"));
+                            cv2.put("postcode", jsonAddr.getInt("postcode"));
+                            cv2.put("city_id", jsonAddr.getInt("city_id"));
+                            cv2.put("city_name", jsonAddr.getString("city_name"));
+                            cv2.put("state_id", jsonAddr.getInt("state_id"));
+                            cv2.put("state_name", jsonAddr.getString("state_name"));
+                            cv2.put("country_id", jsonAddr.getInt("country_id"));
+                            cv2.put("updated_at", jsonAddr.getString("date_updated"));
+
+                            tblAddress.addAddress(cv2);
+                        }
+                    }else{
+                        cv2.put("address1", "");
+                        cv2.put("address2", "");
+                        cv2.put("postcode", 0);
+                        cv2.put("city_id", 0);
+                        cv2.put("city_name", "");
+                        cv2.put("state_id", 0);
+                        cv2.put("state_name", "");
+                        cv2.put("country_id", 0);
+                        cv2.put("updated_at", Jenjobs.date(null,null));
+
+                        tblAddress.addAddress(cv2);
+                    }
+
+                    // end save address
                 } catch (JSONException e) {
                     Log.e("jsonexc", e.getMessage());
                 }

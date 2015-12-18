@@ -5,60 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Bundle;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 public class TableProfile extends SQLiteOpenHelper{
 
     public static final String TABLE_NAME = "profile";
-
-    /*
-{
-  "id": 1000001,
-  "email": "",
-  "username": "sanusi@my.jenjobs.com",
-  "name": "Mohd Sanusi Yaakub",
-  "ic_no": "870101295389",
-  "passport_no": null,
-  "mobile_no": "(+60)132621641",
-  "gender": "Male",
-  "dob": "1987-01-01",
-  "pr": 0,
-  "resume_file": "http://files.jenjobs.com/jj2upload/jobseeker/resume/1000001/resume_1444276053.docx",
-  "photo_file": "",
-  "access": "Open",
-  "status": "Active",
-  "country_id": 127,
-  "country": "Malaysia",
-  "driving_license": 0,
-  "transport": 1,
-  "js_jobseek_status_id": 4,
-  "availability": 1,
-  "availability_unit": "W",
-  "address": {
-    "country_id": 127,
-    "state_id": 60,
-    "city_id": 0,
-    "address1": null,
-    "address2": null,
-    "postcode": null,
-    "city_name": null,
-    "state_name": null,
-    "date_updated": "2015-10-08 13:40:27"
-  },
-  "created_at": "2015-09-28 14:02:24",
-  "info": "xxx yyy",
-  "no_work_exp": 0,
-  "updated_at": "2015-10-21 11:39:25",
-  "_links": {
-    "self": {
-      "href": "http://api.jenjobs.local/jobseekers/1000001"
-    }
-  }
-}
-    */
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableProfile.TABLE_NAME
-            +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //0
+	
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableProfile.TABLE_NAME+"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //0
             "_id INTEGER, " + //1
             "email TEXT, " + //2
             "username TEXT, " + //3
@@ -81,7 +36,7 @@ public class TableProfile extends SQLiteOpenHelper{
             "js_jobseek_status_id INTEGER(2), " + //20
             "availability INTEGER(2), " + //21
             "availability_unit TEXT, " + //22
-            "address TEXT, " + //23
+            //"address TEXT, " + //23
             "no_work_exp TEXT, " + //1=no work, 0=got work //24
             "additional_info TEXT, " + //25
             "created_at NUMERIC, " + //26
@@ -110,6 +65,7 @@ public class TableProfile extends SQLiteOpenHelper{
         db.execSQL(TableSkill.SQL_CREATE_ENTRIES);
         db.execSQL(TableSubscription.SQL_CREATE_ENTRIES);
         db.execSQL(TableWorkExperience.SQL_CREATE_ENTRIES);
+		db.execSQL(TableCountry.SQL_CREATE_ENTRIES);
 
         // insert subscription
         ContentValues cv1 = new ContentValues();
@@ -146,6 +102,15 @@ public class TableProfile extends SQLiteOpenHelper{
             db.insert(TableSettings.TABLE_NAME, null, cv8);
         }
         // end insert settings
+
+        ArrayList<String[]> countries = TableCountry.initialise();
+        for( int i=0;i< countries.size(); i++ ){
+            ContentValues cv8 = new ContentValues();
+            cv8.put("id", countries.get(i)[0]);
+            cv8.put("name", countries.get(i)[1]);
+            cv8.put("dial_code", countries.get(i)[2]);
+            db.insert(TableCountry.TABLE_NAME, null, cv8);
+        }
     }
 
     @Override
@@ -163,6 +128,7 @@ public class TableProfile extends SQLiteOpenHelper{
         db.execSQL(TableSkill.SQL_DELETE_ENTRIES);
         db.execSQL(TableSubscription.SQL_DELETE_ENTRIES);
         db.execSQL(TableWorkExperience.SQL_DELETE_ENTRIES);
+        db.execSQL(TableCountry.SQL_DELETE_ENTRIES);
         onCreate(db);
     }
 
@@ -217,7 +183,7 @@ public class TableProfile extends SQLiteOpenHelper{
             profile.js_jobseek_status_id = c.getInt(20);
             profile.availability = c.getInt(21);
             profile.availability_unit = c.getString(22);
-            profile.address = c.getString(23);
+            //profile.address = c.getString(23);
             profile.no_work_exp = c.getInt(24) > 0;
             profile.additional_info = c.getString(25);
             profile.created_at = c.getString(26);

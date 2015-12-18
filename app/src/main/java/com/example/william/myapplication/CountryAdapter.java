@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
 
 public class CountryAdapter extends BaseAdapter implements ListAdapter {
 
@@ -24,14 +22,17 @@ public class CountryAdapter extends BaseAdapter implements ListAdapter {
     public CountryAdapter(Context context){
         this.context = context;
 
-        HashMap<Integer, String> countries = Jenjobs.getCountry();
-        ArrayList<Country> tempArr = new ArrayList<>();
+        //HashMap<Integer, String> countries = Jenjobs.getCountry();
+        TableCountry tableCountry = new TableCountry(context);
+        ArrayList<Country> tempArr = tableCountry.getCountries();
 
-        Iterator i = countries.entrySet().iterator();
-        while( i.hasNext() ){
-            HashMap.Entry e = (HashMap.Entry)i.next();
-            tempArr.add(new Country( (int)e.getKey(), String.valueOf(e.getValue()) ));
-        }
+        //Iterator i = countries.entrySet().iterator();
+        //while( i.hasNext() ){
+        //    HashMap.Entry e = (HashMap.Entry)i.next();
+        //    tempArr.add(new Country( (int)e.getKey(), String.valueOf(e.getValue()) ));
+        //}
+
+
 
         Collections.sort(tempArr, new Comparator<Country>() {
             @Override

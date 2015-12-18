@@ -6,10 +6,17 @@ public class Country implements Serializable{
     public int id;
     public String name;
     //public String abbr;
+    public String dialCode;
 
     public Country( int id, String name ){
         this.id = id;
         this.name = name;
+    }
+
+    public Country( int id, String name, String dialCode ){
+        this.id = id;
+        this.name = name;
+        this.dialCode = dialCode;
     }
 
     // need to to override these two method if if using indexOf
