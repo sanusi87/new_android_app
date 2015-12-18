@@ -84,7 +84,7 @@ public class JobSearchFilter extends Activity {
         });
 
         // select job spec and roles
-        LinearLayout selectSpec = (LinearLayout)findViewById(R.id.selectedSpec);
+        LinearLayout selectSpec = (LinearLayout)findViewById(R.id.selectSpec);
         selectSpec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +94,7 @@ public class JobSearchFilter extends Activity {
             }
         });
 
-        LinearLayout selectRole = (LinearLayout)findViewById(R.id.selectedRole);
+        LinearLayout selectRole = (LinearLayout)findViewById(R.id.selectRole);
         selectRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

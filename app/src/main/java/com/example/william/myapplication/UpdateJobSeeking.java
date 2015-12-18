@@ -1,5 +1,6 @@
 package com.example.william.myapplication;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -41,9 +42,11 @@ public class UpdateJobSeeking extends ActionBarActivity {
     private TextView selectedMalaysiaState;
     private ArrayList<State> selectedMalaysiaStateValues = new ArrayList<>();
     private TextView selectedCountry;
-    private ArrayList<Country> selectedCountryValues = new ArrayList<>();
+    private Country selectedCountryValues = null;
     private TextView selectedJobSeekingStatus;
     private JobSeekingStatus selectedJobSeekingStatusValues = null;
+
+    //private Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,9 @@ public class UpdateJobSeeking extends ActionBarActivity {
         setContentView(R.layout.activity_update_job_seeking);
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        final int profileId = sharedPref.getInt("js_profile_id",0);
+        final TableProfile tableProfile = new TableProfile(getApplicationContext());
+        //profile = tableProfile.getProfile();
 
         selectedMalaysiaState = (TextView)findViewById(R.id.selectedMalaysiaState);
         selectedCountry = (TextView)findViewById(R.id.selectedCountry);
@@ -100,9 +106,26 @@ public class UpdateJobSeeking extends ActionBarActivity {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // update local db
                 ContentValues cv = new ContentValues();
+                cv.put("js_jobseek_status_id", selectedJobSeekingStatusValues.id);
+                tableProfile.updateProfile(cv, profileId);
 
+                // post to server
                 new SaveDataTask().execute(cv);
+
+                Intent intent = new Intent();
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+        });
+
+        Button cancelButton = (Button)findViewById(R.id.cancel);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(Activity.RESULT_CANCELED);
+                finish();
             }
         });
     }
@@ -123,16 +146,11 @@ public class UpdateJobSeeking extends ActionBarActivity {
         }else if( requestCode == SELECT_COUNTRY ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                ArrayList<Country> selectedValues = (ArrayList<Country>) filters.get("country");
-                ArrayList<String> selectedLabels = new ArrayList<>();
+                Country selectedValues = (Country) filters.get("country");
 
                 if( selectedValues != null ){
-                    for( int i=0;i<selectedValues.size();i++ ){
-                        Country c = selectedValues.get(i);
-                        selectedLabels.add(c.name);
-                    }
                     selectedCountryValues = selectedValues;
-                    selectedCountry.setText(TextUtils.join(",", selectedLabels));
+                    selectedCountry.setText(selectedValues.name);
                 }
             }
         }else if( requestCode == SELECT_STATE ){
@@ -188,7 +206,7 @@ public class UpdateJobSeeking extends ActionBarActivity {
                     Log.e("test", e.getMessage());
                 }
             }
-
+            Log.e("json", obj.toString());
             try {
                 StringEntity entity = new StringEntity(obj.toString());
                 entity.setContentEncoding(HTTP.UTF_8);

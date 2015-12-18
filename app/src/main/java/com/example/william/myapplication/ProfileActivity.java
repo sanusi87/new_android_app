@@ -35,6 +35,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -189,6 +190,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
      */
     private static int sectionNumber;
     private static JobSearch jobSearch;
+    private static LinearLayout profileLayout = null;
 
     public static class PlaceholderFragment extends Fragment {
         /**
@@ -263,11 +265,41 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }
 
         private void setupProfileFragment(View rootView) {
+
+            profileLayout = (LinearLayout) rootView.findViewById(R.id.profileLayout);
+
             TableProfile tProfile = new TableProfile(getActivity());
             Profile theProfile = tProfile.getProfile();
-            Log.e("profile", "" + theProfile);
-            final TextView fullName = (TextView) rootView.findViewById(R.id.fullName);
-            fullName.setText("" + theProfile.name);
+            //Log.e("profile", "" + theProfile);
+            //final TextView fullName = (TextView) rootView.findViewById(R.id.fullName);
+            //fullName.setText("" + theProfile.name);
+
+            TextView name = (TextView) profileLayout.findViewById(R.id.fullName);
+            TextView email = (TextView) profileLayout.findViewById(R.id.email);
+            TextView mobile_no = (TextView) profileLayout.findViewById(R.id.mobile_no);
+            TextView ic_no = (TextView) profileLayout.findViewById(R.id.ic_no);
+            TextView gender = (TextView) profileLayout.findViewById(R.id.gender);
+            TextView dob = (TextView) profileLayout.findViewById(R.id.dob);
+            TextView country = (TextView) profileLayout.findViewById(R.id.country);
+
+            name.setText( theProfile.name );
+            email.setText( theProfile.email );
+            mobile_no.setText( theProfile.mobile_no );
+            ic_no.setText( theProfile.ic );
+            gender.setText( theProfile.gender );
+
+            if( theProfile.country_id > 0 ){
+                TableCountry tableCountry = new TableCountry(getActivity());
+                Country c = tableCountry.findCountryById( theProfile.country_id );
+                if( c != null ){
+                    country.setText( c.name );
+                }
+            }
+
+            String _dob = theProfile.dob;
+            if( _dob != null ){
+                dob.setText( Jenjobs.date(_dob, null) );
+            }
 
             //LinearLayout fullNameContainer = (LinearLayout)rootView.findViewById(R.id.fullNameContainer);
             Button buttonUpdateProfile = (Button)rootView.findViewById(R.id.buttonUpdateProfile);
@@ -714,50 +746,72 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     cv.put("created_at", String.valueOf(success.get("created_at")));
                     cv.put("updated_at", String.valueOf(success.get("updated_at")));
 
+                    Long newId = tblProfile.addProfile(cv);
+                    js_profile_id = newId.intValue();
+                    Log.e("js_profile_id", "" + js_profile_id);
+
+                    SharedPreferences.Editor spEdit = sharedPref.edit();
+                    spEdit.putInt("js_profile_id", js_profile_id);
+                    spEdit.commit();
+
+                    // default address
+                    ContentValues cv2 = new ContentValues();
+                    cv2.put("address1", "");
+                    cv2.put("address2", "");
+                    cv2.put("postcode", 0);
+                    cv2.put("city_id", 0);
+                    cv2.put("city_name", "");
+                    cv2.put("state_id", 0);
+                    cv2.put("state_name", "");
+                    cv2.put("country_id", 0);
+                    cv2.put("updated_at", Jenjobs.date(null, null));
+                    tblAddress.addAddress(cv2);
+
+                    if( sectionNumber == PROFILE_FRAGMENT && profileLayout != null ){
+                        TextView name = (TextView) profileLayout.findViewById(R.id.fullName);
+                        TextView email = (TextView) profileLayout.findViewById(R.id.email);
+                        TextView mobile_no = (TextView) profileLayout.findViewById(R.id.mobile_no);
+                        TextView ic_no = (TextView) profileLayout.findViewById(R.id.ic_no);
+                        TextView gender = (TextView) profileLayout.findViewById(R.id.gender);
+                        TextView dob = (TextView) profileLayout.findViewById(R.id.dob);
+                        TextView country = (TextView) profileLayout.findViewById(R.id.country);
+
+                        name.setText( String.valueOf(success.get("name")) );
+                        email.setText( String.valueOf(success.get("email")) );
+                        mobile_no.setText( String.valueOf(success.get("mobile_no")) );
+                        ic_no.setText( String.valueOf(success.get("ic_no")) );
+                        gender.setText( String.valueOf(success.get("gender")) );
+                        country.setText( String.valueOf(success.get("country")) );
+
+                        String _dob = String.valueOf(success.get("dob"));
+                        if( _dob != null ){
+                            dob.setText( Jenjobs.date(_dob, null) );
+                        }
+
+                        ImageView profileImage = (ImageView) profileLayout.findViewById(R.id.profile_image);
+                        if( String.valueOf(success.get("photo_file")) != null ){
+                            new ImageLoad(String.valueOf(success.get("photo_file")), profileImage).execute();
+                        }
+                    }
+
                     // save address
                     String address = String.valueOf(success.get("address"));
-                    ContentValues cv2 = new ContentValues();
+
                     if( address != null ){
                         JSONObject jsonAddr = new JSONObject(address);
                         if( jsonAddr != null ){
-                            /*
-                            "address": {
-                                "country_id": 127,
-                                "state_id": 60,
-                                "city_id": 0,
-                                "address1": null,
-                                "address2": null,
-                                "postcode": null,
-                                "city_name": "Petaling Jaya",
-                                "state_name": null,
-                                "date_updated": "2015-12-18 10:49:46"
-                            }
-                            */
-
-                            cv2.put("address1", jsonAddr.getString("address1"));
-                            cv2.put("address2", jsonAddr.getString("address2"));
-                            cv2.put("postcode", jsonAddr.getInt("postcode"));
-                            cv2.put("city_id", jsonAddr.getInt("city_id"));
-                            cv2.put("city_name", jsonAddr.getString("city_name"));
-                            cv2.put("state_id", jsonAddr.getInt("state_id"));
-                            cv2.put("state_name", jsonAddr.getString("state_name"));
-                            cv2.put("country_id", jsonAddr.getInt("country_id"));
-                            cv2.put("updated_at", jsonAddr.getString("date_updated"));
-
-                            tblAddress.addAddress(cv2);
+                            ContentValues cv3 = new ContentValues();
+                            cv3.put("address1", jsonAddr.getString("address1"));
+                            cv3.put("address2", jsonAddr.getString("address2"));
+                            cv3.put("postcode", jsonAddr.getInt("postcode"));
+                            cv3.put("city_id", jsonAddr.getInt("city_id"));
+                            cv3.put("city_name", jsonAddr.getString("city_name"));
+                            cv3.put("state_id", jsonAddr.getInt("state_id"));
+                            cv3.put("state_name", jsonAddr.getString("state_name"));
+                            cv3.put("country_id", jsonAddr.getInt("country_id"));
+                            cv3.put("updated_at", jsonAddr.getString("date_updated"));
+                            tblAddress.updateAddress(cv3);
                         }
-                    }else{
-                        cv2.put("address1", "");
-                        cv2.put("address2", "");
-                        cv2.put("postcode", 0);
-                        cv2.put("city_id", 0);
-                        cv2.put("city_name", "");
-                        cv2.put("state_id", 0);
-                        cv2.put("state_name", "");
-                        cv2.put("country_id", 0);
-                        cv2.put("updated_at", Jenjobs.date(null,null));
-
-                        tblAddress.addAddress(cv2);
                     }
 
                     // end save address
@@ -765,13 +819,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     Log.e("jsonexc", e.getMessage());
                 }
 
-                Long newId = tblProfile.addProfile(cv);
-                js_profile_id = newId.intValue();
-                Log.e("js_profile_id", ""+js_profile_id);
 
-                SharedPreferences.Editor spEdit = sharedPref.edit();
-                spEdit.putInt("js_profile_id", js_profile_id);
-                spEdit.commit();
             }else{
                 Log.e("success", "null");
             }
