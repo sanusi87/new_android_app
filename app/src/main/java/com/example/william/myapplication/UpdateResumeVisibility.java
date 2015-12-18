@@ -1,6 +1,7 @@
 package com.example.william.myapplication;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,9 +49,17 @@ public class UpdateResumeVisibility extends Activity {
 
                 /*
                 * save visibility first before finishing activity
+                * local
+                * */
+                TableProfile tableProfile = new TableProfile(getApplicationContext());
+                ContentValues cv = new ContentValues();
+                cv.put("access", rvAdapter.visibility[position]);
+                tableProfile.updateProfile(cv, sharedPref.getInt("js_profile_id", 1));
+
+                /*
+                * remote
                 * */
                 new UpdateTask().execute(new String[]{rvAdapter.visibility[position]});
-
 
                 /*
                 * only then send the result back to the previous page
@@ -59,6 +68,7 @@ public class UpdateResumeVisibility extends Activity {
                 intent.putExtra("selectedvisibility", rvAdapter.visibility[position]);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
+
             }
         });
     }
@@ -113,16 +123,18 @@ public class UpdateResumeVisibility extends Activity {
 
         @Override
         protected void onPostExecute(final JSONObject success) {
+            /*
             if( success != null ){
                 Log.e("success", success.toString());
 
                 try {
-                    int status_code = Integer.getInteger(success.get("status_code").toString());
+                    int status_code = Integer.valueOf(success.get("status_code").toString());
                     Log.e("status_code", ""+status_code);
                 } catch (JSONException e) {
                     Log.e("JSONException", e.getMessage());
                 }
             }
+            */
         }
     }
 }
