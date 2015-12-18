@@ -36,7 +36,7 @@ public class UpdateName extends Activity {
                 //AsyncTask updateTask = new UpdateTask(newId);
                 //updateTask.execute(new String[]{theSkill});
 
-                new PostInput().execute(new String[]{url, jsonString});
+                new PostRequest().execute(new String[]{url, jsonString});
 
                 // finish the job
                 Intent intent = new Intent();

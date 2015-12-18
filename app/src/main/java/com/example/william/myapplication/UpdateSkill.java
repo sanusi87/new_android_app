@@ -57,8 +57,8 @@ public class UpdateSkill extends Activity {
                 int newId = tSkill.addSkill(cv).intValue();
 
                 // post
-                AsyncTask updateTask = new UpdateTask(newId);
-                updateTask.execute(new String[]{theSkill});
+                String[] s = {theSkill};
+                new UpdateTask(newId).execute(s);
 
                 // finish the job
                 Intent intent = new Intent();
@@ -108,7 +108,7 @@ public class UpdateSkill extends Activity {
             final HttpPost httppost = new HttpPost( url );
             httppost.addHeader("Content-Type", "application/json");
             httppost.addHeader("Accept", "application/json");
-            HttpResponse _http_response = null;
+            HttpResponse _http_response;
 
             JSONObject obj = new JSONObject();
             try {

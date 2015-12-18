@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,10 +17,6 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
 public class UpdateProfile extends Activity {
 
@@ -95,7 +90,7 @@ public class UpdateProfile extends Activity {
                 try {
                     obj.put("full_name", theFullName);
 
-                    new PostInput().execute(new String[]{"http://api.jenjobs.com/jobseeker/profile?access-token=" + accessToken, obj.toString()});
+                    new PostRequest().execute(new String[]{"http://api.jenjobs.com/jobseeker/profile?access-token=" + accessToken, obj.toString()});
                 } catch (JSONException e) {
                     Log.e("jsonExc", e.getMessage());
                 }
