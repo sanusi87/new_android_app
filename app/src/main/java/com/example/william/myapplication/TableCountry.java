@@ -273,19 +273,25 @@ public class TableCountry extends SQLiteOpenHelper{
 
     public ArrayList<Country> getCountries(){
         ArrayList<Country> countries = new ArrayList<>();
-
-        Cursor c = db.rawQuery("SELECT * FROM "+TableProfile.TABLE_NAME, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+TableCountry.TABLE_NAME, null);
         c.moveToFirst();
         while( !c.isAfterLast() ){
             int countryId = c.getInt(0);
             String countryName = c.getString(1);
             String countryDialCode = c.getString(2);
-
             countries.add(new Country(countryId, countryName, countryDialCode));
-
             c.moveToNext();
         }
         return countries;
     }
 
+    public Country findCountryById(int country_id) {
+        Cursor c = db.rawQuery("SELECT * FROM " + TableCountry.TABLE_NAME + " WHERE id=?", new String[]{String.valueOf(country_id)});
+        c.moveToFirst();
+        if( !c.isAfterLast() ){
+            Country cc = new Country(c.getInt(0), c.getString(1), c.getString(2));
+            return cc;
+        }
+        return null;
+    }
 }

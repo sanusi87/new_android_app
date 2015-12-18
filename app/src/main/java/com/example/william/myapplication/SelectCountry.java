@@ -5,10 +5,13 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -26,11 +29,13 @@ public class SelectCountry extends Activity {
         final CountryAdapter ca = new CountryAdapter(getApplicationContext());
 
         Bundle extra = getIntent().getExtras();
+        Boolean single = false;
         // checked selected index
         if( extra != null ){
-            Boolean single = (Boolean) extra.get("single");
+            single = (Boolean) extra.get("single");
             if( single ){
                 ca.setLayoutSingle(true);
+                ((ViewGroup)lv.getParent()).getChildAt(1).setVisibility(View.GONE);
             }
 
             ArrayList<Country> selectedCountries = (ArrayList<Country>) extra.get("country");
@@ -46,34 +51,51 @@ public class SelectCountry extends Activity {
         }
         lv.setAdapter(ca);
 
-        Button okButton = (Button)findViewById(R.id.okButton);
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SparseBooleanArray a = lv.getCheckedItemPositions();
-                ArrayList<Country> values = new ArrayList<>();
-                for (int i = 0; i < a.size(); i++) {
-                    if( a.valueAt(i) && a.keyAt(i) >= 0 ){
-                        Country c = (Country) ca.getItem(a.keyAt(i));
-                        values.add(c);
-                    }
+        if( single ) {
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Country country = (Country) ca.getItem(position);
+                    Log.e("selected", ""+country.name);
+                    Log.e("selected", ""+country.id);
+
+                    Intent intent = new Intent();
+                    intent.putExtra("country", country);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
                 }
+            });
+        }else{
+            Button okButton = (Button) findViewById(R.id.okButton);
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SparseBooleanArray a = lv.getCheckedItemPositions();
+                    ArrayList<Country> values = new ArrayList<>();
+                    for (int i = 0; i < a.size(); i++) {
+                        if (a.valueAt(i) && a.keyAt(i) >= 0) {
+                            Country c = (Country) ca.getItem(a.keyAt(i));
+                            values.add(c);
+                        }
+                    }
 
-                Intent intent = new Intent();
-                intent.putExtra("country", values);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-            }
-        });
+                    Intent intent = new Intent();
+                    intent.putExtra("country", values);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }
+            });
 
-        Button cancelButton = (Button)findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult(Activity.RESULT_CANCELED);
-                finish();
-            }
-        });
+            Button cancelButton = (Button) findViewById(R.id.cancelButton);
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setResult(Activity.RESULT_CANCELED);
+                    finish();
+                }
+            });
+        }
     }
 
 
