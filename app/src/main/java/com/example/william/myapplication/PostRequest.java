@@ -24,14 +24,14 @@ import java.io.UnsupportedEncodingException;
 *
 * */
 
-public class PostInput extends AsyncTask<String, Void, JSONObject> {
+public class PostRequest extends AsyncTask<String, Void, JSONObject> {
 
     private View v;
     private int viewType;
 
-    public PostInput(){}
+    public PostRequest(){}
 
-    public PostInput( String url, String jsonObjectString, View v, int viewType ){
+    public PostRequest( String url, String jsonObjectString, View v, int viewType ){
         this.v = v; // TextView, EditText
         this.viewType = viewType; // 1, 2
     }
