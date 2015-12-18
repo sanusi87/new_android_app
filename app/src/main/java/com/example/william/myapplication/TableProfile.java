@@ -146,6 +146,7 @@ public class TableProfile extends SQLiteOpenHelper{
         db.execSQL(TableSkill.SQL_DELETE_ENTRIES);
         db.execSQL(TableSubscription.SQL_DELETE_ENTRIES);
         db.execSQL(TableWorkExperience.SQL_DELETE_ENTRIES);
+        db.execSQL(TableCountry.SQL_DELETE_ENTRIES);
         onCreate(db);
     }
 
@@ -164,7 +165,7 @@ public class TableProfile extends SQLiteOpenHelper{
             profile.email = email;
             profile.username = c.getString(3);
             profile.name = name;
-            profile._id = c.getInt(0);
+            profile._id = c.getInt(1);
             profile.ic = c.getString(5);
             profile.passport = c.getString(6);
             profile.dial_code = c.getString(7);
@@ -183,11 +184,10 @@ public class TableProfile extends SQLiteOpenHelper{
             profile.js_jobseek_status_id = c.getInt(20);
             profile.availability = c.getInt(21);
             profile.availability_unit = c.getString(22);
-            //profile.address = c.getString(23);
-            profile.no_work_exp = c.getInt(24) > 0;
-            profile.additional_info = c.getString(25);
-            profile.created_at = c.getString(26);
-            profile.updated_at = c.getString(27);
+            profile.no_work_exp = c.getInt(23) > 0;
+            profile.additional_info = c.getString(24);
+            profile.created_at = c.getString(25);
+            profile.updated_at = c.getString(26);
 
             c.moveToNext();
         }
