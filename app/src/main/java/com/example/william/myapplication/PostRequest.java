@@ -25,7 +25,6 @@ import java.io.UnsupportedEncodingException;
 * */
 
 public class PostRequest extends AsyncTask<String, Void, JSONObject> {
-
     private View v;
     private int viewType;
 
