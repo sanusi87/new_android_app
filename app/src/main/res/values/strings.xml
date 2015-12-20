@@ -167,4 +167,5 @@
     <string name="limit3000hint">Highlight your unique experience,ambitions and strengths, such as training taken, commercial driving licenses,awards/prizes won and etc.</string>
     <string name="summary">Summary</string>
     <string name="dateofbirth">Date of Birth</string>
+    <string name="secondaryemail">Secondary Email</string>
 </resources>
