@@ -79,6 +79,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     public static final int UPDATE_LANGUAGE = 20;
     public static final int UPDATE_ATTACHED_RESUME = 21;
     public static final int UPDATE_ADDITIONAL_INFO = 22;
+    public static final int UPDATE_PROFILE = 23;
 
     private static TextView resumeVisibility;
     private static TextView jobSeeking;
@@ -267,13 +268,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         private void setupProfileFragment(View rootView) {
 
             profileLayout = (LinearLayout) rootView.findViewById(R.id.profileLayout);
-
             TableProfile tProfile = new TableProfile(getActivity());
             Profile theProfile = tProfile.getProfile();
-            //Log.e("profile", "" + theProfile);
-            //final TextView fullName = (TextView) rootView.findViewById(R.id.fullName);
-            //fullName.setText("" + theProfile.name);
-
             TextView name = (TextView) profileLayout.findViewById(R.id.fullName);
             TextView email = (TextView) profileLayout.findViewById(R.id.email);
             TextView mobile_no = (TextView) profileLayout.findViewById(R.id.mobile_no);
@@ -298,16 +294,15 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
             String _dob = theProfile.dob;
             if( _dob != null ){
-                dob.setText( Jenjobs.date(_dob, null) );
+                dob.setText( Jenjobs.date(_dob, null, "yyyy-M-d") );
             }
 
-            //LinearLayout fullNameContainer = (LinearLayout)rootView.findViewById(R.id.fullNameContainer);
             Button buttonUpdateProfile = (Button)rootView.findViewById(R.id.buttonUpdateProfile);
             buttonUpdateProfile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), UpdateProfile.class);
-                    getActivity().startActivityForResult(intent, ADD_WORK_EXP);
+                    getActivity().startActivityForResult(intent, UPDATE_PROFILE);
                 }
             });
             
@@ -365,7 +360,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 sectionLabel.setText("xxx=" + sectionNumber);
             }
         }
-
 
         private void setupSettingsFragment(View rootView) {
             sectionLabel = (TextView) rootView.findViewById(R.id.section_label);
@@ -486,7 +480,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
     }
 
-
     /*
     * fragment action bar
     * on fragment menu item selected
@@ -557,7 +550,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         if (resultCode == RESULT_OK) {
             extra = data.getExtras();
         }
-
 
         // Check which request we're responding to
         if (requestCode == FETCH_FILTER_PARAM) {
@@ -650,6 +642,40 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             if (resultCode == RESULT_OK) {
                 Log.e("filterdata", extra.getString("info"));
                 additionalInfo.setText(extra.getString("info"));
+            }
+        }else if( requestCode == UPDATE_PROFILE ){
+            if (resultCode == RESULT_OK) {
+                // refresh profile
+                profileLayout = (LinearLayout) findViewById(R.id.profileLayout);
+                TableProfile tProfile = new TableProfile(getApplicationContext());
+                Profile theProfile = tProfile.getProfile();
+                TextView name = (TextView) profileLayout.findViewById(R.id.fullName);
+                TextView email = (TextView) profileLayout.findViewById(R.id.email);
+                TextView mobile_no = (TextView) profileLayout.findViewById(R.id.mobile_no);
+                TextView ic_no = (TextView) profileLayout.findViewById(R.id.ic_no);
+                TextView gender = (TextView) profileLayout.findViewById(R.id.gender);
+                TextView dob = (TextView) profileLayout.findViewById(R.id.dob);
+                TextView country = (TextView) profileLayout.findViewById(R.id.country);
+
+                name.setText( theProfile.name );
+                email.setText( theProfile.email );
+                mobile_no.setText( theProfile.mobile_no );
+                ic_no.setText( theProfile.ic );
+                gender.setText( theProfile.gender );
+
+                if( theProfile.country_id > 0 ){
+                    TableCountry tableCountry = new TableCountry(getApplicationContext());
+                    Country c = tableCountry.findCountryById( theProfile.country_id );
+                    if( c != null ){
+                        country.setText( c.name );
+                    }
+                }
+
+                String _dob = theProfile.dob;
+                if( _dob != null ){
+                    dob.setText( Jenjobs.date(_dob, null, "yyyy-M-d") );
+                }
+                // refresh profile
             }
         }
     }
@@ -764,7 +790,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     cv2.put("state_id", 0);
                     cv2.put("state_name", "");
                     cv2.put("country_id", 0);
-                    cv2.put("updated_at", Jenjobs.date(null, null));
+                    cv2.put("updated_at", Jenjobs.date(null, null, null));
                     tblAddress.addAddress(cv2);
 
                     if( sectionNumber == PROFILE_FRAGMENT && profileLayout != null ){
@@ -785,7 +811,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                         String _dob = String.valueOf(success.get("dob"));
                         if( _dob != null ){
-                            dob.setText( Jenjobs.date(_dob, null) );
+                            dob.setText( Jenjobs.date(_dob, null, null) );
                         }
 
                         ImageView profileImage = (ImageView) profileLayout.findViewById(R.id.profile_image);
