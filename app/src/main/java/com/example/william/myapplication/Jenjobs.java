@@ -1,6 +1,7 @@
 package com.example.william.myapplication;
 
 import android.net.ParseException;
+import android.util.Log;
 
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class Jenjobs {
     public static final String DATABASE_NAME = "jenjobs";
@@ -682,24 +684,29 @@ public class Jenjobs {
         return a;
     }
 
-    public static String date( String currentDate, String format ){
+    public static String date( String currentDate, String outputFormat, String inputFormat ){
         String newDate = "";
-        if( format == null ){
-            format = "dd MMM yyyy";
+        if( outputFormat == null ){
+            outputFormat = "dd MMM yyyy";
         }
-        SimpleDateFormat newFormatter = new SimpleDateFormat(format);
+
+        if( inputFormat == null ){
+            inputFormat = "yyyy-MM-dd hh:mm:ss";
+        }
+
+        SimpleDateFormat outputFormatter = new SimpleDateFormat(outputFormat, Locale.getDefault());
         try {
             Date theDate;
             if( currentDate == null ){
                 Calendar cal = Calendar.getInstance();
                 theDate = cal.getTime();
             }else{
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                theDate = formatter.parse(currentDate);
+                SimpleDateFormat inputFormatter = new SimpleDateFormat(inputFormat, Locale.getDefault());
+                theDate = inputFormatter.parse(currentDate);
             }
-            newDate = newFormatter.format(theDate);
+            newDate = outputFormatter.format(theDate);
         } catch (java.text.ParseException e) {
-            e.printStackTrace();
+            Log.e("newdateErr", e.getMessage());
         }
         return newDate;
     }
