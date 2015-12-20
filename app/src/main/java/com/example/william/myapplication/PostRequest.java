@@ -41,6 +41,9 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
 
         final HttpClient httpclient = new DefaultHttpClient();
         final HttpPost httppost = new HttpPost( params[0] );
+        //Log.e("url", ""+params[0]);
+        //Log.e("json", ""+params[1]);
+
         httppost.addHeader("Content-Type", "application/json");
         httppost.addHeader("Accept", "application/json");
         HttpResponse _http_response = null;
@@ -69,7 +72,7 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
 
     @Override
     protected void onPostExecute(JSONObject result) {
-        super.onPostExecute(result);
+        //super.onPostExecute(result);
     }
 
 }
