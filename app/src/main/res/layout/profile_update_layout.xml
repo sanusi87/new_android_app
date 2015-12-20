@@ -14,29 +14,34 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp">
+                style="@style/AppThemePadding10"
+                android:id="@+id/selectFullName">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/fullname_profile"
-                    style="@style/AppThemeBaseLabel" />
+                    android:text="@string/fullname"
+                    style="@style/AppThemeBaseLabel"
+                    android:id="@+id/labelName" />
 
-                <EditText
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/fullname_profile"
-                    android:inputType="textPersonName|text"
-                    style="@style/AppThemeBaseTextValue" />
+                    style="@style/AppThemeBaseTextValue"
+                    android:text="@string/no_value" />
 
             </LinearLayout>
+
+            <View style="@style/AppThemeBorderBottom" />
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
+                style="@style/AppThemePadding10"
                 android:id="@+id/selectNationality">
 
                 <TextView
@@ -44,7 +49,8 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/nationality"
-                    style="@style/AppThemeBaseLabel" />
+                    style="@style/AppThemeBaseLabel"
+                    android:id="@+id/labelNationality" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -56,11 +62,13 @@
 
             </LinearLayout>
 
+            <View style="@style/AppThemeBorderBottom" />
+
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
+                style="@style/AppThemePadding10"
                 android:id="@+id/selectDateOfBirth">
 
                 <TextView
@@ -68,22 +76,25 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/dateofbirth"
-                    style="@style/AppThemeBaseLabel" />
+                    style="@style/AppThemeBaseLabel"
+                    android:id="@+id/labelDob" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="New Text"
+                    android:text="@string/no_value"
                     android:id="@+id/selectedDateOfBirth"
                     style="@style/AppThemeBaseTextValue" />
 
             </LinearLayout>
 
+            <View style="@style/AppThemeBorderBottom" />
+
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                style="@style/AppThemePadding10"
                 android:id="@+id/selectGender">
 
                 <TextView
@@ -91,69 +102,73 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/gender"
-                    style="@style/AppThemeBaseLabel" />
+                    style="@style/AppThemeBaseLabel"
+                    android:id="@+id/labelGender" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="New Text"
+                    android:text="@string/no_value"
                     android:id="@+id/selectedGender"
                     style="@style/AppThemeBaseTextValue" />
             </LinearLayout>
+
+            <View style="@style/AppThemeBorderBottom" />
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp">
+                style="@style/AppThemePadding10"
+                android:id="@+id/selectSecondaryEmail">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/email"
+                    android:text="@string/secondaryemail"
                     style="@style/AppThemeBaseLabel" />
 
-                <EditText
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/no_value"
                     android:id="@+id/email"
-                    style="@style/AppThemeBaseTextValue"
-                    android:inputType="textEmailAddress" />
+                    style="@style/AppThemeBaseTextValue" />
 
             </LinearLayout>
+
+            <View style="@style/AppThemeBorderBottom" />
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp">
+                style="@style/AppThemePadding10">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mobile_number"
-                    style="@style/AppThemeBaseLabel" />
+                    style="@style/AppThemeBaseLabel"
+                    android:id="@+id/labelMobileNo" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
                     android:weightSum="3">
 
                     <Spinner
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/dial_code"
-                        android:layout_weight="1"
                         style="@style/AppThemeBaseTextValue" />
 
                     <EditText
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/mobile_no"
-                        android:layout_weight="2"
                         android:inputType="textPhonetic" />
                 </LinearLayout>
 
@@ -163,7 +178,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
+                style="@style/AppThemePadding10"
                 android:visibility="gone">
 
                 <CheckBox
