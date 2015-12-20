@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class TableAddress extends SQLiteOpenHelper{
 
-    public static final String TABLE_NAME = "settings";
+    public static final String TABLE_NAME = "address";
 
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableAddress.TABLE_NAME
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
