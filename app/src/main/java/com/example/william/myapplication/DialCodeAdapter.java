@@ -20,13 +20,21 @@ public class DialCodeAdapter extends BaseAdapter implements ListAdapter{
     public DialCodeAdapter( Context context ){
         this.context = context;
 
+        TableCountry tableCountry = new TableCountry(context);
+        ArrayList<Country> countries = tableCountry.getCountries();
+        for(int i=0;i<countries.size();i++){
+            Country c = countries.get(i);
+            dc.add(new DialCode(c.dialCode, "(+"+c.dialCode+")"+c.name));
+        }
+
+        /*
         HashMap<String, String> dialCodes = Jenjobs.getDialCode();
         Iterator i = dialCodes.entrySet().iterator();
         while( i.hasNext() ){
             HashMap.Entry e = (HashMap.Entry)i.next();
             dc.add(new DialCode( String.valueOf(e.getKey()), String.valueOf(e.getValue()) ));
         }
-
+        */
     }
 
     @Override
@@ -59,5 +67,16 @@ public class DialCodeAdapter extends BaseAdapter implements ListAdapter{
         v.setBackgroundColor(context.getResources().getColor(R.color.white));
 
         return v;
+    }
+
+    public int findDialCodePosition( String theCode ){
+        int index = 0;
+        for(int i=0;i< this.dc.size();i++){
+            if( this.dc.get(i).code.equals(theCode) ){
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 }
