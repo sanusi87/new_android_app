@@ -76,6 +76,7 @@
             android:name=".UpdateAdditionalInfo"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".UpdateName" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".SelectGender" android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".UpdateProfile" />
     </application>
 
