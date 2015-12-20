@@ -48,7 +48,7 @@ public class TableSettings  extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put("setting_key", key);
         cv.put("setting_value", value);
-        cv.put("updated_at", Jenjobs.date(null, null));
+        cv.put("updated_at", Jenjobs.date(null, null,null));
         db.update(TableSettings.TABLE_NAME, cv, "setting_key=?", new String[]{key});
     }
 }
