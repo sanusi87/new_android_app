@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -15,32 +16,33 @@ public class UpdateName extends Activity {
         setContentView(R.layout.activity_update_name);
 
         Bundle extra = getIntent().getExtras();
+        String currentText = extra.getString("the_text");
         final String url = extra.getString("url");
         final String jsonString = extra.getString("json");
 
         final EditText t = (EditText)findViewById(R.id.theText);
+        t.setText(currentText);
 
         Button okButton = (Button)findViewById(R.id.okButton);
         Button cancelButton = (Button)findViewById(R.id.cancelButton);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String theSkill = t.getText().toString();
+                String theText = t.getText().toString();
 
-                // insert
-                //ContentValues cv = new ContentValues();
-                //cv.put("name", theSkill);
-                //tSkill.addSkill(cv);
+                if( url != null && jsonString != null ){
+                    // insert
+                    //ContentValues cv = new ContentValues();
+                    //cv.put("name", theSkill);
+                    //tSkill.addSkill(cv);
 
-                // post
-                //AsyncTask updateTask = new UpdateTask(newId);
-                //updateTask.execute(new String[]{theSkill});
-
-                new PostRequest().execute(new String[]{url, jsonString});
+                    String[] param = {url, jsonString};
+                    new PostRequest().execute(param);
+                }
 
                 // finish the job
                 Intent intent = new Intent();
-                intent.putExtra("skill_name", theSkill);
+                intent.putExtra("the_text", theText);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
@@ -53,5 +55,16 @@ public class UpdateName extends Activity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // In order to not be too narrow, set the window size based on the screen resolution:
+        final int screen_width = getResources().getDisplayMetrics().widthPixels;
+        final int new_window_width = screen_width * 90 / 100;
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.width = Math.max(layout.width, new_window_width);
+        getWindow().setAttributes(layout);
     }
 }
