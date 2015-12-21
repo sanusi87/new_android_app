@@ -108,7 +108,13 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     private String JOBFILTER = "job_filter";
 
     private static Context context;
+
+    /*
+    * list of used tables
+    * */
     static TableSkill tableSkill;
+    static TableWorkExperience tableWorkExperience;
+    static TableEducation tableEducation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +182,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         context = getApplicationContext();
 
         tableSkill = new TableSkill(context);
+        tableWorkExperience = new TableWorkExperience(context);
+        tableEducation = new TableEducation(context);
     }
 
 
@@ -416,6 +424,68 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     getActivity().startActivityForResult(intent, ADD_WORK_EXP);
                 }
             });
+
+            LinearLayout listOfWorkExp = (LinearLayout)rootView.findViewById(R.id.listOfWorkExperience);
+            Cursor cw = tableWorkExperience.getWorkExperience();
+            if( cw.moveToFirst() ){
+                listOfWorkExp.removeAllViews();
+
+                while( !cw.isAfterLast() ){
+                    /*
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //0
+                    "_id INTEGER, "+ //1
+                    "position TEXT, " + //2
+                    "company TEXT, " + //3
+                    "job_spec_id INTEGER(4), " + //4
+                    "job_role_id INTEGER(4), " + //5
+                    "job_type_id INTEGER(4), " + //6
+                    "job_level_id INTEGER(4), " + //7
+                    "industry_id INTEGER(4), " + //8
+                    "experience TEXT, " + //9
+                    "salary INTEGER, " + //10
+                    "started_on NUMERIC, " + //11
+                    "resigned_on NUMERIC," + //12
+                    "update_at //13
+                    */
+
+                    final int id = cw.getInt(0);
+                    String positionTitle = cw.getString(2);
+                    String companyName = cw.getString(3);
+                    String dateStart = cw.getString(11);
+                    String dateResign = cw.getString(12);
+
+                    final View v = getActivity().getLayoutInflater().inflate(R.layout.each_work_experience, null);
+                    listOfWorkExp.addView(v);
+
+                    ((TextView)v.findViewById(R.id.positionTitle)).setText( positionTitle );
+                    ((TextView)v.findViewById(R.id.companyName)).setText( companyName );
+                    ((TextView)v.findViewById(R.id.startedOn)).setText( Jenjobs.date(dateStart, null, "yyyy-MM-dd") );
+
+                    // TODO: calculate duration
+                    //((TextView)v.findViewById(R.id.workDuration)).setText(  );
+
+                    LinearLayout updateWorkExp = (LinearLayout)v.findViewById(R.id.updateWorkExperience);
+                    updateWorkExp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent();
+                            intent.setClass(getActivity(),  UpdateWorkExperience.class);
+                            intent.putExtra("id", id);
+                            getActivity().startActivityForResult(intent, ADD_WORK_EXP);
+                        }
+                    });
+
+                    Button deleteButton = (Button)v.findViewById(R.id.deleteButton);
+                    deleteButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // TODO: delete view
+                            // TODO: delete record
+                            // TODO: send DELETE req to server
+                        }
+                    });
+                }
+            }
 
             /*
             * add education
@@ -687,7 +757,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         skill.removeView(v);
 
                         // delete from server
-                        String[] param = {Jenjobs.SKILL_URL+"/"+_skill[1]+"?access-token="+accessToken};
+                        String[] param = {Jenjobs.SKILL_URL + "/" + _skill[1] + "?access-token=" + accessToken};
                         new DeleteRequest().execute(param);
 
                         // delete from local
@@ -947,7 +1017,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 }else if( downloadSection == DOWNLOAD_WORK_EXPERIENCE ){
 
-                    TableWorkExperience tableWorkExperience = new TableWorkExperience(getApplicationContext());
+                    //TableWorkExperience tableWorkExperience = new TableWorkExperience(getApplicationContext());
                     ContentValues cv = new ContentValues();
                     JSONArray success = null;
 
@@ -995,7 +1065,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 }else if( downloadSection == DOWNLOAD_EDUCATION ){
 
-                    TableEducation tableEducation = new TableEducation(getApplicationContext());
+                    //TableEducation tableEducation = new TableEducation(getApplicationContext());
                     ContentValues cv = new ContentValues();
                     JSONArray success = null;
 
