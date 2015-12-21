@@ -5,9 +5,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.util.Log;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class TableProfile extends SQLiteOpenHelper{
 
@@ -121,6 +133,10 @@ public class TableProfile extends SQLiteOpenHelper{
         cv.put("country_id", "");
         cv.put("job_type_id", "");
         db.insert(TableJobPreference.TABLE_NAME, null, cv);
+
+        // job spec and roles
+        String[] url = {Jenjobs.JOB_SPEC_URL};
+        new DownloadDataTask(1).execute(url);
     }
 
     @Override
@@ -229,5 +245,77 @@ public class TableProfile extends SQLiteOpenHelper{
         return false;
     }
 
+    public class DownloadDataTask extends AsyncTask<String, Void, String> {
+
+        private int JOB_SPEC = 1;
+        private int INDUSTRY = 2;
+
+        private int downloadItem = 1;
+        public DownloadDataTask( int downloadItem ){
+            this.downloadItem = downloadItem;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String _response = null;
+
+            final HttpClient httpclient = new DefaultHttpClient();
+            final HttpGet httpget = new HttpGet(params[0]);
+            httpget.addHeader("Content-Type", "application/json");
+            httpget.addHeader("Accept", "application/json");
+
+            HttpResponse _http_response = null;
+            try {
+                _http_response = httpclient.execute(httpget);
+                HttpEntity _entity = _http_response.getEntity();
+                InputStream is = _entity.getContent();
+
+                String responseString = JenHttpRequest.readInputStreamAsString(is);
+                //_response = JenHttpRequest.decodeJsonObjectString(responseString);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return _response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if( this.downloadItem == JOB_SPEC ){
+                
+                try {
+                    JSONObject success = new JSONObject(result);
+                    Iterator i = success.keys();
+                    while ( i.hasNext() ){
+                        String jobSpecId = (String) i.next();
+                        JSONObject jobSpec = success.getJSONObject(jobSpecId);
+
+                        ContentValues cv = new ContentValues();
+                        cv.put("id", jobSpecId);
+                        cv.put("spec_name", jobSpec.getString("name"));
+                        db.insert(TableJobSpec.TABLE_NAME, null, cv);
+
+                        JSONObject jobRole = jobSpec.getJSONObject("roles");
+                        Iterator r = jobRole.keys();
+                        while( r.hasNext() ){
+                            String jobRoleId = (String) r.next();
+                            String jobRoleName = jobRole.getString(jobRoleId);
+
+                            ContentValues cv2 = new ContentValues();
+                            cv2.put("id", jobRoleId);
+                            cv2.put("role_name", jobRoleName);
+                            db.insert(TableJobRole.TABLE_NAME, null, cv2);
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    Log.e("dwnErr", e.getMessage());
+                }
+
+            }else if( this.downloadItem == INDUSTRY ){
+
+            }
+        }
+
+    }
 
 }

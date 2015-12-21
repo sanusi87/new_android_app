@@ -21,6 +21,7 @@ public class Jenjobs {
     public static final String LANGUAGE_URL = "http://api.jenjobs.com/jobseeker/language";
     public static final String BOOKMARK_URL = "http://api.jenjobs.com/jobseeker/bookmark";
     public static final String SUBSCRIPTION_URL = "http://api.jenjobs.com/jobseeker/subscription";
+    public static final String JOB_SPEC_URL = "http://api.jenjobs.com/parameters/job-spec";
 
     /*
     "jobType": {
