@@ -168,4 +168,7 @@
     <string name="summary">Summary</string>
     <string name="dateofbirth">Date of Birth</string>
     <string name="secondaryemail">Secondary Email</string>
+    <string name="confirm">Are you sure?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
