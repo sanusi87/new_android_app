@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -471,6 +472,31 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             * skills
             * */
             skill = (LinearLayout) rootView.findViewById(R.id.listOfSkill);
+
+            TableSkill tableSkill = new TableSkill(getActivity());
+            Cursor c = tableSkill.getSkill();
+
+            c.moveToFirst();
+            while( !c.isAfterLast() ){
+                final int savedId = c.getInt(0); //id
+                final int actualId = c.getInt(1); //_id
+                String skillName = c.getString(2); //name
+
+                final View v = getActivity().getLayoutInflater().inflate(R.layout.each_skill, null);
+                skill.addView(v);
+
+                ((Button)v.findViewById(R.id.deleteSkillButton)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View vv) {
+                        Log.e("clicked", "delete skill " + savedId);
+                        skill.removeView(v);
+                    }
+                });
+                ((TextView)v.findViewById(R.id.skillText)).setText(skillName);
+
+                c.moveToNext();
+            }
+
             Button addSkillButton = (Button)rootView.findViewById(R.id.add_skill);
             addSkillButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -480,6 +506,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     getActivity().startActivityForResult(intent, ADD_SKILL);
                 }
             });
+
 
             /*
             * language
@@ -1054,7 +1081,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             for (int i = 0; i < success.length(); i++) {
                                 JSONObject s = success.getJSONObject(i);
                                 ContentValues cv = new ContentValues();
-                                
+
                                 cv.put("post_id", s.optInt("post_id"));
                                 cv.put("title", s.optString("title"));
                                 cv.put("date_added", s.optString("on"));
