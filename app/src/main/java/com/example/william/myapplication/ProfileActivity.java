@@ -33,9 +33,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,8 +55,17 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     public static final int LOG_OUT_FRAGMENT = 6;
 
     /*
-    * profile
+    * download sections
     * */
+    private int DOWNLOAD_PROFILE = 1; //http://api.jenjobs.com/jobseeker/profile
+    private int DOWNLOAD_APPLICATION = 2; //http://api.jenjobs.com/jobseeker/application
+    private int DOWNLOAD_WORK_EXPERIENCE = 3; //http://api.jenjobs.com/jobseeker/work-experience
+    private int DOWNLOAD_EDUCATION = 4; //http://api.jenjobs.com/jobseeker/qualification
+    private int DOWNLOAD_JOB_PREFERENCE = 5; //http://api.jenjobs.com/jobseeker/job-preference
+    private int DOWNLOAD_SKILL = 6; //http://api.jenjobs.com/jobseeker/skill
+    private int DOWNLOAD_LANGUAGE = 7; //http://api.jenjobs.com/jobseeker/language
+    private int DOWNLOAD_BOOKMARK = 8; //http://api.jenjobs.com/jobseeker/bookmark
+    private int DOWNLOAD_SUBSCRIPTION = 9; //http://api.jenjobs.com/jobseeker/subscription
 
     /*
     * job search
@@ -117,10 +126,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         String accessToken = sharedPref.getString("access_token", null);
 
         int jsProfileId = sharedPref.getInt("js_profile_id", 0);
-        Log.e("js_profile_id", ""+jsProfileId);
-
         String emailAddress = sharedPref.getString("email", null);
-        Log.e("email", ""+emailAddress);
 
         // redirect to login if no access token found
         if (accessToken == null) {
@@ -133,16 +139,38 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (extras.getBoolean("downloadData")) {
-                Log.e("start", "downloading data:"+extras.getBoolean("downloadData"));
-                new DownloadDataTask().execute();
-            }else{
-                Log.e("start", "downloadData not true");
+                Log.e("start", "downloading data:" + extras.getBoolean("downloadData"));
+
+                String[] profileUrl = {Jenjobs.PROFILE_URL};
+                new DownloadDataTask(DOWNLOAD_PROFILE).execute(profileUrl);
+
+                String[] applicationUrl = {Jenjobs.APPLICATION_URL};
+                new DownloadDataTask(DOWNLOAD_APPLICATION).execute(applicationUrl);
+
+                String[] workExperienceUrl = {Jenjobs.WORK_EXPERIENCE_URL};
+                new DownloadDataTask(DOWNLOAD_WORK_EXPERIENCE).execute(workExperienceUrl);
+
+                String[] educationUrl = {Jenjobs.EDUCATION_URL};
+                new DownloadDataTask(DOWNLOAD_EDUCATION).execute(educationUrl);
+
+                String[] jobPreferenceUrl = {Jenjobs.JOB_PREFERENCE_URL};
+                new DownloadDataTask(DOWNLOAD_JOB_PREFERENCE).execute(jobPreferenceUrl);
+
+                String[] skillUrl = {Jenjobs.SKILL_URL};
+                new DownloadDataTask(DOWNLOAD_SKILL).execute(skillUrl);
+
+                String[] languageUrl = {Jenjobs.LANGUAGE_URL};
+                new DownloadDataTask(DOWNLOAD_LANGUAGE).execute(languageUrl);
+
+                String[] bookmarkUrl = {Jenjobs.BOOKMARK_URL};
+                new DownloadDataTask(DOWNLOAD_BOOKMARK).execute(bookmarkUrl);
+
+                String[] subscriptionUrl = {Jenjobs.SUBSCRIPTION_URL};
+                new DownloadDataTask(DOWNLOAD_SUBSCRIPTION).execute(subscriptionUrl);
             }
-        }else{
-            Log.e("start", "downloadData is null");
         }
 
-        this.context = getApplicationContext();
+        context = getApplicationContext();
     }
 
 
@@ -243,7 +271,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 case LOG_OUT_FRAGMENT:
                     Intent _intent = new Intent(context, MainActivity.class);
                     SharedPreferences pref = getActivity().getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-                    pref.edit().clear().commit();
+                    pref.edit().clear().apply();
 
                     (new TableProfile(getActivity())).truncate();
 
@@ -613,6 +641,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     @Override
                     public void onClick(View v) {
                         Log.e("clicked", "open edit modal:" + skillId);
+                        // delete
                     }
                 });
                 ((TextView)v.findViewById(R.id.skillText)).setText(skillName);
@@ -680,19 +709,25 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }
     }
 
-    // download data after success login
-    public class DownloadDataTask extends AsyncTask<Void, Void, JSONObject> {
+    /*
+    * download data after success login
+    * */
+    public class DownloadDataTask extends AsyncTask<String, Void, String> {
 
-        DownloadDataTask(){}
+        private int downloadSection = 1;
+
+        DownloadDataTask( int sectionToDownload ){
+            downloadSection = sectionToDownload;
+        }
 
         private String accessToken;
 
         @Override
-        protected JSONObject doInBackground(Void... params) {
-            Object _response = null;
+        protected String doInBackground(String... params) {
+            String _response = null;
 
             accessToken = sharedPref.getString("access_token", null);
-            String url = "http://api.jenjobs.com/jobseeker/profile?access-token="+accessToken;
+            String url = params[0]+"?access-token="+accessToken;
 
             final HttpClient httpclient = new DefaultHttpClient();
             final HttpGet httpget = new HttpGet( url );
@@ -705,7 +740,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 HttpEntity _entity = _http_response.getEntity();
                 InputStream is = _entity.getContent();
                 String responseString = JenHttpRequest.readInputStreamAsString(is);
-                _response = JenHttpRequest.decodeJsonObjectString(responseString);
+                //_response = JenHttpRequest.decodeJsonObjectString(responseString);
+                _response = responseString;
             } catch (ClientProtocolException e) {
                 Log.e("ClientProtocolException", e.getMessage());
             } catch (UnsupportedEncodingException e) {
@@ -714,142 +750,347 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 Log.e("IOException", e.getMessage());
             }
 
-            return (JSONObject) _response;
+            return _response;
         }
 
         @Override
-        protected void onPostExecute(final JSONObject success) {
-            if( success != null ){
-                Log.e("success", success.toString());
-                int js_profile_id = 0;
+        protected void onPostExecute(final String nsuccess) {
+            if( nsuccess != null ){
+                Log.e("success", nsuccess.toString());
 
-                // remove _link
-                success.remove("_link");
+                if( downloadSection == DOWNLOAD_PROFILE ){
 
-                TableProfile tblProfile = new TableProfile(getApplicationContext());
-                TableAddress tblAddress = new TableAddress(getApplicationContext());
-                ContentValues cv = new ContentValues();
+                    JSONObject success = null;
+                    int js_profile_id = 0;
 
-                /*
-                Iterator a = success.keys();
-                while ( a.hasNext() ){
-                    String key = String.valueOf(a.next());
+                    TableProfile tblProfile = new TableProfile(getApplicationContext());
+                    TableAddress tblAddress = new TableAddress(getApplicationContext());
+                    ContentValues cv = new ContentValues();
+
                     try {
-                        cv.put(key, String.valueOf(success.get(key)));
+                        success = new JSONObject(nsuccess);
+                        success.remove("_link"); // remove _link
+
+                        cv.put("access_token", String.valueOf(accessToken));
+                        cv.put("_id", String.valueOf(success.get("id")));
+                        cv.put("email", String.valueOf(success.get("email")));
+                        cv.put("username", String.valueOf(success.get("username")));
+                        cv.put("name", String.valueOf(success.get("name")));
+                        cv.put("ic_no", String.valueOf(success.get("ic_no")));
+                        cv.put("passport_no", String.valueOf(success.get("passport_no")));
+                        cv.put("mobile_no", String.valueOf(success.get("mobile_no")));
+                        cv.put("gender", String.valueOf(success.get("gender")));
+                        cv.put("dob", String.valueOf(success.get("dob")));
+                        cv.put("pr", String.valueOf(success.get("pr")));
+                        cv.put("resume_file", String.valueOf(success.get("resume_file")));
+                        cv.put("photo_file", String.valueOf(success.get("photo_file")));
+                        cv.put("access", String.valueOf(success.get("access")));
+                        cv.put("status", String.valueOf(success.get("status")));
+                        cv.put("country_id", String.valueOf(success.get("country_id")));
+                        cv.put("driving_license", String.valueOf(success.get("driving_license")));
+                        cv.put("transport", String.valueOf(success.get("transport")));
+                        cv.put("js_jobseek_status_id", String.valueOf(success.get("js_jobseek_status_id")));
+                        cv.put("availability", String.valueOf(success.get("availability")));
+                        cv.put("availability_unit", String.valueOf(success.get("availability_unit")));
+                        //cv.put("address", String.valueOf(success.get("address")));
+                        cv.put("no_work_exp", String.valueOf(success.get("no_work_exp")));
+                        cv.put("additional_info", String.valueOf(success.get("info")));
+                        cv.put("created_at", String.valueOf(success.get("created_at")));
+                        cv.put("updated_at", String.valueOf(success.get("updated_at")));
+
+                        Long newId = tblProfile.addProfile(cv);
+                        js_profile_id = newId.intValue();
+                        Log.e("js_profile_id", "" + js_profile_id);
+
+                        SharedPreferences.Editor spEdit = sharedPref.edit();
+                        spEdit.putInt("js_profile_id", js_profile_id);
+                        spEdit.apply();
+
+                        // default address
+                        ContentValues cv2 = new ContentValues();
+                        cv2.put("address1", "");
+                        cv2.put("address2", "");
+                        cv2.put("postcode", 0);
+                        cv2.put("city_id", 0);
+                        cv2.put("city_name", "");
+                        cv2.put("state_id", 0);
+                        cv2.put("state_name", "");
+                        cv2.put("country_id", 0);
+                        cv2.put("updated_at", Jenjobs.date(null, null, null));
+                        tblAddress.addAddress(cv2);
+
+                        if( sectionNumber == PROFILE_FRAGMENT && profileLayout != null ){
+                            TextView name = (TextView) profileLayout.findViewById(R.id.fullName);
+                            TextView email = (TextView) profileLayout.findViewById(R.id.email);
+                            TextView mobile_no = (TextView) profileLayout.findViewById(R.id.mobile_no);
+                            TextView ic_no = (TextView) profileLayout.findViewById(R.id.ic_no);
+                            TextView gender = (TextView) profileLayout.findViewById(R.id.gender);
+                            TextView dob = (TextView) profileLayout.findViewById(R.id.dob);
+                            TextView country = (TextView) profileLayout.findViewById(R.id.country);
+
+                            name.setText( String.valueOf(success.get("name")) );
+                            email.setText( String.valueOf(success.get("email")) );
+                            mobile_no.setText( String.valueOf(success.get("mobile_no")) );
+                            ic_no.setText( String.valueOf(success.get("ic_no")) );
+                            gender.setText( String.valueOf(success.get("gender")) );
+                            country.setText( String.valueOf(success.get("country")) );
+
+                            String _dob = String.valueOf(success.get("dob"));
+                            if( _dob != null ){
+                                dob.setText( Jenjobs.date(_dob, null, null) );
+                            }
+
+                            ImageView profileImage = (ImageView) profileLayout.findViewById(R.id.profile_image);
+                            if( String.valueOf(success.get("photo_file")) != null ){
+                                new ImageLoad(String.valueOf(success.get("photo_file")), profileImage).execute();
+                            }
+                        }
+
+                        // save address
+                        String address = String.valueOf(success.get("address"));
+
+                        if( address != null ){
+                            JSONObject jsonAddr = new JSONObject(address);
+                            if( jsonAddr != null ){
+                                ContentValues cv3 = new ContentValues();
+                                cv3.put("address1", jsonAddr.getString("address1"));
+                                cv3.put("address2", jsonAddr.getString("address2"));
+                                cv3.put("postcode", jsonAddr.getInt("postcode"));
+                                cv3.put("city_id", jsonAddr.getInt("city_id"));
+                                cv3.put("city_name", jsonAddr.getString("city_name"));
+                                cv3.put("state_id", jsonAddr.getInt("state_id"));
+                                cv3.put("state_name", jsonAddr.getString("state_name"));
+                                cv3.put("country_id", jsonAddr.getInt("country_id"));
+                                cv3.put("updated_at", jsonAddr.getString("date_updated"));
+                                tblAddress.updateAddress(cv3);
+                            }
+                        }
+                        // end save address
                     } catch (JSONException e) {
-                        Log.e("jsonexc", e.getMessage());
+                        Log.e("profileExcp", e.getMessage());
                     }
+
+                }else if( downloadSection == DOWNLOAD_APPLICATION ){
+
+                    JSONArray success = null;
+                    TableApplication tableApplication = new TableApplication(getApplicationContext());
+                    ContentValues cv = new ContentValues();
+
+                    try {
+                        success = new JSONArray(nsuccess);
+                        if( success.length() > 0 ){
+                            for( int i=0;i< success.length();i++ ){
+                                JSONObject s = success.getJSONObject(i);
+                                cv.put("_id", s.getInt("_id"));
+                                cv.put("post_id", s.getInt("post_id"));
+                                cv.put("status", s.getInt("status"));
+                                cv.put("date_created", s.getString("date_created"));
+                                cv.put("date_updated", s.getString("date_updated"));
+                                cv.put("title", s.getString("title"));
+                                cv.put("closed", s.getInt("closed"));
+
+                                tableApplication.addApplication(cv);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.e("appExcp", e.getMessage());
+                    }
+
+                }else if( downloadSection == DOWNLOAD_WORK_EXPERIENCE ){
+
+                    TableWorkExperience tableWorkExperience = new TableWorkExperience(getApplicationContext());
+                    ContentValues cv = new ContentValues();
+                    JSONArray success = null;
+
+                    try {
+                        success = new JSONArray(nsuccess);
+                        if( success.length() > 0 ){
+                            for( int i=0;i< success.length();i++ ){
+                                JSONObject s = success.getJSONObject(i);
+
+                                cv.put("_id", s.getInt("id"));
+                                cv.put("position", s.optString("position"));
+                                cv.put("company", s.optString("company"));
+
+                                /////
+                                JSONObject jobSpec = new JSONObject(s.optString("job_spec"));
+                                cv.put("job_spec_id", jobSpec.optInt("id") > 0 ? jobSpec.optInt("id") : 0 );
+
+                                JSONObject jobRole = new JSONObject(s.optString("job_role"));
+                                cv.put("job_role_id", jobRole.optInt("id") > 0 ? jobRole.optInt("id") : 0 );
+
+                                JSONObject jobType = new JSONObject(s.optString("job_type"));
+                                cv.put("job_type_id", jobType.optInt("id") > 0 ? jobType.optInt("id") : 0 );
+
+                                JSONObject jobLevel = new JSONObject(s.optString("job_level"));
+                                cv.put("job_level_id", jobLevel.optInt("id") > 0 ? jobLevel.optInt("id") : 0 );
+
+                                JSONObject jobIndustry = new JSONObject(s.optString("industry"));
+                                cv.put("industry_id", jobIndustry.optInt("id") > 0 ? jobIndustry.optInt("id") : 0 );
+                                /////
+
+                                cv.put("experience", s.optString("experience"));
+                                cv.put("salary", s.optString("salary"));
+                                cv.put("started_on", s.optString("started_on"));
+                                cv.put("resigned_on", s.optString("resigned_on"));
+                                cv.put("update_at", "");
+
+                                tableWorkExperience.addWorkExperience(cv);
+                            }
+                        }
+
+
+                    } catch (JSONException e) {
+                        Log.e("workExpExcp", e.getMessage());
+                    }
+
+                }else if( downloadSection == DOWNLOAD_EDUCATION ){
+
+                    TableEducation tableEducation = new TableEducation(getApplicationContext());
+                    ContentValues cv = new ContentValues();
+                    JSONArray success = null;
+
+                    try {
+                        success = new JSONArray(nsuccess);
+
+                        if( success.length() > 0 ){
+                            for( int i=0;i< success.length();i++ ){
+                                JSONObject s = success.getJSONObject(i);
+
+                                cv.put("_id", s.getInt("id"));
+                                cv.put("school", s.getString("school"));
+                                cv.put("major", s.optString("major"));
+
+                                JSONObject eduLevel = new JSONObject(s.optString("level"));
+                                cv.put("edu_level_id", eduLevel.optInt("id") > 0 ? eduLevel.optInt("id") : 0 );
+
+                                JSONObject eduField = new JSONObject(s.optString("field"));
+                                cv.put("edu_field_id", eduField.optInt("id") > 0 ? eduField.optInt("id") : 0 );
+
+                                cv.put("country_id", s.optString("country"));
+                                cv.put("grade", s.optString("grade"));
+                                cv.put("info", s.optString("info"));
+                                cv.put("date_graduated", s.getString("date_graduated"));
+
+                                tableEducation.addEducation(cv);
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        Log.e("eduExcp", e.getMessage());
+                    }
+
+
+                }else if( downloadSection == DOWNLOAD_JOB_PREFERENCE ){
+
+                    TableJobPreference tableJobPreference = new TableJobPreference(getApplicationContext());
+                    ContentValues cv = new ContentValues();
+                    JSONObject success = null;
+                    try {
+                        success = new JSONObject(nsuccess);
+
+                        cv.put("salary", success.optString("salary"));
+                        cv.put("currency_id", success.optInt("currency_id"));
+                        cv.put("state_id", success.optString("state_id"));
+                        cv.put("country_id", success.optString("country_id"));
+                        cv.put("job_type_id", success.optString("job_type_id"));
+
+                        tableJobPreference.updateJobPreference(cv);
+                    } catch (JSONException e) {
+                        Log.e("jobPrefExcp", e.getMessage());
+                    }
+
+                }else if( downloadSection == DOWNLOAD_SKILL ){
+
+                    TableSkill tableSkill = new TableSkill(getApplicationContext());
+                    JSONArray success = null;
+
+                    try {
+                        success = new JSONArray(nsuccess);
+                        if( success.length() > 0 ) {
+                            for (int i = 0; i < success.length(); i++) {
+                                JSONObject s = success.getJSONObject(i);
+
+                                ContentValues cv = new ContentValues();
+                                cv.put("_id", s.optInt("id"));
+                                cv.put("name", s.optString("value"));
+                                tableSkill.addSkill(cv);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.e("skillExcp", e.getMessage());
+                    }
+
+                }else if( downloadSection == DOWNLOAD_LANGUAGE ){
+
+                    TableLanguage tableLanguage = new TableLanguage(getApplicationContext());
+                    JSONArray success = null;
+
+                    try {
+                        success = new JSONArray(nsuccess);
+                        if( success.length() > 0 ) {
+                            for (int i = 0; i < success.length(); i++) {
+                                JSONObject s = success.getJSONObject(i);
+                                ContentValues cv = new ContentValues();
+                                cv.put("language_id", s.optInt("language_id"));
+                                cv.put("spoken_language_level_id", s.optInt("spoken_language_level_id"));
+                                cv.put("written_language_level_id", s.optInt("written_language_level_id"));
+                                cv.put("native", s.optInt("native"));
+                                tableLanguage.addLanguage(cv);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.e("langExcp", e.getMessage());
+                    }
+
+                }else if( downloadSection == DOWNLOAD_BOOKMARK ){
+
+                    TableBookmark tableBookmark = new TableBookmark(getApplicationContext());
+                    JSONArray success = null;
+
+                    try {
+                        success = new JSONArray(nsuccess);
+                        if( success.length() > 0 ) {
+                            for (int i = 0; i < success.length(); i++) {
+                                JSONObject s = success.getJSONObject(i);
+                                ContentValues cv = new ContentValues();
+                                
+                                cv.put("post_id", s.optInt("post_id"));
+                                cv.put("title", s.optString("title"));
+                                cv.put("date_added", s.optString("on"));
+                                cv.put("date_closed", s.optString("date_closed"));
+
+                                tableBookmark.addBookmark(cv);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.e("bookExcp", e.getMessage());
+                    }
+
+                }else if( downloadSection == DOWNLOAD_SUBSCRIPTION ){
+
+                    TableSubscription tableSubscription = new TableSubscription(getApplicationContext());
+                    JSONArray success = null;
+
+                    try {
+                        success = new JSONArray(nsuccess);
+                        if( success.length() > 0 ) {
+                            for (int i = 0; i < success.length(); i++) {
+                                JSONObject s = success.getJSONObject(i);
+                                ContentValues cv = new ContentValues();
+                                cv.put("status", s.optBoolean("status") ? 1 : 0);
+                                int subscriptionID = s.getInt("subscription_id");
+                                tableSubscription.updateSubscription(cv, subscriptionID);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.e("subExcp", e.getMessage());
+                    }
+
                 }
-
-                */
-
-                try {
-                    cv.put("access_token", String.valueOf(accessToken));
-                    cv.put("_id", String.valueOf(success.get("id")));
-
-                    cv.put("email", String.valueOf(success.get("email")));
-                    cv.put("username", String.valueOf(success.get("username")));
-                    cv.put("name", String.valueOf(success.get("name")));
-                    cv.put("ic_no", String.valueOf(success.get("ic_no")));
-                    cv.put("passport_no", String.valueOf(success.get("passport_no")));
-                    cv.put("mobile_no", String.valueOf(success.get("mobile_no")));
-                    cv.put("gender", String.valueOf(success.get("gender")));
-                    cv.put("dob", String.valueOf(success.get("dob")));
-                    cv.put("pr", String.valueOf(success.get("pr")));
-                    cv.put("resume_file", String.valueOf(success.get("resume_file")));
-                    cv.put("photo_file", String.valueOf(success.get("photo_file")));
-                    cv.put("access", String.valueOf(success.get("access")));
-                    cv.put("status", String.valueOf(success.get("status")));
-                    cv.put("country_id", String.valueOf(success.get("country_id")));
-                    cv.put("driving_license", String.valueOf(success.get("driving_license")));
-                    cv.put("transport", String.valueOf(success.get("transport")));
-                    cv.put("js_jobseek_status_id", String.valueOf(success.get("js_jobseek_status_id")));
-                    cv.put("availability", String.valueOf(success.get("availability")));
-                    cv.put("availability_unit", String.valueOf(success.get("availability_unit")));
-                    //cv.put("address", String.valueOf(success.get("address")));
-                    cv.put("no_work_exp", String.valueOf(success.get("no_work_exp")));
-                    cv.put("additional_info", String.valueOf(success.get("info")));
-                    cv.put("created_at", String.valueOf(success.get("created_at")));
-                    cv.put("updated_at", String.valueOf(success.get("updated_at")));
-
-                    Long newId = tblProfile.addProfile(cv);
-                    js_profile_id = newId.intValue();
-                    Log.e("js_profile_id", "" + js_profile_id);
-
-                    SharedPreferences.Editor spEdit = sharedPref.edit();
-                    spEdit.putInt("js_profile_id", js_profile_id);
-                    spEdit.commit();
-
-                    // default address
-                    ContentValues cv2 = new ContentValues();
-                    cv2.put("address1", "");
-                    cv2.put("address2", "");
-                    cv2.put("postcode", 0);
-                    cv2.put("city_id", 0);
-                    cv2.put("city_name", "");
-                    cv2.put("state_id", 0);
-                    cv2.put("state_name", "");
-                    cv2.put("country_id", 0);
-                    cv2.put("updated_at", Jenjobs.date(null, null, null));
-                    tblAddress.addAddress(cv2);
-
-                    if( sectionNumber == PROFILE_FRAGMENT && profileLayout != null ){
-                        TextView name = (TextView) profileLayout.findViewById(R.id.fullName);
-                        TextView email = (TextView) profileLayout.findViewById(R.id.email);
-                        TextView mobile_no = (TextView) profileLayout.findViewById(R.id.mobile_no);
-                        TextView ic_no = (TextView) profileLayout.findViewById(R.id.ic_no);
-                        TextView gender = (TextView) profileLayout.findViewById(R.id.gender);
-                        TextView dob = (TextView) profileLayout.findViewById(R.id.dob);
-                        TextView country = (TextView) profileLayout.findViewById(R.id.country);
-
-                        name.setText( String.valueOf(success.get("name")) );
-                        email.setText( String.valueOf(success.get("email")) );
-                        mobile_no.setText( String.valueOf(success.get("mobile_no")) );
-                        ic_no.setText( String.valueOf(success.get("ic_no")) );
-                        gender.setText( String.valueOf(success.get("gender")) );
-                        country.setText( String.valueOf(success.get("country")) );
-
-                        String _dob = String.valueOf(success.get("dob"));
-                        if( _dob != null ){
-                            dob.setText( Jenjobs.date(_dob, null, null) );
-                        }
-
-                        ImageView profileImage = (ImageView) profileLayout.findViewById(R.id.profile_image);
-                        if( String.valueOf(success.get("photo_file")) != null ){
-                            new ImageLoad(String.valueOf(success.get("photo_file")), profileImage).execute();
-                        }
-                    }
-
-                    // save address
-                    String address = String.valueOf(success.get("address"));
-
-                    if( address != null ){
-                        JSONObject jsonAddr = new JSONObject(address);
-                        if( jsonAddr != null ){
-                            ContentValues cv3 = new ContentValues();
-                            cv3.put("address1", jsonAddr.getString("address1"));
-                            cv3.put("address2", jsonAddr.getString("address2"));
-                            cv3.put("postcode", jsonAddr.getInt("postcode"));
-                            cv3.put("city_id", jsonAddr.getInt("city_id"));
-                            cv3.put("city_name", jsonAddr.getString("city_name"));
-                            cv3.put("state_id", jsonAddr.getInt("state_id"));
-                            cv3.put("state_name", jsonAddr.getString("state_name"));
-                            cv3.put("country_id", jsonAddr.getInt("country_id"));
-                            cv3.put("updated_at", jsonAddr.getString("date_updated"));
-                            tblAddress.updateAddress(cv3);
-                        }
-                    }
-
-                    // end save address
-                } catch (JSONException e) {
-                    Log.e("jsonexc", e.getMessage());
-                }
-
-
             }else{
                 Log.e("success", "null");
             }
         }
     }
-
 }
