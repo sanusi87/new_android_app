@@ -9,6 +9,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class TableSubscription extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "subscription";
 
+    public static final int SMS_JOB_ALERT = 1;
+    public static final int NEWSLETTER = 2;
+    public static final int PROMOTION = 3;
+
     /*
     {
         "subscription_name": "SMS Job Alert",
