@@ -473,7 +473,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             * */
             skill = (LinearLayout) rootView.findViewById(R.id.listOfSkill);
 
-            TableSkill tableSkill = new TableSkill(getActivity());
+            final TableSkill tableSkill = new TableSkill(getActivity());
             Cursor c = tableSkill.getSkill();
 
             c.moveToFirst();
@@ -494,6 +494,13 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         public void onClick(View vv) {
                             Log.e("clicked", "delete skill " + savedId);
                             skill.removeView(v);
+
+                        // delete from server
+                        String[] param = {Jenjobs.SKILL_URL};
+                        new DeleteRequest(actualId).execute(param);
+
+                        // delete from local
+                        tableSkill.deleteSkill(actualId);
                         }
                     });
                     ((TextView)v.findViewById(R.id.skillText)).setText(skillName);

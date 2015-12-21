@@ -281,7 +281,7 @@ public class TableProfile extends SQLiteOpenHelper{
         @Override
         protected void onPostExecute(String result) {
             if( this.downloadItem == JOB_SPEC ){
-                
+
                 try {
                     JSONObject success = new JSONObject(result);
                     Iterator i = success.keys();
