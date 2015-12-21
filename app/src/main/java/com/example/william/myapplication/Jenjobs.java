@@ -1,11 +1,8 @@
 package com.example.william.myapplication;
 
-import android.net.ParseException;
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +11,16 @@ import java.util.Locale;
 public class Jenjobs {
     public static final String DATABASE_NAME = "jenjobs";
     public static final int DATABASE_VERSION = 1;
+
+    public static final String PROFILE_URL = "http://api.jenjobs.com/jobseeker/profile";
+    public static final String APPLICATION_URL = "http://api.jenjobs.com/jobseeker/application";
+    public static final String WORK_EXPERIENCE_URL = "http://api.jenjobs.com/jobseeker/work-experience";
+    public static final String EDUCATION_URL = "http://api.jenjobs.com/jobseeker/qualification";
+    public static final String JOB_PREFERENCE_URL = "http://api.jenjobs.com/jobseeker/job-preference";
+    public static final String SKILL_URL = "http://api.jenjobs.com/jobseeker/skill";
+    public static final String LANGUAGE_URL = "http://api.jenjobs.com/jobseeker/language";
+    public static final String BOOKMARK_URL = "http://api.jenjobs.com/jobseeker/bookmark";
+    public static final String SUBSCRIPTION_URL = "http://api.jenjobs.com/jobseeker/subscription";
 
     /*
     "jobType": {
