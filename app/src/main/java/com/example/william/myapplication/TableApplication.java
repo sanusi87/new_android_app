@@ -27,7 +27,10 @@ public class TableApplication extends SQLiteOpenHelper {
             "_id INTEGER, " +
             "post_id INTEGER, " +
             "status INTEGER(3), " +
-            "date_created NUMERIC, date_updated NUMERIC, title TEXT, closed INTEGER(1));";
+            "date_created NUMERIC," +
+            "date_updated NUMERIC," +
+            "title TEXT," +
+            "closed INTEGER(1));";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableApplication.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
