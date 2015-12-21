@@ -323,7 +323,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
             String _dob = theProfile.dob;
             if( _dob != null ){
-                dob.setText( Jenjobs.date(_dob, null, "yyyy-M-d") );
+                dob.setText( Jenjobs.date(_dob, null, "yyyy-MM-dd") );
             }
 
             Button buttonUpdateProfile = (Button)rootView.findViewById(R.id.buttonUpdateProfile);
@@ -477,24 +477,29 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             Cursor c = tableSkill.getSkill();
 
             c.moveToFirst();
-            while( !c.isAfterLast() ){
-                final int savedId = c.getInt(0); //id
-                final int actualId = c.getInt(1); //_id
-                String skillName = c.getString(2); //name
 
-                final View v = getActivity().getLayoutInflater().inflate(R.layout.each_skill, null);
-                skill.addView(v);
+            if( c.moveToFirst() && c.getCount() > 0 ){
+                ((ViewGroup)skill).removeView(skill.findViewById(R.id.emptyText));
 
-                ((Button)v.findViewById(R.id.deleteSkillButton)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View vv) {
-                        Log.e("clicked", "delete skill " + savedId);
-                        skill.removeView(v);
-                    }
-                });
-                ((TextView)v.findViewById(R.id.skillText)).setText(skillName);
+                while( !c.isAfterLast() ){
+                    final int savedId = c.getInt(0); //id
+                    final int actualId = c.getInt(1); //_id
+                    String skillName = c.getString(2); //name
 
-                c.moveToNext();
+                    final View v = getActivity().getLayoutInflater().inflate(R.layout.each_skill, null);
+                    skill.addView(v);
+
+                    ((Button)v.findViewById(R.id.deleteSkillButton)).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View vv) {
+                            Log.e("clicked", "delete skill " + savedId);
+                            skill.removeView(v);
+                        }
+                    });
+                    ((TextView)v.findViewById(R.id.skillText)).setText(skillName);
+
+                    c.moveToNext();
+                }
             }
 
             Button addSkillButton = (Button)rootView.findViewById(R.id.add_skill);
@@ -864,7 +869,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                             String _dob = String.valueOf(success.get("dob"));
                             if( _dob != null ){
-                                dob.setText( Jenjobs.date(_dob, null, null) );
+                                dob.setText( Jenjobs.date(_dob, null, "yyyy-MM-dd") );
                             }
 
                             ImageView profileImage = (ImageView) profileLayout.findViewById(R.id.profile_image);
