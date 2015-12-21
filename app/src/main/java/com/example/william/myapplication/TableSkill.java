@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 public class TableSkill extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "skill";
 
@@ -58,5 +60,23 @@ public class TableSkill extends SQLiteOpenHelper{
             return true;
         }
         return false;
+    }
+
+    public String[] findSkillById(int skillId) {
+        String[] s = null;
+        Cursor c = db.rawQuery("SELECT * FROM "+TableSkill.TABLE_NAME+" WHERE id="+skillId, null);
+        if( c.moveToFirst() ){
+            /*
+            * 0 => savedId
+            * 1 => actualId = id in remote server
+            * 2 => skill name
+            * */
+
+            s = new String[]{c.getString(0),c.getString(1),c.getString(2)};
+
+            c.moveToNext();
+        }
+
+        return s;
     }
 }

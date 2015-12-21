@@ -102,11 +102,13 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
      */
     private CharSequence mTitle;
     SharedPreferences sharedPref;
+    static String accessToken = null;
 
     private DialogFragment filterDialog;
     private String JOBFILTER = "job_filter";
 
     private static Context context;
+    static TableSkill tableSkill;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +126,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         mNavigationDrawerFragment.setHasOptionsMenu(true);
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        String accessToken = sharedPref.getString("access_token", null);
+        accessToken = sharedPref.getString("access_token", null);
 
         int jsProfileId = sharedPref.getInt("js_profile_id", 0);
         String emailAddress = sharedPref.getString("email", null);
@@ -172,6 +174,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }
 
         context = getApplicationContext();
+
+        tableSkill = new TableSkill(context);
     }
 
 
@@ -473,13 +477,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             * */
             skill = (LinearLayout) rootView.findViewById(R.id.listOfSkill);
 
-            final TableSkill tableSkill = new TableSkill(getActivity());
+            //final TableSkill tableSkill = new TableSkill(getActivity());
             Cursor c = tableSkill.getSkill();
 
-            c.moveToFirst();
-
             if( c.moveToFirst() && c.getCount() > 0 ){
-                ((ViewGroup)skill).removeView(skill.findViewById(R.id.emptyText));
+                skill.removeView(skill.findViewById(R.id.emptyText));
 
                 while( !c.isAfterLast() ){
                     final int savedId = c.getInt(0); //id
@@ -489,18 +491,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     final View v = getActivity().getLayoutInflater().inflate(R.layout.each_skill, null);
                     skill.addView(v);
 
-                    ((Button)v.findViewById(R.id.deleteSkillButton)).setOnClickListener(new View.OnClickListener() {
+                    v.findViewById(R.id.deleteSkillButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View vv) {
                             Log.e("clicked", "delete skill " + savedId);
                             skill.removeView(v);
 
-                        // delete from server
-                        String[] param = {Jenjobs.SKILL_URL};
-                        new DeleteRequest(actualId).execute(param);
+                            // delete from server
+                            String[] param = {Jenjobs.SKILL_URL+"/"+actualId+"?access-token="+accessToken};
+                            new DeleteRequest().execute(param);
 
-                        // delete from local
-                        tableSkill.deleteSkill(actualId);
+                            // delete from local
+                            tableSkill.deleteSkill(savedId);
                         }
                     });
                     ((TextView)v.findViewById(R.id.skillText)).setText(skillName);
@@ -670,17 +672,26 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 Log.e("skill_id", ""+skillId);
 
                 if( skill.findViewById(R.id.emptyText) != null ){
-                    ((ViewGroup)skill).removeView(skill.findViewById(R.id.emptyText));
+                    skill.removeView(skill.findViewById(R.id.emptyText));
                 }
 
-                View v = getLayoutInflater().inflate(R.layout.each_skill, null);
+                final View v = getLayoutInflater().inflate(R.layout.each_skill, null);
                 skill.addView(v);
 
-                ((Button)v.findViewById(R.id.deleteSkillButton)).setOnClickListener(new View.OnClickListener() {
+                v.findViewById(R.id.deleteSkillButton).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        Log.e("clicked", "open edit modal:" + skillId);
-                        // delete
+                    public void onClick(View _v) {
+                        //TableSkill tableSkill = new TableSkill(getApplicationContext());
+                        String[] _skill = tableSkill.findSkillById(skillId);
+
+                        skill.removeView(v);
+
+                        // delete from server
+                        String[] param = {Jenjobs.SKILL_URL+"/"+_skill[1]+"?access-token="+accessToken};
+                        new DeleteRequest().execute(param);
+
+                        // delete from local
+                        tableSkill.deleteSkill(skillId);
                     }
                 });
                 ((TextView)v.findViewById(R.id.skillText)).setText(skillName);
@@ -759,7 +770,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             downloadSection = sectionToDownload;
         }
 
-        private String accessToken;
+        //private String accessToken;
 
         @Override
         protected String doInBackground(String... params) {
@@ -772,15 +783,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             final HttpGet httpget = new HttpGet( url );
             httpget.addHeader("Content-Type", "application/json");
             httpget.addHeader("Accept", "application/json");
-            HttpResponse _http_response = null;
 
             try {
-                _http_response = httpclient.execute(httpget);
+                HttpResponse _http_response = httpclient.execute(httpget);
                 HttpEntity _entity = _http_response.getEntity();
                 InputStream is = _entity.getContent();
-                String responseString = JenHttpRequest.readInputStreamAsString(is);
+                _response = JenHttpRequest.readInputStreamAsString(is);
                 //_response = JenHttpRequest.decodeJsonObjectString(responseString);
-                _response = responseString;
+                //_response = responseString;
             } catch (ClientProtocolException e) {
                 Log.e("ClientProtocolException", e.getMessage());
             } catch (UnsupportedEncodingException e) {
@@ -795,12 +805,12 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         @Override
         protected void onPostExecute(final String nsuccess) {
             if( nsuccess != null ){
-                Log.e("success", nsuccess.toString());
+                Log.e("success", nsuccess);
 
                 if( downloadSection == DOWNLOAD_PROFILE ){
 
-                    JSONObject success = null;
-                    int js_profile_id = 0;
+                    JSONObject success;
+                    int js_profile_id;
 
                     TableProfile tblProfile = new TableProfile(getApplicationContext());
                     TableAddress tblAddress = new TableAddress(getApplicationContext());
@@ -1041,7 +1051,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 }else if( downloadSection == DOWNLOAD_SKILL ){
 
-                    TableSkill tableSkill = new TableSkill(getApplicationContext());
+                    //TableSkill tableSkill = new TableSkill(getApplicationContext());
                     JSONArray success = null;
 
                     try {
