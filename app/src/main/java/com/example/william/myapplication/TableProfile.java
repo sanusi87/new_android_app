@@ -73,20 +73,20 @@ public class TableProfile extends SQLiteOpenHelper{
         ContentValues cv3 = new ContentValues();
         cv1.put("subscription_name", "Emails of newsletter, promotion, career advise from JenJOBS");
         cv1.put("subscription_id", "1");
-        cv1.put("status", 1);
+        cv1.put("status", TableSubscription.NEWSLETTER);
         cv2.put("subscription_name", "Promotion emails from JenJOBS partners and affiliates");
         cv2.put("subscription_id", "2");
-        cv2.put("status", 1);
+        cv2.put("status", TableSubscription.PROMOTION);
         cv3.put("subscription_name", "SMS Job Alert");
         cv3.put("subscription_id", "3");
-        cv3.put("status", 1);
+        cv3.put("status", TableSubscription.SMS_JOB_ALERT);
         db.insert(TableSubscription.TABLE_NAME, null, cv1);
         db.insert(TableSubscription.TABLE_NAME, null, cv2);
         db.insert(TableSubscription.TABLE_NAME, null, cv3);
         // end insert subscription
 
         // insert settings
-        String[] ss = {"sms_job_alert", "notification_alert", "newsletter_alert", "promotion_alert"};
+        String[] ss = {"notification_alert"};
         for( int i=0;i<ss.length;i++ ){
             ContentValues cv8 = new ContentValues();
             cv8.put("setting_key", ss[i]);
@@ -111,6 +111,15 @@ public class TableProfile extends SQLiteOpenHelper{
             cv8.put("dial_code", countries.get(i)[2]);
             db.insert(TableCountry.TABLE_NAME, null, cv8);
         }
+
+        // job preference
+        ContentValues cv = new ContentValues();
+        cv.put("salary", 0);
+        cv.put("currency_id", 6);
+        cv.put("state_id", "");
+        cv.put("country_id", "");
+        cv.put("job_type_id", "");
+        db.insert(TableJobPreference.TABLE_NAME, null, cv);
     }
 
     @Override
