@@ -98,6 +98,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     private static LinearLayout skill;
     private static TextView additionalInfo;
     private static LinearLayout listOfWorkExp;
+    private static LinearLayout listOfEducation;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -369,16 +370,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 int previousLastPosition = 0;
 
                 @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-                }
+                public void onScrollStateChanged(AbsListView view, int scrollState) {}
 
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                     final int lastPosition = firstVisibleItem + visibleItemCount;
                     if (lastPosition == totalItemCount) {
                         if (previousLastPosition != lastPosition) {
-                            Log.e("load", "more more");
+                            //Log.e("load", "more more");
                             jobSearch.setPage( jobSearch.getPage()+1 );
                             jobSearch.search(false);
                         }
@@ -514,7 +513,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }
             });
 
-            final LinearLayout listOfEducation = (LinearLayout)rootView.findViewById(R.id.listOfEducation);
+            listOfEducation = (LinearLayout)rootView.findViewById(R.id.listOfEducation);
             Cursor ce = tableEducation.getEducation();
             if( ce.moveToFirst() ){
                 listOfEducation.removeAllViews();
@@ -550,6 +549,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ((TextView)v.findViewById(R.id.school)).setText(school);
                     ((TextView)v.findViewById(R.id.graduationYear)).setText( graduationYear );
 
+                    final int selectedEdu = ce.getPosition();
                     LinearLayout updateEducation = (LinearLayout)v.findViewById(R.id.updateEducation);
                     updateEducation.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -557,6 +557,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             Intent intent = new Intent();
                             intent.setClass(getActivity(),  UpdateEducation.class);
                             intent.putExtra("id", savedId);
+                            intent.putExtra("selectedEdu", selectedEdu);
                             getActivity().startActivityForResult(intent, ADD_EDU);
                         }
                     });
@@ -566,14 +567,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         @Override
                         public void onClick(View _v) {
                             // TODO: delete view
-                            listOfWorkExp.removeView(v);
+                            listOfEducation.removeView(v);
 
                             // TODO: delete from server
-                            String[] param = {Jenjobs.WORK_EXPERIENCE_URL+"/"+actualId+"?access-token="+accessToken};
+                            String[] param = {Jenjobs.EDUCATION_URL+"/"+actualId+"?access-token="+accessToken};
                             new DeleteRequest().execute(param);
 
                             // TODO: delete record
-                            tableWorkExperience.deleteWorkExperience(savedId);
+                            tableEducation.deleteEducation(savedId);
                         }
                     });
 
@@ -781,11 +782,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
         }else if( requestCode == ADD_WORK_EXP ){
             if (resultCode == RESULT_OK) {
-                int id = extra.getInt("id");
+                final int id = extra.getInt("id");
                 int prevWork = extra.getInt("selectedWork");
 
-                View v;
-                if( prevWork > 0 ){
+                final View v;
+                if( prevWork >= 0 ){
                     v = listOfWorkExp.getChildAt(prevWork);
                 }else{
                     v = getLayoutInflater().inflate(R.layout.each_work_experience, null);
@@ -794,26 +795,109 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 Cursor c = tableWorkExperience.getWorkExperienceById(id);
                 if( c.moveToFirst() ){
-                    String positionTitle = c.getString(2);
+                    final int actualId = c.getInt(1);
+                    final String positionTitle = c.getString(2);
                     String companyName = c.getString(3);
                     String dateStart = c.getString(12);
 
                     ((TextView)v.findViewById(R.id.positionTitle)).setText( positionTitle );
                     ((TextView)v.findViewById(R.id.companyName)).setText( companyName );
-                    ((TextView)v.findViewById(R.id.startedOn)).setText( Jenjobs.date(dateStart, null, "yyyy-MM-dd") );
+                    ((TextView)v.findViewById(R.id.startedOn)).setText(Jenjobs.date(dateStart, null, "yyyy-MM-dd"));
+
+                    if( prevWork < 0 ){
+                        // TODO: bind events to new element
+                        final int selectedWork = listOfWorkExp.getChildCount()-1;
+                        LinearLayout updateWorkExp = (LinearLayout)v.findViewById(R.id.updateWorkExperience);
+                        updateWorkExp.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View _v) {
+                                Intent intent = new Intent();
+                                intent.setClass(context,  UpdateWorkExperience.class);
+                                intent.putExtra("id", id);
+                                intent.putExtra("selectedWork", selectedWork);
+                                startActivityForResult(intent, ADD_WORK_EXP);
+                            }
+                        });
+
+                        Button deleteButton = (Button)v.findViewById(R.id.deleteButton);
+                        deleteButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View _v) {
+                                // TODO: delete view
+                                listOfWorkExp.removeView(v);
+
+                                // TODO: delete from server
+                                String[] param = {Jenjobs.WORK_EXPERIENCE_URL + "/" + actualId + "?access-token=" + accessToken};
+                                new DeleteRequest().execute(param);
+
+                                // TODO: delete record
+                                tableWorkExperience.deleteWorkExperience(id);
+                            }
+                        });
+                    }
 
                     c.close();
                 }
             }
         }else if( requestCode == ADD_EDU ){
             if (resultCode == RESULT_OK) {
-                Log.e("filterdata", extra.getString("result"));
-                Log.e("filterdata", extra.toString());
-            }
-        }else if( requestCode == UPDATE_EDU ){
-            if (resultCode == RESULT_OK) {
-                Log.e("filterdata", extra.getString("result"));
-                Log.e("filterdata", extra.toString());
+                final int id = extra.getInt("id");
+                int prevEdu = extra.getInt("selectedEdu");
+
+                final View v;
+                if( prevEdu >= 0 ){
+                    v = listOfEducation.getChildAt(prevEdu);
+                }else{
+                    v = getLayoutInflater().inflate(R.layout.each_education, null);
+                    listOfEducation.addView(v);
+                }
+
+                Cursor c = tableEducation.getEducationById(id);
+                HashMap<Integer,String> eduLv = Jenjobs.getEducationLevel();
+                if( c.moveToFirst() ){
+                    final int actualId = c.getInt(1);
+                    String school = c.getString(2);
+                    String graduationYear = Jenjobs.date(c.getString(9), "yyyy", "yyyy-MM-dd");
+                    String eduLevel = eduLv.get(c.getInt(4));
+
+                    ((TextView)v.findViewById(R.id.educationLevel)).setText( eduLevel );
+                    ((TextView)v.findViewById(R.id.school)).setText(school);
+                    ((TextView)v.findViewById(R.id.graduationYear)).setText( graduationYear );
+
+                    if( prevEdu < 0 ){
+                        // TODO: bind events to new element
+                        final int selectedEdu = listOfEducation.getChildCount()-1;
+                        LinearLayout updateWorkExp = (LinearLayout)v.findViewById(R.id.updateEducation);
+                        updateWorkExp.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View _v) {
+                                Intent intent = new Intent();
+                                intent.setClass(context,  UpdateEducation.class);
+                                intent.putExtra("id", id);
+                                intent.putExtra("selectedEdu", selectedEdu);
+                                startActivityForResult(intent, ADD_EDU);
+                            }
+                        });
+
+                        Button deleteButton = (Button)v.findViewById(R.id.deleteButton);
+                        deleteButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View _v) {
+                                // TODO: delete view
+                                listOfWorkExp.removeView(v);
+
+                                // TODO: delete from server
+                                String[] param = {Jenjobs.EDUCATION_URL + "/" + actualId + "?access-token=" + accessToken};
+                                new DeleteRequest().execute(param);
+
+                                // TODO: delete record
+                                tableEducation.deleteEducation(id);
+                            }
+                        });
+                    }
+
+                    c.close();
+                }
             }
         }else if( requestCode == UPDATE_RESUME_VISIBILITY ){
             if (resultCode == RESULT_OK) {

@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class SelectJobSpec extends ActionBarActivity {
+public class SelectJobSpec extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class SelectJobSpec extends ActionBarActivity {
         Bundle extra = getIntent().getExtras();
         // checked selected index
         if( extra != null ){
-            ArrayList<JobSpec> selectedJobSpecs = (ArrayList<JobSpec>) extra.get("positionlevel");
+            ArrayList<JobSpec> selectedJobSpecs = (ArrayList<JobSpec>) extra.get("jobspec");
             if( selectedJobSpecs != null && selectedJobSpecs.size() > 0 ){
                 for(int i=0; i < selectedJobSpecs.size();i++){
                     JobSpec value = selectedJobSpecs.get(i);

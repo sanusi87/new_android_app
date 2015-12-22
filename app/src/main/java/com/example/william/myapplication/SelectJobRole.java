@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class SelectJobRole extends ActionBarActivity {
+public class SelectJobRole extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class SelectJobRole extends ActionBarActivity {
         Bundle extra = getIntent().getExtras();
         // checked selected index
         if( extra != null ){
-            ArrayList<JobRole> selectedJobRoles = (ArrayList<JobRole>) extra.get("positionlevel");
+            ArrayList<JobRole> selectedJobRoles = (ArrayList<JobRole>) extra.get("jobrole");
             if( selectedJobRoles != null && selectedJobRoles.size() > 0 ){
                 for(int i=0; i < selectedJobRoles.size();i++){
                     JobRole value = selectedJobRoles.get(i);

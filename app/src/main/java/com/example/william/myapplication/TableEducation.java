@@ -79,4 +79,10 @@ public class TableEducation extends SQLiteOpenHelper{
         }
         return false;
     }
+
+    public Cursor getEducationById(int id) {
+        String[] _id = {String.valueOf(id)};
+        Cursor c = db.rawQuery("SELECT * FROM "+TableEducation.TABLE_NAME+" WHERE id=?", _id);
+        return c;
+    }
 }
