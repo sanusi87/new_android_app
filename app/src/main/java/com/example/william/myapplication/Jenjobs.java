@@ -738,7 +738,7 @@ public class Jenjobs {
 
         _listOfYear.add("--none--");
         int year = cal.get(Calendar.YEAR);
-        for( int i=year-50; i <= year; i++ ){
+        for( int i=year-20; i <= year; i++ ){
             _listOfYear.add(String.valueOf(i));
         }
 

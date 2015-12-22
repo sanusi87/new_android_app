@@ -270,7 +270,7 @@ public class TableProfile extends SQLiteOpenHelper{
                 HttpEntity _entity = _http_response.getEntity();
                 InputStream is = _entity.getContent();
 
-                String responseString = JenHttpRequest.readInputStreamAsString(is);
+                _response = JenHttpRequest.readInputStreamAsString(is);
                 //_response = JenHttpRequest.decodeJsonObjectString(responseString);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -280,39 +280,40 @@ public class TableProfile extends SQLiteOpenHelper{
 
         @Override
         protected void onPostExecute(String result) {
-            if( this.downloadItem == JOB_SPEC ){
+            if( result != null ){
+                if( this.downloadItem == JOB_SPEC ){
 
-                try {
-                    JSONObject success = new JSONObject(result);
-                    Iterator i = success.keys();
-                    while ( i.hasNext() ){
-                        String jobSpecId = (String) i.next();
-                        JSONObject jobSpec = success.getJSONObject(jobSpecId);
+                    try {
+                        JSONObject success = new JSONObject(result);
+                        Iterator i = success.keys();
+                        while ( i.hasNext() ){
+                            String jobSpecId = (String) i.next();
+                            JSONObject jobSpec = success.getJSONObject(jobSpecId);
 
-                        ContentValues cv = new ContentValues();
-                        cv.put("id", jobSpecId);
-                        cv.put("spec_name", jobSpec.getString("name"));
-                        db.insert(TableJobSpec.TABLE_NAME, null, cv);
+                            ContentValues cv = new ContentValues();
+                            cv.put("id", jobSpecId);
+                            cv.put("spec_name", jobSpec.getString("name"));
+                            db.insert(TableJobSpec.TABLE_NAME, null, cv);
 
-                        JSONObject jobRole = jobSpec.getJSONObject("roles");
-                        Iterator r = jobRole.keys();
-                        while( r.hasNext() ){
-                            String jobRoleId = (String) r.next();
-                            String jobRoleName = jobRole.getString(jobRoleId);
+                            JSONObject jobRole = jobSpec.getJSONObject("roles");
+                            Iterator r = jobRole.keys();
+                            while( r.hasNext() ){
+                                String jobRoleId = (String) r.next();
+                                String jobRoleName = jobRole.getString(jobRoleId);
 
-                            ContentValues cv2 = new ContentValues();
-                            cv2.put("id", jobRoleId);
-                            cv2.put("role_name", jobRoleName);
-                            db.insert(TableJobRole.TABLE_NAME, null, cv2);
+                                ContentValues cv2 = new ContentValues();
+                                cv2.put("id", jobRoleId);
+                                cv2.put("role_name", jobRoleName);
+                                db.insert(TableJobRole.TABLE_NAME, null, cv2);
+                            }
                         }
+
+                    } catch (JSONException e) {
+                        Log.e("dwnErr", e.getMessage());
                     }
+                }else if( this.downloadItem == INDUSTRY ){
 
-                } catch (JSONException e) {
-                    Log.e("dwnErr", e.getMessage());
                 }
-
-            }else if( this.downloadItem == INDUSTRY ){
-
             }
         }
 

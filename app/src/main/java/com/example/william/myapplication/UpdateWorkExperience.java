@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -19,11 +20,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class UpdateWorkExperience extends ActionBarActivity {
+
+    private static final int SELECT_JOB_SPEC = 1;
+    private static final int SELECT_JOB_ROLE = 2;
 
     TableWorkExperience tableWorkExperience;
     TableJobSpec tableJobSpec;
@@ -31,6 +36,11 @@ public class UpdateWorkExperience extends ActionBarActivity {
 
     SharedPreferences sharedPreferences;
     String accessToken;
+
+    LinearLayout jobSpec;
+    TextView selectedJobSpec;
+    LinearLayout jobRole;
+    TextView selectedJobRole;
 
     int theJobSpec = 0;
     int theJobRole = 0;
@@ -45,6 +55,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
         tableJobRole = new TableJobRole(this);
         int currentId = 0;
         int savedId = 0;
+        int selectedWork = 0;
 
         sharedPreferences = getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPreferences.getString("access_token", null);
@@ -70,11 +81,11 @@ public class UpdateWorkExperience extends ActionBarActivity {
         currency.setAdapter(ca);
         final EditText salary = (EditText)findViewById(R.id.salary_amount);
 
-        LinearLayout jobSpec = (LinearLayout)findViewById(R.id.selectJobSpec);
-        final TextView selectedJobSpec = (TextView)findViewById(R.id.selectedJobSpec);
+        jobSpec = (LinearLayout)findViewById(R.id.selectJobSpec);
+        selectedJobSpec = (TextView)findViewById(R.id.selectedJobSpec);
 
-        LinearLayout jobRole = (LinearLayout)findViewById(R.id.selectJobRole);
-        final TextView selectedJobRole = (TextView)findViewById(R.id.selectedJobRole);
+        jobRole = (LinearLayout)findViewById(R.id.selectJobRole);
+        selectedJobRole = (TextView)findViewById(R.id.selectedJobRole);
 
         // industry
         final Spinner industry = (Spinner)findViewById(R.id.company_industry);
@@ -99,8 +110,9 @@ public class UpdateWorkExperience extends ActionBarActivity {
         final EditText exp = (EditText)findViewById(R.id.experience_text);
 
         Bundle extra = getIntent().getExtras();
-        if( !extra.isEmpty() ){
+        if( extra != null ){
             currentId = extra.getInt("id");
+            selectedWork = extra.getInt("selectedWork");
             Cursor w = tableWorkExperience.getWorkExperienceById(currentId);
             if( w.moveToFirst() ) {
                 if( w.getInt(1) > 0 ){
@@ -111,13 +123,13 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 companyName.setText(w.getString(3));
                 salary.setText(w.getString(10));
 
-                currency.setSelection( ca.findPosition( w.getString( 11 ) ) );
+                currency.setSelection( ca.findPosition( w.getInt(11) ) );
                 employmentType.setSelection(jta.findPosition(w.getInt(6)));
                 jobLevel.setSelection(jla.findPosition(w.getInt(7)));
                 industry.setSelection(ia.findPosition(w.getInt(8)));
 
                 theJobSpec = w.getInt( 4 );
-                JobSpec _jobSpec = tableJobSpec.findById( theJobSpec );
+                JobSpec _jobSpec = tableJobSpec.findById(theJobSpec);
                 selectedJobSpec.setText(_jobSpec.name);
 
                 theJobRole = w.getInt(5);
@@ -125,18 +137,25 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 selectedJobRole.setText(_jobRole.name);
 
                 String startDate = w.getString( 12 );
-                String[] startDatePart = startDate.split( "\\-" );
+                String[] startDatePart = startDate.split("\\-");
+                int a = Integer.valueOf(startDatePart[1]);
+                if( a < 10 ){ startDatePart[1] = ""+a; }
                 monthStart.setSelection( monthAdapter.getPosition( startDatePart[1] ) );
                 yearStart.setSelection( yearAdapter.getPosition( startDatePart[0] ) );
 
                 String endDate = w.getString( 13 );
-                if( endDate != null ){
+                Log.e("endDate", ""+endDate);
+                if( endDate != null && !endDate.equals("null") ){
                     String[] endDatePart = endDate.split( "\\-" );
+                    Log.e("endDatePart", ""+endDatePart.length);
                     monthEnd.setSelection( monthAdapter.getPosition( endDatePart[1] ) );
                     yearEnd.setSelection( yearAdapter.getPosition( endDatePart[0] ) );
                 }
 
-                exp.setText( w.getString( 9 ) );
+                if( !w.getString(9).equals("null") ){
+                    // TODO: write html
+                    exp.setText(Html.fromHtml(w.getString(9)) );
+                }
 
             }
             w.close();
@@ -146,14 +165,18 @@ public class UpdateWorkExperience extends ActionBarActivity {
         jobSpec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), SelectJobSpec.class);
+                startActivityForResult(intent, SELECT_JOB_SPEC);
             }
         });
 
         jobRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), SelectJobRole.class);
+                startActivityForResult(intent, SELECT_JOB_ROLE);
             }
         });
 
@@ -162,6 +185,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
 
         final int finalCurrentId = currentId;
         final int finalSavedId = savedId;
+        final int finalSelectedWork = selectedWork;
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,7 +211,10 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     errors.add("Please specify the month and year you start this work.");
                 }
 
-                if( monthEnd.getSelectedItemPosition() != Spinner.INVALID_POSITION || yearEnd.getSelectedItemPosition() != Spinner.INVALID_POSITION ){
+                Log.e("invalid", ""+Spinner.INVALID_POSITION);
+                Log.e("monthEnd", ""+monthEnd.getSelectedItemPosition());
+                Log.e("yearEnd", ""+yearEnd.getSelectedItemPosition());
+                if( monthEnd.getSelectedItemPosition() != 0 || yearEnd.getSelectedItemPosition() != 0 ){
                     errors.add("Please specify both resignation month and year, or left both blank.");
                 }
 
@@ -253,14 +280,16 @@ public class UpdateWorkExperience extends ActionBarActivity {
 
                     String _monthStart = monthStart.getSelectedItem().toString();
                     String _yearStart = yearStart.getSelectedItem().toString();
-                    cv.put("started_on", _yearStart+"-"+_monthStart+"-01");
+                    String startedOn = _yearStart+"-"+_monthStart+"-01";
+                    cv.put("started_on", startedOn);
 
-                    if( monthEnd.getSelectedItemPosition() != Spinner.INVALID_POSITION && yearEnd.getSelectedItemPosition() != Spinner.INVALID_POSITION ){
+                    String endOn = null;
+                    if( monthEnd.getSelectedItemPosition() != 0 || yearEnd.getSelectedItemPosition() != 0 ){
                         String _monthEnd = monthEnd.getSelectedItem().toString();
                         String _yearEnd = yearEnd.getSelectedItem().toString();
-                        cv.put("resigned_on", _yearEnd+"-"+_monthEnd+"-01");
+                        endOn = _yearEnd+"-"+_monthEnd+"-01";
                     }
-
+                    cv.put("resigned_on", ""+endOn);
                     cv.put("update_at", Jenjobs.date(null, "yyyy-MM-dd", null));
 
                     int localId = finalCurrentId;
@@ -276,12 +305,33 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     String url = Jenjobs.WORK_EXPERIENCE_URL;
                     if( finalSavedId > 0 ){ url += "/"+ finalSavedId; }
                     url += "?access-token=" + accessToken;
-                    Log.e("url", url);
+
+                    try {
+                        obj.put("job_spec_id", theJobSpec);
+                        obj.put("job_role_id", theJobRole);
+                        obj.put("job_type_id", jt.id);
+                        obj.put("job_level_id", jl.id);
+                        obj.put("industry_id", ind.id);
+                        obj.put("currency_id", _currency.id);
+                        obj.put("position", thePositionTitle);
+                        obj.put("company", theCompanyName);
+                        obj.put("experience", experience);
+                        obj.put("salary", salary.getText().toString());
+                        obj.put("started_on", startedOn);
+                        obj.put("resigned_on", ""+endOn);
+
+                    } catch (JSONException e) {
+                        Log.e("jsonExcpt", e.getMessage());
+                    }
+                    Log.e("obj", obj.toString());
                     String[] s = {url, obj.toString()};
                     new PostRequest().execute(s);
 
                     Intent intent = new Intent();
                     intent.putExtra("id", localId);
+                    if( finalSelectedWork > 0 ){
+                        intent.putExtra("selectedWork", finalSelectedWork);
+                    }
                     setResult(Activity.RESULT_OK, intent);
                     finish();
                 }else{
@@ -297,6 +347,23 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SELECT_JOB_SPEC) {
+            if (resultCode == RESULT_OK) {
+                Bundle extra = data.getExtras();
+                JobSpec jobSpec = (JobSpec)extra.get("spec");
+                selectedJobSpec.setText(jobSpec.name);
+            }
+        }else if( requestCode == SELECT_JOB_ROLE ){
+            if (resultCode == RESULT_OK) {
+                Bundle extra = data.getExtras();
+                JobRole jobrole = (JobRole)extra.get("role");
+                selectedJobRole.setText(jobrole.name);
+            }
+        }
     }
 
 }

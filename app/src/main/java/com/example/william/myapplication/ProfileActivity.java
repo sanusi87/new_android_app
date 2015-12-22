@@ -78,7 +78,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     * online resume
     * */
     public static final int ADD_WORK_EXP = 10;
-    public static final int UPDATE_WORK_EXP = 11;
+    //public static final int UPDATE_WORK_EXP = 11;
     public static final int ADD_EDU = 12;
     public static final int UPDATE_EDU = 13;
     public static final int UPDATE_RESUME_VISIBILITY = 14;
@@ -97,6 +97,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     private static TextView jobPreference;
     private static LinearLayout skill;
     private static TextView additionalInfo;
+    private static LinearLayout listOfWorkExp;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -426,7 +427,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }
             });
 
-            final LinearLayout listOfWorkExp = (LinearLayout)rootView.findViewById(R.id.listOfWorkExperience);
+            listOfWorkExp = (LinearLayout)rootView.findViewById(R.id.listOfWorkExperience);
             Cursor cw = tableWorkExperience.getWorkExperience();
             if( cw.moveToFirst() ){
                 listOfWorkExp.removeAllViews();
@@ -467,6 +468,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     // TODO: calculate duration
                     //((TextView)v.findViewById(R.id.workDuration)).setText(  );
 
+                    final int selectedWork = cw.getPosition();
                     LinearLayout updateWorkExp = (LinearLayout)v.findViewById(R.id.updateWorkExperience);
                     updateWorkExp.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -474,6 +476,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             Intent intent = new Intent();
                             intent.setClass(getActivity(),  UpdateWorkExperience.class);
                             intent.putExtra("id", savedId);
+                            intent.putExtra("selectedWork", selectedWork);
                             getActivity().startActivityForResult(intent, ADD_WORK_EXP);
                         }
                     });
@@ -493,6 +496,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             tableWorkExperience.deleteWorkExperience(savedId);
                         }
                     });
+
+                    cw.moveToNext();
                 }
             }
 
@@ -776,13 +781,29 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
         }else if( requestCode == ADD_WORK_EXP ){
             if (resultCode == RESULT_OK) {
-                Log.e("filterdata", extra.getString("result"));
-                Log.e("filterdata", extra.toString());
-            }
-        }else if( requestCode == UPDATE_WORK_EXP ){
-            if (resultCode == RESULT_OK) {
-                Log.e("filterdata", extra.getString("result"));
-                Log.e("filterdata", extra.toString());
+                int id = extra.getInt("id");
+                int prevWork = extra.getInt("selectedWork");
+
+                View v;
+                if( prevWork > 0 ){
+                    v = listOfWorkExp.getChildAt(prevWork);
+                }else{
+                    v = getLayoutInflater().inflate(R.layout.each_work_experience, null);
+                    listOfWorkExp.addView(v);
+                }
+
+                Cursor c = tableWorkExperience.getWorkExperienceById(id);
+                if( c.moveToFirst() ){
+                    String positionTitle = c.getString(2);
+                    String companyName = c.getString(3);
+                    String dateStart = c.getString(12);
+
+                    ((TextView)v.findViewById(R.id.positionTitle)).setText( positionTitle );
+                    ((TextView)v.findViewById(R.id.companyName)).setText( companyName );
+                    ((TextView)v.findViewById(R.id.startedOn)).setText( Jenjobs.date(dateStart, null, "yyyy-MM-dd") );
+
+                    c.close();
+                }
             }
         }else if( requestCode == ADD_EDU ){
             if (resultCode == RESULT_OK) {
