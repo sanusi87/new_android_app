@@ -47,7 +47,7 @@ public class MainService extends Service{
 
         // Set the info for the views that show in the notification panel.
         Notification notification = new Notification.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)  // the status icon
+                .setSmallIcon(R.drawable.icon)  // the status icon
                 .setTicker(text)  // the status text
                 .setWhen(System.currentTimeMillis())  // the time stamp
                 .setContentTitle(getText(R.string.local_service_label))  // the label of the entry
