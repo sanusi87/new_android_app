@@ -3,6 +3,7 @@ package com.example.william.myapplication;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -717,5 +718,30 @@ public class Jenjobs {
             Log.e("newdateErr", e.getMessage());
         }
         return newDate;
+    }
+
+    public static String[] listOfMonth(){
+        ArrayList<String> _listOfMonth = new ArrayList<>();
+
+        _listOfMonth.add("--none--");
+        for( int i=1; i <= 12; i++ ){
+            _listOfMonth.add(String.valueOf(i));
+        }
+
+        // TODO: arraylist to string array
+        return _listOfMonth.toArray(new String[_listOfMonth.size()]);
+    }
+
+    public static String[] listOfYear(){
+        ArrayList<String> _listOfYear = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+
+        _listOfYear.add("--none--");
+        int year = cal.get(Calendar.YEAR);
+        for( int i=year-50; i <= year; i++ ){
+            _listOfYear.add(String.valueOf(i));
+        }
+
+        return _listOfYear.toArray(new String[_listOfYear.size()]);
     }
 }
