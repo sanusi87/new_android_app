@@ -22,6 +22,7 @@ public class TableWorkExperience  extends SQLiteOpenHelper {
             "industry_id INTEGER(4), " +
             "experience TEXT, " +
             "salary INTEGER, " +
+            "currency_id INTEGER, " +
             "started_on NUMERIC, " +
             "resigned_on NUMERIC," +
             "update_at NUMERIC);";
@@ -56,10 +57,12 @@ public class TableWorkExperience  extends SQLiteOpenHelper {
     }
 
     public boolean updateWorkExperience(ContentValues cv2, int existingID){
-        String[] _id = {String.valueOf(existingID)};
-        int affectedRows = db.update(TableWorkExperience.TABLE_NAME, cv2, "id=?", _id);
-        if( affectedRows > 0 ){
-            return true;
+        if( existingID > 0 ){
+            String[] _id = {String.valueOf(existingID)};
+            int affectedRows = db.update(TableWorkExperience.TABLE_NAME, cv2, "id=?", _id);
+            if( affectedRows > 0 ){
+                return true;
+            }
         }
         return false;
     }
@@ -72,5 +75,11 @@ public class TableWorkExperience  extends SQLiteOpenHelper {
             return true;
         }
         return false;
+    }
+
+    public Cursor getWorkExperienceById(int currentId) {
+        String[] _id = {String.valueOf(currentId)};
+        Cursor c = db.rawQuery("SELECT * FROM "+TableWorkExperience.TABLE_NAME+" WHERE id=?", _id);
+        return c;
     }
 }
