@@ -186,7 +186,8 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp">
+    android:layout_marginBottom="10dp"
+    android:id="@+id/selectIndustry">
 
     <TextView
         android:layout_width="fill_parent"
@@ -307,14 +308,21 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:weightSum="2">
 
         <Button
-            android:layout_width="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:id="@+id/okButton"
+        android:layout_weight="1" />
+
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/save_experience"
-            android:id="@+id/save_experience"
-            android:singleLine="false"
+            android:text="@string/cancel"
+            android:id="@+id/cancelButton"
             android:layout_weight="1" />
     </LinearLayout>
 
