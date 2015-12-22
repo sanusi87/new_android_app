@@ -69,7 +69,7 @@
     <string name="direct_employer">Direct Employer</string>
     <string name="ra">Company Undisclosed / Recruitment Agency</string>
     <string name="Other_Preferred_Countries">Other Preferred Countries</string>
-    <string name="experience_info">Describe your experience (Optional but important to employer)</string>
+    <string name="experience_info">Describe your experience</string>
     <string name="work_location">Preferred Working Location in Malaysia</string>
     <string name="internship">Internship</string>
     <string name="part_time">Part-Time/Temporary</string>
@@ -105,7 +105,7 @@
     <string name="date_start">Date Start</string>
     <string name="month_start">Month Start</string>
     <string name="year_start">Year Start</string>
-    <string name="end_date">End Date (Leave blank for current job)</string>
+    <string name="end_date">End Date</string>
     <string name="month_end_date">Month End Date</string>
     <string name="year_end">Year End Date</string>
     <string name="save_experience">Save Experience</string>
@@ -171,4 +171,6 @@
     <string name="confirm">Are you sure?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="exp2">Optional but important to employer</string>
+    <string name="end_date2">Leave blank for current job</string>
 </resources>
