@@ -26,7 +26,7 @@ public class CurrencyAdapter extends BaseAdapter implements ListAdapter{
         while( i.hasNext() ){
             HashMap.Entry e = (HashMap.Entry)i.next();
             //tempArr.add(new JobSeekingStatus( (int)e.getKey(), String.valueOf(e.getValue()) ));
-            currencies.add(new MyCurrency( String.valueOf(e.getKey()), String.valueOf(e.getValue()) ));
+            currencies.add(new MyCurrency( (int)e.getKey(), String.valueOf(e.getValue()) ));
         }
     }
 
@@ -62,10 +62,10 @@ public class CurrencyAdapter extends BaseAdapter implements ListAdapter{
         return v;
     }
 
-    public int findPosition( String theCode ){
+    public int findPosition( int theCode ){
         int index = 0;
         for(int i=0;i< this.currencies.size();i++){
-            if( this.currencies.get(i).id.equals( theCode ) ){
+            if( this.currencies.get(i).id == theCode ){
                 index = i;
                 break;
             }
