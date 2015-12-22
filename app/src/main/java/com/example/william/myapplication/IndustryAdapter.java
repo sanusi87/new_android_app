@@ -9,27 +9,35 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
-public class JobSpecAdapter extends BaseAdapter implements ListAdapter{
-
-    public ArrayList<JobSpec> jobspec = new ArrayList<>();
+public class IndustryAdapter extends BaseAdapter implements ListAdapter{
+    public ArrayList<Industry> industry = new ArrayList<>();
     private Context context;
 
-    public JobSpecAdapter(Context context){
+    public IndustryAdapter(Context context){
         this.context = context;
 
-        // TODO: populate jobspec
+        HashMap<Integer, String> fields = Jenjobs.getJobLevel();
+        //ArrayList<JobSeekingStatus> tempArr = new ArrayList<>();
 
+        Iterator i = fields.entrySet().iterator();
+        while( i.hasNext() ){
+            HashMap.Entry e = (HashMap.Entry)i.next();
+            //tempArr.add(new JobSeekingStatus( (int)e.getKey(), String.valueOf(e.getValue()) ));
+            industry.add(new Industry( (int)e.getKey(), String.valueOf(e.getValue()) ));
+        }
     }
 
     @Override
     public int getCount() {
-        return jobspec.size();
+        return industry.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return jobspec.get(position);
+        return industry.get(position);
     }
 
     @Override
@@ -43,9 +51,9 @@ public class JobSpecAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+            v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
         }
-        JobSpec c = (JobSpec) getItem(position);
+        Industry c = (Industry) getItem(position);
         TextView tvName = (TextView) v.findViewById(android.R.id.text1);
         tvName.setText(c.name);
         tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
@@ -56,8 +64,8 @@ public class JobSpecAdapter extends BaseAdapter implements ListAdapter{
 
     public int findPosition( int theCode ){
         int index = 0;
-        for(int i=0;i< this.jobspec.size();i++){
-            if( this.jobspec.get(i).id == theCode ){
+        for(int i=0;i< this.industry.size();i++){
+            if( this.industry.get(i).id == theCode ){
                 index = i;
                 break;
             }

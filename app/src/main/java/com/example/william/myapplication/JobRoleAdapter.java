@@ -52,4 +52,15 @@ public class JobRoleAdapter extends BaseAdapter implements ListAdapter{
 
         return v;
     }
+
+    public int findPosition( int theCode ){
+        int index = 0;
+        for(int i=0;i< this.jobrole.size();i++){
+            if( this.jobrole.get(i).id == theCode ){
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
 }
