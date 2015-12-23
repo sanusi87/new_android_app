@@ -55,7 +55,9 @@
             android:label="@string/title_activity_update_work_experience" />
         `
         <activity android:name=".SelectJobSpec" />
+        <activity android:name=".SelectSingleJobSpec" />
         <activity android:name=".SelectJobRole" />
+        <activity android:name=".SelectSingleJobRole" />
         <activity
             android:name=".UpdateEducation"
             android:label="@string/title_activity_update_education" />
