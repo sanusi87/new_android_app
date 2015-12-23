@@ -105,9 +105,13 @@ public class UpdateProfile extends FragmentActivity {
             if( theProfile.mobile_no != null ){
                 // get dial code
                 String[] parts = theProfile.mobile_no.split("\\)");
-                String dialCodePart = parts[0].replaceAll("[^0-9]", "");
-                dialCode.setSelection( dca.findDialCodePosition( dialCodePart ) );
-                mobileNumber.setText( parts[1] );
+                if( parts.length == 2 ){
+                    String dialCodePart = parts[0].replaceAll("[^0-9]", "");
+                    dialCode.setSelection( dca.findDialCodePosition( dialCodePart ) );
+                    mobileNumber.setText( parts[1] );
+                }else{
+                    mobileNumber.setText( parts[0] );
+                }
             }
         }
 
