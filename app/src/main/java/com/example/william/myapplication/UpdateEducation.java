@@ -2,16 +2,18 @@ package com.example.william.myapplication;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,64 +25,127 @@ import org.apache.http.protocol.HTTP;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.HashMap;
 
 public class UpdateEducation extends ActionBarActivity {
 
-    SharedPreferences sharedPref;
+    private static final int SELECT_EDU_LEVEL = 1;
+    private static final int SELECT_EDU_FIELD = 2;
+    private static final int SELECT_GRADUATION_YEAR = 3;
+
+    SharedPreferences sharedPreferences;
+    String accessToken;
+
     // SQLite id, not the one from JenJOBS
     int currentEducationId = 0;
     int remoteEducationId = 0;
     private static Context context;
+
+    TableEducation tableEducation;
+
+    TextView selectedEducationLevel;
+    TextView enteredSchool;
+    TextView enteredMajor;
+    TextView selectedEducationField;
+    TextView enteredGrade;
+    TextView selectedGraduationYear;
+    TextView enteredEducationInfo;
+
+    EducationLevel educationLevel;
+    EducationField educationField;
+    String year;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_education);
 
-        sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        tableEducation = new TableEducation(this);
+        sharedPreferences = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        accessToken = sharedPreferences.getString("access_token", null);
 
-        // education level
-        final Spinner educationLevel = (Spinner)findViewById(R.id.education_level);
-        EducationLevelAdapter eduLevelAdapter = new EducationLevelAdapter(this);
-        educationLevel.setAdapter(eduLevelAdapter);
+        HashMap listOfeducationLevel = Jenjobs.getEducationLevel();
+        HashMap listOfeducationField = Jenjobs.getEducationField();
+
+        LinearLayout selectEducationLevel = (LinearLayout)findViewById(R.id.selectEducationLevel);
+        LinearLayout selectEducationField = (LinearLayout)findViewById(R.id.selectEducationField);
+        LinearLayout selectGraduationYear = (LinearLayout)findViewById(R.id.selectGraduationYear);
 
         final EditText school = (EditText)findViewById(R.id.school_text);
         final EditText major = (EditText)findViewById(R.id.edu_major_text);
-
-        // education field
-        final Spinner educationField = (Spinner)findViewById(R.id.education_field);
-        EducationFieldAdapter eduFieldAdapter = new EducationFieldAdapter(this);
-        educationField.setAdapter(eduFieldAdapter);
-
         final EditText grade = (EditText)findViewById(R.id.grade_text);
-
-        final Spinner year = (Spinner) findViewById(R.id.graduation_year);
-        ArrayList<Integer> years = new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
-        int currentYear = calendar.get(Calendar.YEAR);
-        for( int y = currentYear; y > currentYear-50; y-- ){
-            years.add(y);
-        }
-        year.setAdapter(new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, years));
-
         final EditText info = (EditText)findViewById(R.id.extra_info);
 
         // extras send for update, maybe only ID passed, then read form DB to get other values
         Bundle extras = getIntent().getExtras();
         if( !extras.isEmpty() ){
             currentEducationId = extras.getInt("id");
+            Cursor ce = tableEducation.getEducationById(currentEducationId);
+            if( ce.moveToFirst() ){
+                /*
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT //0
+                _id INTEGER //1
+                school TEXT //2
+                major TEXT //3
+                edu_level_id INTEGER(4) //4
+                edu_field_id INTEGER(4) //5
+                country_id INTEGER(4) //6
+                grade TEXT //7
+                info TEXT //8
+                date_graduated //9
+                */
+                remoteEducationId = ce.getInt(1);
 
-            // read db
-            remoteEducationId = 0;
+                //educationLevel.setSelection( eduLevelAdapter.getItemPosition( ce.getInt(4) ) );
+                Object theEducationLevel = listOfeducationLevel.get( ce.getInt(4) );
+                Log.e( "theEducationLevel", ""+theEducationLevel.toString() );
+
+                educationLevel = new EducationLevel(ce.getInt(4), String.valueOf(listOfeducationLevel.get( ce.getInt(4) ) ) );
+                educationField = new EducationField(ce.getInt(5), String.valueOf(listOfeducationField.get( ce.getInt(5) ) ) );
+                year = ce.getString(9).substring(0,3);
+
+                ce.close();
+            }
         }
+
+        selectEducationLevel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), SelectEducationLevel.class);
+                startActivityForResult(intent, SELECT_EDU_LEVEL);
+            }
+        });
+
+        selectEducationField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), SelectEducationField.class);
+                startActivityForResult(intent, SELECT_EDU_FIELD);
+            }
+        });
+
+        selectGraduationYear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), SelectGraduationYear.class);
+                startActivityForResult(intent, SELECT_GRADUATION_YEAR);
+            }
+        });
 
         // save button
         Button saveEducation = (Button) findViewById(R.id.save_education);
         saveEducation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO: validate input
+
+                // TODO: save to local db
+
+                // TODO: send POST request
+
                 /*
                 "_id INTEGER, "+
                 "school TEXT, " +
@@ -93,14 +158,12 @@ public class UpdateEducation extends ActionBarActivity {
                 "date_graduated NUMERIC);";
                 */
                 ContentValues cv = new ContentValues();
-                Log.e("selectedItem", ""+educationLevel.getSelectedItemId());
-                Log.e("selectedItem2", "" + educationLevel.getSelectedItemPosition());
-                cv.put("edu_level_id", educationLevel.getSelectedItemId());
+                cv.put("edu_level_id", educationLevel.id);
                 cv.put("school", school.getText().toString());
                 cv.put("major", major.getText().toString());
-                cv.put("edu_field_id", educationField.getSelectedItemId());
+                cv.put("edu_field_id", educationField.id);
                 cv.put("grade", grade.getText().toString());
-                cv.put("date_graduated", year.getSelectedItemId());
+                cv.put("date_graduated", year);
                 cv.put("info", info.getText().toString());
 
                 // JenJOBS id
@@ -116,12 +179,33 @@ public class UpdateEducation extends ActionBarActivity {
                     Long newEducationId = edu.addEducation(cv);
                 }
 
-                AsyncTask a = new SaveEducation(remoteEducationId);
-                a.execute(cv);
+                //new SaveEducation(remoteEducationId).execute(cv);
             }
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SELECT_EDU_LEVEL) {
+            if (resultCode == RESULT_OK) {
+                Bundle extra = data.getExtras();
+                educationLevel = (EducationLevel)extra.get("edulevel");
+                selectedEducationLevel.setText(educationLevel.name);
+            }
+        }else if( requestCode == SELECT_EDU_FIELD ){
+            if (resultCode == RESULT_OK) {
+                Bundle extra = data.getExtras();
+                educationField = (EducationField)extra.get("edufield");
+                selectedEducationField.setText(educationField.name);
+            }
+        }else if( requestCode == SELECT_GRADUATION_YEAR ){
+            if (resultCode == RESULT_OK) {
+                Bundle extra = data.getExtras();
+                year = (String)extra.get("year");
+                selectedGraduationYear.setText(year);
+            }
+        }
+    }
 
     public class SaveEducation extends AsyncTask<Void, Void, Object> {
 
@@ -155,7 +239,6 @@ public class UpdateEducation extends ActionBarActivity {
             */
             // end create JSON string
 
-            String accessToken = sharedPref.getString("access_token", null);
             String url = "http://api.jenjobs.com/jobseeker/qualification";
             if( currentEduId > 0 ){
                 url += "/"+currentEduId;
