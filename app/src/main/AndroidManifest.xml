@@ -75,10 +75,23 @@
         <activity
             android:name=".UpdateAdditionalInfo"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".UpdateName" android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".SelectGender" android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".UpdateName"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".SelectGender"
+            android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".UpdateProfile" />
-        <activity android:name=".Confirmation" android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".Confirmation"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".SelectEducationLevel"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".SelectEducationField"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".SelectGraduationYear"></activity>
     </application>
 
 </manifest>
