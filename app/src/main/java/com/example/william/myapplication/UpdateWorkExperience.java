@@ -111,6 +111,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
 
         Bundle extra = getIntent().getExtras();
         if( extra != null ){
+            // for updating existing job
             currentId = extra.getInt("id");
             selectedWork = extra.getInt("selectedWork");
             Cursor w = tableWorkExperience.getWorkExperienceById(currentId);
@@ -166,7 +167,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(getApplicationContext(), SelectJobSpec.class);
+                intent.setClass(getApplicationContext(), SelectSingleJobSpec.class);
                 startActivityForResult(intent, SELECT_JOB_SPEC);
             }
         });
@@ -174,9 +175,12 @@ public class UpdateWorkExperience extends ActionBarActivity {
         jobRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(getApplicationContext(), SelectJobRole.class);
-                startActivityForResult(intent, SELECT_JOB_ROLE);
+                if( !selectedJobSpec.getText().equals(getResources().getString(R.string.no_value)) ){
+                    Intent intent = new Intent();
+                    intent.putExtra("jobspecid", theJobSpec);
+                    intent.setClass(getApplicationContext(), SelectSingleJobRole.class);
+                    startActivityForResult(intent, SELECT_JOB_ROLE);
+                }
             }
         });
 
@@ -356,12 +360,14 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 Bundle extra = data.getExtras();
                 JobSpec jobSpec = (JobSpec)extra.get("spec");
                 selectedJobSpec.setText(jobSpec.name);
+                theJobSpec = jobSpec.id;
             }
         }else if( requestCode == SELECT_JOB_ROLE ){
             if (resultCode == RESULT_OK) {
                 Bundle extra = data.getExtras();
                 JobRole jobrole = (JobRole)extra.get("role");
                 selectedJobRole.setText(jobrole.name);
+                theJobRole = jobrole.id;
             }
         }
     }
