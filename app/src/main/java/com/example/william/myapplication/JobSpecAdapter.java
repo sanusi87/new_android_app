@@ -27,10 +27,8 @@ public class JobSpecAdapter extends BaseAdapter implements ListAdapter{
 
         c.moveToFirst();
         for( int i=0;i<c.getCount();i++ ){
-            Log.e("xx", ""+c.getInt(0));
-
+            //Log.e("xx", ""+c.getInt(0));
             jobspec.add(new JobSpec(c.getInt(0), c.getString(1)));
-
             c.moveToNext();
         }
     }
