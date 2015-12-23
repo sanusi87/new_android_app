@@ -93,7 +93,7 @@
         <activity
             android:name=".SelectEducationField"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".SelectGraduationYear"></activity>
+        <activity android:name=".SelectGraduationYear" android:theme="@android:style/Theme.Dialog" />
     </application>
 
 </manifest>
