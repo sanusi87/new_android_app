@@ -541,7 +541,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     String school = ce.getString(2);
                     String graduationYear = Jenjobs.date(ce.getString(9), "yyyy", "yyyy-MM-dd");
                     String eduLevel = eduLv.get(ce.getInt(4));
-                    Log.e("educationLv", eduLevel);
+                    //Log.e("educationLv", eduLevel);
 
                     final View v = getActivity().getLayoutInflater().inflate(R.layout.each_education, null);
                     listOfEducation.addView(v);
@@ -558,7 +558,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             Intent intent = new Intent();
                             intent.setClass(getActivity(),  UpdateEducation.class);
                             intent.putExtra("id", savedId);
-                            intent.putExtra("selectedEdu", selectedEdu);
+                            intent.putExtra("currentViewPosition", selectedEdu);
                             getActivity().startActivityForResult(intent, ADD_EDU);
                         }
                     });
@@ -843,8 +843,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }else if( requestCode == ADD_EDU ){
             if (resultCode == RESULT_OK) {
                 final int id = extra.getInt("id");
-                int prevEdu = extra.getInt("selectedEdu");
-
+                // TODO: the index might changed one we have added or removed a child
+                int prevEdu = extra.getInt("currentViewPosition");
+                Log.e("returnedPos", ""+prevEdu);
                 final View v;
                 if( prevEdu >= 0 ){
                     v = listOfEducation.getChildAt(prevEdu);
@@ -858,7 +859,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 if( c.moveToFirst() ){
                     final int actualId = c.getInt(1);
                     String school = c.getString(2);
-                    String graduationYear = Jenjobs.date(c.getString(9), "yyyy", "yyyy-MM-dd");
+                    String graduationYear = c.getString(9).substring(0,4);
                     String eduLevel = eduLv.get(c.getInt(4));
 
                     ((TextView)v.findViewById(R.id.educationLevel)).setText( eduLevel );

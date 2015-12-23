@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -13,6 +14,7 @@ public class SelectSingleJobSpec extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_job_spec);
+        setTitle("Select Specialisation");
 
         final ListView lv = (ListView)findViewById(R.id.listOfJobSpec);
         final JobSpecAdapter ca = new JobSpecAdapter(getApplicationContext());
@@ -36,5 +38,16 @@ public class SelectSingleJobSpec extends Activity{
 
         okButton.setVisibility(View.GONE);
         cancelButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // In order to not be too narrow, set the window size based on the screen resolution:
+        final int screen_width = getResources().getDisplayMetrics().widthPixels;
+        final int new_window_width = screen_width * 90 / 100;
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.width = Math.max(layout.width, new_window_width);
+        getWindow().setAttributes(layout);
     }
 }

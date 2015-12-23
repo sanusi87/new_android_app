@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -17,6 +18,7 @@ public class SelectState extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_state);
+        setTitle("Select State");
 
         final ListView lv = (ListView)findViewById(R.id.listOfStates);
         final StateAdapter ca = new StateAdapter(getApplicationContext());
@@ -65,5 +67,16 @@ public class SelectState extends Activity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // In order to not be too narrow, set the window size based on the screen resolution:
+        final int screen_width = getResources().getDisplayMetrics().widthPixels;
+        final int new_window_width = screen_width * 90 / 100;
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.width = Math.max(layout.width, new_window_width);
+        getWindow().setAttributes(layout);
     }
 }

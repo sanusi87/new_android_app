@@ -16,6 +16,7 @@ public class SelectJobSeekingStatus extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_job_seeking_status);
+        setTitle("Select Jobseeking Status");
 
         final ListView lv = (ListView) findViewById(R.id.listOfJobSeekingStatus);
         final JobSeekingAdapter ja = new JobSeekingAdapter(this);
