@@ -4,10 +4,12 @@ import java.io.Serializable;
 
 public class JobRole implements Serializable{
     public int id;
+    public int jobSpec;
     public String name;
 
-    public JobRole(int id, String name){
+    public JobRole(int id, int jobSpec, String name){
         this.id = id;
+        this.jobSpec = jobSpec;
         this.name = name;
     }
 

@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class TableJobRole extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "job_role";
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableJobRole.TABLE_NAME+"' (id INTEGER(4), role_name TEXT);";
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableJobRole.TABLE_NAME+"' (id INTEGER(4), " +
+            "job_spec_id INTEGER(4), " +
+            "role_name TEXT);";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableJobRole.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
@@ -27,11 +29,18 @@ public class TableJobRole extends SQLiteOpenHelper{
         //onCreate(db);
     }
 
+    public Cursor getAllJobRole(int jobSpecId){
+        Cursor c = db.rawQuery("SELECT * FROM "+TableJobRole.TABLE_NAME, null);
+        return c;
+    }
+
     public JobRole findById( int id ){
         String[] _id = {String.valueOf(id)};
         Cursor c = db.rawQuery("SELECT * FROM "+TableJobRole.TABLE_NAME+" WHERE id=?", _id);
         if( c.moveToFirst() ){
-            return new JobRole(c.getInt(0), c.getString(1));
+            JobRole r = new JobRole(c.getInt(0), c.getInt(1), c.getString(2));
+            c.close();
+            return r;
         }
         return null;
     }
