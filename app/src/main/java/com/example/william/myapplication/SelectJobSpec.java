@@ -2,7 +2,6 @@ package com.example.william.myapplication;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -43,6 +42,7 @@ public class SelectJobSpec extends Activity {
             public void onClick(View v) {
                 SparseBooleanArray a = lv.getCheckedItemPositions();
                 ArrayList<JobSpec> values = new ArrayList<>();
+                // TODO: loop SparseBooleanArray
                 for (int i = 0; i < a.size(); i++) {
                     if (a.valueAt(i) && a.keyAt(i) >= 0) {
                         JobSpec c = (JobSpec) ca.getItem(a.keyAt(i));
