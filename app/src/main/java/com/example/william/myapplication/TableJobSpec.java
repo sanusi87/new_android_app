@@ -27,11 +27,18 @@ public class TableJobSpec extends SQLiteOpenHelper{
         //onCreate(db);
     }
 
+    public Cursor getAllJobSpec(){
+        Cursor c = db.rawQuery("SELECT * FROM "+TableJobSpec.TABLE_NAME, null);
+        return c;
+    }
+
     public JobSpec findById( int id ){
         String[] _id = {String.valueOf(id)};
         Cursor c = db.rawQuery("SELECT * FROM "+TableJobSpec.TABLE_NAME+" WHERE id=?", _id);
         if( c.moveToFirst() ){
-            return new JobSpec(c.getInt(0), c.getString(1));
+            JobSpec s = new JobSpec(c.getInt(0), c.getString(1));
+            c.close();
+            return s;
         }
         return null;
     }
