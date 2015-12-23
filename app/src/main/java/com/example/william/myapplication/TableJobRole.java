@@ -30,7 +30,8 @@ public class TableJobRole extends SQLiteOpenHelper{
     }
 
     public Cursor getAllJobRole(int jobSpecId){
-        Cursor c = db.rawQuery("SELECT * FROM "+TableJobRole.TABLE_NAME, null);
+        String[] _id = {String.valueOf(jobSpecId)};
+        Cursor c = db.rawQuery("SELECT * FROM "+TableJobRole.TABLE_NAME+" WHERE job_spec_id=?", _id);
         return c;
     }
 
