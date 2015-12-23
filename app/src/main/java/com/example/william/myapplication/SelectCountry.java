@@ -24,6 +24,7 @@ public class SelectCountry extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_country);
+        setTitle("Select Country");
 
         final ListView lv = (ListView)findViewById(R.id.listOfCountries);
         final CountryAdapter ca = new CountryAdapter(getApplicationContext());
