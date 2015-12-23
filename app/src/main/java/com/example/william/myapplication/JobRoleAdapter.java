@@ -1,6 +1,7 @@
 package com.example.william.myapplication;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,22 @@ public class JobRoleAdapter extends BaseAdapter implements ListAdapter{
 
     public ArrayList<JobRole> jobrole = new ArrayList<>();
     private Context context;
+    private boolean single = false;
 
-    public JobRoleAdapter(Context context){
+    public JobRoleAdapter(Context context, int jobSpecId){
         this.context = context;
 
         // populate job role
+        TableJobRole tableJobRole = new TableJobRole(context);
+        Cursor c = tableJobRole.getAllJobRole(jobSpecId);
+        if( c.moveToFirst() ){
+            while( !c.isAfterLast() ){
+
+                jobrole.add(new JobRole(c.getInt(0), c.getInt(1), c.getString(2)));
+
+                c.moveToNext();
+            }
+        }
     }
 
     @Override
@@ -42,7 +54,11 @@ public class JobRoleAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+            if( this.single ){
+                v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+            }else{
+                v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+            }
         }
         JobRole c = (JobRole) getItem(position);
         TextView tvName = (TextView) v.findViewById(android.R.id.text1);
@@ -62,5 +78,9 @@ public class JobRoleAdapter extends BaseAdapter implements ListAdapter{
             }
         }
         return index;
+    }
+
+    public void setSingle( boolean single ){
+        this.single = single;
     }
 }

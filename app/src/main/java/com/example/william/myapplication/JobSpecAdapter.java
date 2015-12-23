@@ -1,6 +1,8 @@
 package com.example.william.myapplication;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +16,23 @@ public class JobSpecAdapter extends BaseAdapter implements ListAdapter{
 
     public ArrayList<JobSpec> jobspec = new ArrayList<>();
     private Context context;
+    private boolean single = false;
 
     public JobSpecAdapter(Context context){
         this.context = context;
 
         // TODO: populate jobspec
+        TableJobSpec tableJobSpec = new TableJobSpec(context);
+        Cursor c = tableJobSpec.getAllJobSpec();
 
+        c.moveToFirst();
+        for( int i=0;i<c.getCount();i++ ){
+            Log.e("xx", ""+c.getInt(0));
+
+            jobspec.add(new JobSpec(c.getInt(0), c.getString(1)));
+
+            c.moveToNext();
+        }
     }
 
     @Override
@@ -43,7 +56,11 @@ public class JobSpecAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+            if( this.single ){
+                v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+            }else{
+                v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+            }
         }
         JobSpec c = (JobSpec) getItem(position);
         TextView tvName = (TextView) v.findViewById(android.R.id.text1);
@@ -63,5 +80,9 @@ public class JobSpecAdapter extends BaseAdapter implements ListAdapter{
             }
         }
         return index;
+    }
+
+    public void setSingle( boolean single ){
+        this.single = single;
     }
 }
