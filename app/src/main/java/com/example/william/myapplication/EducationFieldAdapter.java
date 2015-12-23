@@ -19,6 +19,7 @@ public class EducationFieldAdapter extends BaseAdapter implements ListAdapter{
 
     public ArrayList<EducationField> eduField = new ArrayList<>();
     private Context context;
+    private boolean single = false;
 
     public EducationFieldAdapter( Context context ){
         this.context = context;
@@ -69,7 +70,11 @@ public class EducationFieldAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+            if( this.single ){
+                v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+            }else{
+                v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+            }
         }
         EducationField c = (EducationField) getItem(position);
         TextView tvName = (TextView) v.findViewById(android.R.id.text1);
@@ -78,5 +83,9 @@ public class EducationFieldAdapter extends BaseAdapter implements ListAdapter{
         v.setBackgroundColor(context.getResources().getColor(R.color.white));
 
         return v;
+    }
+
+    public void setSingle(boolean single){
+        this.single = single;
     }
 }

@@ -7,15 +7,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.william.myapplication.SelectJobRole"
+    tools:context="com.example.william.myapplication.SelectEducationField"
     android:orientation="vertical">
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/listOfJobRole"
-        android:choiceMode="multipleChoice"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:id="@+id/listView" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -37,4 +36,5 @@
             android:id="@+id/cancelButton"
             android:layout_weight="1" />
     </LinearLayout>
+
 </LinearLayout>
