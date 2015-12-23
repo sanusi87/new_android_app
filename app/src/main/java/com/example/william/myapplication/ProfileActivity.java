@@ -395,7 +395,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
         }
 
-
         private void setupApplicationFragment(View rootView) {
             sectionLabel = (TextView) rootView.findViewById(R.id.section_label);
             if (sectionLabel != null) {
@@ -409,7 +408,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 sectionLabel.setText("xxx=" + sectionNumber);
             }
         }
-
 
         private void setupOnlineResumeFragment(View rootView) {
             /*
@@ -549,7 +547,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ((TextView)v.findViewById(R.id.school)).setText(school);
                     ((TextView)v.findViewById(R.id.graduationYear)).setText( graduationYear );
 
-                    final int selectedEdu = ce.getPosition();
+                    final int selectedEdu = ce.getPosition(); // the view index based on the listOfEducation
                     LinearLayout updateEducation = (LinearLayout)v.findViewById(R.id.updateEducation);
                     updateEducation.setOnClickListener(new View.OnClickListener() {
                         @Override
