@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
@@ -20,9 +21,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class UpdateWorkExperience extends ActionBarActivity {
@@ -44,6 +56,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
 
     int theJobSpec = 0;
     int theJobRole = 0;
+    int currentId = 0; // the local db index
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +66,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
         tableWorkExperience = new TableWorkExperience(this);
         tableJobSpec = new TableJobSpec(this);
         tableJobRole = new TableJobRole(this);
-        int currentId = 0;
+
         int savedId = 0;
         int selectedWork = 0;
 
@@ -175,11 +188,14 @@ public class UpdateWorkExperience extends ActionBarActivity {
         jobRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("selectedJobSpec", ""+theJobSpec);
                 if( !selectedJobSpec.getText().equals(getResources().getString(R.string.no_value)) ){
                     Intent intent = new Intent();
                     intent.putExtra("jobspecid", theJobSpec);
                     intent.setClass(getApplicationContext(), SelectSingleJobRole.class);
                     startActivityForResult(intent, SELECT_JOB_ROLE);
+                }else{
+                    Toast.makeText(getApplicationContext(), "Please select job specialisation first.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -187,7 +203,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
         Button okButton = (Button)findViewById(R.id.okButton);
         Button cancelButton = (Button)findViewById(R.id.cancelButton);
 
-        final int finalCurrentId = currentId;
+        //final int finalCurrentId = currentId;
         final int finalSavedId = savedId;
         final int finalSelectedWork = selectedWork;
         okButton.setOnClickListener(new View.OnClickListener() {
@@ -296,12 +312,12 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     cv.put("resigned_on", ""+endOn);
                     cv.put("update_at", Jenjobs.date(null, "yyyy-MM-dd", null));
 
-                    int localId = finalCurrentId;
-                    if( finalCurrentId > 0 ){
-                        tableWorkExperience.updateWorkExperience(cv, finalCurrentId);
+                    //int localId = finalCurrentId;
+                    if( currentId > 0 ){
+                        tableWorkExperience.updateWorkExperience(cv, currentId);
                     }else{
                         Long _savedId = tableWorkExperience.addWorkExperience(cv);
-                        localId = _savedId.intValue();
+                        currentId = _savedId.intValue();
                     }
 
                     // TODO: send POST request
@@ -329,10 +345,10 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     }
                     Log.e("obj", obj.toString());
                     String[] s = {url, obj.toString()};
-                    new PostRequest().execute(s);
+                    new PostWorkExp().execute(s);
 
                     Intent intent = new Intent();
-                    intent.putExtra("id", localId);
+                    intent.putExtra("id", currentId);
                     if( finalSelectedWork > 0 ){
                         intent.putExtra("selectedWork", finalSelectedWork);
                     }
@@ -358,18 +374,72 @@ public class UpdateWorkExperience extends ActionBarActivity {
         if (requestCode == SELECT_JOB_SPEC) {
             if (resultCode == RESULT_OK) {
                 Bundle extra = data.getExtras();
-                JobSpec jobSpec = (JobSpec)extra.get("spec");
+                JobSpec jobSpec = (JobSpec)extra.get("jobspec");
                 selectedJobSpec.setText(jobSpec.name);
                 theJobSpec = jobSpec.id;
+
+                // reset job role
+                selectedJobRole.setText(getResources().getString(R.string.no_value));
+                theJobRole = 0;
             }
         }else if( requestCode == SELECT_JOB_ROLE ){
             if (resultCode == RESULT_OK) {
                 Bundle extra = data.getExtras();
-                JobRole jobrole = (JobRole)extra.get("role");
+                JobRole jobrole = (JobRole)extra.get("jobrole");
                 selectedJobRole.setText(jobrole.name);
                 theJobRole = jobrole.id;
             }
         }
+    }
+
+    public class PostWorkExp extends AsyncTask<String, Void, JSONObject> {
+        private View v;
+        private int viewType;
+
+        public PostWorkExp(){}
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            JSONObject _response = null;
+
+            final HttpClient httpclient = new DefaultHttpClient();
+            final HttpPost httppost = new HttpPost( params[0] );
+
+            httppost.addHeader("Content-Type", "application/json");
+            httppost.addHeader("Accept", "application/json");
+            HttpResponse _http_response = null;
+
+            try {
+                StringEntity entity = new StringEntity(params[1]);
+                entity.setContentEncoding(HTTP.UTF_8);
+                entity.setContentType("application/json");
+                httppost.setEntity(entity);
+
+                _http_response = httpclient.execute(httppost);
+                HttpEntity _entity = _http_response.getEntity();
+                InputStream is = _entity.getContent();
+                String responseString = JenHttpRequest.readInputStreamAsString(is);
+                _response = JenHttpRequest.decodeJsonObjectString(responseString);
+            } catch (ClientProtocolException e) {
+                Log.e("ClientProtocolException", e.getMessage());
+            } catch (UnsupportedEncodingException e) {
+                Log.e("UnsupportedEncoding", e.getMessage());
+            } catch (IOException e) {
+                Log.e("IOException", e.getMessage());
+            }
+
+            return _response;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            if( result.optInt("id") > 0 ){
+                ContentValues cv = new ContentValues();
+                cv.put("_id", result.optInt("id"));
+                tableWorkExperience.updateWorkExperience(cv, currentId);
+            }
+        }
+
     }
 
 }
