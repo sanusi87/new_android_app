@@ -303,6 +303,7 @@ public class TableProfile extends SQLiteOpenHelper{
 
                                 ContentValues cv2 = new ContentValues();
                                 cv2.put("id", jobRoleId);
+                                cv2.put("job_spec_id", jobSpecId);
                                 cv2.put("role_name", jobRoleName);
                                 db.insert(TableJobRole.TABLE_NAME, null, cv2);
                             }
