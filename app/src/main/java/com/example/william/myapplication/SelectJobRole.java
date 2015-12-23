@@ -2,7 +2,6 @@ package com.example.william.myapplication;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -18,11 +17,16 @@ public class SelectJobRole extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_job_role);
 
+        Bundle extra = getIntent().getExtras();
+        int jobSpecId = 200;
+        if( extra != null ){
+            jobSpecId = extra.getInt("jobspecid");
+        }
+
         final ListView lv = (ListView)findViewById(R.id.listOfJobRole);
-        final JobRoleAdapter ca = new JobRoleAdapter(getApplicationContext());
+        final JobRoleAdapter ca = new JobRoleAdapter(getApplicationContext(), jobSpecId);
         lv.setAdapter(ca);
 
-        Bundle extra = getIntent().getExtras();
         // checked selected index
         if( extra != null ){
             ArrayList<JobRole> selectedJobRoles = (ArrayList<JobRole>) extra.get("jobrole");
