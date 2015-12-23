@@ -3,10 +3,12 @@ package com.example.william.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class UpdateName extends Activity {
 
@@ -19,9 +21,15 @@ public class UpdateName extends Activity {
         String currentText = extra.getString("the_text");
         final String url = extra.getString("url");
         final String jsonString = extra.getString("json");
+        boolean multiline = extra.getBoolean("multiline");
 
         final EditText t = (EditText)findViewById(R.id.theText);
         t.setText(currentText);
+        if( multiline ){
+            t.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            t.setLines(5);
+            t.setSingleLine(false);
+        }
 
         Button okButton = (Button)findViewById(R.id.okButton);
         Button cancelButton = (Button)findViewById(R.id.cancelButton);
