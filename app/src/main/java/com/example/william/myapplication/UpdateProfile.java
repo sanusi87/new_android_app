@@ -236,7 +236,8 @@ public class UpdateProfile extends FragmentActivity {
                     }
 
                     if( selectedDialCodeValue != null && !selectedDialCodeValue.equals("") && !theMobileNumber.equals("") ){
-                        cv.put("mobile_no", "(+"+selectedDialCodeValue+")"+theMobileNumber);
+                        cv.put("dial_code", selectedDialCodeValue);
+                        cv.put("mobile_no", theMobileNumber);
                     }
 
                     tableProfile.updateProfile(cv, profileId);
