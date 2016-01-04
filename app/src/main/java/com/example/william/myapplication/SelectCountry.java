@@ -39,10 +39,10 @@ public class SelectCountry extends Activity {
                 ((ViewGroup)lv.getParent()).getChildAt(1).setVisibility(View.GONE);
             }
 
-            ArrayList<Country> selectedCountries = (ArrayList<Country>) extra.get("country");
+            ArrayList selectedCountries = (ArrayList) extra.get("country");
             if( selectedCountries != null && selectedCountries.size() > 0 ){
                 for(int i=0; i < selectedCountries.size();i++){
-                    Country value = selectedCountries.get(i);
+                    Country value = (Country) selectedCountries.get(i);
                     int selectedIndex = ca.country.indexOf(value); // index of the selected value
                     if( selectedIndex != -1 ){
                         lv.setItemChecked(selectedIndex, true);
