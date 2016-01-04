@@ -81,6 +81,11 @@ public class UpdateJobPreference extends Activity {
         HashMap listOfCountries = Jenjobs.getCountry();
         HashMap listOfCurrencies = Jenjobs.getCurrency();
 
+        _state = new ArrayList<>();
+        _country = new ArrayList<>();
+        _jobtype = new ArrayList<>();
+        savedCurrency = new MyCurrency(6, "MYR");
+
         /*
         * fetch saved data
         * */
@@ -133,6 +138,8 @@ public class UpdateJobPreference extends Activity {
                     selectedCountries.add( (String) listOfCountries.get( theCountry ) );
                     _country.add(new Country(theCountry, (String) listOfCountries.get( theCountry )));
                 }
+
+                d.moveToNext();
             }
 
             selectedMalaysiaState.setText(TextUtils.join(", ", selectedStates));
