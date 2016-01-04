@@ -10,44 +10,72 @@ tools:context="com.example.william.myapplication.UpdateJobPreference">
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        style="@style/AppThemePadding10"
+        android:id="@+id/insertSalary">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/salary"
             style="@style/AppThemeBaseLabel" />
-        <EditText
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/salary"
-            android:inputType="text"
-            style="@style/AppThemeBaseTextValue" />
+            android:layout_height="match_parent"
+            android:weightSum="3">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/currency"
+                android:id="@+id/selectedCurrency"
+                style="@style/AppThemeBaseTextValue"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/insertedSalary"
+                style="@style/AppThemeBaseTextValue"
+                android:layout_weight="2" />
+        </LinearLayout>
+
     </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        style="@style/AppThemePadding10"
+        android:id="@+id/selectJobType">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/job_type"
             style="@style/AppThemeBaseLabel" />
-        <ListView
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/selectJobType" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/no_value"
+            android:id="@+id/selectedJobType" />
     </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/selectMalaysiaState">
+        android:id="@+id/selectMalaysiaState"
+        style="@style/AppThemePadding10">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,12 +90,14 @@ tools:context="com.example.william.myapplication.UpdateJobPreference">
             android:id="@+id/selectedMalaysiaState" />
     </LinearLayout>
 
+    <View style="@style/AppThemeBorderBottom" />
+
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/selectOtherCountry">
+        android:id="@+id/selectOtherCountry"
+        style="@style/AppThemePadding10">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,9 +108,11 @@ tools:context="com.example.william.myapplication.UpdateJobPreference">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
+            android:text="@string/no_value"
             android:id="@+id/selectedOtherCountry" />
     </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -88,9 +120,9 @@ tools:context="com.example.william.myapplication.UpdateJobPreference">
         android:layout_height="wrap_content">
 
         <Button
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/save_preference"
+        android:text="@string/save"
         android:id="@+id/save_job_preferred" />
     </LinearLayout>
 
