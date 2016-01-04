@@ -1287,18 +1287,22 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }else if( downloadSection == DOWNLOAD_JOB_PREFERENCE ){
 
                     TableJobPreference tableJobPreference = new TableJobPreference(getApplicationContext());
+                    TableJobPreferenceLocation tableJobPreferenceLocation = new TableJobPreferenceLocation(getApplicationContext());
+
                     ContentValues cv = new ContentValues();
+                    ContentValues cv2 = new ContentValues();
                     JSONObject success = null;
                     try {
                         success = new JSONObject(nsuccess);
 
                         cv.put("salary", success.optString("salary"));
                         cv.put("currency_id", success.optInt("currency_id"));
-                        cv.put("state_id", success.optString("state_id"));
-                        cv.put("country_id", success.optString("country_id"));
+                        tableJobPreference.updateJobPreference(cv);
                         cv.put("job_type_id", success.optString("job_type_id"));
 
-                        tableJobPreference.updateJobPreference(cv);
+                        cv2.put("state_id", success.optString("state_id"));
+                        cv2.put("country_id", success.optString("country_id"));
+                        tableJobPreferenceLocation.updateJobPreference(cv2);
                     } catch (JSONException e) {
                         Log.e("jobPrefExcp", e.getMessage());
                     }
