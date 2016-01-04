@@ -97,7 +97,7 @@
             android:name=".SelectGraduationYear"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".UpdateSalary" />
-        <activity android:name=".SelectJobType" android:theme="@android:style/Theme.Dialog"></activity>
+        <activity android:name=".SelectJobType" />
     </application>
 
 </manifest>
