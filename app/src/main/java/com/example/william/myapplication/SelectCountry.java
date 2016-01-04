@@ -30,10 +30,10 @@ public class SelectCountry extends Activity {
         final CountryAdapter ca = new CountryAdapter(getApplicationContext());
 
         Bundle extra = getIntent().getExtras();
-        Boolean single = false;
+        boolean single = false;
         // checked selected index
         if( extra != null ){
-            single = (Boolean) extra.get("single");
+            single = (boolean) extra.get("single");
             if( single ){
                 ca.setLayoutSingle(true);
                 ((ViewGroup)lv.getParent()).getChildAt(1).setVisibility(View.GONE);

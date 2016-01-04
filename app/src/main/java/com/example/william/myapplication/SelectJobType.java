@@ -3,6 +3,7 @@ package com.example.william.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -22,7 +23,7 @@ public class SelectJobType extends Activity {
             Bundle extra = getIntent().getExtras();
             single = extra.getBoolean("single");
         }
-
+        Log.e("single?", ""+single);
         if( single ){
             jta.setSingle(single);
         }
