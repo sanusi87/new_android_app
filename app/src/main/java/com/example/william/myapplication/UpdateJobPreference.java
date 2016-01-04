@@ -1,5 +1,6 @@
 package com.example.william.myapplication;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +8,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -33,7 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class UpdateJobPreference extends ActionBarActivity {
+public class UpdateJobPreference extends Activity {
 
     private int INSERT_SALARY = 1;
     private int SELECT_JOB_TYPE = 2;
@@ -244,17 +244,10 @@ public class UpdateJobPreference extends ActionBarActivity {
                     }
                 }
                 params[4] = (new JSONArray( savedCountryId )).toString();
-
-                /*
-                obj.put("salary", params[0]);
-                obj.put("currency_id", params[1]);
-                obj.put("job_type_id", params[2]);
-                obj.put("country_id", params[3]);
-                obj.put("state_id", params[4]);
-                */
                 new UpdateTask().execute(params);
             }
         });
+
     }
 
     @Override
