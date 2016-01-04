@@ -4,10 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class SelectJobType extends Activity {
 
@@ -15,6 +20,10 @@ public class SelectJobType extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_job_type);
+        setTitle("Select Job Type");
+
+        Button okbutton = (Button)findViewById(R.id.okButton);
+        Button cancelButton = (Button)findViewById(R.id.cancelButton);
 
         final JobTypeAdapter jta = new JobTypeAdapter(this);
         boolean single = true;
@@ -23,12 +32,15 @@ public class SelectJobType extends Activity {
             Bundle extra = getIntent().getExtras();
             single = extra.getBoolean("single");
         }
-        Log.e("single?", ""+single);
+
         if( single ){
             jta.setSingle(single);
+            ((ViewGroup)okbutton.getParent()).setVisibility(View.GONE);
+        }else{
+
         }
 
-        ListView listOfJobType = (ListView) findViewById(R.id.listOfJobType);
+        final ListView listOfJobType = (ListView) findViewById(R.id.listOfJobType);
         listOfJobType.setAdapter( jta );
 
         if( single ){
@@ -43,7 +55,36 @@ public class SelectJobType extends Activity {
                 }
             });
         }else{
+            okbutton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
 
+                    SparseBooleanArray a = listOfJobType.getCheckedItemPositions();
+
+                    if( a.size() > 0 ){
+                        ArrayList<JobType> values = new ArrayList<>();
+                        for (int i = 0; i < a.size(); i++) {
+                            if (a.valueAt(i) && a.keyAt(i) >= 0) {
+                                JobType c = (JobType) jta.getItem(a.keyAt(i));
+                                values.add(c);
+                            }
+                        }
+
+                        intent.putExtra("jobType", values);
+                        setResult(Activity.RESULT_OK, intent);
+                    }
+
+                    finish();
+                }
+            });
+
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
         }
     }
 
