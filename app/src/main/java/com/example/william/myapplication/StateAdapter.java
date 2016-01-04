@@ -1,13 +1,10 @@
 package com.example.william.myapplication;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -22,6 +19,7 @@ public class StateAdapter extends BaseAdapter implements ListAdapter{
 
     public ArrayList<State> listOfStates = new ArrayList<>();
     private Context context;
+    private boolean layoutSingle = false;
 
     public StateAdapter(Context context){
         this.context = context;
@@ -72,7 +70,12 @@ public class StateAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+
+            if( layoutSingle ){
+                v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+            }else{
+                v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+            }
         }
 
         State state = (State) getItem(position);
