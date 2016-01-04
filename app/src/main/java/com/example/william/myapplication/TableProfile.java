@@ -79,6 +79,7 @@ public class TableProfile extends SQLiteOpenHelper{
         db.execSQL(TableWorkExperience.SQL_CREATE_ENTRIES);
 		db.execSQL(TableCountry.SQL_CREATE_ENTRIES);
 		db.execSQL(TableAddress.SQL_CREATE_ENTRIES);
+        db.execSQL(TableJobPreferenceLocation.SQL_CREATE_ENTRIES);
 
         // insert subscription
         ContentValues cv1 = new ContentValues();
@@ -129,10 +130,13 @@ public class TableProfile extends SQLiteOpenHelper{
         ContentValues cv = new ContentValues();
         cv.put("salary", 0);
         cv.put("currency_id", 6);
-        cv.put("state_id", "");
-        cv.put("country_id", "");
         cv.put("job_type_id", "");
         db.insert(TableJobPreference.TABLE_NAME, null, cv);
+
+        ContentValues cv9 = new ContentValues();
+        cv9.put("state_id", "");
+        cv9.put("country_id", "");
+        db.insert(TableJobPreferenceLocation.TABLE_NAME, null, cv9);
 
         // job spec and roles
         String[] url = {Jenjobs.JOB_SPEC_URL};
