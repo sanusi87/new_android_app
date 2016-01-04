@@ -2,6 +2,7 @@ package com.example.william.myapplication;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -38,5 +39,10 @@ public class TableJobPreference extends SQLiteOpenHelper{
             return true;
         }
         return false;
+    }
+
+    public Cursor getJobPreference() {
+        Cursor c = db.rawQuery("SELECT * FROM "+TableJobPreference.TABLE_NAME, null);
+        return c;
     }
 }
