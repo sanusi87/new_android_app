@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,8 +77,8 @@ public class UpdateEducation extends ActionBarActivity {
         sharedPreferences = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPreferences.getString("access_token", null);
 
-        HashMap listOfeducationLevel = Jenjobs.getEducationLevel();
-        HashMap listOfeducationField = Jenjobs.getEducationField();
+        HashMap listOfEducationLevel = Jenjobs.getEducationLevel();
+        HashMap listOfEducationField = Jenjobs.getEducationField();
 
         LinearLayout selectEducationLevel = (LinearLayout)findViewById(R.id.selectEducationLevel);
         LinearLayout selectEducationField = (LinearLayout)findViewById(R.id.selectEducationField);
@@ -125,8 +124,8 @@ public class UpdateEducation extends ActionBarActivity {
                 remoteEducationId = ce.getInt(1);
 
                 //educationLevel.setSelection( eduLevelAdapter.getItemPosition( ce.getInt(4) ) );
-                String theEducationLevel = (String) listOfeducationLevel.get( ce.getInt(4) );
-                String theEducationField = (String) listOfeducationField.get( ce.getInt(5) );
+                String theEducationLevel = (String) listOfEducationLevel.get( ce.getInt(4) );
+                String theEducationField = (String) listOfEducationField.get( ce.getInt(5) );
                 //Log.e( "theEducationLevel", ""+theEducationLevel );
 
                 educationLevel = new EducationLevel(ce.getInt(4), theEducationLevel );
