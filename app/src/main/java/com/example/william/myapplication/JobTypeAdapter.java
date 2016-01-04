@@ -20,7 +20,7 @@ public class JobTypeAdapter extends BaseAdapter implements ListAdapter{
     public JobTypeAdapter(Context context){
         this.context = context;
 
-        HashMap<Integer, String> fields = Jenjobs.getJobType();
+        HashMap fields = Jenjobs.getJobType();
         //ArrayList<JobSeekingStatus> tempArr = new ArrayList<>();
 
         Iterator i = fields.entrySet().iterator();
