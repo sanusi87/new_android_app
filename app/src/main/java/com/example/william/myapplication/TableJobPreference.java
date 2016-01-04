@@ -10,9 +10,8 @@ public class TableJobPreference extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "job_preference";
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableJobPreference.TABLE_NAME+"' (salary INTEGER, " +
             "currency_id INTEGER, " +
-            "state_id TEXT, " +
-            "country_id TEXT, " +
-            "job_type_id TEXT)";
+            "job_type_id TEXT, " + // saved as json string
+            "date_updated NUMERIC)";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableJobPreference.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
