@@ -113,6 +113,7 @@ public class UpdateJobPreference extends ActionBarActivity {
                 Log.e("jsonErr", e.getMessage());
             }
         }
+        c.close();
 
         Cursor d = tableJobPreferenceLocation.getJobPreference();
         if( d.moveToFirst() ){
@@ -137,6 +138,7 @@ public class UpdateJobPreference extends ActionBarActivity {
             selectedMalaysiaState.setText(TextUtils.join(", ", selectedStates));
             selectedOtherCountry.setText(TextUtils.join(", ", selectedCountries));
         }
+        d.close();
 
         /*
         * clicked on salary
