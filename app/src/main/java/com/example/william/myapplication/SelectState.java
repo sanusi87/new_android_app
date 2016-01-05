@@ -30,7 +30,7 @@ public class SelectState extends Activity {
             single = (boolean)extra.get("single");
             ca.setLayoutSingle(single);
             lv.setAdapter(ca);
-            
+
             ArrayList selectedStates = (ArrayList) extra.get("state");
             if( selectedStates != null && selectedStates.size() > 0 ){
                 for(int i=0; i < selectedStates.size();i++){
