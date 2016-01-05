@@ -30,14 +30,16 @@ public class UpdateNoticePeriod extends Activity {
 
         if( getIntent() != null ){
             Bundle extra = getIntent().getExtras();
-            String _availability = extra.getString("availability");
-            String _availabilityUnit = extra.getString("availabilityUnit");
+            if( extra != null ){
+                String _availability = extra.getString("availability");
+                String _availabilityUnit = extra.getString("availabilityUnit");
 
-            availability.setText(_availability);
+                availability.setText(_availability);
 
-            for(int i=0;i<units.length;i++){
-                if( _availabilityUnit != null && _availabilityUnit.equals( units[i] ) ){
-                    availabilityUnit.setSelection( i );
+                for(int i=0;i<units.length;i++){
+                    if( _availabilityUnit != null && _availabilityUnit.equals( units[i] ) ){
+                        availabilityUnit.setSelection( i );
+                    }
                 }
             }
         }
