@@ -47,13 +47,11 @@ public class TableWorkExperience  extends SQLiteOpenHelper {
     }
 
     public Cursor getWorkExperience(){
-        Cursor c = db.rawQuery("SELECT * FROM "+TableWorkExperience.TABLE_NAME, null);
-        return c;
+        return db.rawQuery("SELECT * FROM "+TableWorkExperience.TABLE_NAME, null);
     }
 
     public Long addWorkExperience(ContentValues cv2){
-        Long newID = db.insert(TableWorkExperience.TABLE_NAME, null, cv2);
-        return newID;
+        return db.insert(TableWorkExperience.TABLE_NAME, null, cv2);
     }
 
     public boolean updateWorkExperience(ContentValues cv2, int existingID){
@@ -71,15 +69,11 @@ public class TableWorkExperience  extends SQLiteOpenHelper {
         String _id = String.valueOf(id);
         String[] param = {_id};
         int affectedRows = db.delete(TableWorkExperience.TABLE_NAME, "id=?", param);
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        return affectedRows > 0;
     }
 
     public Cursor getWorkExperienceById(int currentId) {
         String[] _id = {String.valueOf(currentId)};
-        Cursor c = db.rawQuery("SELECT * FROM "+TableWorkExperience.TABLE_NAME+" WHERE id=?", _id);
-        return c;
+        return db.rawQuery("SELECT * FROM "+TableWorkExperience.TABLE_NAME+" WHERE id=?", _id);
     }
 }

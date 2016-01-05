@@ -26,10 +26,10 @@ public class SelectJobSpec extends Activity {
         Bundle extra = getIntent().getExtras();
         // checked selected index
         if( extra != null ){
-            ArrayList<JobSpec> selectedJobSpecs = (ArrayList<JobSpec>) extra.get("jobspec");
+            ArrayList selectedJobSpecs = (ArrayList) extra.get("jobspec");
             if( selectedJobSpecs != null && selectedJobSpecs.size() > 0 ){
                 for(int i=0; i < selectedJobSpecs.size();i++){
-                    JobSpec value = selectedJobSpecs.get(i);
+                    JobSpec value = (JobSpec) selectedJobSpecs.get(i);
                     int selectedIndex = ca.jobspec.indexOf(value); // index of the selected value
                     if( selectedIndex != -1 ){
                         lv.setItemChecked(selectedIndex, true);

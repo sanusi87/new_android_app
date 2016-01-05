@@ -31,10 +31,10 @@ public class SelectJobRole extends Activity {
 
         // checked selected index
         if( extra != null ){
-            ArrayList<JobRole> selectedJobRoles = (ArrayList<JobRole>) extra.get("jobrole");
+            ArrayList selectedJobRoles = (ArrayList) extra.get("jobrole");
             if( selectedJobRoles != null && selectedJobRoles.size() > 0 ){
                 for(int i=0; i < selectedJobRoles.size();i++){
-                    JobRole value = selectedJobRoles.get(i);
+                    JobRole value = (JobRole) selectedJobRoles.get(i);
                     int selectedIndex = ca.jobrole.indexOf(value); // index of the selected value
                     if( selectedIndex != -1 ){
                         lv.setItemChecked(selectedIndex, true);

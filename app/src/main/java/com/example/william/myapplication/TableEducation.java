@@ -57,32 +57,24 @@ public class TableEducation extends SQLiteOpenHelper{
     }
 
     public Long addEducation(ContentValues cv2){
-        Long newID = db.insert(TableEducation.TABLE_NAME, null, cv2);
-        return newID;
+        return db.insert(TableEducation.TABLE_NAME, null, cv2);
     }
 
     public boolean updateEducation(ContentValues cv2, int existingID){
         String[] _id = {String.valueOf(existingID)};
         int affectedRows = db.update(TableEducation.TABLE_NAME, cv2, "id=?", _id);
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        return affectedRows > 0;
     }
 
     public boolean deleteEducation(int id){
         String _id = String.valueOf(id);
         String[] param = {_id};
         int affectedRows = db.delete(TableEducation.TABLE_NAME, "id=?", param);
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        return affectedRows > 0;
     }
 
     public Cursor getEducationById(int id) {
         String[] _id = {String.valueOf(id)};
-        Cursor c = db.rawQuery("SELECT * FROM "+TableEducation.TABLE_NAME+" WHERE id=?", _id);
-        return c;
+        return db.rawQuery("SELECT * FROM "+TableEducation.TABLE_NAME+" WHERE id=?", _id);
     }
 }

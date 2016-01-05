@@ -188,7 +188,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
         jobRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("selectedJobSpec", ""+theJobSpec);
+                Log.e("selectedJobSpec", "" + theJobSpec);
                 if( !selectedJobSpec.getText().equals(getResources().getString(R.string.no_value)) ){
                     Intent intent = new Intent();
                     intent.putExtra("jobspecid", theJobSpec);
@@ -375,8 +375,10 @@ public class UpdateWorkExperience extends ActionBarActivity {
             if (resultCode == RESULT_OK) {
                 Bundle extra = data.getExtras();
                 JobSpec jobSpec = (JobSpec)extra.get("jobspec");
-                selectedJobSpec.setText(jobSpec.name);
-                theJobSpec = jobSpec.id;
+                if( jobSpec != null ){
+                    selectedJobSpec.setText(jobSpec.name);
+                    theJobSpec = jobSpec.id;
+                }
 
                 // reset job role
                 selectedJobRole.setText(getResources().getString(R.string.no_value));
@@ -386,16 +388,15 @@ public class UpdateWorkExperience extends ActionBarActivity {
             if (resultCode == RESULT_OK) {
                 Bundle extra = data.getExtras();
                 JobRole jobrole = (JobRole)extra.get("jobrole");
-                selectedJobRole.setText(jobrole.name);
-                theJobRole = jobrole.id;
+                if( jobrole != null ) {
+                    selectedJobRole.setText(jobrole.name);
+                    theJobRole = jobrole.id;
+                }
             }
         }
     }
 
     public class PostWorkExp extends AsyncTask<String, Void, JSONObject> {
-        private View v;
-        private int viewType;
-
         public PostWorkExp(){}
 
         @Override
@@ -407,7 +408,6 @@ public class UpdateWorkExperience extends ActionBarActivity {
 
             httppost.addHeader("Content-Type", "application/json");
             httppost.addHeader("Accept", "application/json");
-            HttpResponse _http_response = null;
 
             try {
                 StringEntity entity = new StringEntity(params[1]);
@@ -415,7 +415,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 entity.setContentType("application/json");
                 httppost.setEntity(entity);
 
-                _http_response = httpclient.execute(httppost);
+                HttpResponse _http_response = httpclient.execute(httppost);
                 HttpEntity _entity = _http_response.getEntity();
                 InputStream is = _entity.getContent();
                 String responseString = JenHttpRequest.readInputStreamAsString(is);
