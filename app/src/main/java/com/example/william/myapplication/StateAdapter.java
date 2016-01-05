@@ -86,4 +86,8 @@ public class StateAdapter extends BaseAdapter implements ListAdapter{
 
         return v;
     }
+
+    public void setLayoutSingle(boolean layoutSingle) {
+        this.layoutSingle = layoutSingle;
+    }
 }
