@@ -3,14 +3,12 @@ package com.example.william.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class SelectJobSeekingStatus extends ActionBarActivity {
+public class SelectJobSeekingStatus extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,25 +30,14 @@ public class SelectJobSeekingStatus extends ActionBarActivity {
             }
         }
 
-        Button okButton = (Button)findViewById(R.id.okButton);
-        okButton.setOnClickListener(new View.OnClickListener() {
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                SparseBooleanArray a = lv.getCheckedItemPositions();
-                JobSeekingStatus values = (JobSeekingStatus) ja.getItem( a.keyAt(0) );
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                JobSeekingStatus values = (JobSeekingStatus) ja.getItem(position);
                 Log.e("jobseekingstatus", ""+values.name);
                 Intent intent = new Intent();
                 intent.putExtra("jobseekingstatus", values);
                 setResult(Activity.RESULT_OK, intent);
-                finish();
-            }
-        });
-
-        Button cancelButton = (Button)findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult(Activity.RESULT_CANCELED);
                 finish();
             }
         });
