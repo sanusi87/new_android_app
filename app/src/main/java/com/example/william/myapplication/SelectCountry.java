@@ -60,9 +60,6 @@ public class SelectCountry extends Activity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                     Country country = (Country) ca.getItem(position);
-                    Log.e("selected", ""+country.name);
-                    Log.e("selected", ""+country.id);
-
                     Intent intent = new Intent();
                     intent.putExtra("country", country);
                     setResult(Activity.RESULT_OK, intent);
