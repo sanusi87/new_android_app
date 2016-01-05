@@ -46,7 +46,7 @@ public class TableProfile extends SQLiteOpenHelper{
             "driving_license INTEGER(2), " + //18
             "transport INTEGER(2), " + //19
             "js_jobseek_status_id INTEGER(2), " + //20
-            "availability INTEGER(2), " + //21
+            "availability INTEGER(4), " + //21
             "availability_unit TEXT, " + //22
             //"address TEXT, " + //23
             "no_work_exp TEXT, " + //1=no work, 0=got work //24
