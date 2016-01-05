@@ -28,18 +28,17 @@ public class SelectState extends Activity {
         boolean single = false;
         // checked selected index
         if( extra != null ){
-            ArrayList<State> selectedStates = (ArrayList<State>) extra.get("state");
+            ArrayList selectedStates = (ArrayList) extra.get("state");
             if( selectedStates != null && selectedStates.size() > 0 ){
                 for(int i=0; i < selectedStates.size();i++){
-                    State value = selectedStates.get(i);
+                    State value = (State) selectedStates.get(i);
                     int selectedIndex = ca.listOfStates.indexOf(value); // index of the selected value
                     if( selectedIndex != -1 ){
                         lv.setItemChecked(selectedIndex, true);
                     }
                 }
             }
-        }else{
-
+            single = (boolean)extra.get("single");
         }
 
         if( !single ){
