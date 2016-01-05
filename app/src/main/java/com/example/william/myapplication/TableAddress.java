@@ -2,6 +2,7 @@ package com.example.william.myapplication;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -10,16 +11,16 @@ public class TableAddress extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "address";
 
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableAddress.TABLE_NAME
-            +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-            "address1 TEXT, " +
-            "address2 TEXT, " +
-            "postcode NUMERIC, " +
-            "city_id NUMERIC, " +
-            "city_name TEXT, " +
-            "state_id NUMERIC, " +
-            "state_name TEXT, " +
-            "country_id NUMERIC, " +
-            "updated_at NUMERIC);";
+            +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //1
+            "address1 TEXT, " + //2
+            "address2 TEXT, " + //3
+            "postcode NUMERIC, " + //4
+            "city_id NUMERIC, " + //5
+            "city_name TEXT, " + //6
+            "state_id NUMERIC, " + //7
+            "state_name TEXT, " + //8
+            "country_id NUMERIC, " + //9
+            "updated_at NUMERIC);"; //10
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableAddress.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
@@ -45,10 +46,11 @@ public class TableAddress extends SQLiteOpenHelper{
 
     public boolean updateAddress(ContentValues cv){
         int affectedRows = db.update(TableAddress.TABLE_NAME, cv, null, null);
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        return affectedRows > 0;
     }
 
+    public Cursor getAddress() {
+        return db.rawQuery("SELECT * FROM "+TableAddress.TABLE_NAME+" JOIN "+TableCountry.TABLE_NAME
+                +" ON "+TableAddress.TABLE_NAME+".country_id = "+TableCountry.TABLE_NAME+".id", null);
+    }
 }
