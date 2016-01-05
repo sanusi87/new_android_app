@@ -123,7 +123,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/license"
                 android:layout_weight="3"
-                android:labelFor="@id/license"
+                android:labelFor="@+id/license"
                 style="@style/AppThemeBaseLabel"
                 android:gravity="center_vertical" />
 
@@ -132,7 +132,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/license"
                 android:checked="false"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:focusable="true" />
         </LinearLayout>
 
         <LinearLayout
@@ -147,7 +148,7 @@
                 android:text="@string/transport"
                 android:layout_weight="3"
                 style="@style/AppThemeBaseLabel"
-                android:labelFor="@id/own_transport"
+                android:labelFor="@+id/own_transport"
                 android:gravity="center_vertical" />
 
             <CheckBox
@@ -155,7 +156,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/own_transport"
                 android:singleLine="false"
-                android:checked="false" />
+                android:checked="false"
+                android:focusable="true" />
         </LinearLayout>
     </LinearLayout>
 
