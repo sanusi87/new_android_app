@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,10 +25,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Iterator;
 
-public class UpdateJobSeeking extends ActionBarActivity {
+public class UpdateJobSeeking extends Activity {
 
     public static final int SELECT_JOB_SEEKING_STATUS = 1;
     public static final int SELECT_COUNTRY = 2;
@@ -40,13 +37,11 @@ public class UpdateJobSeeking extends ActionBarActivity {
     SharedPreferences sharedPref;
 
     private TextView selectedMalaysiaState;
-    private ArrayList<State> selectedMalaysiaStateValues = new ArrayList<>();
+    private State selectedMalaysiaStateValues = null;
     private TextView selectedCountry;
     private Country selectedCountryValues = null;
     private TextView selectedJobSeekingStatus;
     private JobSeekingStatus selectedJobSeekingStatusValues = null;
-
-    //private Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +93,9 @@ public class UpdateJobSeeking extends ActionBarActivity {
         selectJobNotice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getApplicationContext(), UpdateNoticePeriod.class);
+                // TODO - set saved period
+                startActivityForResult(intent, SELECT_JOB_NOTICE);
             }
         });
 
@@ -156,22 +153,18 @@ public class UpdateJobSeeking extends ActionBarActivity {
         }else if( requestCode == SELECT_STATE ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                ArrayList<State> selectedValues = (ArrayList<State>) filters.get("state");
-                ArrayList<String> selectedLabels = new ArrayList<>();
-
-                if( selectedValues != null ){
-                    for( int i=0;i<selectedValues.size();i++ ){
-                        State c = selectedValues.get(i);
-                        selectedLabels.add(c.name);
-                    }
-                    selectedMalaysiaStateValues = selectedValues;
-                    selectedMalaysiaState.setText(TextUtils.join(",", selectedLabels));
+                State c = (State) filters.get("state");
+                selectedMalaysiaStateValues = c;
+                if( c != null ){
+                    selectedMalaysiaState.setText(c.name);
                 }
             }
         }else if( requestCode == SELECT_JOB_NOTICE ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-
+                Log.e("value", filters.getString("availability"));
+                Log.e("unit", filters.getString("availabilityUnit"));
+                
             }
         }
     }
