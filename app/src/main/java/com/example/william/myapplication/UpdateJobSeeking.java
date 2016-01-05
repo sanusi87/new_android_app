@@ -55,6 +55,7 @@ public class UpdateJobSeeking extends Activity {
 
         selectedMalaysiaState = (TextView)findViewById(R.id.selectedMalaysiaState);
         selectedCountry = (TextView)findViewById(R.id.selectedCountry);
+        selectedJobSeekingStatus = (TextView)findViewById(R.id.selectedJobSeekingStatus);
 
         LinearLayout selectJobSeekingStatus = (LinearLayout)findViewById(R.id.selectJobSeekingStatus);
         LinearLayout selectCountry = (LinearLayout)findViewById(R.id.selectCountry);
