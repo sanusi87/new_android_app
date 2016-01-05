@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,7 +42,10 @@ public class UpdateJobSeeking extends Activity {
     private TextView selectedCountry;
     private Country selectedCountryValues = null;
     private TextView selectedJobSeekingStatus;
+    private TextView selectedJobNotice;
     private JobSeekingStatus selectedJobSeekingStatusValues = null;
+    private TextView ownTransportLabel;
+    private TextView licenseLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +60,30 @@ public class UpdateJobSeeking extends Activity {
         selectedMalaysiaState = (TextView)findViewById(R.id.selectedMalaysiaState);
         selectedCountry = (TextView)findViewById(R.id.selectedCountry);
         selectedJobSeekingStatus = (TextView)findViewById(R.id.selectedJobSeekingStatus);
+        selectedJobNotice = (TextView)findViewById(R.id.selectedJobNotice);
+        licenseLabel = (TextView)findViewById(R.id.licenseLabel);
+        ownTransportLabel = (TextView)findViewById(R.id.ownTransportLabel);
+        final CheckBox cbLicense = (CheckBox)findViewById(R.id.license);
+        final CheckBox cbTransport = (CheckBox)findViewById(R.id.own_transport);
 
         LinearLayout selectJobSeekingStatus = (LinearLayout)findViewById(R.id.selectJobSeekingStatus);
         LinearLayout selectCountry = (LinearLayout)findViewById(R.id.selectCountry);
         LinearLayout selectMalaysiaState = (LinearLayout)findViewById(R.id.selectMalaysiaState);
         LinearLayout selectJobNotice = (LinearLayout)findViewById(R.id.selectJobNotice);
+
+        licenseLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbLicense.setChecked( !cbLicense.isChecked() );
+            }
+        });
+
+        ownTransportLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbTransport.setChecked( !cbTransport.isChecked() );
+            }
+        });
 
         selectJobSeekingStatus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,9 +186,7 @@ public class UpdateJobSeeking extends Activity {
         }else if( requestCode == SELECT_JOB_NOTICE ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                Log.e("value", filters.getString("availability"));
-                Log.e("unit", filters.getString("availabilityUnit"));
-                
+                selectedJobNotice.setText( filters.getString("availability")+" "+filters.getString("availabilityUnit") );
             }
         }
     }
