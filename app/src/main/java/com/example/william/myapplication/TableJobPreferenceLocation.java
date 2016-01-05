@@ -35,8 +35,12 @@ public class TableJobPreferenceLocation extends SQLiteOpenHelper {
 
     }
 
-    public boolean updateJobPreference(ContentValues cv){
-        int affectedRows = db.update(TableJobPreferenceLocation.TABLE_NAME, cv, null, null);
+    public void truncate(){
+        db.execSQL("DELETE FROM "+TableJobPreferenceLocation.TABLE_NAME);
+    }
+
+    public boolean insertJobPreference(ContentValues cv){
+        Long affectedRows = db.insert(TableJobPreferenceLocation.TABLE_NAME, null, cv);
         if( affectedRows > 0 ){
             return true;
         }
