@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dp">
+    style="@style/AppThemePadding10">
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/selectJobSeekingStatus">
+        android:id="@+id/selectJobSeekingStatus"
+        style="@style/AppThemePadding10">
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,14 +28,15 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/no_value"
             android:id="@+id/selectedJobSeekingStatus" />
-
     </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        style="@style/AppThemePadding10"
         android:id="@+id/selectCountry">
 
         <TextView
@@ -52,14 +53,15 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/no_value"
             android:id="@+id/selectedCountry" />
-
     </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        style="@style/AppThemePadding10"
         android:id="@+id/selectMalaysiaState">
 
         <TextView
@@ -75,14 +77,15 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/no_value"
             android:id="@+id/selectedMalaysiaState" />
-
     </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        style="@style/AppThemePadding10"
         android:id="@+id/selectJobNotice">
 
         <TextView
@@ -99,14 +102,15 @@
             android:text="@string/no_value"
             android:id="@+id/selectedJobNotice"
             style="@style/AppThemeBaseTextValue" />
-
     </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        style="@style/AppThemePadding10">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -116,17 +120,19 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/license"
                 android:layout_weight="3"
-                android:labelFor="@+id/license"
-                style="@style/AppThemeBaseLabel" />
+                android:labelFor="@id/license"
+                style="@style/AppThemeBaseLabel"
+                android:gravity="center_vertical" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/license"
-                android:checked="false" />
+                android:checked="false"
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
@@ -137,11 +143,12 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/transport"
                 android:layout_weight="3"
                 style="@style/AppThemeBaseLabel"
-                android:labelFor="@+id/own_transport" />
+                android:labelFor="@id/own_transport"
+                android:gravity="center_vertical" />
 
             <CheckBox
                 android:layout_width="wrap_content"
@@ -150,22 +157,23 @@
                 android:singleLine="false"
                 android:checked="false" />
         </LinearLayout>
-
     </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="2">
         <Button
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/save"
             android:id="@+id/save_jobseeking_information"
             android:layout_weight="1" />
         <Button
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
             android:id="@+id/cancel"
