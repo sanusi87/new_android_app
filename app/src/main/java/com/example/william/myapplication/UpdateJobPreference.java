@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -98,7 +99,7 @@ public class UpdateJobPreference extends Activity {
             String savedSalary = c.getString(0);
 
             insertedSalary.setText(savedSalary);
-            selectedCurrency.setText( (String)listOfCurrencies.get( c.getString(1) ) );
+            selectedCurrency.setText((String)listOfCurrencies.get( c.getInt(1) ) );
 
             String savedJobTypes = c.getString(2);
             try {
@@ -113,7 +114,7 @@ public class UpdateJobPreference extends Activity {
                 }
 
                 selectedJobType.setText( TextUtils.join( ", ", jobTypeName ) );
-                savedCurrency = new MyCurrency( c.getInt(1), (String)listOfCurrencies.get( c.getString(1) ) );
+                savedCurrency = new MyCurrency( c.getInt(1), (String)listOfCurrencies.get( c.getInt(1) ) );
             } catch (JSONException e) {
                 Log.e("jsonErr", e.getMessage());
             }
@@ -132,6 +133,7 @@ public class UpdateJobPreference extends Activity {
                 if( theState > 0 ){
                     selectedStates.add( (String) listOfStates.get( theState ) );
                     _state.add(new State(theState, (String)listOfStates.get(theState)));
+                    theCountry = 0;
                 }
 
                 if( theCountry > 0 ){
@@ -154,8 +156,17 @@ public class UpdateJobPreference extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                // TODO: pass already inserted salary and currency record from db
                 intent.setClass(getApplicationContext(), UpdateSalary.class);
+                // TODO: pass already inserted salary and currency record from db
+                String _insertedSalary = insertedSalary.getText().toString();
+                if( _insertedSalary.length() > 0 ){
+                    intent.putExtra("salary", _insertedSalary);
+                }
+
+                // TODO: add currency to intent
+                if( savedCurrency != null ){
+                    intent.putExtra("currency", savedCurrency);
+                }
                 startActivityForResult(intent, INSERT_SALARY);
             }
         });
@@ -167,9 +178,12 @@ public class UpdateJobPreference extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                // TODO: pass already inserted job type from db
                 intent.setClass(getApplicationContext(), SelectJobType.class);
                 intent.putExtra("single", false);
+                // TODO: pass already inserted job type from db
+                if( _jobtype.size() > 0 ){
+                    intent.putExtra("jobtype", _jobtype);
+                }
                 startActivityForResult(intent, SELECT_JOB_TYPE);
             }
         });
@@ -184,6 +198,9 @@ public class UpdateJobPreference extends Activity {
                 intent.setClass(getApplicationContext(), SelectState.class);
                 intent.putExtra("single", false);
                 // TODO: pass already inserted value from db
+                if( _state.size() > 0 ){
+                    intent.putExtra("state", _state);
+                }
                 startActivityForResult(intent, MALAYSIA_STATE);
             }
         });
@@ -198,6 +215,9 @@ public class UpdateJobPreference extends Activity {
                 intent.setClass(getApplicationContext(), SelectCountry.class);
                 intent.putExtra("single", false);
                 // TODO: pass already inserted value from db
+                if( _country.size() > 0 ){
+                    intent.putExtra("country", _country);
+                }
                 startActivityForResult(intent, OTHER_COUNTRY);
             }
         });
@@ -205,13 +225,21 @@ public class UpdateJobPreference extends Activity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] params = {};
+                ArrayList<String> errors = new ArrayList<String>();
+                String[] params = new String[5];
                 ContentValues cv = new ContentValues();
-                cv.put("salary", insertedSalary.getText().toString());
-                cv.put("currency_id", selectedCurrency.getText().toString());
 
-                params[0] = insertedSalary.getText().toString();
-                params[1] = String.valueOf(savedCurrency.id);
+                if( insertedSalary.getText().toString().length() > 0 ){
+                    cv.put("salary", insertedSalary.getText().toString());
+                    params[0] = insertedSalary.getText().toString();
+                }else{
+                    errors.add("Please enter your expected salary.");
+                }
+
+                if( savedCurrency != null ){
+                    cv.put("currency_id", savedCurrency.id);
+                    params[1] = String.valueOf(savedCurrency.id);
+                }
 
                 ArrayList<Integer> savedJobTypeId = new ArrayList<>();
                 if( _jobtype.size() > 0 ){
@@ -220,12 +248,14 @@ public class UpdateJobPreference extends Activity {
                         savedJobTypeId.add(__jobtype.id);
                     }
                     cv.put("job_type_id", (new JSONArray( savedJobTypeId )).toString() );
+                    params[2] = (new JSONArray( savedJobTypeId )).toString();
+                }else{
+                    errors.add("Please select your preferred job type(s).");
                 }
-                params[2] = (new JSONArray( savedJobTypeId )).toString();
-                tableJobPreference.updateJobPreference(cv);
 
                 ArrayList<Integer> savedStateId = new ArrayList<>();
                 if( _state.size() > 0 ){
+                    tableJobPreferenceLocation.truncate();
                     for(int i=0;i<_state.size();i++){
                         State __state = _state.get(i);
                         savedStateId.add(__state.id);
@@ -233,25 +263,34 @@ public class UpdateJobPreference extends Activity {
                         ContentValues cv2 = new ContentValues();
                         cv2.put("country_id", 127);
                         cv2.put("state_id", __state.id);
-                        tableJobPreferenceLocation.updateJobPreference(cv2);
+                        tableJobPreferenceLocation.insertJobPreference(cv2);
                     }
+                    params[3] = (new JSONArray( savedStateId )).toString();
+                }else{
+                    errors.add("Please select your preferred working location in Malaysia.");
                 }
-                params[3] = (new JSONArray( savedStateId )).toString();
 
-                ArrayList<Integer> savedCountryId = new ArrayList<>();
-                if( _country.size() > 0 ) {
-                    for(int i=0;i<_country.size();i++){
-                        Country __country = _country.get(i);
-                        savedCountryId.add(__country.id);
+                if( errors.size() == 0 ){
+                    tableJobPreference.updateJobPreference(cv);
+                    ArrayList<Integer> savedCountryId = new ArrayList<>();
+                    if( _country.size() > 0 ) {
+                        for(int i=0;i<_country.size();i++){
+                            Country __country = _country.get(i);
+                            savedCountryId.add(__country.id);
 
-                        ContentValues cv2 = new ContentValues();
-                        cv2.put("country_id", __country.id);
-                        cv2.put("state_id", 0);
-                        tableJobPreferenceLocation.updateJobPreference(cv2);
+                            ContentValues cv2 = new ContentValues();
+                            cv2.put("country_id", __country.id);
+                            cv2.put("state_id", 0);
+                            tableJobPreferenceLocation.insertJobPreference(cv2);
+                        }
                     }
+                    params[4] = (new JSONArray( savedCountryId )).toString();
+                    new UpdateTask().execute(params);
+
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_SHORT).show();
                 }
-                params[4] = (new JSONArray( savedCountryId )).toString();
-                new UpdateTask().execute(params);
             }
         });
 
@@ -267,6 +306,8 @@ public class UpdateJobPreference extends Activity {
                 MyCurrency c = (MyCurrency)extra.get("the_currency");
 
                 insertedSalary.setText(salary);
+                Log.e("salary", "" + salary);
+                Log.e("currency", ""+c.name);
                 if( c != null ){
                     selectedCurrency.setText(c.name);
                     savedCurrency = c;
@@ -320,6 +361,7 @@ public class UpdateJobPreference extends Activity {
                         Country country = (Country)countries.get(i);
                         country_name.add(country.name);
                         _country.add(country);
+                        Log.e("country_name", country.name);
                     }
                     selectedOtherCountry.setText(TextUtils.join(", ", country_name));
                 }
@@ -348,9 +390,9 @@ public class UpdateJobPreference extends Activity {
             try {
                 obj.put("salary", params[0]);
                 obj.put("currency_id", params[1]);
-                obj.put("job_type_id", params[2]);
-                obj.put("country_id", params[3]);
-                obj.put("state_id", params[4]);
+                obj.put("job_type_id", new JSONArray(params[2]));
+                obj.put("state_id", new JSONArray(params[3]));
+                obj.put("country_id", new JSONArray(params[4]));
 
                 StringEntity entity = new StringEntity(obj.toString());
                 entity.setContentEncoding(HTTP.UTF_8);
@@ -363,7 +405,7 @@ public class UpdateJobPreference extends Activity {
 
                 String responseString = JenHttpRequest.readInputStreamAsString(is);
                 _response = JenHttpRequest.decodeJsonObjectString(responseString);
-
+                Log.e("response", responseString);
             } catch (JSONException e) {
                 Log.e("JSONException", e.getMessage());
             } catch (ClientProtocolException e) {
