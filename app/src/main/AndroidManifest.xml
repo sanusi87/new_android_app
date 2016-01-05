@@ -98,6 +98,7 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".UpdateSalary" />
         <activity android:name=".SelectJobType" />
+        <activity android:name=".UpdateNoticePeriod"></activity>
     </application>
 
 </manifest>
