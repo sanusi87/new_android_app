@@ -1290,7 +1290,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     TableJobPreferenceLocation tableJobPreferenceLocation = new TableJobPreferenceLocation(getApplicationContext());
 
                     ContentValues cv = new ContentValues();
-                    ContentValues cv2 = new ContentValues();
                     JSONObject success = null;
                     try {
                         success = new JSONObject(nsuccess);
@@ -1300,9 +1299,27 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         tableJobPreference.updateJobPreference(cv);
                         cv.put("job_type_id", success.optString("job_type_id"));
 
-                        cv2.put("state_id", success.optString("state_id"));
-                        cv2.put("country_id", success.optString("country_id"));
-                        tableJobPreferenceLocation.updateJobPreference(cv2);
+                        tableJobPreferenceLocation.truncate();
+                        JSONArray state = new JSONArray(success.optString("state_id"));
+                        if( state.length() > 0 ){
+                           for(int i=0;i<state.length();i++){
+                               ContentValues cv2 = new ContentValues();
+                               cv2.put("state_id", (String)state.get(i));
+                               cv2.put("country_id", 127);
+                               tableJobPreferenceLocation.insertJobPreference(cv2);
+                           }
+                        }
+
+                        JSONArray country = new JSONArray(success.optString("country_id"));
+                        if( country.length() > 0 ){
+                            for(int i=0;i<country.length();i++) {
+                                ContentValues cv2 = new ContentValues();
+                                cv2.put("state_id", 0);
+                                cv2.put("country_id", (String)country.get(i));
+                                tableJobPreferenceLocation.insertJobPreference(cv2);
+                            }
+                        }
+
                     } catch (JSONException e) {
                         Log.e("jobPrefExcp", e.getMessage());
                     }
