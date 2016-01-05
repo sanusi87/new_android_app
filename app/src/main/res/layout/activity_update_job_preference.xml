@@ -16,7 +16,7 @@ tools:context="com.example.william.myapplication.UpdateJobPreference">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/salary"
+            android:text="@string/expected_salary"
             style="@style/AppThemeBaseLabel" />
 
         <LinearLayout
