@@ -125,7 +125,8 @@
                 android:layout_weight="3"
                 android:labelFor="@id/license"
                 style="@style/AppThemeBaseLabel"
-                android:gravity="center_vertical" />
+                android:gravity="center_vertical"
+                android:id="@+id/licenseLabel" />
 
             <CheckBox
                 android:layout_width="wrap_content"
@@ -148,7 +149,8 @@
                 android:layout_weight="3"
                 style="@style/AppThemeBaseLabel"
                 android:labelFor="@id/own_transport"
-                android:gravity="center_vertical" />
+                android:gravity="center_vertical"
+                android:id="@+id/ownTransportLabel" />
 
             <CheckBox
                 android:layout_width="wrap_content"
@@ -157,6 +159,7 @@
                 android:singleLine="false"
                 android:checked="false" />
         </LinearLayout>
+
     </LinearLayout>
 
     <View style="@style/AppThemeBorderBottom" />
