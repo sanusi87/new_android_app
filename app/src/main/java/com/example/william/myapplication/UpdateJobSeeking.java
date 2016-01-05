@@ -5,14 +5,17 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -26,6 +29,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class UpdateJobSeeking extends Activity {
@@ -38,14 +43,17 @@ public class UpdateJobSeeking extends Activity {
     SharedPreferences sharedPref;
 
     private TextView selectedMalaysiaState;
-    private State selectedMalaysiaStateValues = null;
     private TextView selectedCountry;
-    private Country selectedCountryValues = null;
     private TextView selectedJobSeekingStatus;
     private TextView selectedJobNotice;
+    private LinearLayout selectMalaysiaState;
+    private View selectMalaysiaStateSibling;
+
+    private State selectedMalaysiaStateValues = null;
+    private Country selectedCountryValues = null;
     private JobSeekingStatus selectedJobSeekingStatusValues = null;
-    private TextView ownTransportLabel;
-    private TextView licenseLabel;
+    private String selectedAvailability = "";
+    private String selectedAvailabilityUnit = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,35 +61,79 @@ public class UpdateJobSeeking extends Activity {
         setContentView(R.layout.activity_update_job_seeking);
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        final int profileId = sharedPref.getInt("js_profile_id",0);
-        final TableProfile tableProfile = new TableProfile(getApplicationContext());
-        //profile = tableProfile.getProfile();
+        final int profileId = sharedPref.getInt("js_profile_id", 0);
 
         selectedMalaysiaState = (TextView)findViewById(R.id.selectedMalaysiaState);
         selectedCountry = (TextView)findViewById(R.id.selectedCountry);
         selectedJobSeekingStatus = (TextView)findViewById(R.id.selectedJobSeekingStatus);
         selectedJobNotice = (TextView)findViewById(R.id.selectedJobNotice);
-        licenseLabel = (TextView)findViewById(R.id.licenseLabel);
-        ownTransportLabel = (TextView)findViewById(R.id.ownTransportLabel);
+        TextView licenseLabel = (TextView) findViewById(R.id.licenseLabel);
+        TextView ownTransportLabel = (TextView) findViewById(R.id.ownTransportLabel);
         final CheckBox cbLicense = (CheckBox)findViewById(R.id.license);
         final CheckBox cbTransport = (CheckBox)findViewById(R.id.own_transport);
 
         LinearLayout selectJobSeekingStatus = (LinearLayout)findViewById(R.id.selectJobSeekingStatus);
         LinearLayout selectCountry = (LinearLayout)findViewById(R.id.selectCountry);
-        LinearLayout selectMalaysiaState = (LinearLayout)findViewById(R.id.selectMalaysiaState);
+        selectMalaysiaState = (LinearLayout)findViewById(R.id.selectMalaysiaState);
+        selectMalaysiaStateSibling = findViewById(R.id.selectMalaysiaStateSibling);
         LinearLayout selectJobNotice = (LinearLayout)findViewById(R.id.selectJobNotice);
+
+        // TODO - read default values from db
+        final TableProfile tableProfile = new TableProfile(getApplicationContext());
+        final TableAddress tableAddress = new TableAddress(getApplicationContext());
+        Profile profile = tableProfile.getProfile();
+
+        Cursor c = tableAddress.getAddress();
+        if( c.moveToFirst() ){
+            int _country = c.getInt(9);
+            String _country_name = c.getString(12);
+            int _state_id = c.getInt(7);
+            String _state_name = c.getString(8);
+
+            Log.e("country_id", ""+_country);
+            Log.e("country_name", _country_name);
+
+            if( _country > 0 && _country_name.length() > 0 ){
+                selectedCountry.setText(_country_name);
+                selectedCountryValues = new Country(_country, _country_name);
+            }
+
+            if( _state_id > 0 && _state_name.length() > 0 ){
+                selectedMalaysiaStateValues = new State( _state_id, _state_name );
+                selectedMalaysiaState.setText(_state_name);
+            }
+        }
+        c.close();
+
+        if( profile.js_jobseek_status_id > 0 ) {
+            HashMap jobseekStatus = Jenjobs.getJobSeekingStatus();
+            String _jssValue = (String) jobseekStatus.get(profile.js_jobseek_status_id);
+            selectedJobSeekingStatusValues = new JobSeekingStatus(profile.js_jobseek_status_id, _jssValue);
+            selectedJobSeekingStatus.setText( _jssValue );
+        }
+
+        if( profile.availability > 0 && profile.availability_unit.length() > 0 ){
+            selectedAvailability = String.valueOf(profile.availability);
+
+            String[] _av = getResources().getStringArray(R.array.availability_unit);
+            for( int i=0;i<_av.length;i++ ){
+                if( _av[i].substring(0,1).equals(profile.availability_unit )){
+                    selectedAvailabilityUnit = _av[i];
+                }
+            }
+        }
 
         licenseLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cbLicense.setChecked( !cbLicense.isChecked() );
+                cbLicense.setChecked(!cbLicense.isChecked());
             }
         });
 
         ownTransportLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cbTransport.setChecked( !cbTransport.isChecked() );
+                cbTransport.setChecked(!cbTransport.isChecked());
             }
         });
 
@@ -127,17 +179,55 @@ public class UpdateJobSeeking extends Activity {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // update local db
-                ContentValues cv = new ContentValues();
-                cv.put("js_jobseek_status_id", selectedJobSeekingStatusValues.id);
-                tableProfile.updateProfile(cv, profileId);
+                ArrayList<String> errors = new ArrayList<>();
 
-                // post to server
-                new SaveDataTask().execute(cv);
+                if( selectedJobSeekingStatusValues == null ){
+                    errors.add("Please select jobseeking status!");
+                }
 
-                Intent intent = new Intent();
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+                if( selectedAvailability.length() == 0 && selectedAvailabilityUnit.length() == 0 ){
+                    errors.add("Please select your notice period!");
+                }
+
+                if( selectedCountryValues == null ){
+                    errors.add("Please select the country!");
+                }else{
+                    if( selectedCountryValues.id == 127 ){
+                        if( selectedMalaysiaStateValues == null ){
+                            errors.add("Please select the state!");
+                        }
+                    }
+                }
+
+                if( errors.size() == 0 ) {
+                    // TODO - save to profile, local db
+                    ContentValues cv = new ContentValues();
+                    cv.put("js_jobseek_status_id", selectedJobSeekingStatusValues.id);
+                    cv.put("driving_license", cbLicense.isChecked() ? 1 : 0);
+                    cv.put("transport", cbTransport.isChecked() ? 1 : 0);
+                    cv.put("availability", selectedAvailability);
+                    cv.put("availability_unit", selectedAvailabilityUnit.substring(0, 1));
+                    tableProfile.updateProfile(cv, profileId);
+
+                    // TODO - save to address, add address to parameter
+                    ContentValues cv2 = new ContentValues();
+                    cv2.put("state_id", selectedMalaysiaStateValues.id);
+                    cv2.put("state_name", selectedMalaysiaStateValues.name);
+                    cv2.put("country_id", selectedCountryValues.id);
+                    cv2.put("updated_at", Jenjobs.date(null,"yyyy-MM-dd",null));
+                    tableAddress.updateAddress(cv2);
+
+                    // TODO - change cv to ArrayList -> String
+                    // post to server
+                    new SaveDataTask().execute(cv);
+
+                    Intent intent = new Intent();
+                    intent.putExtra("", "");
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -172,6 +262,14 @@ public class UpdateJobSeeking extends Activity {
                 if( selectedValues != null ){
                     selectedCountryValues = selectedValues;
                     selectedCountry.setText(selectedValues.name);
+
+                    if( selectedValues.id == 127 ){
+                        selectMalaysiaState.setVisibility(View.VISIBLE);
+                        selectMalaysiaStateSibling.setVisibility(View.VISIBLE);
+                    }else{
+                        selectMalaysiaState.setVisibility(View.GONE);
+                        selectMalaysiaStateSibling.setVisibility(View.GONE);
+                    }
                 }
             }
         }else if( requestCode == SELECT_STATE ){
@@ -186,7 +284,10 @@ public class UpdateJobSeeking extends Activity {
         }else if( requestCode == SELECT_JOB_NOTICE ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                selectedJobNotice.setText( filters.getString("availability")+" "+filters.getString("availabilityUnit") );
+                selectedAvailability = filters.getString("availability");
+                selectedAvailabilityUnit = filters.getString("availabilityUnit");
+                String a = selectedAvailability+" "+selectedAvailabilityUnit;
+                selectedJobNotice.setText( a );
             }
         }
     }
@@ -209,7 +310,6 @@ public class UpdateJobSeeking extends Activity {
             final HttpPost httppost = new HttpPost( url );
             httppost.addHeader("Content-Type", "application/json");
             httppost.addHeader("Accept", "application/json");
-            HttpResponse _http_response = null;
 
             JSONObject obj = new JSONObject();
             Iterator t = cv2.keySet().iterator();
@@ -228,7 +328,7 @@ public class UpdateJobSeeking extends Activity {
                 entity.setContentType("application/json");
                 httppost.setEntity(entity);
 
-                _http_response = httpclient.execute(httppost);
+                HttpResponse _http_response = httpclient.execute(httppost);
                 HttpEntity _entity = _http_response.getEntity();
                 InputStream is = _entity.getContent();
 
