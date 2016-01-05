@@ -199,7 +199,7 @@ public class Jenjobs {
     }
     */
     public static HashMap getJobSeekingStatus(){
-        HashMap a = new HashMap<Integer, String>();
+        HashMap a = new HashMap<>();
         a.put(2, "Actively looking");
         a.put(3, "Open to good offer");
         a.put(4, "Satisfied with current job");
@@ -744,4 +744,10 @@ public class Jenjobs {
 
         return _listOfYear.toArray(new String[_listOfYear.size()]);
     }
+
+    public static String[] listOfAvailabilityUnit(){
+        String[] a = {"Day", "Week", "Month"};
+        return a;
+    }
+
 }
