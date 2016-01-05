@@ -38,6 +38,7 @@ public class SelectCountry extends Activity {
                 ca.setLayoutSingle(true);
                 ((ViewGroup)lv.getParent()).getChildAt(1).setVisibility(View.GONE);
             }
+            lv.setAdapter(ca);
 
             ArrayList selectedCountries = (ArrayList) extra.get("country");
             if( selectedCountries != null && selectedCountries.size() > 0 ){
@@ -49,8 +50,9 @@ public class SelectCountry extends Activity {
                     }
                 }
             }
+        }else{
+            lv.setAdapter(ca);
         }
-        lv.setAdapter(ca);
 
         if( single ) {
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

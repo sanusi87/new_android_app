@@ -22,12 +22,15 @@ public class SelectState extends Activity {
 
         final ListView lv = (ListView)findViewById(R.id.listOfStates);
         final StateAdapter ca = new StateAdapter(getApplicationContext());
-        lv.setAdapter(ca);
 
         Bundle extra = getIntent().getExtras();
         boolean single = false;
         // checked selected index
         if( extra != null ){
+            single = (boolean)extra.get("single");
+            ca.setLayoutSingle(single);
+            lv.setAdapter(ca);
+            
             ArrayList selectedStates = (ArrayList) extra.get("state");
             if( selectedStates != null && selectedStates.size() > 0 ){
                 for(int i=0; i < selectedStates.size();i++){
@@ -38,7 +41,8 @@ public class SelectState extends Activity {
                     }
                 }
             }
-            single = (boolean)extra.get("single");
+        }else{
+            lv.setAdapter(ca);
         }
 
         if( !single ){
