@@ -151,6 +151,7 @@ public class TableProfile extends SQLiteOpenHelper{
         db.execSQL(TableEducation.SQL_DELETE_ENTRIES);
         db.execSQL(TableJob.SQL_DELETE_ENTRIES);
         db.execSQL(TableJobPreference.SQL_DELETE_ENTRIES);
+        db.execSQL(TableJobPreferenceLocation.SQL_DELETE_ENTRIES);
         db.execSQL(TableJobRole.SQL_DELETE_ENTRIES);
         db.execSQL(TableJobSpec.SQL_DELETE_ENTRIES);
         db.execSQL(TableLanguage.SQL_DELETE_ENTRIES);
@@ -170,6 +171,7 @@ public class TableProfile extends SQLiteOpenHelper{
         db.execSQL(TableEducation.SQL_DELETE_ENTRIES);
         db.execSQL(TableJob.SQL_DELETE_ENTRIES);
         db.execSQL(TableJobPreference.SQL_DELETE_ENTRIES);
+        db.execSQL(TableJobPreferenceLocation.SQL_DELETE_ENTRIES);
         db.execSQL(TableJobRole.SQL_DELETE_ENTRIES);
         db.execSQL(TableJobSpec.SQL_DELETE_ENTRIES);
         db.execSQL(TableLanguage.SQL_DELETE_ENTRIES);
@@ -223,6 +225,7 @@ public class TableProfile extends SQLiteOpenHelper{
 
             c.moveToNext();
         }
+        c.close();
         return profile;
     }
 
@@ -233,24 +236,17 @@ public class TableProfile extends SQLiteOpenHelper{
     public boolean updateProfile(ContentValues cv, int existingID){
         String[] _id = {String.valueOf(existingID)};
         int affectedRows = db.update(TableProfile.TABLE_NAME, cv, "id=?", _id);
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        return affectedRows > 0;
     }
 
     public boolean deleteProfile(int id){
         String _id = String.valueOf(id);
         String[] param = {_id};
         int affectedRows = db.delete(TableProfile.TABLE_NAME, "id=?", param);
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        return affectedRows > 0;
     }
 
     public class DownloadDataTask extends AsyncTask<String, Void, String> {
-
         private int JOB_SPEC = 1;
         private int INDUSTRY = 2;
 
@@ -268,9 +264,8 @@ public class TableProfile extends SQLiteOpenHelper{
             httpget.addHeader("Content-Type", "application/json");
             httpget.addHeader("Accept", "application/json");
 
-            HttpResponse _http_response = null;
             try {
-                _http_response = httpclient.execute(httpget);
+                HttpResponse _http_response = httpclient.execute(httpget);
                 HttpEntity _entity = _http_response.getEntity();
                 InputStream is = _entity.getContent();
 
