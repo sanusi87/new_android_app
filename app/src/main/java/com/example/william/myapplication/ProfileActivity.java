@@ -924,8 +924,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
         }else if( requestCode == UPDATE_JOB_SEEKING ){
             if (resultCode == RESULT_OK) {
-                Log.e("filterdata", extra.getString("result"));
-                Log.e("filterdata", extra.toString());
+                // TODO - handle returned intent
+                //Log.e("filterdata", extra.getString("result"));
+                //Log.e("filterdata", extra.toString());
             }
         }else if( requestCode == UPDATE_JOB_PREFERENCE ){
             if (resultCode == RESULT_OK) {
@@ -1317,7 +1318,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         if( state.length() > 0 ){
                            for(int i=0;i<state.length();i++){
                                ContentValues cv2 = new ContentValues();
-                               cv2.put("state_id", (String)state.get(i));
+                               cv2.put("state_id", (int)state.get(i));
                                cv2.put("country_id", 127);
                                tableJobPreferenceLocation.insertJobPreference(cv2);
                            }
@@ -1328,7 +1329,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             for(int i=0;i<country.length();i++) {
                                 ContentValues cv2 = new ContentValues();
                                 cv2.put("state_id", 0);
-                                cv2.put("country_id", (String)country.get(i));
+                                cv2.put("country_id", (int)country.get(i));
                                 tableJobPreferenceLocation.insertJobPreference(cv2);
                             }
                         }
