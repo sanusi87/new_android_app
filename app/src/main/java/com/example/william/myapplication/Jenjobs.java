@@ -425,7 +425,7 @@ public class Jenjobs {
     }
 
     public static HashMap getState(){
-        HashMap a = new HashMap<Integer, String>();
+        HashMap a = new HashMap();
         a.put(4, "Johor");
         a.put(10,"Kedah");
         a.put(22,"Kelantan");
