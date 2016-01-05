@@ -228,6 +228,7 @@ public class UpdateJobPreference extends Activity {
                 ArrayList<String> errors = new ArrayList<String>();
                 String[] params = new String[5];
                 ContentValues cv = new ContentValues();
+                String summary = "";
 
                 if( insertedSalary.getText().toString().length() > 0 ){
                     cv.put("salary", insertedSalary.getText().toString());
@@ -239,6 +240,8 @@ public class UpdateJobPreference extends Activity {
                 if( savedCurrency != null ){
                     cv.put("currency_id", savedCurrency.id);
                     params[1] = String.valueOf(savedCurrency.id);
+
+                    summary = savedCurrency.name+" "+insertedSalary.getText().toString()+" per month";
                 }
 
                 ArrayList<Integer> savedJobTypeId = new ArrayList<>();
@@ -287,6 +290,9 @@ public class UpdateJobPreference extends Activity {
                     params[4] = (new JSONArray( savedCountryId )).toString();
                     new UpdateTask().execute(params);
 
+                    Intent intent = new Intent();
+                    intent.putExtra("summary", summary);
+                    setResult(Activity.RESULT_OK, intent);
                     finish();
                 }else{
                     Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_SHORT).show();
