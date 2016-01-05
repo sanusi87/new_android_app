@@ -118,6 +118,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     static TableSkill tableSkill;
     static TableWorkExperience tableWorkExperience;
     static TableEducation tableEducation;
+    static TableJobPreference tableJobPreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +191,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         tableSkill = new TableSkill(context);
         tableWorkExperience = new TableWorkExperience(context);
         tableEducation = new TableEducation(context);
+        tableJobPreference = new TableJobPreference(context);
     }
 
 
@@ -624,6 +626,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     getActivity().startActivityForResult(intent, UPDATE_JOB_PREFERENCE);
                 }
             });
+            Cursor tjp = tableJobPreference.getJobPreference();
+            if( tjp.moveToFirst() ){
+                String summary = "";
+                String savedSalary = tjp.getString(0);
+                int savedCurrency = tjp.getInt(1);
+                HashMap currencies = Jenjobs.getCurrency();
+                String _savedCurrency = (String) currencies.get(savedCurrency);
+
+                summary = _savedCurrency+" "+savedSalary+" per month";
+                jobPreference.setText(summary);
+            }
+            tjp.close();
 
             /*
             * skills
@@ -855,12 +869,12 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }
 
                 Cursor c = tableEducation.getEducationById(id);
-                HashMap<Integer,String> eduLv = Jenjobs.getEducationLevel();
+                HashMap eduLv = Jenjobs.getEducationLevel();
                 if( c.moveToFirst() ){
                     final int actualId = c.getInt(1);
                     String school = c.getString(2);
                     String graduationYear = c.getString(9).substring(0,4);
-                    String eduLevel = eduLv.get(c.getInt(4));
+                    String eduLevel = (String) eduLv.get(c.getInt(4));
 
                     ((TextView)v.findViewById(R.id.educationLevel)).setText( eduLevel );
                     ((TextView)v.findViewById(R.id.school)).setText(school);
@@ -915,8 +929,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
         }else if( requestCode == UPDATE_JOB_PREFERENCE ){
             if (resultCode == RESULT_OK) {
-                Log.e("filterdata", extra.getString("result"));
-                Log.e("filterdata", extra.toString());
+                // TODO - update job preference text
+                String response = extra.getString("summary");
+                jobPreference.setText(response);
             }
         }else if( requestCode == ADD_SKILL ){
             if (resultCode == RESULT_OK) {
@@ -1153,19 +1168,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                         if( address != null ){
                             JSONObject jsonAddr = new JSONObject(address);
-                            if( jsonAddr != null ){
-                                ContentValues cv3 = new ContentValues();
-                                cv3.put("address1", jsonAddr.getString("address1"));
-                                cv3.put("address2", jsonAddr.getString("address2"));
-                                cv3.put("postcode", jsonAddr.getInt("postcode"));
-                                cv3.put("city_id", jsonAddr.getInt("city_id"));
-                                cv3.put("city_name", jsonAddr.getString("city_name"));
-                                cv3.put("state_id", jsonAddr.getInt("state_id"));
-                                cv3.put("state_name", jsonAddr.getString("state_name"));
-                                cv3.put("country_id", jsonAddr.getInt("country_id"));
-                                cv3.put("updated_at", jsonAddr.getString("date_updated"));
-                                tblAddress.updateAddress(cv3);
-                            }
+
+                            ContentValues cv3 = new ContentValues();
+                            cv3.put("address1", jsonAddr.getString("address1"));
+                            cv3.put("address2", jsonAddr.getString("address2"));
+                            cv3.put("postcode", jsonAddr.getInt("postcode"));
+                            cv3.put("city_id", jsonAddr.getInt("city_id"));
+                            cv3.put("city_name", jsonAddr.getString("city_name"));
+                            cv3.put("state_id", jsonAddr.getInt("state_id"));
+                            cv3.put("state_name", jsonAddr.getString("state_name"));
+                            cv3.put("country_id", jsonAddr.getInt("country_id"));
+                            cv3.put("updated_at", jsonAddr.getString("date_updated"));
+                            tblAddress.updateAddress(cv3);
                         }
                         // end save address
                     } catch (JSONException e) {
@@ -1174,12 +1188,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 }else if( downloadSection == DOWNLOAD_APPLICATION ){
 
-                    JSONArray success = null;
                     TableApplication tableApplication = new TableApplication(getApplicationContext());
                     ContentValues cv = new ContentValues();
 
                     try {
-                        success = new JSONArray(nsuccess);
+                        JSONArray success = new JSONArray(nsuccess);
                         if( success.length() > 0 ){
                             for( int i=0;i< success.length();i++ ){
                                 JSONObject s = success.getJSONObject(i);
