@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -45,8 +46,10 @@ public class SelectState extends Activity {
             lv.setAdapter(ca);
         }
 
+        Button okButton = (Button)findViewById(R.id.okButton);
+        Button cancelButton = (Button)findViewById(R.id.cancelButton);
+
         if( !single ){
-            Button okButton = (Button)findViewById(R.id.okButton);
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -60,13 +63,13 @@ public class SelectState extends Activity {
                     }
 
                     Intent intent = new Intent();
+                    // when multiple, return ArrayList
                     intent.putExtra("state", values);
                     setResult(Activity.RESULT_OK, intent);
                     finish();
                 }
             });
 
-            Button cancelButton = (Button)findViewById(R.id.cancelButton);
             cancelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -75,11 +78,13 @@ public class SelectState extends Activity {
                 }
             });
         }else{
+            ((ViewGroup)okButton.getParent()).setVisibility(View.GONE);
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     State state = (State) ca.getItem(position);
                     Intent intent = new Intent();
+                    // when single, returned State
                     intent.putExtra("state", state);
                     setResult(Activity.RESULT_OK, intent);
                     finish();
