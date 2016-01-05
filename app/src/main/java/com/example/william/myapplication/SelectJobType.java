@@ -25,23 +25,32 @@ public class SelectJobType extends Activity {
         Button okbutton = (Button)findViewById(R.id.okButton);
         Button cancelButton = (Button)findViewById(R.id.cancelButton);
 
+        final ListView listOfJobType = (ListView) findViewById(R.id.listOfJobType);
         final JobTypeAdapter jta = new JobTypeAdapter(this);
         boolean single = true;
 
         if( getIntent() != null ){
             Bundle extra = getIntent().getExtras();
             single = extra.getBoolean("single");
-        }
-
-        if( single ){
             jta.setSingle(single);
-            ((ViewGroup)okbutton.getParent()).setVisibility(View.GONE);
+            listOfJobType.setAdapter(jta);
+            if( single ){
+                ((ViewGroup)okbutton.getParent()).setVisibility(View.GONE);
+            }
+
+            ArrayList selectedJobType = (ArrayList) extra.get("jobtype");
+            if( selectedJobType != null && selectedJobType.size() > 0 ){
+                for( int i=0;i<selectedJobType.size();i++ ){
+                    JobType jobType = (JobType)selectedJobType.get(i);
+                    int selectedIndex = jta.jobtype.indexOf(jobType); // index of the selected value
+                    if( selectedIndex != -1 ){
+                        listOfJobType.setItemChecked(selectedIndex, true);
+                    }
+                }
+            }
         }else{
-
+            listOfJobType.setAdapter( jta );
         }
-
-        final ListView listOfJobType = (ListView) findViewById(R.id.listOfJobType);
-        listOfJobType.setAdapter( jta );
 
         if( single ){
             listOfJobType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
