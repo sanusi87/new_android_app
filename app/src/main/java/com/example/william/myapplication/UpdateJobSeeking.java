@@ -23,6 +23,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +32,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class UpdateJobSeeking extends Activity {
 
@@ -200,6 +200,8 @@ public class UpdateJobSeeking extends Activity {
                 }
 
                 if( errors.size() == 0 ) {
+                    ArrayList<BasicNameValuePair> a = new ArrayList<>();
+
                     // TODO - save to profile, local db
                     ContentValues cv = new ContentValues();
                     cv.put("js_jobseek_status_id", selectedJobSeekingStatusValues.id);
@@ -209,17 +211,26 @@ public class UpdateJobSeeking extends Activity {
                     cv.put("availability_unit", selectedAvailabilityUnit.substring(0, 1));
                     tableProfile.updateProfile(cv, profileId);
 
+                    a.add(new BasicNameValuePair("js_jobseek_status_id", cv.getAsString("js_jobseek_status_id")));
+                    a.add(new BasicNameValuePair("driving_license", cv.getAsString("driving_license")));
+                    a.add(new BasicNameValuePair("transport", cv.getAsString("transport")));
+                    a.add(new BasicNameValuePair("availability", cv.getAsString("availability")));
+                    a.add(new BasicNameValuePair("availability_unit", cv.getAsString("availability_unit")));
+
                     // TODO - save to address, add address to parameter
                     ContentValues cv2 = new ContentValues();
                     cv2.put("state_id", selectedMalaysiaStateValues.id);
                     cv2.put("state_name", selectedMalaysiaStateValues.name);
                     cv2.put("country_id", selectedCountryValues.id);
-                    cv2.put("updated_at", Jenjobs.date(null,"yyyy-MM-dd",null));
+                    cv2.put("updated_at", Jenjobs.date(null, "yyyy-MM-dd", null));
                     tableAddress.updateAddress(cv2);
+
+                    a.add(new BasicNameValuePair("state_id", cv.getAsString("state_id")));
+                    a.add(new BasicNameValuePair("country_id", cv.getAsString("country_id")));
 
                     // TODO - change cv to ArrayList -> String
                     // post to server
-                    new SaveDataTask().execute(cv);
+                    new SaveDataTask().execute(a);
 
                     Intent intent = new Intent();
                     intent.putExtra("", "");
@@ -292,14 +303,12 @@ public class UpdateJobSeeking extends Activity {
         }
     }
 
-    public class SaveDataTask extends AsyncTask<ContentValues, Void, Object> {
+    public class SaveDataTask extends AsyncTask<ArrayList, Void, Object> {
 
         SaveDataTask(){}
 
         @Override
-        protected Object doInBackground(ContentValues... params) {
-
-            ContentValues cv2 = params[0];
+        protected Object doInBackground(ArrayList... params) {
             Object _response = null;
 
             String accessToken = sharedPref.getString("access_token", null);
@@ -312,6 +321,8 @@ public class UpdateJobSeeking extends Activity {
             httppost.addHeader("Accept", "application/json");
 
             JSONObject obj = new JSONObject();
+            
+            /*
             Iterator t = cv2.keySet().iterator();
             while( t.hasNext() ){
                 String key = String.valueOf(t.next());
@@ -321,6 +332,17 @@ public class UpdateJobSeeking extends Activity {
                     Log.e("test", e.getMessage());
                 }
             }
+            */
+
+            for( int i=0;i<params[0].size();i++ ){
+                BasicNameValuePair b = (BasicNameValuePair) params[0].get(i);
+                try {
+                    obj.put(b.getName(), b.getValue());
+                } catch (JSONException e) {
+                    Log.e("err", e.getMessage());
+                }
+            }
+
             Log.e("json", obj.toString());
             try {
                 StringEntity entity = new StringEntity(obj.toString());
