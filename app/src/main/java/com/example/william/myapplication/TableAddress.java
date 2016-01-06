@@ -11,16 +11,16 @@ public class TableAddress extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "address";
 
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableAddress.TABLE_NAME
-            +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //1
-            "address1 TEXT, " + //2
-            "address2 TEXT, " + //3
-            "postcode NUMERIC, " + //4
-            "city_id NUMERIC, " + //5
-            "city_name TEXT, " + //6
-            "state_id NUMERIC, " + //7
-            "state_name TEXT, " + //8
-            "country_id NUMERIC, " + //9
-            "updated_at NUMERIC);"; //10
+            +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //0
+            "address1 TEXT, " + //1
+            "address2 TEXT, " + //2
+            "postcode NUMERIC, " + //3
+            "city_id NUMERIC, " + //4
+            "city_name TEXT, " + //5
+            "state_id NUMERIC, " + //6
+            "state_name TEXT, " + //7
+            "country_id NUMERIC, " + //8
+            "updated_at NUMERIC);"; //9
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableAddress.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
