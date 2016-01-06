@@ -9,7 +9,11 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class LanguageAdapter extends BaseAdapter implements ListAdapter{
     public ArrayList<Language> language = new ArrayList<>();
@@ -18,11 +22,27 @@ public class LanguageAdapter extends BaseAdapter implements ListAdapter{
     public LanguageAdapter(Context context){
         this.context = context;
 
+        ArrayList<Language> tempArr = new ArrayList<>();
         HashMap fields = Jenjobs.getLanguage();
         for (Object o : fields.entrySet()) {
             HashMap.Entry e = (HashMap.Entry) o;
-            language.add(new Language((int) e.getKey(), String.valueOf(e.getValue())));
+            tempArr.add(new Language((int) e.getKey(), String.valueOf(e.getValue())));
         }
+
+        Collections.sort(tempArr, new Comparator<Language>() {
+            @Override
+            public int compare(Language lhs, Language rhs) {
+                String[] t = {lhs.name, rhs.name};
+                Arrays.sort(t);
+                if (Objects.equals(t[0], lhs.name)) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        });
+
+        language = tempArr;
     }
 
     @Override
@@ -46,10 +66,10 @@ public class LanguageAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+            v = vi.inflate(R.layout.spinner_item, parent, false);
         }
-        JobType c = (JobType) getItem(position);
-        TextView tvName = (TextView) v.findViewById(android.R.id.text1);
+        Language c = (Language) getItem(position);
+        TextView tvName = (TextView) v.findViewById(R.id.spinner_item);
         tvName.setText(c.name);
         tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
         v.setBackgroundColor(context.getResources().getColor(R.color.white));

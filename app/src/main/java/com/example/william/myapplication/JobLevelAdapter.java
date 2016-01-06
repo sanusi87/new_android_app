@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class JobLevelAdapter extends BaseAdapter implements ListAdapter{
     public ArrayList<JobLevel> joblevel = new ArrayList<>();
@@ -20,14 +21,10 @@ public class JobLevelAdapter extends BaseAdapter implements ListAdapter{
     public JobLevelAdapter(Context context){
         this.context = context;
 
-        HashMap<Integer, String> fields = Jenjobs.getJobLevel();
-        //ArrayList<JobSeekingStatus> tempArr = new ArrayList<>();
-
-        Iterator i = fields.entrySet().iterator();
-        while( i.hasNext() ){
-            HashMap.Entry e = (HashMap.Entry)i.next();
-            //tempArr.add(new JobSeekingStatus( (int)e.getKey(), String.valueOf(e.getValue()) ));
-            joblevel.add(new JobLevel( (int)e.getKey(), String.valueOf(e.getValue()) ));
+        HashMap fields = Jenjobs.getJobLevel();
+        for (Object o : fields.entrySet()) {
+            HashMap.Entry e = (HashMap.Entry) o;
+            joblevel.add(new JobLevel((int) e.getKey(), String.valueOf(e.getValue())));
         }
     }
 

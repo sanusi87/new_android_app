@@ -685,24 +685,16 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 HashMap _language = Jenjobs.getLanguage();
 
                 while( !cl.isAfterLast() ){
-                    /*
-                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //0
-                    "language_id INTEGER, "+ //1
-                    "spoken_language_level_id INTEGER, "+ //2
-                    "written_language_level_id INTEGER, "+ //3
-                    "native INTEGER(1));"; //4
-                    */
-
                     final int lang_saved_id = cl.getInt(0);
-                    final String lang_id = cl.getString(1);
-                    String lang_spoken = cl.getString(2);
-                    String lang_written = cl.getString(3);
+                    final int lang_id = cl.getInt(1);
+                    int lang_spoken = cl.getInt(2);
+                    int lang_written = cl.getInt(3);
                     int lang_native = cl.getInt(4);
 
                     final View v = getActivity().getLayoutInflater().inflate(R.layout.each_language, null);
                     language.addView(v);
 
-                    if( lang_native > 0 ){ v.setBackgroundColor(getResources().getColor(R.color.light_gray)); }
+                    if( lang_native > 0 ){ v.setBackgroundColor(getResources().getColor(R.color.white)); }
                     v.findViewById(R.id.deleteLanguageButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -714,10 +706,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             tableLanguage.deleteLanguage(lang_saved_id);
                         }
                     });
-                    ((TextView)v.findViewById(R.id.languageName)).setText( (String) _language.get( lang_id ) );
-                    ((TextView)v.findViewById(R.id.spokenLanguageLevel)).setText( (String) _languageLevel.get( lang_spoken ) );
+                    ((TextView)v.findViewById(R.id.languageName)).setText((String) _language.get(lang_id));
+                    ((TextView)v.findViewById(R.id.spokenLanguageLevel)).setText((String) _languageLevel.get(lang_spoken));
                     ((TextView)v.findViewById(R.id.writtenLanguageLevel)).setText( (String) _languageLevel.get( lang_written ) );
-
                     cl.moveToNext();
                 }
             }

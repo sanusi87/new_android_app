@@ -4,5 +4,5 @@
     android:layout_height="wrap_content"
     android:text="New Text"
     android:id="@+id/spinner_item"
-    android:padding="8dp"
-    style="@style/AppThemeBaseLabel" />
+    style="@style/AppThemeBaseLabel"
+    android:padding="5dp" />

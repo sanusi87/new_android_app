@@ -9,7 +9,11 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class LanguageLevelAdapter extends BaseAdapter implements ListAdapter{
     public ArrayList<LanguageLevel> language = new ArrayList<>();
@@ -17,11 +21,28 @@ public class LanguageLevelAdapter extends BaseAdapter implements ListAdapter{
 
     public LanguageLevelAdapter(Context context){
         this.context = context;
+
+        ArrayList<LanguageLevel> tempArr = new ArrayList<>();
         HashMap fields = Jenjobs.getLanguageLevel();
         for (Object o : fields.entrySet()) {
             HashMap.Entry e = (HashMap.Entry) o;
-            language.add(new LanguageLevel((int) e.getKey(), String.valueOf(e.getValue())));
+            tempArr.add(new LanguageLevel((int) e.getKey(), String.valueOf(e.getValue())));
         }
+
+        Collections.sort(tempArr, new Comparator<LanguageLevel>() {
+            @Override
+            public int compare(LanguageLevel lhs, LanguageLevel rhs) {
+                String[] t = {lhs.name, rhs.name};
+                Arrays.sort(t);
+                if (Objects.equals(t[0], lhs.name)) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        });
+
+        language = tempArr;
     }
 
     @Override
@@ -45,10 +66,10 @@ public class LanguageLevelAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+            v = vi.inflate(R.layout.spinner_item, parent, false);
         }
-        JobType c = (JobType) getItem(position);
-        TextView tvName = (TextView) v.findViewById(android.R.id.text1);
+        LanguageLevel c = (LanguageLevel) getItem(position);
+        TextView tvName = (TextView) v.findViewById(R.id.spinner_item);
         tvName.setText(c.name);
         tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
         v.setBackgroundColor(context.getResources().getColor(R.color.white));

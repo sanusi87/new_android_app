@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -54,7 +55,10 @@ public class UpdateLanguage extends ActionBarActivity {
         String[] args = null;
         if( getIntent() != null ){
             Bundle extra = getIntent().getExtras();
-            args = new String[]{extra.getString("language_id")};
+            if( extra != null ){
+                String language_id = extra.getString("language_id");
+                args = new String[]{language_id};
+            }
         }
 
         TableLanguage tableLanguage = new TableLanguage(this);
@@ -62,6 +66,8 @@ public class UpdateLanguage extends ActionBarActivity {
         if( cl.moveToFirst() ){
             HashMap _lang = Jenjobs.getLanguage();
             String _langName = (String) _lang.get( cl.getInt(1) );
+            Log.e("name", ""+_langName);
+            Log.e("native", ""+cl.getInt( 4 ));
             language = new Language(cl.getInt(1), _langName);
             language.spoken = cl.getInt( 2 );
             language.written = cl.getInt( 3 );
@@ -169,12 +175,20 @@ public class UpdateLanguage extends ActionBarActivity {
         }else if( requestCode == SELECT_SPOKEN ){
             if (resultCode == RESULT_OK) {
                 Bundle extra = data.getExtras();
-                selectedSpokenLevel.setText( extra.getString("the_text") );
+                LanguageLevel lv = (LanguageLevel)extra.get("the_text");
+                if( lv != null ){
+                    selectedSpokenLevel.setText( lv.name );
+                    language.spoken = lv.id;
+                }
             }
         }else if( requestCode == SELECT_WRITTEN ){
             if (resultCode == RESULT_OK) {
                 Bundle extra = data.getExtras();
-                selectedWrittenLevel.setText( extra.getString("the_text") );
+                LanguageLevel lv = (LanguageLevel)extra.get("the_text");
+                if( lv != null ){
+                    selectedWrittenLevel.setText( lv.name );
+                    language.written = lv.id;
+                }
             }
         }
     }

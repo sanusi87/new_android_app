@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class SelectLanguageLevel extends ActionBarActivity {
+public class SelectLanguageLevel extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class SelectLanguageLevel extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-                intent.putExtra("the_text", (Language) languageLevelAdapter.getItem(position));
+                intent.putExtra("the_text", (LanguageLevel) languageLevelAdapter.getItem(position));
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
