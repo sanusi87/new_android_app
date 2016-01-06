@@ -85,17 +85,17 @@ public class UpdateJobSeeking extends Activity {
 
         Cursor c = tableAddress.getAddress();
         if( c.moveToFirst() ){
-            int _country = c.getInt(9);
-            String _country_name = c.getString(12);
-            int _state_id = c.getInt(7);
-            String _state_name = c.getString(8);
+            int _country_id = c.getInt(8);
+            String _country_name = c.getString(11);
+            int _state_id = c.getInt(6);
+            String _state_name = c.getString(7);
 
-            Log.e("country_id", ""+_country);
+            Log.e("country_id", ""+_country_id);
             Log.e("country_name", _country_name);
 
-            if( _country > 0 && _country_name.length() > 0 ){
+            if( _country_id > 0 && _country_name.length() > 0 ){
                 selectedCountry.setText(_country_name);
-                selectedCountryValues = new Country(_country, _country_name);
+                selectedCountryValues = new Country(_country_id, _country_name);
             }
 
             if( _state_id > 0 && _state_name.length() > 0 ){
@@ -121,6 +121,14 @@ public class UpdateJobSeeking extends Activity {
                     selectedAvailabilityUnit = _av[i];
                 }
             }
+        }
+
+        if( profile.driving_license ){
+            cbLicense.setChecked(true);
+        }
+
+        if( profile.transport ){
+            cbTransport.setChecked(true);
         }
 
         licenseLabel.setOnClickListener(new View.OnClickListener() {
@@ -321,7 +329,7 @@ public class UpdateJobSeeking extends Activity {
             httppost.addHeader("Accept", "application/json");
 
             JSONObject obj = new JSONObject();
-            
+
             /*
             Iterator t = cv2.keySet().iterator();
             while( t.hasNext() ){
