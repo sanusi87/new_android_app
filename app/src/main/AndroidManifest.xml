@@ -70,8 +70,7 @@
         <activity
             android:name=".UpdateResumeVisibility"
             android:label="@string/title_activity_update_resume_visibility"
-            android:theme="@android:style/Theme.Dialog"
-            />
+            android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".SelectJobSeekingStatus"
             android:theme="@android:style/Theme.Dialog" />
@@ -104,7 +103,14 @@
         <activity android:name=".SelectJobType" />
         <activity
             android:name=".UpdateNoticePeriod"
-            android:theme="@android:style/Theme.Dialog"/>
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".UpdateLanguage" />
+        <activity
+            android:name=".SelectLanguage"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".SelectLanguageLevel"
+            android:theme="@android:style/Theme.Dialog" />
     </application>
 
 </manifest>
