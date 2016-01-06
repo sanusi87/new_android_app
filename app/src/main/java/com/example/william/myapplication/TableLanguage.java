@@ -10,11 +10,11 @@ public class TableLanguage extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "language";
 
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableLanguage.TABLE_NAME+"' (" +
-            "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-            "language_id INTEGER, "+
-            "spoken_language_level_id INTEGER, "+
-            "written_language_level_id INTEGER, "+
-            "native INTEGER(1));";
+            "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //0
+            "language_id INTEGER, "+ //1
+            "spoken_language_level_id INTEGER, "+ //2
+            "written_language_level_id INTEGER, "+ //3
+            "native INTEGER(1));"; //4 0/1
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableLanguage.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
@@ -34,8 +34,12 @@ public class TableLanguage extends SQLiteOpenHelper{
         //onCreate(db);
     }
 
-    public Cursor getLanguage(){
-        return db.rawQuery("SELECT * FROM "+TableLanguage.TABLE_NAME, null);
+    public Cursor getLanguage(String[] args){
+        String strSQL = "SELECT * FROM "+TableLanguage.TABLE_NAME;
+        if( args != null && args.length > 0 ){
+            strSQL += " WHERE language_id=?";
+        }
+        return db.rawQuery(strSQL,args);
     }
 
     public Long addLanguage(ContentValues cv2){
@@ -45,19 +49,13 @@ public class TableLanguage extends SQLiteOpenHelper{
     public boolean updateLanguage(ContentValues cv2, int existingID){
         String[] _id = {String.valueOf(existingID)};
         int affectedRows = db.update(TableLanguage.TABLE_NAME, cv2, "id=?", _id);
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        return affectedRows > 0;
     }
 
     public boolean deleteLanguage(int id){
         String _id = String.valueOf(id);
         String[] param = {_id};
         int affectedRows = db.delete(TableLanguage.TABLE_NAME, "id=?", param);
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        return affectedRows > 0;
     }
 }

@@ -1,13 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.william.myapplication.UpdateLanguage">
+    tools:context="com.example.william.myapplication.UpdateLanguage"
+    android:orientation="vertical"
+    style="@style/AppThemePadding10">
 
-</RelativeLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/AppThemePadding10"
+        android:id="@+id/selectLanguage">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/language"
+            style="@style/AppThemeBaseLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/no_value"
+            style="@style/AppThemeBaseTextValue"
+            android:id="@+id/selectedLanguage" />
+    </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/AppThemePadding10"
+        android:id="@+id/selectSpokenLevel"
+        android:clickable="false">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/spoken"
+            style="@style/AppThemeBaseLabel"
+            android:textColor="@color/dark_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/no_value"
+            style="@style/AppThemeBaseTextValue"
+            android:id="@+id/selectedSpokenLevel" />
+    </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/AppThemePadding10"
+        android:id="@+id/selectWrittenLevel"
+        android:clickable="false">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/written_text"
+            style="@style/AppThemeBaseLabel"
+            android:textColor="@color/dark_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/no_value"
+            style="@style/AppThemeBaseTextValue"
+            android:id="@+id/selectedWrittenLevel" />
+    </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/AppThemePadding10"
+        android:weightSum="3">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/native_language"
+            android:layout_weight="3"
+            android:gravity="center_vertical"
+            style="@style/AppThemeBaseLabel"
+            android:labelFor="@+id/nativeValue"
+            android:id="@+id/nativeValueLabel"
+            android:clickable="false"
+            android:textColor="@color/dark_gray"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nativeValue"
+            android:enabled="false" />
+    </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            android:id="@+id/okButton"
+            android:layout_weight="1" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:id="@+id/cancelButton"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>
