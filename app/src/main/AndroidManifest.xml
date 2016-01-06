@@ -69,7 +69,9 @@
             android:label="@string/title_activity_update_job_seeking" />
         <activity
             android:name=".UpdateResumeVisibility"
-            android:label="@string/title_activity_update_resume_visibility" />
+            android:label="@string/title_activity_update_resume_visibility"
+            android:theme="@android:style/Theme.Dialog"
+            />
         <activity
             android:name=".SelectJobSeekingStatus"
             android:theme="@android:style/Theme.Dialog" />
