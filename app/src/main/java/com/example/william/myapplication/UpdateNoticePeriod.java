@@ -20,6 +20,7 @@ public class UpdateNoticePeriod extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_notice_period);
+        setTitle(getResources().getString(R.string.start_job));
 
         final EditText availability = (EditText)findViewById(R.id.availability);
         final Spinner availabilityUnit = (Spinner)findViewById(R.id.availabilityUnit);
@@ -27,7 +28,7 @@ public class UpdateNoticePeriod extends Activity {
         Button cancelButton = (Button)findViewById(R.id.cancelButton);
 
         String[] units = getResources().getStringArray(R.array.availability_unit);
-        availabilityUnit.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, units));
+        availabilityUnit.setAdapter(new ArrayAdapter<>(this, R.layout.spinner_item, units));
 
         if( getIntent() != null ){
             Bundle extra = getIntent().getExtras();
