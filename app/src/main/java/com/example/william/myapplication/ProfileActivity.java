@@ -44,7 +44,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-    private NavigationDrawerFragment mNavigationDrawerFragment;
 
     /**
      * list of fragment numbers
@@ -96,6 +95,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     private static TextView jobSeeking;
     private static TextView jobPreference;
     private static LinearLayout skill;
+    private static LinearLayout language;
     private static TextView additionalInfo;
     private static LinearLayout listOfWorkExp;
     private static LinearLayout listOfEducation;
@@ -119,6 +119,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     static TableWorkExperience tableWorkExperience;
     static TableEducation tableEducation;
     static TableJobPreference tableJobPreference;
+    static TableLanguage tableLanguage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +129,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         // dialog setup
         filterDialog = new JobSearchFilterDialog();
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
         // Set up the drawer.
@@ -192,6 +193,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         tableWorkExperience = new TableWorkExperience(context);
         tableEducation = new TableEducation(context);
         tableJobPreference = new TableJobPreference(context);
+        tableLanguage = new TableLanguage(context);
     }
 
 
@@ -486,14 +488,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
-                            // TODO: delete view
                             listOfWorkExp.removeView(v);
-
-                            // TODO: delete from server
                             String[] param = {Jenjobs.WORK_EXPERIENCE_URL+"/"+actualId+"?access-token="+accessToken};
                             new DeleteRequest().execute(param);
-
-                            // TODO: delete record
                             tableWorkExperience.deleteWorkExperience(savedId);
                         }
                     });
@@ -520,14 +517,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             if( ce.moveToFirst() ){
                 listOfEducation.removeAllViews();
 
-                HashMap<Integer,String> eduLv = Jenjobs.getEducationLevel();
+                HashMap eduLv = Jenjobs.getEducationLevel();
 
                 while( !ce.isAfterLast() ){
                     final int savedId = ce.getInt(0);
                     final int actualId = ce.getInt(1);
                     String school = ce.getString(2);
                     String graduationYear = Jenjobs.date(ce.getString(9), "yyyy", "yyyy-MM-dd");
-                    String eduLevel = eduLv.get(ce.getInt(4));
+                    String eduLevel = (String) eduLv.get(ce.getInt(4));
 
                     final View v = getActivity().getLayoutInflater().inflate(R.layout.each_education, null);
                     listOfEducation.addView(v);
@@ -553,14 +550,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
-                            // TODO: delete view
                             listOfEducation.removeView(v);
-
-                            // TODO: delete from server
                             String[] param = {Jenjobs.EDUCATION_URL+"/"+actualId+"?access-token="+accessToken};
                             new DeleteRequest().execute(param);
-
-                            // TODO: delete record
                             tableEducation.deleteEducation(savedId);
                         }
                     });
@@ -602,7 +594,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             });
 
             HashMap _jobseekingStatus = Jenjobs.getJobSeekingStatus();
-            jobSeeking.setText( _jobseekingStatus.get(theProfile.js_jobseek_status_id).toString() );
+            jobSeeking.setText(_jobseekingStatus.get(theProfile.js_jobseek_status_id).toString());
 
             /*
             * job preference
@@ -620,13 +612,12 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
             Cursor tjp = tableJobPreference.getJobPreference();
             if( tjp.moveToFirst() ){
-                String summary = "";
                 String savedSalary = tjp.getString(0);
                 int savedCurrency = tjp.getInt(1);
                 HashMap currencies = Jenjobs.getCurrency();
                 String _savedCurrency = (String) currencies.get(savedCurrency);
 
-                summary = _savedCurrency+" "+savedSalary+" per month";
+                String summary = _savedCurrency+" "+savedSalary+" per month";
                 jobPreference.setText(summary);
             }
             tjp.close();
@@ -684,7 +675,63 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             /*
             * language
             * */
+            language = (LinearLayout) rootView.findViewById(R.id.listOfLanguage);
 
+            Cursor cl = tableLanguage.getLanguage(null);
+            if( cl.moveToFirst() && cl.getCount() > 0 ) {
+                language.removeView(language.findViewById(R.id.emptyLanguageText));
+
+                HashMap _languageLevel = Jenjobs.getLanguageLevel();
+                HashMap _language = Jenjobs.getLanguage();
+
+                while( !cl.isAfterLast() ){
+                    /*
+                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //0
+                    "language_id INTEGER, "+ //1
+                    "spoken_language_level_id INTEGER, "+ //2
+                    "written_language_level_id INTEGER, "+ //3
+                    "native INTEGER(1));"; //4
+                    */
+
+                    final int lang_saved_id = cl.getInt(0);
+                    final String lang_id = cl.getString(1);
+                    String lang_spoken = cl.getString(2);
+                    String lang_written = cl.getString(3);
+                    int lang_native = cl.getInt(4);
+
+                    final View v = getActivity().getLayoutInflater().inflate(R.layout.each_language, null);
+                    language.addView(v);
+
+                    if( lang_native > 0 ){ v.setBackgroundColor(getResources().getColor(R.color.light_gray)); }
+                    v.findViewById(R.id.deleteLanguageButton).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            language.removeView(v);
+                            // delete from server
+                            String[] param = {Jenjobs.LANGUAGE_URL + "/" + lang_id + "?access-token=" + accessToken};
+                            new DeleteRequest().execute(param);
+                            // delete from local
+                            tableLanguage.deleteLanguage(lang_saved_id);
+                        }
+                    });
+                    ((TextView)v.findViewById(R.id.languageName)).setText( (String) _language.get( lang_id ) );
+                    ((TextView)v.findViewById(R.id.spokenLanguageLevel)).setText( (String) _languageLevel.get( lang_spoken ) );
+                    ((TextView)v.findViewById(R.id.writtenLanguageLevel)).setText( (String) _languageLevel.get( lang_written ) );
+
+                    cl.moveToNext();
+                }
+            }
+            cl.close();
+
+            Button addLanguageButton = (Button)rootView.findViewById(R.id.add_language);
+            addLanguageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), UpdateLanguage.class);
+                    getActivity().startActivityForResult(intent, ADD_LANGUAGE);
+                }
+            });
 
             /*
             * attached resume
