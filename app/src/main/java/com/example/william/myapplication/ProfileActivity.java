@@ -362,7 +362,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
         }
 
-
         private void setupJobFragment(View rootView) {
             ListView lv = (ListView) rootView.findViewById(R.id.job_list_view);
             final JobSearchAdapter jobSearchAdapter = new JobSearchAdapter(getActivity());
@@ -524,26 +523,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 HashMap<Integer,String> eduLv = Jenjobs.getEducationLevel();
 
                 while( !ce.isAfterLast() ){
-
-                    /*
-                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT //0
-                    _id INTEGER //1
-                    school TEXT //2
-                    major TEXT //3
-                    edu_level_id INTEGER(4) //4
-                    edu_field_id INTEGER(4) //5
-                    country_id INTEGER(4) //6
-                    grade TEXT //7
-                    info TEXT //8
-                    date_graduated //9
-                    */
-
                     final int savedId = ce.getInt(0);
                     final int actualId = ce.getInt(1);
                     String school = ce.getString(2);
                     String graduationYear = Jenjobs.date(ce.getString(9), "yyyy", "yyyy-MM-dd");
                     String eduLevel = eduLv.get(ce.getInt(4));
-                    //Log.e("educationLv", eduLevel);
 
                     final View v = getActivity().getLayoutInflater().inflate(R.layout.each_education, null);
                     listOfEducation.addView(v);
@@ -585,6 +569,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }
             }
 
+            TableProfile tProfile = new TableProfile(getActivity());
+            Profile theProfile = tProfile.getProfile();
+
             /*
             * resume visibility
             * */
@@ -598,6 +585,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     getActivity().startActivityForResult(intent, UPDATE_RESUME_VISIBILITY);
                 }
             });
+            resumeVisibility.setText(theProfile.access);
 
             /*
             * job seeking info
@@ -613,6 +601,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }
             });
 
+            HashMap _jobseekingStatus = Jenjobs.getJobSeekingStatus();
+            jobSeeking.setText( _jobseekingStatus.get(theProfile.js_jobseek_status_id).toString() );
+
             /*
             * job preference
             * */
@@ -626,6 +617,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     getActivity().startActivityForResult(intent, UPDATE_JOB_PREFERENCE);
                 }
             });
+
             Cursor tjp = tableJobPreference.getJobPreference();
             if( tjp.moveToFirst() ){
                 String summary = "";
@@ -925,8 +917,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }else if( requestCode == UPDATE_JOB_SEEKING ){
             if (resultCode == RESULT_OK) {
                 // TODO - handle returned intent
-                //Log.e("filterdata", extra.getString("result"));
-                //Log.e("filterdata", extra.toString());
+                String summary = extra.getString("summary");
+                jobSeeking.setText(summary);
             }
         }else if( requestCode == UPDATE_JOB_PREFERENCE ){
             if (resultCode == RESULT_OK) {
