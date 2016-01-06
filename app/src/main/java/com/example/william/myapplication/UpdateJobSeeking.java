@@ -219,14 +219,21 @@ public class UpdateJobSeeking extends Activity {
 
                     // TODO - save to address, add address to parameter
                     ContentValues cv2 = new ContentValues();
-                    cv2.put("state_id", selectedMalaysiaStateValues.id);
-                    cv2.put("state_name", selectedMalaysiaStateValues.name);
+
+                    if(selectedMalaysiaStateValues != null){
+                        cv2.put("state_id", selectedMalaysiaStateValues.id);
+                        cv2.put("state_name", selectedMalaysiaStateValues.name);
+                    }else{
+                        cv2.put("state_id", 0);
+                        cv2.put("state_name", "");
+                    }
+
                     cv2.put("country_id", selectedCountryValues.id);
                     cv2.put("updated_at", Jenjobs.date(null, "yyyy-MM-dd", null));
                     tableAddress.updateAddress(cv2);
 
-                    a.add(new BasicNameValuePair("state_id", cv.getAsString("state_id")));
-                    a.add(new BasicNameValuePair("country_id", cv.getAsString("country_id")));
+                    a.add(new BasicNameValuePair("state_id", cv2.getAsString("state_id")));
+                    a.add(new BasicNameValuePair("country_id", cv2.getAsString("country_id")));
 
                     // TODO - change cv to ArrayList -> String
                     // post to server
@@ -338,6 +345,7 @@ public class UpdateJobSeeking extends Activity {
                 BasicNameValuePair b = (BasicNameValuePair) params[0].get(i);
                 try {
                     obj.put(b.getName(), b.getValue());
+                    Log.e("jsonnn", b.getName()+"-"+b.getValue());
                 } catch (JSONException e) {
                     Log.e("err", e.getMessage());
                 }
