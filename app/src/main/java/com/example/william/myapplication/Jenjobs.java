@@ -24,14 +24,6 @@ public class Jenjobs {
     public static final String SUBSCRIPTION_URL = "http://api.jenjobs.com/jobseeker/subscription";
     public static final String JOB_SPEC_URL = "http://api.jenjobs.com/parameters/job-spec";
 
-    /*
-    "jobType": {
-        "1": "Permanent",
-        "2": "Contract",
-        "3": "Part-Time/Temporary",
-        "4": "Internship"
-    }
-    */
     public static HashMap getJobType(){
         HashMap a = new HashMap<Integer, String>();
         a.put(1, "Permanent");
@@ -41,16 +33,6 @@ public class Jenjobs {
         return a;
     }
 
-    /*
-    "jobLevel": {
-        "1": "Non-Executive",
-        "2": "Executive",
-        "3": "Management",
-        "4": "Senior Management",
-        "5": "Entry Level",
-        "6": "Senior Executive"
-    }
-    */
     public static HashMap getJobLevel(){
         HashMap a = new HashMap<Integer, String>();
         a.put(1, "Non-Executive");
@@ -62,28 +44,6 @@ public class Jenjobs {
         return a;
     }
 
-    /*
-    "currency": {
-        "1": "AUD",
-        "2": "THB",
-        "3": "EUR",
-        "4": "HKD",
-        "5": "PHP",
-        "6": "MYR",
-        "7": "IDR",
-        "8": "INR",
-        "9": "SGD",
-        "10": "USD",
-        "11": "CNY",
-        "12": "JPY",
-        "13": "GBP",
-        "14": "VND",
-        "15": "NZD",
-        "16": "TWD",
-        "17": "CAD",
-        "18": "CHF"
-    }
-    */
     public static HashMap getCurrency(){
         HashMap a = new HashMap<Integer, String>();
         a.put(1, "AUD");
