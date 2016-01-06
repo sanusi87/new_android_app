@@ -121,6 +121,9 @@ public class UpdateJobSeeking extends Activity {
                     selectedAvailabilityUnit = _av[i];
                 }
             }
+
+            String a = selectedAvailability+" "+selectedAvailabilityUnit;
+            selectedJobNotice.setText( a );
         }
 
         if( profile.driving_license ){
@@ -248,7 +251,7 @@ public class UpdateJobSeeking extends Activity {
                     new SaveDataTask().execute(a);
 
                     Intent intent = new Intent();
-                    intent.putExtra("", "");
+                    intent.putExtra("summary", selectedJobSeekingStatusValues.name);
                     setResult(Activity.RESULT_OK, intent);
                     finish();
                 }else{
