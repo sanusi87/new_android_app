@@ -58,9 +58,11 @@ public class UpdateAdditionalInfo extends Activity {
                 cv.put("additional_info", theInfo);
                 tProfile.updateProfile(cv, sharedPref.getInt("js_profile_id", 0));
 
+                String[] param = {theInfo};
                 // post
-                AsyncTask updateTask = new UpdateTask();
-                updateTask.execute(new String[]{theInfo});
+                //AsyncTask updateTask = new UpdateTask();
+                //updateTask.execute(new String[]{theInfo});
+                new UpdateTask().execute(param);
 
                 // finish the job
                 Intent intent = new Intent();
@@ -106,7 +108,6 @@ public class UpdateAdditionalInfo extends Activity {
             final HttpPost httppost = new HttpPost( url );
             httppost.addHeader("Content-Type", "application/json");
             httppost.addHeader("Accept", "application/json");
-            HttpResponse _http_response = null;
 
             JSONObject obj = new JSONObject();
             try {
@@ -117,7 +118,7 @@ public class UpdateAdditionalInfo extends Activity {
                 entity.setContentType("application/json");
                 httppost.setEntity(entity);
 
-                _http_response = httpclient.execute(httppost);
+                HttpResponse _http_response = httpclient.execute(httppost);
                 HttpEntity _entity = _http_response.getEntity();
                 InputStream is = _entity.getContent();
 
