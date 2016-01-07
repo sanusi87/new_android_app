@@ -700,9 +700,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     v.findViewById(R.id.languageContainer).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
+                            int __viewIndex = language.indexOfChild(v);
                             Intent intent = new Intent();
                             intent.setClass(getActivity(), UpdateLanguage.class);
-                            intent.putExtra("_viewIndex", cl.getPosition());
+                            intent.putExtra("_viewIndex", __viewIndex);
+                            intent.putExtra("language_id", lang_id);
                             getActivity().startActivityForResult(intent, ADD_LANGUAGE);
                         }
                     });
@@ -1015,12 +1017,15 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 if( _lang != null ){
                     HashMap _languageLevel = Jenjobs.getLanguageLevel();
                     HashMap _language = Jenjobs.getLanguage();
-
                     if( _viewIndex != -1 ){
-                        language.removeViewAt(_viewIndex);
+                        View __v = language.getChildAt(_viewIndex);
+                        if( __v != null ){
+                            __v.clearFocus();
+                            language.removeView(__v);
+                        }
                     }
 
-                    View v = getLayoutInflater().inflate(R.layout.each_language, null);
+                    final View v = getLayoutInflater().inflate(R.layout.each_language, null);
                     language.addView(v);
 
                     if( _lang.isNative > 0 ){ v.setBackgroundColor(getResources().getColor(R.color.white)); }
@@ -1029,9 +1034,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     v.findViewById(R.id.languageContainer).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
+                            int __viewIndex = language.indexOfChild(v);
                             Intent intent = new Intent();
                             intent.setClass(getApplicationContext(), UpdateLanguage.class);
-                            intent.putExtra("_viewIndex", language.getChildCount());
+                            intent.putExtra("_viewIndex", __viewIndex);
+                            intent.putExtra("language_id", _lang.id);
                             startActivityForResult(intent, ADD_LANGUAGE);
                         }
                     });
