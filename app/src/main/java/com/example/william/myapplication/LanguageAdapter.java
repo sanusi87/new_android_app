@@ -1,6 +1,7 @@
 package com.example.william.myapplication;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +23,26 @@ public class LanguageAdapter extends BaseAdapter implements ListAdapter{
     public LanguageAdapter(Context context){
         this.context = context;
 
+        ArrayList<Integer> savedLang = new ArrayList<>();
+        TableLanguage tableLanguage = new TableLanguage(context);
+        Cursor c = tableLanguage.getLanguage(null);
+        if( c.moveToFirst() ){
+            while( !c.isAfterLast() ){
+                savedLang.add(c.getInt(1));
+                c.moveToNext();
+            }
+        }
+        c.close();
+
         ArrayList<Language> tempArr = new ArrayList<>();
         HashMap fields = Jenjobs.getLanguage();
         for (Object o : fields.entrySet()) {
             HashMap.Entry e = (HashMap.Entry) o;
-            tempArr.add(new Language((int) e.getKey(), String.valueOf(e.getValue())));
+
+            int key = (int) e.getKey();
+            if( savedLang.indexOf( key ) == -1 ){
+                tempArr.add(new Language(key, String.valueOf(e.getValue())));
+            }
         }
 
         Collections.sort(tempArr, new Comparator<Language>() {

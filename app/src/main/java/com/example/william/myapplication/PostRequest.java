@@ -41,12 +41,9 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
 
         final HttpClient httpclient = new DefaultHttpClient();
         final HttpPost httppost = new HttpPost( params[0] );
-        //Log.e("url", ""+params[0]);
-        //Log.e("json", ""+params[1]);
 
         httppost.addHeader("Content-Type", "application/json");
         httppost.addHeader("Accept", "application/json");
-        HttpResponse _http_response = null;
 
         try {
             StringEntity entity = new StringEntity(params[1]);
@@ -54,10 +51,11 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
             entity.setContentType("application/json");
             httppost.setEntity(entity);
 
-            _http_response = httpclient.execute(httppost);
+            HttpResponse _http_response = httpclient.execute(httppost);
             HttpEntity _entity = _http_response.getEntity();
             InputStream is = _entity.getContent();
             String responseString = JenHttpRequest.readInputStreamAsString(is);
+            Log.e("respp", responseString);
             _response = JenHttpRequest.decodeJsonObjectString(responseString);
         } catch (ClientProtocolException e) {
             Log.e("ClientProtocolException", e.getMessage());
@@ -73,6 +71,7 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
     @Override
     protected void onPostExecute(JSONObject result) {
         //super.onPostExecute(result);
+        //Log.e("reqresult", ""+result);
     }
 
 }

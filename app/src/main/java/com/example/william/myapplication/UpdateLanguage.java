@@ -51,6 +51,7 @@ public class UpdateLanguage extends ActionBarActivity {
         setContentView(R.layout.activity_update_language);
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
+        tableLanguage = new TableLanguage(this);
 
         LinearLayout selectLanguage = (LinearLayout)findViewById(R.id.selectLanguage);
         selectSpokenLevel = (LinearLayout)findViewById(R.id.selectSpokenLevel);
@@ -69,35 +70,42 @@ public class UpdateLanguage extends ActionBarActivity {
         if( getIntent() != null ){
             Bundle extra = getIntent().getExtras();
             if( extra != null ){
-                String language_id = extra.getString("language_id");
+                String language_id = String.valueOf(extra.getInt("language_id"));
                 _viewIndex = extra.getInt("_viewIndex");
                 args = new String[]{language_id};
+
+                Cursor cl = tableLanguage.getLanguage(args);
+                if( cl.moveToFirst() ){
+                    HashMap _lang = Jenjobs.getLanguage();
+                    String _langName = (String) _lang.get( cl.getInt(1) );
+                    
+                    language = new Language(cl.getInt(1), _langName);
+                    language.spoken = cl.getInt( 2 );
+                    language.written = cl.getInt( 3 );
+                    language.isNative = cl.getInt( 4 );
+
+                    if( language.isNative != 0 ){
+                        nativeValue.setChecked(true);
+                    }
+
+                    selectedLanguage.setText( language.name );
+
+                    HashMap _langlevel = Jenjobs.getLanguageLevel();
+                    selectedSpokenLevel.setText((String) _langlevel.get(language.spoken));
+                    selectedWrittenLevel.setText( (String)_langlevel.get( language.written ) );
+
+                    selectSpokenLevel.setClickable(true);
+                    selectWrittenLevel.setClickable(true);
+                    nativeValueLabel.setClickable(true);
+                    nativeValue.setEnabled(true);
+
+                    ((TextView)selectSpokenLevel.getChildAt(0)).setTextColor(getResources().getColor(android.R.color.black));
+                    ((TextView)selectWrittenLevel.getChildAt(0)).setTextColor(getResources().getColor(android.R.color.black));
+                    nativeValueLabel.setTextColor(getResources().getColor(android.R.color.black));
+                }
+                cl.close();
             }
         }
-
-        tableLanguage = new TableLanguage(this);
-        Cursor cl = tableLanguage.getLanguage(args);
-        if( cl.moveToFirst() ){
-            HashMap _lang = Jenjobs.getLanguage();
-            String _langName = (String) _lang.get( cl.getInt(1) );
-            Log.e("name", ""+_langName);
-            Log.e("native", ""+cl.getInt( 4 ));
-            language = new Language(cl.getInt(1), _langName);
-            language.spoken = cl.getInt( 2 );
-            language.written = cl.getInt( 3 );
-            language.isNative = cl.getInt( 4 );
-
-            if( language.isNative != 0 ){
-                nativeValue.setChecked(true);
-            }
-
-            selectedLanguage.setText( language.name );
-
-            HashMap _langlevel = Jenjobs.getLanguageLevel();
-            selectedSpokenLevel.setText((String) _langlevel.get(language.spoken));
-            selectedWrittenLevel.setText( (String)_langlevel.get( language.written ) );
-        }
-        cl.close();
 
         nativeValueLabel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,10 +151,13 @@ public class UpdateLanguage extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 ArrayList<String> errors = new ArrayList<>();
-
                 if( language == null ){
                     errors.add("Please select a language.");
                 }
+                Log.e("lang", ""+language.id);
+                Log.e("lang", ""+language.spoken);
+                Log.e("lang", ""+language.written);
+                Log.e("lang", ""+language.isNative);
 
                 if( ( language.spoken == 0 && language.written == 0 ) || ( language.spoken == 1 && language.written == 1 ) ){
                     errors.add("Please select speaking and writing efficiency.");
@@ -169,7 +180,7 @@ public class UpdateLanguage extends ActionBarActivity {
                         jsonString.put("spoken_language_level_id", language.spoken);
                         jsonString.put("written_language_level_id", language.written);
                         jsonString.put("native", language.isNative);
-
+                        Log.e("langpost", jsonString.toString());
                         String[] param = {url, jsonString.toString()};
                         new PostRequest().execute(param);
                     } catch (JSONException e) {
