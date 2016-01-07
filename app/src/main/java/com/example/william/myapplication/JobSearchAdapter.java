@@ -12,10 +12,7 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
     private Context context;
@@ -73,9 +70,9 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             jobTitle.setText(p.optString("title"));
             final int postId = p.optInt("post_id");
 
-            jobTitle.setOnClickListener(new View.OnClickListener() {
+            v.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View _v) {
                     Intent intent = new Intent(context, JobDetails.class);
                     intent.putExtra("post_id", postId);
                     context.startActivity(intent);
@@ -102,15 +99,16 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             ((TextView) v.findViewById(R.id.company_name)).setText( p.optString("company_name") );
             ((TextView) v.findViewById(R.id.job_location)).setText(p.optString("job_location"));
             ((TextView) v.findViewById(R.id.job_type)).setText(p.optString("job_type"));
+            ((TextView) v.findViewById(R.id.date_closed)).setText( Jenjobs.date( p.optString("date_closed"), "dd MMM yyyy", "yyyy-MM-dd hh:mm:ss" ) );
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            SimpleDateFormat newFormatter = new SimpleDateFormat("dd MMM yyyy");
-            try {
-                Date theDate = formatter.parse(p.optString("date_closed"));
-                ((TextView) v.findViewById(R.id.date_closed)).setText( newFormatter.format(theDate) );
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            //SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            //SimpleDateFormat newFormatter = new SimpleDateFormat("dd MMM yyyy");
+            //try {
+                //Date theDate = formatter.parse(p.optString("date_closed"));
+                //((TextView) v.findViewById(R.id.date_closed)).setText( newFormatter.format(theDate) );
+            //} catch (ParseException e) {
+                //e.printStackTrace();
+            //}
 
             ((TextView) v.findViewById(R.id.job_description)).setText(Html.fromHtml(p.optString("job_desc_brief")));
         }
