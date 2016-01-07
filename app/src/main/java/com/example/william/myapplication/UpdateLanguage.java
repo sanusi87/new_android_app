@@ -58,32 +58,31 @@ public class UpdateLanguage extends ActionBarActivity {
             if( extra != null ){
                 String language_id = extra.getString("language_id");
                 args = new String[]{language_id};
+
+                TableLanguage tableLanguage = new TableLanguage(this);
+                Cursor cl = tableLanguage.getLanguage(args);
+                if( cl.moveToFirst() ){
+                    HashMap _lang = Jenjobs.getLanguage();
+                    String _langName = (String) _lang.get( cl.getInt(1) );
+                    
+                    language = new Language(cl.getInt(1), _langName);
+                    language.spoken = cl.getInt( 2 );
+                    language.written = cl.getInt( 3 );
+                    language.isNative = cl.getInt( 4 );
+
+                    if( language.isNative != 0 ){
+                        nativeValue.setChecked(true);
+                    }
+
+                    selectedLanguage.setText( language.name );
+
+                    HashMap _langlevel = Jenjobs.getLanguageLevel();
+                    selectedSpokenLevel.setText((String) _langlevel.get(language.spoken));
+                    selectedWrittenLevel.setText( (String)_langlevel.get( language.written ) );
+                }
+                cl.close();
             }
         }
-
-        TableLanguage tableLanguage = new TableLanguage(this);
-        Cursor cl = tableLanguage.getLanguage(args);
-        if( cl.moveToFirst() ){
-            HashMap _lang = Jenjobs.getLanguage();
-            String _langName = (String) _lang.get( cl.getInt(1) );
-            Log.e("name", ""+_langName);
-            Log.e("native", ""+cl.getInt( 4 ));
-            language = new Language(cl.getInt(1), _langName);
-            language.spoken = cl.getInt( 2 );
-            language.written = cl.getInt( 3 );
-            language.isNative = cl.getInt( 4 );
-
-            if( language.isNative != 0 ){
-                nativeValue.setChecked(true);
-            }
-
-            selectedLanguage.setText( language.name );
-
-            HashMap _langlevel = Jenjobs.getLanguageLevel();
-            selectedSpokenLevel.setText((String) _langlevel.get(language.spoken));
-            selectedWrittenLevel.setText( (String)_langlevel.get( language.written ) );
-        }
-        cl.close();
 
         nativeValueLabel.setOnClickListener(new View.OnClickListener() {
             @Override
