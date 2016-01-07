@@ -5,8 +5,8 @@ import java.io.Serializable;
 public class Language implements Serializable {
     public int id;
     public String name;
-    public int spoken;
-    public int written;
+    public int spoken = 0;
+    public int written = 0;
     public int isNative;
 
     public Language( int id, String name ){
