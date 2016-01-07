@@ -397,8 +397,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     previousLastPosition = 0;
                 }
             });
-
-
         }
 
         private void setupApplicationFragment(View rootView) {
