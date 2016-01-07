@@ -673,11 +673,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
 
             /*
-            * language
+            * TODO - language
             * */
             language = (LinearLayout) rootView.findViewById(R.id.listOfLanguage);
 
-            Cursor cl = tableLanguage.getLanguage(null);
+            final Cursor cl = tableLanguage.getLanguage(null);
             if( cl.moveToFirst() && cl.getCount() > 0 ) {
                 language.removeView(language.findViewById(R.id.emptyLanguageText));
 
@@ -685,7 +685,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 HashMap _language = Jenjobs.getLanguage();
 
                 while( !cl.isAfterLast() ){
-                    final int lang_saved_id = cl.getInt(0);
+                    //final int lang_saved_id = cl.getInt(0);
                     final int lang_id = cl.getInt(1);
                     int lang_spoken = cl.getInt(2);
                     int lang_written = cl.getInt(3);
@@ -695,6 +695,19 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     language.addView(v);
 
                     if( lang_native > 0 ){ v.setBackgroundColor(getResources().getColor(R.color.white)); }
+
+                    // update language
+                    v.findViewById(R.id.languageContainer).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View _v) {
+                            Intent intent = new Intent();
+                            intent.setClass(getActivity(), UpdateLanguage.class);
+                            intent.putExtra("_viewIndex", cl.getPosition());
+                            getActivity().startActivityForResult(intent, ADD_LANGUAGE);
+                        }
+                    });
+
+                    // delete language
                     v.findViewById(R.id.deleteLanguageButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -703,7 +716,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             String[] param = {Jenjobs.LANGUAGE_URL + "/" + lang_id + "?access-token=" + accessToken};
                             new DeleteRequest().execute(param);
                             // delete from local
-                            tableLanguage.deleteLanguage(lang_saved_id);
+                            tableLanguage.deleteLanguage(lang_id);
                         }
                     });
                     ((TextView)v.findViewById(R.id.languageName)).setText((String) _language.get(lang_id));
@@ -954,13 +967,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
         }else if( requestCode == UPDATE_JOB_SEEKING ){
             if (resultCode == RESULT_OK) {
-                // TODO - handle returned intent
                 String summary = extra.getString("summary");
                 jobSeeking.setText(summary);
             }
         }else if( requestCode == UPDATE_JOB_PREFERENCE ){
             if (resultCode == RESULT_OK) {
-                // TODO - update job preference text
                 String response = extra.getString("summary");
                 jobPreference.setText(response);
             }
@@ -996,20 +1007,52 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 ((TextView)v.findViewById(R.id.skillText)).setText(skillName);
 
             }
-        }else if( requestCode == UPDATE_SKILL ){
-            if (resultCode == RESULT_OK) {
-                Log.e("filterdata", extra.getString("result"));
-                Log.e("filterdata", extra.toString());
-            }
         }else if( requestCode == ADD_LANGUAGE ){
             if (resultCode == RESULT_OK) {
-                Log.e("filterdata", extra.getString("result"));
-                Log.e("filterdata", extra.toString());
-            }
-        }else if( requestCode == UPDATE_LANGUAGE ){
-            if (resultCode == RESULT_OK) {
-                Log.e("filterdata", extra.getString("result"));
-                Log.e("filterdata", extra.toString());
+                final Language _lang = (Language)extra.get("language");
+                int _viewIndex = extra.getInt("_viewIndex");
+
+                if( _lang != null ){
+                    HashMap _languageLevel = Jenjobs.getLanguageLevel();
+                    HashMap _language = Jenjobs.getLanguage();
+
+                    if( _viewIndex != -1 ){
+                        language.removeViewAt(_viewIndex);
+                    }
+
+                    View v = getLayoutInflater().inflate(R.layout.each_language, null);
+                    language.addView(v);
+
+                    if( _lang.isNative > 0 ){ v.setBackgroundColor(getResources().getColor(R.color.white)); }
+
+                    // update language
+                    v.findViewById(R.id.languageContainer).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View _v) {
+                            Intent intent = new Intent();
+                            intent.setClass(getApplicationContext(), UpdateLanguage.class);
+                            intent.putExtra("_viewIndex", language.getChildCount());
+                            startActivityForResult(intent, ADD_LANGUAGE);
+                        }
+                    });
+
+                    // delete language
+                    v.findViewById(R.id.deleteLanguageButton).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            language.removeView(v);
+                            // delete from server
+                            String[] param = {Jenjobs.LANGUAGE_URL + "/" + _lang.id + "?access-token=" + accessToken};
+                            new DeleteRequest().execute(param);
+                            // delete from local
+                            tableLanguage.deleteLanguage(_lang.id);
+                        }
+                    });
+
+                    ((TextView)v.findViewById(R.id.languageName)).setText((String) _language.get(_lang.id));
+                    ((TextView)v.findViewById(R.id.spokenLanguageLevel)).setText((String) _languageLevel.get(_lang.spoken));
+                    ((TextView)v.findViewById(R.id.writtenLanguageLevel)).setText((String) _languageLevel.get(_lang.written));
+                }
             }
         }else if( requestCode == UPDATE_ATTACHED_RESUME ){
             if (resultCode == RESULT_OK) {

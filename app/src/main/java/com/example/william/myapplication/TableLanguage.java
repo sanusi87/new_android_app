@@ -43,7 +43,22 @@ public class TableLanguage extends SQLiteOpenHelper{
     }
 
     public Long addLanguage(ContentValues cv2){
-        return db.insert(TableLanguage.TABLE_NAME, null, cv2);
+        // delete same language_id from table
+        deleteLanguage(cv2.getAsInteger("language_id"));
+
+        // insert
+        Long insertedId = db.insert(TableLanguage.TABLE_NAME, null, cv2);
+
+        // if this language is set as native
+        if( cv2.getAsInteger("native") != null && cv2.getAsInteger("native") == 1 ){
+            ContentValues cv = new ContentValues();
+            // remove other assigned native languages
+            cv.put("native", 0);
+            String[] params = {String.valueOf(insertedId.intValue())};
+            db.update(TableLanguage.TABLE_NAME, cv, "id != ?", params);
+        }
+
+        return insertedId;
     }
 
     public boolean updateLanguage(ContentValues cv2, int existingID){
@@ -55,7 +70,7 @@ public class TableLanguage extends SQLiteOpenHelper{
     public boolean deleteLanguage(int id){
         String _id = String.valueOf(id);
         String[] param = {_id};
-        int affectedRows = db.delete(TableLanguage.TABLE_NAME, "id=?", param);
+        int affectedRows = db.delete(TableLanguage.TABLE_NAME, "language_id=?", param);
         return affectedRows > 0;
     }
 }
