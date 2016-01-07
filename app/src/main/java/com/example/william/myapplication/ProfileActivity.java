@@ -712,7 +712,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     // delete language
                     v.findViewById(R.id.deleteLanguageButton).setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
+                        public void onClick(View _v) {
                             language.removeView(v);
                             // delete from server
                             String[] param = {Jenjobs.LANGUAGE_URL + "/" + lang_id + "?access-token=" + accessToken};
@@ -1046,7 +1046,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     // delete language
                     v.findViewById(R.id.deleteLanguageButton).setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
+                        public void onClick(View _v) {
                             language.removeView(v);
                             // delete from server
                             String[] param = {Jenjobs.LANGUAGE_URL + "/" + _lang.id + "?access-token=" + accessToken};
