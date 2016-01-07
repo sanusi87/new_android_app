@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -59,7 +58,7 @@ public class UpdateResumeVisibility extends Activity {
                 /*
                 * remote
                 * */
-                new UpdateTask().execute(new String[]{rvAdapter.visibility[position]});
+                new UpdateTask().execute(rvAdapter.visibility[position]);
 
                 /*
                 * only then send the result back to the previous page
@@ -90,7 +89,6 @@ public class UpdateResumeVisibility extends Activity {
             final HttpPost httppost = new HttpPost( url );
             httppost.addHeader("Content-Type", "application/json");
             httppost.addHeader("Accept", "application/json");
-            HttpResponse _http_response = null;
 
             JSONObject obj = new JSONObject();
             try {
@@ -101,7 +99,7 @@ public class UpdateResumeVisibility extends Activity {
                 entity.setContentType("application/json");
                 httppost.setEntity(entity);
 
-                _http_response = httpclient.execute(httppost);
+                HttpResponse _http_response = httpclient.execute(httppost);
                 HttpEntity _entity = _http_response.getEntity();
                 InputStream is = _entity.getContent();
 
