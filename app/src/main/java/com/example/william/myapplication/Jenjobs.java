@@ -23,6 +23,7 @@ public class Jenjobs {
     public static final String BOOKMARK_URL = "http://api.jenjobs.com/jobseeker/bookmark";
     public static final String SUBSCRIPTION_URL = "http://api.jenjobs.com/jobseeker/subscription";
     public static final String JOB_SPEC_URL = "http://api.jenjobs.com/parameters/job-spec";
+    public static final String JOB_DETAILS = "http://api.jenjobs.com/jobs/search";
 
     public static HashMap getJobType(){
         HashMap a = new HashMap<Integer, String>();
