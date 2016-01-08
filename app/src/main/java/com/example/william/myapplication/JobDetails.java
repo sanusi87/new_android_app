@@ -33,8 +33,6 @@ public class JobDetails extends Activity {
         }else{
             Toast.makeText(getApplicationContext(), "Job posting ID not found!", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     public class GetJobRequest extends AsyncTask<String, Void, JSONObject> {
