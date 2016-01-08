@@ -195,4 +195,6 @@
         <item name="W">Week</item>
         <item name="M">Month</item>
     </string-array>
+    <string name="title_activity_job_details2">JobDetails2</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
