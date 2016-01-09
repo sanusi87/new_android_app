@@ -8,11 +8,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +25,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -47,35 +52,14 @@ public class JobDetails2 extends ActionBarActivity {
     int jobPostingId = 0;
     static JSONObject jobDetails = null;
 
+    ProgressBar loading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_details2);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                //getActionBar().setSelectedNavigationItem(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        jobDetails = null;
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -103,28 +87,18 @@ public class JobDetails2 extends ActionBarActivity {
                 //finish();
             }
         });
+
+        loading = (ProgressBar)findViewById(R.id.progressBar);
     }
 
     /**
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private static int SECTION_OVERVIEW = 1;
-        private static int SECTION_REQUIREMENTS = 2;
-        private static int SECTION_EMPLOYER = 3;
 
-        public PlaceholderFragment() {
-        }
+        public PlaceholderFragment() {}
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -135,20 +109,19 @@ public class JobDetails2 extends ActionBarActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            // TODO - inflate different view based on section number
-
-            View rootView = inflater.inflate(R.layout.fragment_job_details2, container, false);
-            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-
             int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
-            if( sectionNumber == SECTION_OVERVIEW ){
+
+            View rootView = null;
+            int SECTION_OVERVIEW = 1;
+            int SECTION_REQUIREMENTS = 2;
+            int SECTION_EMPLOYER = 3;
+            if( sectionNumber == SECTION_OVERVIEW){
                 rootView = inflater.inflate(R.layout.job_details_overview, container, false);
                 setupOverview(rootView);
-            }else if( sectionNumber == SECTION_REQUIREMENTS ){
+            }else if( sectionNumber == SECTION_REQUIREMENTS){
                 rootView = inflater.inflate(R.layout.job_details_requirements, container, false);
                 setupDescription(rootView);
-            }else if( sectionNumber == SECTION_EMPLOYER ){
+            }else if( sectionNumber == SECTION_EMPLOYER){
                 rootView = inflater.inflate(R.layout.job_details_employer, container, false);
                 setupEmployer(rootView);
             }
@@ -156,19 +129,7 @@ public class JobDetails2 extends ActionBarActivity {
             return rootView;
         }
 
-        public void setupOverview(View v) {
-            ((TextView)v.findViewById(R.id.location)).setText(jobDetails.optString("location"));
-            ((TextView)v.findViewById(R.id.location)).setText(jobDetails.optString("location"));
-            ((TextView)v.findViewById(R.id.location)).setText(jobDetails.optString("location"));
-        }
 
-        public void setupDescription(View v) {
-
-        }
-
-        public void setupEmployer(View v) {
-
-        }
     }
 
     /**
@@ -234,10 +195,69 @@ public class JobDetails2 extends ActionBarActivity {
             jobDetails = success;
             Log.e("onPostEx", "" + success);
             if( success != null ){
+                mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+                mViewPager = (ViewPager) findViewById(R.id.container);
+                mViewPager.setAdapter(mSectionsPagerAdapter);
+
                 positionTitle.setText(success.optString("title"));
+                loading.setVisibility(View.GONE);
             }
         }
     }
 
+    /*
+    * function used to set textviews
+    * */
+    public static void setupOverview(View v) {
+        if( jobDetails != null ){
+            if( jobDetails.optString("location") != null ){
+                ((TextView)v.findViewById(R.id.location)).setText( Html.fromHtml(jobDetails.optString("location")) );
+            }else{
+                v.findViewById(R.id.location).setVisibility(View.GONE);
+            }
+
+            ((TextView)v.findViewById(R.id.jobType)).setText(jobDetails.optString("type"));
+            ((TextView)v.findViewById(R.id.jobLevel)).setText(jobDetails.optString("level"));
+            ((TextView)v.findViewById(R.id.jobSpecialisation)).setText( Html.fromHtml(jobDetails.optString("specialisation")) );
+            ((TextView)v.findViewById(R.id.qualification)).setText(jobDetails.optString("education"));
+            ((TextView)v.findViewById(R.id.skill)).setText(jobDetails.optString("skills"));
+            ((TextView)v.findViewById(R.id.language)).setText(jobDetails.optString("languages"));
+            ((TextView)v.findViewById(R.id.closedOn)).setText( Jenjobs.date(jobDetails.optString("date_closed"), "dd MMM yyyy", "yyyy-MM-dd hh:mm:ss") );
+        }
+    }
+
+    public static void setupDescription(View v) {
+        if( jobDetails != null ){
+            ((TextView)v.findViewById(R.id.description)).setText(Html.fromHtml(jobDetails.optString("description")));
+        }
+    }
+
+    public static void setupEmployer(View v) {
+        if( jobDetails != null ){
+            try {
+                JSONObject companyDetails = new JSONObject(jobDetails.getString("company_details"));
+
+                ImageView companyLogo = (ImageView)v.findViewById(R.id.companyLogo);
+                new ImageLoad(companyDetails.getString("logo_file"), companyLogo).execute();
+
+                ((TextView)v.findViewById(R.id.companyName)).setText( jobDetails.optString("company") );
+                ((TextView)v.findViewById(R.id.companyRegistrationNumber)).setText( companyDetails.optString("registration_no") );
+                ((TextView)v.findViewById(R.id.companyIndustry)).setText( companyDetails.optString("industry") );
+                ((TextView)v.findViewById(R.id.companyWorkingHours)).setText( companyDetails.optString("work_hour") );
+                ((TextView)v.findViewById(R.id.companyBenefits)).setText( companyDetails.optString("benefits") );
+                ((TextView)v.findViewById(R.id.companyWebsite)).setText( companyDetails.optString( "website" ) );
+                ((TextView)v.findViewById(R.id.companyFacebookPage)).setText( companyDetails.optString( "fb_page" ) );
+
+                ImageView workLocationImage = (ImageView)v.findViewById(R.id.workLocationImage);
+                new ImageLoad(companyDetails.getString("map_image"), workLocationImage).execute();
+
+            } catch (JSONException e) {
+                Log.e("compErr", e.getMessage());
+            }
+        }
+    }
+    /*
+    * function used to set textviews
+    * */
 
 }
