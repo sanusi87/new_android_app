@@ -190,23 +190,21 @@ public class JobSearch {
 
         @Override
         protected void onPostExecute(final Object success) {
-            Log.e("onPostEx", "" + success);
+            //Log.e("onPostEx", "" + success);
             if( success != null ){
                 ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
                 JSONObject jObj = (JSONObject) success;
-                if( jObj != null ){
-                    JSONArray jArr = jObj.optJSONArray("data");
-                    if( jArr != null ){
-                        for( int i=0;i< jArr.length();i++ ){
-                            try {
-                                arr.add(jArr.getJSONObject(i));
-                            } catch (JSONException e) {
-                                Log.e("injecting", "" + e.getMessage());
-                            }
+                JSONArray jArr = jObj.optJSONArray("data");
+                if( jArr != null ){
+                    for( int i=0;i< jArr.length();i++ ){
+                        try {
+                            arr.add(jArr.getJSONObject(i));
+                        } catch (JSONException e) {
+                            Log.e("injecting", "" + e.getMessage());
                         }
-                        adapter.setJob( arr );
-                        adapter.notifyDataSetChanged();
                     }
+                    adapter.setJob( arr );
+                    adapter.notifyDataSetChanged();
                 }
             }
         }
