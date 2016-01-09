@@ -100,16 +100,6 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             ((TextView) v.findViewById(R.id.job_location)).setText(p.optString("job_location"));
             ((TextView) v.findViewById(R.id.job_type)).setText(p.optString("job_type"));
             ((TextView) v.findViewById(R.id.date_closed)).setText( Jenjobs.date( p.optString("date_closed"), "dd MMM yyyy", "yyyy-MM-dd hh:mm:ss" ) );
-
-            //SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            //SimpleDateFormat newFormatter = new SimpleDateFormat("dd MMM yyyy");
-            //try {
-                //Date theDate = formatter.parse(p.optString("date_closed"));
-                //((TextView) v.findViewById(R.id.date_closed)).setText( newFormatter.format(theDate) );
-            //} catch (ParseException e) {
-                //e.printStackTrace();
-            //}
-
             ((TextView) v.findViewById(R.id.job_description)).setText(Html.fromHtml(p.optString("job_desc_brief")));
         }
 
