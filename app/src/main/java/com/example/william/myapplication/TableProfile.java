@@ -238,7 +238,7 @@ public class TableProfile extends SQLiteOpenHelper{
 
     public boolean updateProfile(ContentValues cv, int existingID){
         String[] _id = {String.valueOf(existingID)};
-        int affectedRows = db.update(TableProfile.TABLE_NAME, cv, "id=?", _id);
+        int affectedRows = db.update(TableProfile.TABLE_NAME, cv, "_id=?", _id);
         return affectedRows > 0;
     }
 
