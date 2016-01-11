@@ -20,8 +20,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 * */
 
 public class TableApplication extends SQLiteOpenHelper {
-    public static final String TABLE_NAME = "application";
+    public static final int STATUS_UNPROCESSED = 0;
+    public static final int STATUS_SHORTLISTED = 1;
+    public static final int STATUS_INTERVIEW = 2;
+    public static final int STATUS_REJECTED = 4;
+    public static final int STATUS_KIV = 6;
+    public static final int STATUS_PRESCREENED = 9;
+    public static final int STATUS_WITHDRAWN = 10;
+    public static final int STATUS_HIRED = 11;
 
+    public static final String TABLE_NAME = "application";
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableApplication.TABLE_NAME
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "_id INTEGER, " +
@@ -34,10 +42,12 @@ public class TableApplication extends SQLiteOpenHelper {
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableApplication.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
+    private Context context;
 
     public TableApplication(Context context) {
         super(context, Jenjobs.DATABASE_NAME , null, Jenjobs.DATABASE_VERSION);
         db = this.getReadableDatabase();
+        this.context = context;
     }
 
     @Override
@@ -62,7 +72,8 @@ public class TableApplication extends SQLiteOpenHelper {
     }
 
     public Long addApplication(ContentValues cv2){
-        return db.insert(TableApplication.TABLE_NAME, null, cv2);
+        Long insertId = db.insert(TableApplication.TABLE_NAME, null, cv2);
+        return insertId;
     }
 
     public boolean updateApplication(ContentValues cv2, int existingID){
