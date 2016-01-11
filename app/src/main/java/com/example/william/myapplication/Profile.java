@@ -17,10 +17,10 @@ public class Profile {
     public String access; //Open, Limited, Hidden
     public String access_token;
     public String status;
-    public int country_id;
+    public int country_id = 0;
     public boolean driving_license;
     public boolean transport;
-    public int js_jobseek_status_id;
+    public int js_jobseek_status_id = 0;
     public int availability;
     public String availability_unit;
     public String address;
