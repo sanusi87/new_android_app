@@ -24,7 +24,7 @@ public class Profile {
     public int availability;
     public String availability_unit;
     public String address;
-    public boolean no_work_exp;
+    public boolean no_work_exp = false;
     public String additional_info;
     public String created_at;
     public String updated_at;
