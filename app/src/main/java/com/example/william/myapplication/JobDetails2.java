@@ -72,6 +72,10 @@ public class JobDetails2 extends ActionBarActivity {
     TableJobPreferenceLocation tableJobPreferenceLocation;
     TableApplication tableApplication;
     TableJob tableJob;
+    TableWorkExperience tableWorkExperience;
+    TableEducation tableEducation;
+    TableSkill tableSkill;
+    TableLanguage tableLanguage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,10 @@ public class JobDetails2 extends ActionBarActivity {
         tableJobPreferenceLocation = new TableJobPreferenceLocation(this);
         tableApplication = new TableApplication(this);
         tableJob = new TableJob(this);
+        tableWorkExperience = new TableWorkExperience(this);
+        tableEducation = new TableEducation(this);
+        tableSkill = new TableSkill(this);
+        tableLanguage = new TableLanguage(this);
         // -----
 
         Intent intent = getIntent();
@@ -140,12 +148,36 @@ public class JobDetails2 extends ActionBarActivity {
                         errors.add("Please update your jobseeking infomation!");
                     }
 
-
-
                     // work exp
+                    if( !profile.no_work_exp ){ // if no_work_exp == false // got work experience
+                        // check for entered work exp
+                        Cursor works = tableWorkExperience.getWorkExperience();
+                        if( works.getCount() == 0 ){
+                            errors.add("Please add your work experience!");
+                        }
+                        works.close();
+                    }
+
                     // education
+                    Cursor edus = tableEducation.getEducation();
+                    if( edus.getCount() == 0 ){
+                        errors.add("Please add your qualification!");
+                    }
+                    edus.close();
+
                     // skills
+                    Cursor skills = tableSkill.getSkill();
+                    if( skills.getCount() == 0 ){
+                        errors.add("Please add your skills!");
+                    }
+                    skills.close();
+
                     // languages
+                    Cursor languages = tableLanguage.getLanguage(null);
+                    if( languages.getCount() == 0 ){
+                        errors.add("Please add your language proficiencies!");
+                    }
+                    languages.close();
                 }
 
                 if( errors.size() == 0 ){
@@ -176,6 +208,7 @@ public class JobDetails2 extends ActionBarActivity {
                         cv2.put("job_data", jobDetails.toString());
                         tableJob.addJob(cv2);
                     }
+                    jobs.close();
 
                     //finish();
                 }else{
