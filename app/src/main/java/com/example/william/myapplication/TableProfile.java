@@ -80,6 +80,7 @@ public class TableProfile extends SQLiteOpenHelper{
 		db.execSQL(TableCountry.SQL_CREATE_ENTRIES);
 		db.execSQL(TableAddress.SQL_CREATE_ENTRIES);
         db.execSQL(TableJobPreferenceLocation.SQL_CREATE_ENTRIES);
+        db.execSQL(TableInvitation.SQL_CREATE_ENTRIES);
 
         // insert subscription
         ContentValues cv1 = new ContentValues();
@@ -161,6 +162,7 @@ public class TableProfile extends SQLiteOpenHelper{
         db.execSQL(TableWorkExperience.SQL_DELETE_ENTRIES);
         db.execSQL(TableCountry.SQL_DELETE_ENTRIES);
         db.execSQL(TableAddress.SQL_DELETE_ENTRIES);
+        db.execSQL(TableInvitation.SQL_DELETE_ENTRIES);
         onCreate(db);
     }
 
@@ -181,6 +183,7 @@ public class TableProfile extends SQLiteOpenHelper{
         db.execSQL(TableWorkExperience.SQL_DELETE_ENTRIES);
         db.execSQL(TableCountry.SQL_DELETE_ENTRIES);
         db.execSQL(TableAddress.SQL_DELETE_ENTRIES);
+        db.execSQL(TableInvitation.SQL_DELETE_ENTRIES);
         onCreate(db);
     }
 
