@@ -34,6 +34,16 @@ public class TableJob extends SQLiteOpenHelper{
         //onCreate(db);
     }
 
+    public Cursor getJob(int post_id){
+        String strSQL = "SELECT * FROM "+TableJob.TABLE_NAME;
+        String[] args = null;
+        if( post_id > 0 ){
+            strSQL += " WHERE id=?";
+            args = new String[]{String.valueOf(post_id)};
+        }
+        return db.rawQuery(strSQL, args);
+    }
+
     public Long addJob(ContentValues cv){
         return db.insert(TableJob.TABLE_NAME, null, cv);
     }
