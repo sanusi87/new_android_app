@@ -1,6 +1,10 @@
 package com.example.william.myapplication;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,14 +26,20 @@ import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 public class JobDetails2 extends ActionBarActivity {
 
@@ -51,8 +61,17 @@ public class JobDetails2 extends ActionBarActivity {
     TextView positionTitle;
     int jobPostingId = 0;
     static JSONObject jobDetails = null;
-
     ProgressBar loading;
+    Button applyButton;
+
+    SharedPreferences sharedPref;
+    String accessToken;
+
+    TableProfile tableProfile;
+    TableJobPreference tableJobPreference;
+    TableJobPreferenceLocation tableJobPreferenceLocation;
+    TableApplication tableApplication;
+    TableJob tableJob;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +79,16 @@ public class JobDetails2 extends ActionBarActivity {
         setContentView(R.layout.activity_job_details2);
 
         jobDetails = null;
+        sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        accessToken = sharedPref.getString("access_token", null);
+
+        // -----
+        tableProfile = new TableProfile(this);
+        tableJobPreference = new TableJobPreference(this);
+        tableJobPreferenceLocation = new TableJobPreferenceLocation(this);
+        tableApplication = new TableApplication(this);
+        tableJob = new TableJob(this);
+        // -----
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -72,19 +101,86 @@ public class JobDetails2 extends ActionBarActivity {
         }
 
         positionTitle = (TextView)findViewById(R.id.positionTitle);
-        Button applyButton = (Button)findViewById(R.id.applyButton);
+        applyButton = (Button)findViewById(R.id.applyButton);
+        applyButton.setEnabled(false);
+        applyButton.setClickable(false);
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO - save to local db
+                Profile profile = tableProfile.getProfile();
+
+                ArrayList<String> errors = new ArrayList<String>();
+
+                // if got resume file, send application without checking anything
+                if( profile.resume_file != null && profile.resume_file.length() > 0 ){
+
+                }else{
+                    // check for profile completeness
+                    if( profile.country_id == 0 ){
+                        errors.add("Please set your nationality!");
+                    }
+
+                    if( profile.dob == null ){
+                        errors.add("Please set your date of birth!");
+                    }
+
+                    if( profile.gender == null ){
+                        errors.add("Please set gender!");
+                    }
+
+                    if( profile.mobile_no == null ){
+                        errors.add("Please set mobile number!");
+                    }
+
+                    if( profile.access == null ){
+                        errors.add("Please update your resume visibility!");
+                    }
+
+                    if( profile.js_jobseek_status_id == 0 ){
+                        errors.add("Please update your jobseeking infomation!");
+                    }
 
 
-                // TODO - post to server
 
+                    // work exp
+                    // education
+                    // skills
+                    // languages
+                }
 
-                // TODO - disabled button
+                if( errors.size() == 0 ){
+                    // TODO - save to local db (applicationTable)
+                    ContentValues cv = new ContentValues();
+                    cv.put("post_id", jobPostingId);
+                    cv.put("status", TableApplication.STATUS_UNPROCESSED);
+                    cv.put("date_created", Jenjobs.date(null, null, "yyyy-MM-dd hh:mm:ss"));
+                    cv.put("title", jobDetails.optString("title"));
+                    cv.put("closed", 0);
+                    tableApplication.addApplication(cv);
 
-                //finish();
+                    // TODO - post to server
+                    String[] params = {Jenjobs.APPLICATION_URL+"/"+jobPostingId+"?access-token="+accessToken, "{}"};
+                    new SubmitApplication().execute(params);
+
+                    // TODO - disabled button
+                    applyButton.setEnabled(false);
+                    applyButton.setClickable(false);
+
+                    // save the job
+                    Cursor jobs = tableJob.getJob(jobPostingId);
+                    if( jobs.getCount() == 0 ){
+                        ContentValues cv2 = new ContentValues();
+                        cv2.put("id", jobPostingId);
+                        cv2.put("title", jobDetails.optString("title"));
+                        cv2.put("company", jobDetails.optString("company"));
+                        cv2.put("job_data", jobDetails.toString());
+                        tableJob.addJob(cv2);
+                    }
+
+                    //finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -168,6 +264,9 @@ public class JobDetails2 extends ActionBarActivity {
         }
     }
 
+    /*
+    * download job data
+    * */
     public class GetJobRequest extends AsyncTask<String, Void, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
@@ -198,9 +297,17 @@ public class JobDetails2 extends ActionBarActivity {
                 mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
                 mViewPager = (ViewPager) findViewById(R.id.container);
                 mViewPager.setAdapter(mSectionsPagerAdapter);
-
                 positionTitle.setText(success.optString("title"));
                 loading.setVisibility(View.GONE);
+
+                Cursor application = tableApplication.getApplication(jobPostingId);
+                if( application.getCount() > 0 ){
+                    applyButton.setText(getResources().getString(R.string.already_applied));
+                    applyButton.setOnClickListener(null);
+                }else{
+                    applyButton.setEnabled(true);
+                    applyButton.setClickable(true);
+                }
             }
         }
     }
@@ -260,4 +367,49 @@ public class JobDetails2 extends ActionBarActivity {
     * function used to set textviews
     * */
 
+    /*
+    * post application
+    * */
+    public class SubmitApplication extends AsyncTask<String, Void, JSONObject> {
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            JSONObject _response = null;
+
+            final HttpClient httpclient = new DefaultHttpClient();
+            final HttpPost httppost = new HttpPost( params[0] ); // 0=url
+
+            httppost.addHeader("Content-Type", "application/json");
+            httppost.addHeader("Accept", "application/json");
+
+            try {
+                StringEntity entity = new StringEntity(params[1]); // 1=JSON string of post data
+                entity.setContentEncoding(HTTP.UTF_8);
+                entity.setContentType("application/json");
+                httppost.setEntity(entity);
+
+                HttpResponse _http_response = httpclient.execute(httppost);
+                HttpEntity _entity = _http_response.getEntity();
+                InputStream is = _entity.getContent();
+                String responseString = JenHttpRequest.readInputStreamAsString(is);
+                Log.e("respp", responseString);
+                _response = JenHttpRequest.decodeJsonObjectString(responseString);
+            } catch (ClientProtocolException e) {
+                Log.e("ClientProtocolException", e.getMessage());
+            } catch (UnsupportedEncodingException e) {
+                Log.e("UnsupportedEncoding", e.getMessage());
+            } catch (IOException e) {
+                Log.e("IOException", e.getMessage());
+            }
+
+            return _response;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject response) {
+            Log.e("onPostEx", "" + response);
+            if( response != null ){
+
+            }
+        }
+    }
 }
