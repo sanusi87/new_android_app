@@ -51,35 +51,31 @@ public class TableApplication extends SQLiteOpenHelper {
         //onCreate(db);
     }
 
-    public Cursor getApplication(){
-        Cursor c = db.rawQuery("SELECT * FROM "+TableApplication.TABLE_NAME, null);
-        return c;
+    public Cursor getApplication(int post_id){
+        String strSQL = "SELECT * FROM "+TableApplication.TABLE_NAME;
+        String[] args = null;
+        if( post_id > 0 ){
+            strSQL += " WHERE post_id=?";
+            args = new String[]{String.valueOf(post_id)};
+        }
+        return db.rawQuery(strSQL, args);
     }
 
     public Long addApplication(ContentValues cv2){
-        Long rowNumber = db.insert(TableApplication.TABLE_NAME, null, cv2);
-        return rowNumber;
+        return db.insert(TableApplication.TABLE_NAME, null, cv2);
     }
 
     public boolean updateApplication(ContentValues cv2, int existingID){
         String[] _id = {String.valueOf(existingID)};
         int affectedRows = db.update(TableApplication.TABLE_NAME, cv2, "id=?", _id);
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        return affectedRows > 0;
     }
 
     public boolean deleteApplication(int id){
         String _id = String.valueOf(id);
         String[] param = {_id};
-
         int affectedRows = db.delete(TableApplication.TABLE_NAME, "id=?", param);
-
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        return affectedRows > 0;
     }
 }
 

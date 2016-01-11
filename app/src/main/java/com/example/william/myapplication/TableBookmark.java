@@ -6,9 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by william on 12/1/2015.
- */
 public class TableBookmark extends SQLiteOpenHelper{
 
     public static final String TABLE_NAME = "bookmark";
@@ -24,16 +21,16 @@ public class TableBookmark extends SQLiteOpenHelper{
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableBookmark.TABLE_NAME
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "post_id INTEGER, " +
-            "title TEXT, " +
-            "date_added NUMERIC, " +
-            "date_closed NUMERIC);";
+            "date_added NUMERIC);";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableBookmark.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
+    private Context context;
 
     public TableBookmark(Context context){
         super(context, Jenjobs.DATABASE_NAME , null, Jenjobs.DATABASE_VERSION);
         db = this.getReadableDatabase();
+        this.context = context;
     }
 
     @Override
@@ -54,8 +51,14 @@ public class TableBookmark extends SQLiteOpenHelper{
     public int deleteBookmark(){}
     */
 
-    public Cursor getBookmark(){
-        return db.rawQuery("SELECT * FROM "+TableBookmark.TABLE_NAME, null);
+    public Cursor getBookmark(int post_id){
+        String strSQL = "SELECT * FROM "+TableBookmark.TABLE_NAME;
+        String[] args = null;
+        if( post_id > 0 ){
+            strSQL += " WHERE post_id=?";
+            args = new String[]{String.valueOf(post_id)};
+        }
+        return db.rawQuery(strSQL, args);
     }
 
     public Long addBookmark(ContentValues cv){
@@ -71,11 +74,17 @@ public class TableBookmark extends SQLiteOpenHelper{
         return false;
     }
 
-    public boolean deleteBookmark(int id){
+    public boolean deleteBookmark(int id, int post_id){
         String _id = String.valueOf(id);
         String[] param = {_id};
+
+        // delete bookmark
         int affectedRows = db.delete(TableBookmark.TABLE_NAME, "id=?", param);
         if( affectedRows > 0 ){
+            // and delete job
+            TableJob tableJob = new TableJob(context);
+            tableJob.deleteJob(post_id);
+
             return true;
         }
         return false;
