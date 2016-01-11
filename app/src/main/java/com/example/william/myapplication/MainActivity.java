@@ -137,7 +137,6 @@ public class MainActivity extends Activity {
             final HttpPost httppost = new HttpPost( "http://api.jenjobs.com/oauth2/token" );
             httppost.addHeader("Content-Type", "application/json");
             httppost.addHeader("Accept", "application/json");
-            HttpResponse _http_response = null;
 
             JSONObject obj = new JSONObject();
             try {
@@ -152,7 +151,7 @@ public class MainActivity extends Activity {
                 entity.setContentType("application/json");
                 httppost.setEntity(entity);
 
-                _http_response = httpclient.execute(httppost);
+                HttpResponse _http_response = httpclient.execute(httppost);
                 HttpEntity _entity = _http_response.getEntity();
                 InputStream is = _entity.getContent();
 
@@ -199,7 +198,7 @@ public class MainActivity extends Activity {
                     SharedPreferences.Editor spEdit = sharedPref.edit();
                     spEdit.putString("access_token", success.optString("access_token"));
                     spEdit.putString("email", mEmail);
-                    spEdit.commit();
+                    spEdit.apply();
 
                     Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG).show();
 
