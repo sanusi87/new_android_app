@@ -188,7 +188,7 @@ public class UpdateProfile extends FragmentActivity {
             public void onClick(View v) {
                 ArrayList<String> errors = new ArrayList<String>();
                 String accessToken = sharedPref.getString("access_token", null);
-                int profileId = sharedPref.getInt("js_profile_id", 1);
+                int profileId = sharedPref.getInt("js_profile_id", 0);
                 String theFullName = fullName.getText().toString();
                 String theDateOfBirth = selectedDoB.getText().toString();
                 String theEmailAddress = emailAddress.getText().toString();
