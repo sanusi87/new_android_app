@@ -423,10 +423,39 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             LinearLayout partners = (LinearLayout)rootView.findViewById(R.id.partners);
             final CheckBox partnersCb = (CheckBox)rootView.findViewById(R.id.partners_checkbox);
 
+            LinearLayout sms = (LinearLayout)rootView.findViewById(R.id.sms);
+            final CheckBox smsCb = (CheckBox)rootView.findViewById(R.id.sms_checkbox);
+
+            Cursor subscriptions = tableSubscription.getSubscription();
+            if( subscriptions.moveToFirst() ){
+                while( !subscriptions.isAfterLast() ){
+
+                    int subscripId = subscriptions.getInt(2);
+                    int subscripStat = subscriptions.getInt(3);
+
+                    if( subscripId == TableSubscription.NEWSLETTER ){
+                        if( subscripStat > 0 ){
+                            newsletterCb.setChecked(true);
+                        }
+                    }else if( subscripId == TableSubscription.PROMOTION ){
+                        if( subscripStat > 0 ){
+                            partnersCb.setChecked(true);
+                        }
+                    }else if( subscripId == TableSubscription.SMS_JOB_ALERT ){
+                        if( subscripStat > 0 ){
+                            smsCb.setChecked(true);
+                        }
+                    }
+
+                    subscriptions.moveToNext();
+                }
+            }
+            subscriptions.close();
+
             notification.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    notificationCb.setChecked( !notificationCb.isChecked() );
+                    notificationCb.setChecked(!notificationCb.isChecked());
                     tableSettings.updateSettings("notification_alert", notificationCb.isChecked() ? "1" : "0");
                 }
             });
@@ -465,6 +494,28 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     JSONObject jsonString = new JSONObject();
                     try {
                         jsonString.put("subscription_id", TableSubscription.PROMOTION);
+                        jsonString.put("status", cv.getAsInteger("status"));
+
+                        String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
+                        new PostRequest().execute(param);
+                    } catch (JSONException e) {
+                        Log.e("error", e.getMessage());
+                    }
+                }
+            });
+
+            sms.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    smsCb.setChecked( !smsCb.isChecked() );
+
+                    ContentValues cv = new ContentValues();
+                    cv.put("status", smsCb.isChecked() ? 1 : 0);
+                    tableSubscription.updateSubscription(cv, TableSubscription.SMS_JOB_ALERT);
+
+                    JSONObject jsonString = new JSONObject();
+                    try {
+                        jsonString.put("subscription_id", TableSubscription.SMS_JOB_ALERT);
                         jsonString.put("status", cv.getAsInteger("status"));
 
                         String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
