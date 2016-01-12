@@ -1109,8 +1109,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }
     }
 
-
-
     /*
     * download data after success login
     * */
@@ -1272,12 +1270,13 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     }
 
                 }else if( downloadSection == DOWNLOAD_APPLICATION ){
-
+                    Log.e("status", "application downloaded");
                     TableApplication tableApplication = new TableApplication(getApplicationContext());
                     ContentValues cv = new ContentValues();
 
                     try {
                         JSONArray success = new JSONArray(nsuccess);
+                        Log.e("status", "application count="+success.length());
                         if( success.length() > 0 ){
                             for( int i=0;i< success.length();i++ ){
                                 JSONObject s = success.getJSONObject(i);
@@ -1289,7 +1288,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 cv.put("title", s.getString("title"));
                                 cv.put("closed", s.getInt("closed"));
 
-                                tableApplication.addApplication(cv);
+                                Long insertedId = tableApplication.addApplication(cv);
+                                Log.e("status", "inserted ID="+insertedId.intValue());
                             }
                         }
                     } catch (JSONException e) {
