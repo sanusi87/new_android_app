@@ -194,6 +194,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         tableEducation = new TableEducation(context);
         tableJobPreference = new TableJobPreference(context);
         tableLanguage = new TableLanguage(context);
+
+        Intent svc = new Intent(this, MainService.class);
+        startService(svc);
     }
 
 
@@ -284,7 +287,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     setupApplicationFragment(rootView);
                     break;
                 case SETTINGS_FRAGMENT:
-                    rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+                    rootView = inflater.inflate(R.layout.settings_layout, container, false);
                     setupSettingsFragment(rootView);
                     break;
                 case ONLINE_RESUME_FRAGMENT:
@@ -408,10 +411,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }
 
         private void setupSettingsFragment(View rootView) {
-            sectionLabel = (TextView) rootView.findViewById(R.id.section_label);
-            if (sectionLabel != null) {
-                sectionLabel.setText("xxx=" + sectionNumber);
-            }
+
         }
 
         private void setupOnlineResumeFragment(View rootView) {
