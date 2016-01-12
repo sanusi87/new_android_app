@@ -861,7 +861,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     String companyName = c.getString(3);
                     String dateStart = c.getString(12);
 
-                    ((TextView)v.findViewById(R.id.positionTitle)).setText( positionTitle );
+                    ((TextView)v.findViewById(R.id.positionTitle)).setText(positionTitle);
                     ((TextView)v.findViewById(R.id.companyName)).setText( companyName );
                     ((TextView)v.findViewById(R.id.startedOn)).setText(Jenjobs.date(dateStart, null, "yyyy-MM-dd"));
 
@@ -1255,7 +1255,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             ContentValues cv3 = new ContentValues();
                             cv3.put("address1", jsonAddr.getString("address1"));
                             cv3.put("address2", jsonAddr.getString("address2"));
-                            cv3.put("postcode", jsonAddr.getInt("postcode"));
+                            cv3.put("postcode", jsonAddr.getString("postcode") == null ? 0 : jsonAddr.getInt("postcode"));
                             cv3.put("city_id", jsonAddr.getInt("city_id"));
                             cv3.put("city_name", jsonAddr.getString("city_name"));
                             cv3.put("state_id", jsonAddr.getInt("state_id"));
@@ -1286,7 +1286,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 cv.put("date_created", s.getString("date_created"));
                                 cv.put("date_updated", s.getString("date_updated"));
                                 cv.put("title", s.getString("title"));
-                                cv.put("closed", s.getInt("closed"));
+                                cv.put("closed", s.getBoolean("closed") ? 1 : 0);
 
                                 Long insertedId = tableApplication.addApplication(cv);
                                 Log.e("status", "inserted ID="+insertedId.intValue());
@@ -1312,31 +1312,33 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 cv.put("position", s.optString("position"));
                                 cv.put("company", s.optString("company"));
 
-                                /////
-                                JSONObject jobSpec = new JSONObject(s.optString("job_spec"));
-                                cv.put("job_spec_id", jobSpec.optInt("id") > 0 ? jobSpec.optInt("id") : 0 );
+                                if( s.optString("job_spec") != null && s.optString("job_role") != null && s.optString("job_type") != null ){
+                                    /////
+                                    JSONObject jobSpec = new JSONObject(s.optString("job_spec"));
+                                    cv.put("job_spec_id", jobSpec.optInt("id") > 0 ? jobSpec.optInt("id") : 0 );
 
-                                JSONObject jobRole = new JSONObject(s.optString("job_role"));
-                                cv.put("job_role_id", jobRole.optInt("id") > 0 ? jobRole.optInt("id") : 0 );
+                                    JSONObject jobRole = new JSONObject(s.optString("job_role"));
+                                    cv.put("job_role_id", jobRole.optInt("id") > 0 ? jobRole.optInt("id") : 0 );
 
-                                JSONObject jobType = new JSONObject(s.optString("job_type"));
-                                cv.put("job_type_id", jobType.optInt("id") > 0 ? jobType.optInt("id") : 0 );
+                                    JSONObject jobType = new JSONObject(s.optString("job_type"));
+                                    cv.put("job_type_id", jobType.optInt("id") > 0 ? jobType.optInt("id") : 0 );
 
-                                JSONObject jobLevel = new JSONObject(s.optString("job_level"));
-                                cv.put("job_level_id", jobLevel.optInt("id") > 0 ? jobLevel.optInt("id") : 0 );
+                                    JSONObject jobLevel = new JSONObject(s.optString("job_level"));
+                                    cv.put("job_level_id", jobLevel.optInt("id") > 0 ? jobLevel.optInt("id") : 0 );
 
-                                JSONObject jobIndustry = new JSONObject(s.optString("industry"));
-                                cv.put("industry_id", jobIndustry.optInt("id") > 0 ? jobIndustry.optInt("id") : 0 );
-                                /////
+                                    JSONObject jobIndustry = new JSONObject(s.optString("industry"));
+                                    cv.put("industry_id", jobIndustry.optInt("id") > 0 ? jobIndustry.optInt("id") : 0 );
+                                    /////
 
-                                cv.put("experience", s.optString("experience"));
-                                cv.put("salary", s.optString("salary"));
-                                cv.put("currency_id", s.optInt("currency_id"));
-                                cv.put("started_on", s.optString("started_on"));
-                                cv.put("resigned_on", s.optString("resigned_on"));
-                                cv.put("update_at", "");
+                                    cv.put("experience", s.optString("experience"));
+                                    cv.put("salary", s.optString("salary"));
+                                    cv.put("currency_id", s.optInt("currency_id"));
+                                    cv.put("started_on", s.optString("started_on"));
+                                    cv.put("resigned_on", s.optString("resigned_on"));
+                                    cv.put("update_at", "");
 
-                                tableWorkExperience.addWorkExperience(cv);
+                                    tableWorkExperience.addWorkExperience(cv);
+                                }
                             }
                         }
 
