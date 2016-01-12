@@ -11,7 +11,8 @@ public class TableJob extends SQLiteOpenHelper{
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableJob.TABLE_NAME+"' (id INTEGER, " +
             "title TEXT, " +
             "company TEXT, " +
-            "job_data TEXT)";
+            "job_data TEXT, " +
+            "date_closed NUMERIC)";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableJob.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
