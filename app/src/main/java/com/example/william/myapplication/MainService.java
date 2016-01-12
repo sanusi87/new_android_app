@@ -101,6 +101,7 @@ public class MainService extends Service{
 
             new android.os.Handler().postDelayed(new Runnable() {
                 public void run() {
+                    // TODO - check for network connectivity first, only then can proceed
                     Calendar cal = Calendar.getInstance();
                     Date theDate = cal.getTime();
                     Log.e("appurl", ""+theDate.getTime());
@@ -152,7 +153,6 @@ public class MainService extends Service{
             }
             return _response;
         }
-
 
         @Override
         protected void onPostExecute(JSONArray success) {
