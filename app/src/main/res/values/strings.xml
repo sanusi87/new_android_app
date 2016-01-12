@@ -198,4 +198,8 @@
     <string name="title_activity_job_details2">Job Details</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="already_applied">Already Applied</string>
+    <string name="notification_alert">Notification Alert</string>
+    <string name="notification_alert_desc">Show notification when you received invitation from employers, job application updates</string>
+    <string name="newsletter_desc">Emails of newsletter, promotion, career advise from JenJOBS</string>
+    <string name="partners_desc">Promotion email from JenJOBS partners and affiliates</string>
 </resources>
