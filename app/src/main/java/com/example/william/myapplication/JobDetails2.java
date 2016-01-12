@@ -205,6 +205,7 @@ public class JobDetails2 extends ActionBarActivity {
                         cv2.put("id", jobPostingId);
                         cv2.put("title", jobDetails.optString("title"));
                         cv2.put("company", jobDetails.optString("company"));
+                        cv2.put("date_closed", jobDetails.optString("date_closed"));
                         cv2.put("job_data", jobDetails.toString());
                         tableJob.addJob(cv2);
                     }
