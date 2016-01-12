@@ -202,4 +202,7 @@
     <string name="notification_alert_desc">Show notification when you received invitation from employers, job application updates</string>
     <string name="newsletter_desc">Emails of newsletter, promotion, career advise from JenJOBS</string>
     <string name="partners_desc">Promotion email from JenJOBS partners and affiliates</string>
+    <string name="withdraw">Withdraw</string>
+    <string name="applied_on">Applied On</string>
+    <string name="status">Status</string>
 </resources>
