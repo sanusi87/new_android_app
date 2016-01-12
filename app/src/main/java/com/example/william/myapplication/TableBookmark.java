@@ -21,7 +21,8 @@ public class TableBookmark extends SQLiteOpenHelper{
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableBookmark.TABLE_NAME
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "post_id INTEGER, " +
-            "date_added NUMERIC);";
+            "date_added NUMERIC," +
+            "date_closed NUMERIC);";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableBookmark.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
