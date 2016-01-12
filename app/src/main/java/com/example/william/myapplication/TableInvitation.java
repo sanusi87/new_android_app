@@ -8,11 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class TableInvitation extends SQLiteOpenHelper {
 
     public static final String TABLE_NAME = "invitation";
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableBookmark.TABLE_NAME
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableInvitation.TABLE_NAME
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "post_id INTEGER, " +
             "date_added NUMERIC);";
-    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableBookmark.TABLE_NAME+"'";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableInvitation.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
     private Context context;
