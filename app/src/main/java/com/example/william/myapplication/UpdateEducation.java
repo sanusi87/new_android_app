@@ -51,7 +51,7 @@ public class UpdateEducation extends ActionBarActivity {
     // SQLite id, not the one from JenJOBS
     int currentEducationId = 0;
     int remoteEducationId = 0;
-    int currentViewPosition = 0;
+    int currentViewPosition = -1;
     private static Context context;
 
     TableEducation tableEducation;
@@ -323,9 +323,7 @@ public class UpdateEducation extends ActionBarActivity {
 
                     Intent intent = new Intent();
                     intent.putExtra("id", currentEducationId);
-                    if( currentViewPosition > 0 ){
-                        intent.putExtra("currentViewPosition", currentViewPosition);
-                    }
+                    intent.putExtra("currentViewPosition", currentViewPosition);
                     setResult(Activity.RESULT_OK, intent);
                     finish();
                 }else{
@@ -350,13 +348,17 @@ public class UpdateEducation extends ActionBarActivity {
             if (resultCode == RESULT_OK) {
                 Bundle extra = data.getExtras();
                 educationLevel = (EducationLevel)extra.get("edulevel");
-                selectedEducationLevel.setText(educationLevel.name);
+                if( educationLevel != null ){
+                    selectedEducationLevel.setText(educationLevel.name);
+                }
             }
         }else if( requestCode == SELECT_EDU_FIELD ){
             if (resultCode == RESULT_OK) {
                 Bundle extra = data.getExtras();
                 educationField = (EducationField)extra.get("edufield");
-                selectedEducationField.setText(educationField.name);
+                if( educationField != null ){
+                    selectedEducationField.setText(educationField.name);
+                }
             }
         }else if( requestCode == SELECT_GRADUATION_YEAR ){
             if (resultCode == RESULT_OK) {
@@ -406,7 +408,6 @@ public class UpdateEducation extends ActionBarActivity {
 
             httppost.addHeader("Content-Type", "application/json");
             httppost.addHeader("Accept", "application/json");
-            HttpResponse _http_response = null;
 
             try {
                 StringEntity entity = new StringEntity(params[1]);
@@ -414,7 +415,7 @@ public class UpdateEducation extends ActionBarActivity {
                 entity.setContentType("application/json");
                 httppost.setEntity(entity);
 
-                _http_response = httpclient.execute(httppost);
+                HttpResponse _http_response = httpclient.execute(httppost);
                 HttpEntity _entity = _http_response.getEntity();
                 InputStream is = _entity.getContent();
                 String responseString = JenHttpRequest.readInputStreamAsString(is);
