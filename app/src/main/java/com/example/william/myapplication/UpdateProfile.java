@@ -92,12 +92,12 @@ public class UpdateProfile extends FragmentActivity {
             selectedNationalityValues = theCountry;
         }
 
-        if( !theProfile.dob.equals("") && !theProfile.dob.equals(null) ){
+        if( !theProfile.dob.equals("") ){
             selectedDoB.setText(Jenjobs.date(theProfile.dob, null, "yyyy-MM-dd"));
         }
 
         selectedGender.setText(theProfile.gender);
-
+        Log.e("dialcode", ""+theProfile.dial_code);
         if( theProfile.dial_code != null ){
             dialCode.setSelection(dca.findDialCodePosition(theProfile.dial_code));
             selectedDialCodeValue = theProfile.dial_code;
@@ -112,6 +112,8 @@ public class UpdateProfile extends FragmentActivity {
                 }else{
                     mobileNumber.setText( parts[0] );
                 }
+            }else{
+                dialCode.setSelection( dca.findDialCodePosition( "60" ) );
             }
         }
 
