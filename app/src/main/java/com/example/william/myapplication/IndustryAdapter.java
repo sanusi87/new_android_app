@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class IndustryAdapter extends BaseAdapter implements ListAdapter{
     public ArrayList<Industry> industry = new ArrayList<>();
@@ -19,14 +18,11 @@ public class IndustryAdapter extends BaseAdapter implements ListAdapter{
     public IndustryAdapter(Context context){
         this.context = context;
 
-        HashMap<Integer, String> fields = Jenjobs.getJobLevel();
-        //ArrayList<JobSeekingStatus> tempArr = new ArrayList<>();
+        HashMap<Integer, String> fields = Jenjobs.getIndustry();
 
-        Iterator i = fields.entrySet().iterator();
-        while( i.hasNext() ){
-            HashMap.Entry e = (HashMap.Entry)i.next();
-            //tempArr.add(new JobSeekingStatus( (int)e.getKey(), String.valueOf(e.getValue()) ));
-            industry.add(new Industry( (int)e.getKey(), String.valueOf(e.getValue()) ));
+        for (Object o : fields.entrySet()) {
+            HashMap.Entry e = (HashMap.Entry) o;
+            industry.add(new Industry((int) e.getKey(), String.valueOf(e.getValue())));
         }
     }
 
