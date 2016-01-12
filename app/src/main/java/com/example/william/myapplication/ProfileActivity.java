@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -283,7 +284,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     setupJobFragment(rootView);
                     break;
                 case APPLICATION_FRAGMENT:
-                    rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+                    rootView = inflater.inflate(R.layout.application_layout, container, false);
                     setupApplicationFragment(rootView);
                     break;
                 case SETTINGS_FRAGMENT:
@@ -404,14 +405,75 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }
 
         private void setupApplicationFragment(View rootView) {
-            sectionLabel = (TextView) rootView.findViewById(R.id.section_label);
-            if (sectionLabel != null) {
-                sectionLabel.setText("xxx=" + sectionNumber);
-            }
+            ListView lv = (ListView)rootView.findViewById(R.id.listOfApplication);
+            ApplicationAdapter applicationAdapter = new ApplicationAdapter(context, accessToken);
+            lv.setAdapter(applicationAdapter);
         }
 
         private void setupSettingsFragment(View rootView) {
+            final TableSettings tableSettings = new TableSettings(context);
+            final TableSubscription tableSubscription = new TableSubscription(context);
 
+            LinearLayout notification = (LinearLayout)rootView.findViewById(R.id.notification);
+            final CheckBox notificationCb = (CheckBox)rootView.findViewById(R.id.notification_checkbox);
+
+            LinearLayout newsletter = (LinearLayout)rootView.findViewById(R.id.newsletter);
+            final CheckBox newsletterCb = (CheckBox)rootView.findViewById(R.id.newsletter_checkbox);
+
+            LinearLayout partners = (LinearLayout)rootView.findViewById(R.id.partners);
+            final CheckBox partnersCb = (CheckBox)rootView.findViewById(R.id.partners_checkbox);
+
+            notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notificationCb.setChecked( !notificationCb.isChecked() );
+                    tableSettings.updateSettings("notification_alert", notificationCb.isChecked() ? "1" : "0");
+                }
+            });
+
+            newsletter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    newsletterCb.setChecked(!newsletterCb.isChecked());
+
+                    ContentValues cv = new ContentValues();
+                    cv.put("status", newsletterCb.isChecked() ? 1 : 0);
+                    tableSubscription.updateSubscription(cv, TableSubscription.NEWSLETTER);
+
+                    JSONObject jsonString = new JSONObject();
+                    try {
+                        jsonString.put("subscription_id", TableSubscription.NEWSLETTER);
+                        jsonString.put("status", cv.getAsInteger("status"));
+
+                        String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
+                        new PostRequest().execute(param);
+                    } catch (JSONException e) {
+                        Log.e("error", e.getMessage());
+                    }
+                }
+            });
+
+            partners.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    partnersCb.setChecked( !partnersCb.isChecked() );
+
+                    ContentValues cv = new ContentValues();
+                    cv.put("status", partnersCb.isChecked() ? 1 : 0);
+                    tableSubscription.updateSubscription(cv, TableSubscription.PROMOTION);
+
+                    JSONObject jsonString = new JSONObject();
+                    try {
+                        jsonString.put("subscription_id", TableSubscription.PROMOTION);
+                        jsonString.put("status", cv.getAsInteger("status"));
+
+                        String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
+                        new PostRequest().execute(param);
+                    } catch (JSONException e) {
+                        Log.e("error", e.getMessage());
+                    }
+                }
+            });
         }
 
         private void setupOnlineResumeFragment(View rootView) {
