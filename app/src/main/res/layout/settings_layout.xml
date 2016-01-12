@@ -103,4 +103,43 @@
             android:id="@+id/partners_checkbox" />
     </LinearLayout>
 
+    <View style="@style/AppThemeBorderBottom" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        style="@style/AppThemePadding10"
+        android:id="@+id/sms">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                style="@style/AppThemeBaseLabel"
+                android:text="@string/sms_desc" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/notification_alert_desc"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/sms_checkbox" />
+    </LinearLayout>
+
 </LinearLayout>
