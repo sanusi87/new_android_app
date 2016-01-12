@@ -51,17 +51,12 @@ public class UpdateAdditionalInfo extends Activity {
             @Override
             public void onClick(View v) {
                 String theInfo = info.getText().toString();
-                Log.e("info", theInfo);
-                Log.e("info2", ""+sharedPref.getInt("js_profile_id", 0));
-                // insert
                 ContentValues cv = new ContentValues();
                 cv.put("additional_info", theInfo);
                 tProfile.updateProfile(cv, sharedPref.getInt("js_profile_id", 0));
 
                 String[] param = {theInfo};
                 // post
-                //AsyncTask updateTask = new UpdateTask();
-                //updateTask.execute(new String[]{theInfo});
                 new UpdateTask().execute(param);
 
                 // finish the job

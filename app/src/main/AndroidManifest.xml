@@ -19,7 +19,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -113,7 +114,7 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".JobDetails2"
-            android:label="@string/title_activity_job_details2"></activity>
+            android:label="@string/title_activity_job_details2" />
     </application>
 
 </manifest>

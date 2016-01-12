@@ -48,6 +48,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
 
     SharedPreferences sharedPreferences;
     String accessToken;
+    int profileId;
 
     LinearLayout jobSpec;
     TextView selectedJobSpec;
@@ -72,6 +73,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
 
         sharedPreferences = getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPreferences.getString("access_token", null);
+        profileId = sharedPreferences.getInt("js_profile_id", 0);
 
         final EditText positionTitle = (EditText)findViewById(R.id.position_title);
         final EditText companyName = (EditText)findViewById(R.id.company_name);
@@ -318,6 +320,11 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     }else{
                         Long _savedId = tableWorkExperience.addWorkExperience(cv);
                         currentId = _savedId.intValue();
+
+                        TableProfile tableProfile = new TableProfile(getApplicationContext());
+                        ContentValues cv3 = new ContentValues();
+                        cv3.put("no_work_exp", 0); // set to got work exp
+                        tableProfile.updateProfile(cv3, profileId);
                     }
 
                     // TODO: send POST request

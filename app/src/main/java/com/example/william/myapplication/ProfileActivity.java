@@ -356,7 +356,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     getActivity().startActivityForResult(intent, UPDATE_PROFILE);
                 }
             });
-            
+
             ImageView profileImage = (ImageView) rootView.findViewById(R.id.profile_image);
             if( theProfile.photo_file != null ){
                 new ImageLoad(theProfile.photo_file, profileImage).execute();
@@ -376,7 +376,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 int previousLastPosition = 0;
 
                 @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {}
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                }
 
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
@@ -384,7 +385,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     if (lastPosition == totalItemCount) {
                         if (previousLastPosition != lastPosition) {
                             //Log.e("load", "more more");
-                            jobSearch.setPage( jobSearch.getPage()+1 );
+                            jobSearch.setPage(jobSearch.getPage() + 1);
                             jobSearch.search(false);
                         }
                         previousLastPosition = lastPosition;
@@ -469,7 +470,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     // TODO: calculate duration
                     //((TextView)v.findViewById(R.id.workDuration)).setText(  );
 
-                    final int selectedWork = cw.getPosition();
+                    // final int selectedWork = cw.getPosition();
                     LinearLayout updateWorkExp = (LinearLayout)v.findViewById(R.id.updateWorkExperience);
                     updateWorkExp.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -477,7 +478,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             Intent intent = new Intent();
                             intent.setClass(getActivity(),  UpdateWorkExperience.class);
                             intent.putExtra("id", savedId);
-                            intent.putExtra("selectedWork", selectedWork);
+                            intent.putExtra("selectedWork", listOfWorkExp.indexOfChild(v));
                             getActivity().startActivityForResult(intent, ADD_WORK_EXP);
                         }
                     });
@@ -495,6 +496,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                     cw.moveToNext();
                 }
+            }else{
+                // if no work experience found
             }
 
             /*
@@ -531,7 +534,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ((TextView)v.findViewById(R.id.school)).setText(school);
                     ((TextView)v.findViewById(R.id.graduationYear)).setText( graduationYear );
 
-                    final int selectedEdu = ce.getPosition(); // the view index based on the listOfEducation
+                    //final int selectedEdu = ce.getPosition(); // the view index based on the listOfEducation
                     LinearLayout updateEducation = (LinearLayout)v.findViewById(R.id.updateEducation);
                     updateEducation.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -539,7 +542,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             Intent intent = new Intent();
                             intent.setClass(getActivity(),  UpdateEducation.class);
                             intent.putExtra("id", savedId);
-                            intent.putExtra("currentViewPosition", selectedEdu);
+                            intent.putExtra("currentViewPosition", listOfEducation.indexOfChild(v));
                             getActivity().startActivityForResult(intent, ADD_EDU);
                         }
                     });
@@ -1106,6 +1109,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }
     }
 
+
+
     /*
     * download data after success login
     * */
@@ -1175,6 +1180,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         cv.put("ic_no", String.valueOf(success.get("ic_no")));
                         cv.put("passport_no", String.valueOf(success.get("passport_no")));
                         cv.put("mobile_no", String.valueOf(success.get("mobile_no")));
+                        cv.put("dial_code", String.valueOf(success.get("dial_code")));
                         cv.put("gender", String.valueOf(success.get("gender")));
                         cv.put("dob", String.valueOf(success.get("dob")));
                         cv.put("pr", String.valueOf(success.get("pr")));
@@ -1195,8 +1201,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         cv.put("updated_at", String.valueOf(success.get("updated_at")));
 
                         Long newId = tblProfile.addProfile(cv);
-                        js_profile_id = newId.intValue();
-                        Log.e("js_profile_id", "" + js_profile_id);
+                        js_profile_id = cv.getAsInteger("_id");
+                        Log.e("js_profile_id", String.valueOf(js_profile_id));
 
                         SharedPreferences.Editor spEdit = sharedPref.edit();
                         spEdit.putInt("js_profile_id", js_profile_id);
