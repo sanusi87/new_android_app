@@ -71,6 +71,12 @@ public class TableApplication extends SQLiteOpenHelper {
         return db.rawQuery(strSQL, args);
     }
 
+    public Cursor getActiveApplication(){
+        String strSQL = "SELECT * FROM "+TableApplication.TABLE_NAME+" WHERE (status != ? AND status != ?) AND closed=0";
+        String[] args = {String.valueOf(STATUS_WITHDRAWN), String.valueOf(STATUS_HIRED)};
+        return db.rawQuery(strSQL, args);
+    }
+
     public Long addApplication(ContentValues cv2){
         Long insertId = db.insert(TableApplication.TABLE_NAME, null, cv2);
         return insertId;
