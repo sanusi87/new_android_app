@@ -30,7 +30,7 @@
 
         <service android:name=".MainService">
             <intent-filter>
-                <action android:name="com.example.william.myapplication.MainService" />
+                <action android:name=".MainService" />
             </intent-filter>
         </service>
 
