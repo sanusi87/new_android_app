@@ -3,14 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/scrollView2"
-    tools:context="com.example.william.myapplication.UpdateEducation">
+    tools:context=".UpdateEducation">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp">
+        style="@style/AppThemePadding10">
 
         <LinearLayout
             android:orientation="vertical"

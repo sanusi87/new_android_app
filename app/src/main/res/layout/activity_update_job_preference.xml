@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent" android:layout_height="match_parent"
-android:orientation="vertical"
-android:padding="10dp"
-xmlns:tools="http://schemas.android.com/tools"
-tools:context="com.example.william.myapplication.UpdateJobPreference">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    style="@style/AppThemePadding10"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".UpdateJobPreference">
 
     <LinearLayout
         android:orientation="vertical"
@@ -117,13 +118,23 @@ tools:context="com.example.william.myapplication.UpdateJobPreference">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:weightSum="2">
 
         <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/save"
-        android:id="@+id/save_job_preferred" />
+        android:id="@+id/save_job_preferred"
+            android:layout_weight="1" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:id="@+id/cancelButton"
+            android:layout_weight="1" />
     </LinearLayout>
 
 </LinearLayout>

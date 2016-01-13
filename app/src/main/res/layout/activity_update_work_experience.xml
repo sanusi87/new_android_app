@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/scrollView2"
-    tools:context="com.example.william.myapplication.UpdateWorkExperience">
+    tools:context=".UpdateWorkExperience">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         android:padding="10dp">
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/AppThemePadding10">
             <TextView
@@ -24,7 +24,7 @@
                 android:text="@string/job_title"
                 style="@style/AppThemeBaseLabel" />
             <EditText
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/position_title"
                 android:inputType="text"
@@ -35,7 +35,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/AppThemePadding10">
             <TextView
@@ -46,7 +46,7 @@
                 android:phoneNumber="true"
                 style="@style/AppThemeBaseLabel" />
             <EditText
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/company_name"
                 android:inputType="text"
@@ -61,13 +61,13 @@
             android:layout_height="wrap_content"
             style="@style/AppThemePadding10">
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/employment_type"
                 style="@style/AppThemeBaseLabel" />
             <Spinner
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/employment_type"
                 android:spinnerMode="dropdown" />
@@ -77,7 +77,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/AppThemePadding10">
             <TextView
@@ -87,7 +87,7 @@
                 android:text="@string/job_level"
                 style="@style/AppThemeBaseLabel" />
             <Spinner
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/job_level"
                 android:spinnerMode="dropdown" />
@@ -97,7 +97,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/AppThemePadding10">
             <TextView
@@ -130,7 +130,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/AppThemePadding10"
             android:id="@+id/selectJobSpec">
@@ -153,7 +153,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/AppThemePadding10"
             android:id="@+id/selectJobRole">
@@ -176,19 +176,19 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/AppThemePadding10"
             android:id="@+id/selectIndustry">
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/company_industry"
                 android:singleLine="true"
                 style="@style/AppThemeBaseLabel" />
             <Spinner
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/company_industry"
                 android:spinnerMode="dropdown" />
@@ -198,7 +198,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/AppThemePadding10">
             <TextView
@@ -210,7 +210,7 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:weightSum="2">
                 <Spinner
                     android:layout_width="wrap_content"
@@ -231,7 +231,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/AppThemePadding10">
             <TextView
@@ -249,7 +249,7 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:weightSum="2">
                 <Spinner
                     android:layout_width="wrap_content"
@@ -270,7 +270,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/AppThemePadding10">
             <TextView
@@ -286,7 +286,7 @@
                 android:text="@string/exp2"
                 style="@style/AppThemeBaseTextValue" />
             <EditText
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:id="@+id/experience_text"
                 android:maxLines="10"

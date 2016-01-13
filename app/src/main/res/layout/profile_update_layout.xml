@@ -159,7 +159,7 @@
                 android:weightSum="3">
 
                 <Spinner
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/dial_code"
                     style="@style/AppThemeBaseTextValue" />
@@ -191,17 +191,17 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="2">
             <Button
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/save"
                 android:id="@+id/okButton"
                 android:layout_weight="1" />
             <Button
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel"
                 android:id="@+id/cancelButton"
