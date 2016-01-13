@@ -34,7 +34,7 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".NetworkChangeReceiver" >
+        <receiver android:name=".NetworkChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -121,6 +121,9 @@
         <activity
             android:name=".JobDetails2"
             android:label="@string/title_activity_job_details2" />
+        <activity
+            android:name=".SelectKeywordFilter"
+            android:theme="@android:style/Theme.Dialog"/>
     </application>
 
 </manifest>
