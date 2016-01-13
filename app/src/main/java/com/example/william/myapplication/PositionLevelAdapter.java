@@ -9,11 +9,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class PositionLevelAdapter extends BaseAdapter implements ListAdapter{
 
@@ -23,22 +19,12 @@ public class PositionLevelAdapter extends BaseAdapter implements ListAdapter{
     public PositionLevelAdapter(Context context){
         this.context = context;
 
-        /*
-        positionLevel.add(new PositionLevel(1, "Non-Executive"));
-        positionLevel.add(new PositionLevel(2, "Executive"));
-        positionLevel.add(new PositionLevel(3, "Management"));
-        positionLevel.add(new PositionLevel(4, "Senior Management"));
-        positionLevel.add(new PositionLevel(5, "Entry Level"));
-        positionLevel.add(new PositionLevel(6, "Senior Executive"));
-        */
-
         HashMap<Integer, String> positionLevels = Jenjobs.getJobLevel();
         ArrayList<PositionLevel> tempArr = new ArrayList<>();
 
-        Iterator i = positionLevels.entrySet().iterator();
-        while( i.hasNext() ){
-            HashMap.Entry e = (HashMap.Entry)i.next();
-            tempArr.add(new PositionLevel( (int)e.getKey(), String.valueOf(e.getValue()) ));
+        for (Object o : positionLevels.entrySet()) {
+            HashMap.Entry e = (HashMap.Entry) o;
+            tempArr.add(new PositionLevel((int) e.getKey(), String.valueOf(e.getValue())));
         }
 
         /*
@@ -80,7 +66,7 @@ public class PositionLevelAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+            v = vi.inflate(android.R.layout.simple_list_item_checked, parent, false);
         }
         PositionLevel c = (PositionLevel) getItem(position);
         TextView tvName = (TextView) v.findViewById(android.R.id.text1);

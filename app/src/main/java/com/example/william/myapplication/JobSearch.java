@@ -1,6 +1,5 @@
 package com.example.william.myapplication;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,7 +18,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class JobSearch {
-    private String url = "http://api.jenjobs.com/jobs/search";
+    //private String url = "http://api.jenjobs.com/jobs/search";
     private ArrayList<String> filters = new ArrayList<String>();
     private ArrayList<String> orders = new ArrayList<String>();
     private String defaultOrder = "o=date_posted";
@@ -72,48 +71,48 @@ public class JobSearch {
 
     public void setJobLevel( String[] jobLevel ){
         if( jobLevel.length > 0 ){
-            for( int i=0; i < jobLevel.length; i++ ){
-                filters.add( "job_level_id[]="+jobLevel[i] );
+            for (String aJobLevel : jobLevel) {
+                filters.add("job_level_id[]=" + aJobLevel);
             }
         }
     }
 
     public void setJobSpec( String[] jobSpec ){
         if( jobSpec.length > 0 ){
-            for( int i=0; i < jobSpec.length; i++ ){
-                filters.add( "job_spec_id[]="+jobSpec[i] );
+            for (String aJobSpec : jobSpec) {
+                filters.add("job_spec_id[]=" + aJobSpec);
             }
         }
     }
 
     public void setJobRole( String[] jobRole ){
         if( jobRole.length > 0 ){
-            for( int i=0; i < jobRole.length; i++ ){
-                filters.add( "job_role_id[]="+jobRole[i] );
+            for (String aJobRole : jobRole) {
+                filters.add("job_role_id[]=" + aJobRole);
             }
         }
     }
 
     public void setCountry( String[] country ){
         if( country.length > 0 ){
-            for( int i=0; i < country.length; i++ ){
-                filters.add( "country_id[]="+country[i] );
+            for (String aCountry : country) {
+                filters.add("country_id[]=" + aCountry);
             }
         }
     }
 
     public void setState( String[] state ){
         if( state.length > 0 ){
-            for( int i=0; i < state.length; i++ ){
-                filters.add( "state_id[]="+state[i] );
+            for (String aState : state) {
+                filters.add("state_id[]=" + aState);
             }
         }
     }
 
     public void setJobType( String[] types ){
         if( types.length > 0 ){
-            for( int i=0; i < types.length; i++ ){
-                filters.add( "job_type_id[]="+types[i] );
+            for (String type : types) {
+                filters.add("job_type_id[]=" + type);
             }
         }
     }
@@ -142,7 +141,7 @@ public class JobSearch {
     private String getSearchUrl(){
         String filterUrl = "?page="+this.page + TextUtils.join("&", filters) + "&" + TextUtils.join("&", orders);
         Log.e("filter", filterUrl);
-        return url+filterUrl;
+        return Jenjobs.JOB_DETAILS+filterUrl;
     }
 
     public void resetFilter(){

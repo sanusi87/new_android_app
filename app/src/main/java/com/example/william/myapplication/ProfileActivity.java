@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -42,6 +41,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -108,9 +108,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     SharedPreferences sharedPref;
     static String accessToken = null;
 
-    private DialogFragment filterDialog;
-    private String JOBFILTER = "job_filter";
-
     private static Context context;
 
     /*
@@ -126,9 +123,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-        // dialog setup
-        filterDialog = new JobSearchFilterDialog();
 
         NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -199,7 +193,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         Intent svc = new Intent(this, MainService.class);
         startService(svc);
     }
-
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -423,10 +416,39 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             LinearLayout partners = (LinearLayout)rootView.findViewById(R.id.partners);
             final CheckBox partnersCb = (CheckBox)rootView.findViewById(R.id.partners_checkbox);
 
+            LinearLayout sms = (LinearLayout)rootView.findViewById(R.id.sms);
+            final CheckBox smsCb = (CheckBox)rootView.findViewById(R.id.sms_checkbox);
+
+            Cursor subscriptions = tableSubscription.getSubscription();
+            if( subscriptions.moveToFirst() ){
+                while( !subscriptions.isAfterLast() ){
+
+                    int subscripId = subscriptions.getInt(2);
+                    int subscripStat = subscriptions.getInt(3);
+
+                    if( subscripId == TableSubscription.NEWSLETTER ){
+                        if( subscripStat > 0 ){
+                            newsletterCb.setChecked(true);
+                        }
+                    }else if( subscripId == TableSubscription.PROMOTION ){
+                        if( subscripStat > 0 ){
+                            partnersCb.setChecked(true);
+                        }
+                    }else if( subscripId == TableSubscription.SMS_JOB_ALERT ){
+                        if( subscripStat > 0 ){
+                            smsCb.setChecked(true);
+                        }
+                    }
+
+                    subscriptions.moveToNext();
+                }
+            }
+            subscriptions.close();
+
             notification.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    notificationCb.setChecked( !notificationCb.isChecked() );
+                    notificationCb.setChecked(!notificationCb.isChecked());
                     tableSettings.updateSettings("notification_alert", notificationCb.isChecked() ? "1" : "0");
                 }
             });
@@ -465,6 +487,28 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     JSONObject jsonString = new JSONObject();
                     try {
                         jsonString.put("subscription_id", TableSubscription.PROMOTION);
+                        jsonString.put("status", cv.getAsInteger("status"));
+
+                        String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
+                        new PostRequest().execute(param);
+                    } catch (JSONException e) {
+                        Log.e("error", e.getMessage());
+                    }
+                }
+            });
+
+            sms.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    smsCb.setChecked( !smsCb.isChecked() );
+
+                    ContentValues cv = new ContentValues();
+                    cv.put("status", smsCb.isChecked() ? 1 : 0);
+                    tableSubscription.updateSubscription(cv, TableSubscription.SMS_JOB_ALERT);
+
+                    JSONObject jsonString = new JSONObject();
+                    try {
+                        jsonString.put("subscription_id", TableSubscription.SMS_JOB_ALERT);
                         jsonString.put("status", cv.getAsInteger("status"));
 
                         String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
@@ -837,10 +881,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 return super.onOptionsItemSelected(item);
             case JOB_FRAGMENT:
                 if( clickedItem == R.id.filter_job_button ){
-                    //filterDialog.show(getSupportFragmentManager(), JOBFILTER);
                     Intent intent = new Intent();
                     intent.setClass(getApplicationContext(), JobSearchFilter.class);
-                    startActivityForResult(intent, ProfileActivity.FETCH_FILTER_PARAM);
+                    startActivityForResult(intent, FETCH_FILTER_PARAM);
                     return true;
                 }else{
                     return super.onOptionsItemSelected(item);
@@ -886,10 +929,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
 
-        Log.e("requestCode", ""+requestCode);
-        Log.e("requestCode2", ""+UPDATE_RESUME_VISIBILITY);
-        Log.e("resultCode", ""+resultCode);
-
         Bundle extra = null;
         if (resultCode == RESULT_OK) {
             extra = data.getExtras();
@@ -899,9 +938,113 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         if (requestCode == FETCH_FILTER_PARAM) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
+                // TODO - process returned search parameter
+                /*
+                intent.putExtra("keyword_filter", (KeywordFilter) keywordFilterInput.getSelectedItem());
+                intent.putExtra("keyword", keywordInput.getText().toString());
+                intent.putExtra("salary_min", salaryMinInput.getText().toString());
+                intent.putExtra("salary_max", salaryMaxInput.getText().toString());
+                intent.putExtra("job_spec", selectedJobSpecValues);
+                intent.putExtra("job_role", selectedJobRoleValues);
+                intent.putExtra("state", selectedMalaysiaStateValues);
+                intent.putExtra("country", selectedOtherCountryValues);
+                intent.putExtra("position_level", selectedPositionLevelValues);
+                intent.putExtra("direct_employer", postedDirectEmployer);
+                intent.putExtra("recruitment_agency", postedRecruitmentAgency);
+                */
 
-                Log.e("filterdata", extra.getString("result"));
-                Log.e("filterdata", extra.toString());
+                jobSearch.resetFilter();
+
+                KeywordFilter keywordFilter = (KeywordFilter) extra.get("keyword_filter");
+                if( keywordFilter != null ){
+                    jobSearch.setKeywordFilter(keywordFilter.name);
+                }
+
+                String keyword = extra.getString("keyword");
+                if( keyword != null ){
+                    jobSearch.setKeyword(keyword);
+                }
+
+                String _salaryMin = extra.getString("salary_min");
+                if( _salaryMin != null ){
+                    int salaryMin = Integer.valueOf(_salaryMin);
+                    jobSearch.setSalaryMin(salaryMin);
+                }
+
+                String _salaryMax = extra.getString("salary_max");
+                if( _salaryMax != null ){
+                    int salaryMax = Integer.valueOf(_salaryMax);
+                    jobSearch.setSalaryMax(salaryMax);
+                }
+
+                ArrayList jobSpecs = (ArrayList) extra.get("job_spec");
+                if( jobSpecs != null && jobSpecs.size() > 0 ){
+                    ArrayList<String> _jobSpec = new ArrayList<>();
+                    for(Object jobSpec : jobSpecs){
+                        JobSpec __jobSpec = (JobSpec)jobSpec;
+                        _jobSpec.add(__jobSpec.name);
+                    }
+                    jobSearch.setJobSpec(_jobSpec.toArray(new String[_jobSpec.size()]));
+                }
+
+                ArrayList jobRoles = (ArrayList) extra.get("job_role");
+                if( jobRoles != null && jobRoles.size() > 0 ){
+                    ArrayList<String> _jobRole = new ArrayList<>();
+                    for(Object jobRole : jobRoles){
+                        JobRole __jobRole = (JobRole)jobRole;
+                        _jobRole.add(__jobRole.name);
+                    }
+                    jobSearch.setJobRole(_jobRole.toArray(new String[_jobRole.size()]));
+                }
+
+                ArrayList jobTypes = (ArrayList) extra.get("job_type");
+                if( jobTypes != null && jobTypes.size() > 0 ){
+                    ArrayList<String> _jobType = new ArrayList<>();
+                    for(Object jobType : jobTypes){
+                        JobRole __jobType = (JobRole)jobType;
+                        _jobType.add(__jobType.name);
+                    }
+                    jobSearch.setJobType(_jobType.toArray(new String[_jobType.size()]));
+                }
+
+                ArrayList states = (ArrayList) extra.get("state");
+                if( states != null && states.size() > 0 ){
+                    ArrayList<String> _state = new ArrayList<>();
+                    for(Object state : states){
+                        State __state = (State)state;
+                        _state.add(__state.name);
+                    }
+                    jobSearch.setState(_state.toArray(new String[_state.size()]));
+                }
+
+                ArrayList countries = (ArrayList) extra.get("country");
+                if( countries != null && countries.size() > 0 ){
+                    ArrayList<String> _country = new ArrayList<>();
+                    for(Object country : countries){
+                        Country __country = (Country)country;
+                        _country.add(__country.name);
+                    }
+                    jobSearch.setCountry(_country.toArray(new String[_country.size()]));
+                }
+
+                ArrayList positionLevels = (ArrayList) extra.get("position_level");
+                if( positionLevels != null && positionLevels.size() > 0 ){
+                    ArrayList<String> _positionLevel = new ArrayList<>();
+                    for(Object positionLevel : positionLevels){
+                        PositionLevel __positionLevel = (PositionLevel)positionLevel;
+                        _positionLevel.add(__positionLevel.name);
+                    }
+                    jobSearch.setJobLevel(_positionLevel.toArray(new String[_positionLevel.size()]));
+                }
+
+
+                boolean directEmployer = extra.getBoolean("direct_employer");
+                jobSearch.setDirectEmployer(directEmployer);
+
+                boolean recruitmentAgency = extra.getBoolean("recruitment_agency");
+                jobSearch.setAdvertiser(recruitmentAgency); // same different
+
+                jobSearch.search(true);
             }
         }else if( requestCode == ADD_WORK_EXP ){
             if (resultCode == RESULT_OK) {

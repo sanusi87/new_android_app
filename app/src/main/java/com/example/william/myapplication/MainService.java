@@ -99,7 +99,7 @@ public class MainService extends Service{
     Runnable updateData = new Runnable(){
         @Override
         public void run() {
-            Log.e("runon", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
+                    // TODO - check for network connectivity first, only then can proceed
 
             Cursor applications = tableApplication.getActiveApplication();
             Log.e("active apps",""+applications.getCount());
@@ -163,7 +163,6 @@ public class MainService extends Service{
             }
             return _response;
         }
-
 
         @Override
         protected void onPostExecute(JSONArray success) {

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.example.william.myapplication.Confirmation"
+    tools:context=".Confirmation"
     android:orientation="vertical"
     android:weightSum="2"
     style="@style/AppThemePadding10">

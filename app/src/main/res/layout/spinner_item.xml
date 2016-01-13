@@ -5,4 +5,5 @@
     android:text="New Text"
     android:id="@+id/spinner_item"
     style="@style/AppThemeBaseLabel"
-    android:padding="5dp" />
+    android:padding="10dp"
+    android:background="@android:color/white" />

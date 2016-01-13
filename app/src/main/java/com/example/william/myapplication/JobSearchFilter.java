@@ -3,20 +3,16 @@ package com.example.william.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.text.Layout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class JobSearchFilter extends Activity {
 
@@ -25,18 +21,24 @@ public class JobSearchFilter extends Activity {
     private static int INTENT_GET_COUNTRY = 3;
     private static int INTENT_GET_SPEC = 4;
     private static int INTENT_GET_ROLE = 5;
+    private static int INTENT_GET_TYPE = 6;
 
     private TextView selectedOtherCountry;
     private TextView selectedPositionLevel;
     private TextView selectedMalaysiaState;
     private TextView selectedJobSpec;
     private TextView selectedJobRole;
+    private TextView selectedJobType;
+
+    private CheckBox directEmployerCb;
+    private CheckBox recruitmentAgencyCb;
 
     private ArrayList<Country> selectedOtherCountryValues = new ArrayList<>();
     private ArrayList<PositionLevel> selectedPositionLevelValues = new ArrayList<>();
     private ArrayList<State> selectedMalaysiaStateValues = new ArrayList<>();
     private ArrayList<JobSpec> selectedJobSpecValues = new ArrayList<>();
     private ArrayList<JobRole> selectedJobRoleValues = new ArrayList<>();
+    private ArrayList<JobType> selectedJobTypeValues = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +46,15 @@ public class JobSearchFilter extends Activity {
         setContentView(R.layout.activity_job_search_filter);
 
         // keyword filter
-        Spinner keywordFilterInput = (Spinner)findViewById(R.id.keyword_filter_spinner);
+        final Spinner keywordFilterInput = (Spinner)findViewById(R.id.keyword_filter_spinner);
         KeywordFilterAdapter kwa = new KeywordFilterAdapter(getApplicationContext());
         keywordFilterInput.setAdapter(kwa);
         // keyword
-        EditText keywordInput = (EditText)findViewById(R.id.keyword);
+        final EditText keywordInput = (EditText)findViewById(R.id.keyword);
         // min salary
-        EditText salaryMinInput = (EditText)findViewById(R.id.minimum_salary);
+        final EditText salaryMinInput = (EditText)findViewById(R.id.minimum_salary);
         // max salary
-        EditText salaryMaxInput = (EditText)findViewById(R.id.maximum_salary);
+        final EditText salaryMaxInput = (EditText)findViewById(R.id.maximum_salary);
         // position level
         //ListView positionLevelInput = (ListView)findViewById(R.id.position_level);
 
@@ -62,15 +64,68 @@ public class JobSearchFilter extends Activity {
         selectedMalaysiaState = (TextView)findViewById(R.id.selectedMalaysiaState);
         selectedJobSpec = (TextView)findViewById(R.id.selectedSpec);
         selectedJobRole = (TextView)findViewById(R.id.selectedRole);
+        selectedJobType = (TextView)findViewById(R.id.selectedJobType);
+
+        TextView directEmployer = (TextView) findViewById(R.id.direct_employer);
+        directEmployerCb = (CheckBox)findViewById(R.id.direct_employer_checkbox);
+
+        TextView recruitmentAgency = (TextView) findViewById(R.id.recruitment_agency);
+        recruitmentAgencyCb = (CheckBox)findViewById(R.id.recruitment_agency_checkBox);
 
         Button searchButton = (Button)findViewById(R.id.startSearch);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent();
-            intent.putExtra("result", "test ok");
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+                Intent intent = new Intent();
+
+                if( keywordFilterInput.getSelectedItem() != null ){
+                    intent.putExtra("keyword_filter", (KeywordFilter) keywordFilterInput.getSelectedItem());
+                }
+
+                if( keywordInput.getText().toString().length() > 0 ){
+                    intent.putExtra("keyword", keywordInput.getText().toString());
+                }
+
+                if( salaryMinInput.getText().toString().length() > 0 ){
+                    intent.putExtra("salary_min", salaryMinInput.getText().toString());
+                }
+
+                if( salaryMaxInput.getText().toString().length() > 0 ){
+                    intent.putExtra("salary_max", salaryMaxInput.getText().toString());
+                }
+
+                if( selectedJobSpecValues.size() > 0 ){
+                    intent.putExtra("job_spec", selectedJobSpecValues);
+                }
+
+                if( selectedJobRoleValues.size() > 0 ){
+                    intent.putExtra("job_role", selectedJobRoleValues);
+                }
+
+                if( selectedJobTypeValues.size() > 0 ){
+                    intent.putExtra("job_type", selectedJobTypeValues);
+                }
+
+                if( selectedMalaysiaStateValues.size() > 0 ){
+                    intent.putExtra("state", selectedMalaysiaStateValues);
+                }
+
+                if( selectedOtherCountryValues.size() > 0 ){
+                    intent.putExtra("country", selectedOtherCountryValues);
+                }
+
+                if( selectedPositionLevelValues.size() > 0 ){
+                    intent.putExtra("position_level", selectedPositionLevelValues);
+                }
+
+                boolean postedDirectEmployer = directEmployerCb.isChecked();
+                intent.putExtra("direct_employer", postedDirectEmployer);
+
+                boolean postedRecruitmentAgency = recruitmentAgencyCb.isChecked();
+                intent.putExtra("recruitment_agency", postedRecruitmentAgency);
+
+                setResult(Activity.RESULT_OK, intent);
+                finish();
             }
         });
 
@@ -78,8 +133,8 @@ public class JobSearchFilter extends Activity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            setResult(Activity.RESULT_CANCELED);
-            finish();
+                setResult(Activity.RESULT_CANCELED);
+                finish();
             }
         });
 
@@ -101,6 +156,18 @@ public class JobSearchFilter extends Activity {
                 Intent intent = new Intent(getApplicationContext(), SelectJobRole.class);
                 // get a list of already selected states and update the Extra to be submitted to next activity
                 startActivityForResult(intent, INTENT_GET_ROLE);
+            }
+        });
+
+        // select job type
+        LinearLayout selectJobType = (LinearLayout)findViewById(R.id.selectJobType);
+        selectJobType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SelectJobType.class);
+                intent.putExtra("single", false);
+                // get a list of already selected states and update the Extra to be submitted to next activity
+                startActivityForResult(intent, INTENT_GET_TYPE);
             }
         });
 
@@ -146,6 +213,20 @@ public class JobSearchFilter extends Activity {
                 }
                 // get a list of already selected states and update the Extra to be submitted to next activity
                 startActivityForResult(intent, INTENT_GET_LEVEL);
+            }
+        });
+
+        directEmployer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                directEmployerCb.setChecked(!directEmployerCb.isChecked());
+            }
+        });
+
+        recruitmentAgency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recruitmentAgencyCb.setChecked(!recruitmentAgencyCb.isChecked());
             }
         });
     }
@@ -227,6 +308,21 @@ public class JobSearchFilter extends Activity {
                     }
                     selectedJobRoleValues = selectedValues;
                     selectedJobRole.setText(TextUtils.join(",",selectedLabels));
+                }
+            }
+        }else if( requestCode == INTENT_GET_TYPE ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                ArrayList<JobType> selectedValues = (ArrayList<JobType>) filters.get("jobtype");
+                ArrayList<String> selectedLabels = new ArrayList<>();
+
+                if( selectedValues != null ){
+                    for( int i=0;i<selectedValues.size();i++ ){
+                        JobType c = selectedValues.get(i);
+                        selectedLabels.add(c.name);
+                    }
+                    selectedJobTypeValues = selectedValues;
+                    selectedJobType.setText(TextUtils.join(",",selectedLabels));
                 }
             }
         }

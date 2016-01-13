@@ -1,6 +1,8 @@
 package com.example.william.myapplication;
 
-public class KeywordFilter {
+import java.io.Serializable;
+
+public class KeywordFilter implements Serializable {
     public int id;
     public String name;
 

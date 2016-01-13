@@ -205,5 +205,6 @@
     <string name="withdraw">Withdraw</string>
     <string name="applied_on">Applied On</string>
     <string name="status">Status</string>
+    <string name="sms_desc">SMS Job Alert</string>
     <string name="update_education">Update Education</string>
 </resources>

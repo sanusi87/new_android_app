@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.example.william.myapplication.UpdateSkill"
+    tools:context=".UpdateSkill"
     android:orientation="vertical"
     style="@style/AppThemePadding10">
 
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/skill"
             android:inputType="text|textMultiLine"
@@ -25,17 +25,17 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="2">
         <Button
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/save"
             android:id="@+id/okButton"
             android:layout_weight="1" />
         <Button
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
             android:id="@+id/cancelButton"

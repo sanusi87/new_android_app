@@ -35,6 +35,7 @@ public class UpdateResumeVisibility extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_resume_visibility);
+        setTitle("Update Resume Visibility");
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 
