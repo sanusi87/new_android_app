@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -108,9 +107,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     SharedPreferences sharedPref;
     static String accessToken = null;
 
-    private DialogFragment filterDialog;
-    private String JOBFILTER = "job_filter";
-
     private static Context context;
 
     /*
@@ -126,9 +122,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-        // dialog setup
-        filterDialog = new JobSearchFilterDialog();
 
         NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -199,7 +192,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         Intent svc = new Intent(this, MainService.class);
         startService(svc);
     }
-
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -888,10 +880,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 return super.onOptionsItemSelected(item);
             case JOB_FRAGMENT:
                 if( clickedItem == R.id.filter_job_button ){
-                    //filterDialog.show(getSupportFragmentManager(), JOBFILTER);
                     Intent intent = new Intent();
                     intent.setClass(getApplicationContext(), JobSearchFilter.class);
-                    startActivityForResult(intent, ProfileActivity.FETCH_FILTER_PARAM);
+                    startActivityForResult(intent, FETCH_FILTER_PARAM);
                     return true;
                 }else{
                     return super.onOptionsItemSelected(item);
@@ -950,9 +941,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         if (requestCode == FETCH_FILTER_PARAM) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-
-                Log.e("filterdata", extra.getString("result"));
-                Log.e("filterdata", extra.toString());
+                // TODO - process returned search parameter
             }
         }else if( requestCode == ADD_WORK_EXP ){
             if (resultCode == RESULT_OK) {
