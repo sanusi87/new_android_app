@@ -145,6 +145,9 @@ public class UpdateEducation extends ActionBarActivity {
 
                 ce.close();
             }
+            setTitle(R.string.update_education);
+        }else{
+            setTitle(R.string.add_education);
         }
 
         selectEducationLevel.setOnClickListener(new View.OnClickListener() {
