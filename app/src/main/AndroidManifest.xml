@@ -49,7 +49,9 @@
             android:label="@string/title_activity_job_search_filter" />
         <activity android:name=".SelectState" />
         <activity android:name=".SelectCountry" />
-        <activity android:name=".SelectPositionLevel" />
+        <activity
+            android:name=".SelectPositionLevel"
+            android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".SelectSpecAndRole" />
         <activity
             android:name=".UpdateWorkExperience"
