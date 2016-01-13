@@ -61,6 +61,7 @@ public class UpdateJobPreference extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_job_preference);
+        setTitle("Update Job Preference");
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 
@@ -76,6 +77,7 @@ public class UpdateJobPreference extends Activity {
         selectedOtherCountry = (TextView)findViewById(R.id.selectedOtherCountry);
 
         Button save = (Button)findViewById(R.id.save_job_preferred);
+        Button cancel = (Button)findViewById(R.id.cancelButton);
 
         HashMap listOfJobTypes = Jenjobs.getJobType();
         HashMap listOfStates = Jenjobs.getState();
@@ -297,6 +299,14 @@ public class UpdateJobPreference extends Activity {
                 }else{
                     Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(Activity.RESULT_CANCELED);
+                finish();
             }
         });
 
