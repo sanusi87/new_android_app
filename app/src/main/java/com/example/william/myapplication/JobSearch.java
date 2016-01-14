@@ -139,7 +139,7 @@ public class JobSearch {
 
     // setup search URL
     private String getSearchUrl(){
-        String filterUrl = "?page="+this.page + TextUtils.join("&", filters) + "&" + TextUtils.join("&", orders);
+        String filterUrl = "?page="+this.page + "&" + TextUtils.join("&", filters) + "&" + TextUtils.join("&", orders);
         Log.e("filter", filterUrl);
         return Jenjobs.JOB_DETAILS+filterUrl;
     }
