@@ -3,7 +3,6 @@ package com.example.william.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
     private Context context;
@@ -53,12 +49,7 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
                     dateUpdated = Jenjobs.date(dateUpdated, null, null);
                 }
                 String positionTitle = _applications.getString(6);
-                String closingDate = _applications.getString(7);
-                if( closingDate != null ){
-                    closingDate = Jenjobs.date(closingDate, "dd MMM yyyy", "yyyy-MM-dd hh:mm:ss");
-                }else{
-                    closingDate = Jenjobs.date(null, "dd MMM yyyy", null);
-                }
+                String isJobClosed = _applications.getString(7);
 
                 String[] item = new String[8];
                 item[0] = String.valueOf(id);
@@ -68,7 +59,7 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
                 item[4] = dateApplied;
                 item[5] = dateUpdated;
                 item[6] = positionTitle;
-                item[7] = closingDate;
+                item[7] = isJobClosed;
 
                 applications.add(item);
 
@@ -113,7 +104,7 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
 
         positionTitle.setText( theApplication[6] );
         applicationDate.setText( theApplication[4] );
-        String applicationStatus = "";
+        String applicationStatus;
         int appStat = Integer.valueOf(theApplication[3]);
         if( appStat == TableApplication.STATUS_HIRED ) {
             applicationStatus = "Successful";
@@ -125,15 +116,20 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
             applicationStatus = "Processing";
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-        Date strDate = null;
+        /*
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         try {
-            strDate = sdf.parse( theApplication[7] );
+            Date strDate = sdf.parse( theApplication[7] );
             if (System.currentTimeMillis() > strDate.getTime()) {
                 applicationStatus = "Job Closed";
             }
         } catch (ParseException e) {
             Log.e("error", e.getMessage());
+        }
+        */
+
+        if( theApplication[7].equals("1") ){
+            applicationStatus = "Job Closed";
         }
 
         jobStatus.setText( applicationStatus );
@@ -152,7 +148,7 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
             @Override
             public void onClick(View v) {
                 String[] params = {Jenjobs.APPLICATION_URL+"/"+postId+"?access-token="+accessToken};
-                new DeleteRequest().execute();
+                new DeleteRequest().execute(params);
             }
         });
 
