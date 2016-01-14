@@ -190,7 +190,7 @@ public class JobDetails2 extends ActionBarActivity {
                     ContentValues cv = new ContentValues();
                     cv.put("post_id", jobPostingId);
                     cv.put("status", TableApplication.STATUS_UNPROCESSED);
-                    cv.put("date_created", Jenjobs.date(null, null, "yyyy-MM-dd hh:mm:ss"));
+                    cv.put("date_created", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
                     cv.put("title", jobDetails.optString("title"));
                     cv.put("closed", 0);
                     tableApplication.addApplication(cv);
