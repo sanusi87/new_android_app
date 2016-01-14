@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/companyRegistrationNumber"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/companyIndustry"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/companyWorkingHours"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
@@ -134,7 +134,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/companyBenefits"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
@@ -156,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/companyWebsite"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
@@ -178,7 +178,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/companyFacebookPage"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
