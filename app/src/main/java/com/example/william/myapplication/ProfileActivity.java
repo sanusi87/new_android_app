@@ -906,7 +906,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         MenuInflater inflater = getMenuInflater();
         switch (sectionNumber) {
             case PROFILE_FRAGMENT:
-                inflater.inflate(R.menu.profile, menu);
+                //inflater.inflate(R.menu.profile, menu);
                 break;
             case JOB_FRAGMENT:
                 inflater.inflate(R.menu.job_search_menu, menu);

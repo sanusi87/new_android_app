@@ -76,12 +76,12 @@ public class TableBookmark extends SQLiteOpenHelper{
         return false;
     }
 
-    public boolean deleteBookmark(int id, int post_id){
-        String _id = String.valueOf(id);
+    public boolean deleteBookmark(int post_id){
+        String _id = String.valueOf(post_id);
         String[] param = {_id};
 
         // delete bookmark
-        int affectedRows = db.delete(TableBookmark.TABLE_NAME, "id=?", param);
+        int affectedRows = db.delete(TableBookmark.TABLE_NAME, "post_id=?", param);
         if( affectedRows > 0 ){
             // and delete job
             TableJob tableJob = new TableJob(context);

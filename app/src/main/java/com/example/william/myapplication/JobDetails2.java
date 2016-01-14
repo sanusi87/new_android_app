@@ -16,6 +16,9 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -76,6 +79,7 @@ public class JobDetails2 extends ActionBarActivity {
     TableEducation tableEducation;
     TableSkill tableSkill;
     TableLanguage tableLanguage;
+    TableBookmark tableBookmark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +100,7 @@ public class JobDetails2 extends ActionBarActivity {
         tableEducation = new TableEducation(this);
         tableSkill = new TableSkill(this);
         tableLanguage = new TableLanguage(this);
+        tableBookmark = new TableBookmark(this);
         // -----
 
         Intent intent = getIntent();
@@ -191,7 +196,11 @@ public class JobDetails2 extends ActionBarActivity {
                     tableApplication.addApplication(cv);
 
                     // TODO - post to server
-                    String[] params = {Jenjobs.APPLICATION_URL+"/"+jobPostingId+"?access-token="+accessToken, "{}"};
+                    String[] params = {
+                            Jenjobs.APPLICATION_URL+"/"+jobPostingId+"?access-token="+accessToken,
+                            "{}",
+                            "1"
+                    };
                     new SubmitApplication().execute(params);
 
                     // TODO - disabled button
@@ -219,6 +228,31 @@ public class JobDetails2 extends ActionBarActivity {
         });
 
         loading = (ProgressBar)findViewById(R.id.progressBar);
+
+        Cursor jobBookmark = tableBookmark.getBookmark(jobPostingId);
+        if( jobBookmark.moveToFirst() ){
+            // if bookmark found
+        }
+        jobBookmark.close();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.job_details, menu);
+        // TODO - change this to show/hide menu
+        return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.bookmark:
+                bookmarkThisJob();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -401,10 +435,19 @@ public class JobDetails2 extends ActionBarActivity {
     * function used to set textviews
     * */
 
+    private void bookmarkThisJob() {
+
+    }
+
     /*
     * post application
+    * post bookmark
     * */
     public class SubmitApplication extends AsyncTask<String, Void, JSONObject> {
+        int REQUEST_TYPE = 0;
+        int POST_APPLICATION = 1;
+        int POST_BOOKMARK = 2;
+
         @Override
         protected JSONObject doInBackground(String... params) {
             JSONObject _response = null;
@@ -415,8 +458,10 @@ public class JobDetails2 extends ActionBarActivity {
             httppost.addHeader("Content-Type", "application/json");
             httppost.addHeader("Accept", "application/json");
 
+            REQUEST_TYPE = Integer.valueOf(params[2]);
+
             try {
-                StringEntity entity = new StringEntity(params[1]); // 1=JSON string of post data
+                StringEntity entity = new StringEntity( params[1] ); // 1=JSON string of post data
                 entity.setContentEncoding(HTTP.UTF_8);
                 entity.setContentType("application/json");
                 httppost.setEntity(entity);
@@ -442,8 +487,15 @@ public class JobDetails2 extends ActionBarActivity {
         protected void onPostExecute(JSONObject response) {
             Log.e("onPostEx", "" + response);
             if( response != null ){
+                if( REQUEST_TYPE == POST_APPLICATION ){
+                    Toast.makeText(getApplicationContext(), "Application submitted!", Toast.LENGTH_SHORT).show();
+                }else if( REQUEST_TYPE == POST_BOOKMARK ){
 
+                }else{
+
+                }
             }
         }
     }
+
 }
