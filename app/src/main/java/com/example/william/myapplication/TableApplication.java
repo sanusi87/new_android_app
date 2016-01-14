@@ -77,6 +77,22 @@ public class TableApplication extends SQLiteOpenHelper {
         return db.rawQuery(strSQL, args);
     }
 
+    public boolean isDifferentApplicationStatus(int applicationId, int newStatus){
+        String string = "SELECT status FROM "+TableApplication.TABLE_NAME+" WHERE id=?";
+        String[] args = {String.valueOf(applicationId)};
+        Cursor c = db.rawQuery(string, args);
+
+        if( c.moveToFirst() ){
+            int _status = c.getInt(0);
+            c.close();
+
+            if( _status != newStatus ){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Long addApplication(ContentValues cv2){
         Long insertId = db.insert(TableApplication.TABLE_NAME, null, cv2);
         return insertId;
