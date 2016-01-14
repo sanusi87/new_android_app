@@ -26,6 +26,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
@@ -362,10 +363,12 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }
 
         private void setupJobFragment(View rootView) {
+            ProgressBar loading = (ProgressBar) rootView.findViewById(R.id.progressBar4);
             ListView lv = (ListView) rootView.findViewById(R.id.job_list_view);
             final JobSearchAdapter jobSearchAdapter = new JobSearchAdapter(getActivity());
 
             jobSearch = new JobSearch(jobSearchAdapter);
+            jobSearch.setLoading( loading );
             jobSearch.search(true);
 
             lv.setAdapter(jobSearchAdapter);
