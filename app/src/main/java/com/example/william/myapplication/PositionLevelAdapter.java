@@ -66,7 +66,7 @@ public class PositionLevelAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_checked, parent, false);
+            v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
         }
         PositionLevel c = (PositionLevel) getItem(position);
         TextView tvName = (TextView) v.findViewById(android.R.id.text1);

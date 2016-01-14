@@ -80,7 +80,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             });
 
             //Log.e("position%2", ""+(position%2));
-            if( position%2 == 0 ){
+            if( position%2 == 1 ){
                 v.setBackgroundColor( context.getResources().getColor(R.color.bright_white));
             }
 
@@ -91,16 +91,17 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                 salary = "Salary undisclosed";
             }else{
                 String currency = p.optString("currency");
-                salary = currency +" "+ p.optInt("salary_min")+" - "+ p.optInt("salary_max");
+                salary = currency +" "+ p.optInt("salary_min")+" - "+currency +" "+ p.optInt("salary_max");
                 vSalary.setTextColor(context.getResources().getColor(R.color.green));
             }
             vSalary.setText(salary);
 
-            ((TextView) v.findViewById(R.id.company_name)).setText( p.optString("company_name") );
+            ((TextView) v.findViewById(R.id.company_name)).setText(p.optString("company_name") );
             ((TextView) v.findViewById(R.id.job_location)).setText(p.optString("job_location"));
             ((TextView) v.findViewById(R.id.job_type)).setText(p.optString("job_type"));
-            ((TextView) v.findViewById(R.id.date_closed)).setText( Jenjobs.date( p.optString("date_closed"), "dd MMM yyyy", "yyyy-MM-dd hh:mm:ss" ) );
+            ((TextView) v.findViewById(R.id.date_closed)).setText( Jenjobs.date(p.optString("date_closed"), "dd MMM yyyy", "yyyy-MM-dd hh:mm:ss" ) );
             ((TextView) v.findViewById(R.id.job_description)).setText(Html.fromHtml(p.optString("job_desc_brief")));
+            ((TextView) v.findViewById(R.id.job_spec)).setText(Html.fromHtml(p.optString("job_spec")));
         }
 
         return v;

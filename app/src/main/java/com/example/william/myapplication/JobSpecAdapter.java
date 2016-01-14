@@ -64,7 +64,7 @@ public class JobSpecAdapter extends BaseAdapter implements ListAdapter{
         TextView tvName = (TextView) v.findViewById(android.R.id.text1);
         tvName.setText(c.name);
         tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
-        v.setBackgroundColor(context.getResources().getColor(R.color.white));
+        //v.setBackgroundColor(context.getResources().getColor(R.color.white));
 
         return v;
     }
