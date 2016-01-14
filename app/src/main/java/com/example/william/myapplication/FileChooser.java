@@ -1,5 +1,6 @@
 package com.example.william.myapplication;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Environment;
@@ -18,7 +19,7 @@ import java.util.Arrays;
 public class FileChooser {
     private static final String PARENT_DIR = "..";
 
-    private final Context context;
+    private final Activity activity;
     private ListView list;
     private Dialog dialog;
     private File currentPath;
@@ -41,10 +42,10 @@ public class FileChooser {
 
     private FileSelectedListener fileListener;
 
-    public FileChooser(Context context) {
-        this.context = context;
-        dialog = new Dialog(context);
-        list = new ListView(context);
+    public FileChooser(Activity activity) {
+        this.activity = activity;
+        dialog = new Dialog(activity);
+        list = new ListView(activity);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override public void onItemClick(AdapterView<?> parent, View view, int which, long id) {
                 String fileChosen = (String) list.getItemAtPosition(which);
@@ -113,7 +114,7 @@ public class FileChooser {
 
             // refresh the user interface
             dialog.setTitle(currentPath.getPath());
-            list.setAdapter(new ArrayAdapter(context, android.R.layout.simple_list_item_1, fileList) {
+            list.setAdapter(new ArrayAdapter(activity, android.R.layout.simple_list_item_1, fileList) {
                 @Override public View getView(int pos, View view, ViewGroup parent) {
                     view = super.getView(pos, view, parent);
                     ((TextView) view).setSingleLine(true);
