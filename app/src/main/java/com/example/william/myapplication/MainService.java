@@ -4,11 +4,13 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -92,35 +94,43 @@ public class MainService extends Service{
         return START_STICKY;
     }
 
+    final Handler handler = new Handler();
+
+    Runnable updateData = new Runnable(){
+        @Override
+        public void run() {
+                    // TODO - check for network connectivity first, only then can proceed
+
+            Cursor applications = tableApplication.getActiveApplication();
+            Log.e("active apps",""+applications.getCount());
+            if (applications.getCount() > 0) {
+                applications.moveToFirst();
+
+                JSONArray arr = new JSONArray();
+                while (!applications.isAfterLast()) {
+                    int postId = applications.getInt(2);
+                    arr.put(postId);
+                    applications.moveToNext();
+                }
+
+                String[] params = {Jenjobs.APPLICATION_URL + "?id=" + arr.toString() + "&access-token=" + accessToken};
+                Log.e("url",params[0]);
+                new CheckApplication().execute(params);
+            }
+            applications.close();
+
+            handler.postDelayed(updateData, 30000);
+        }
+    };
+
     private void handleCommand(Intent intent){
         mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
         tableApplication = new TableApplication(getApplicationContext());
+        sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
         if( accessToken != null ){
-
-            new android.os.Handler().postDelayed(new Runnable() {
-                public void run() {
-                    // TODO - check for network connectivity first, only then can proceed
-                    Calendar cal = Calendar.getInstance();
-                    Date theDate = cal.getTime();
-                    Log.e("appurl", ""+theDate.getTime());
-
-                    Cursor applications = tableApplication.getActiveApplication();
-                    if (applications.getCount() > 0) {
-                        JSONArray arr = new JSONArray();
-                        while (!applications.isAfterLast()) {
-                            int postId = applications.getInt(2);
-                            arr.put(postId);
-                            applications.moveToNext();
-                        }
-
-                        String[] params = {Jenjobs.APPLICATION_URL + "?id=" + arr.toString() + "access-token=" + accessToken};
-                        new CheckApplication().execute(params);
-                    }
-                    applications.close();
-                }
-            }, 30000);
+            handler.postDelayed(updateData, 30000);
         }
     }
 
@@ -149,7 +159,7 @@ public class MainService extends Service{
                 String responseString = JenHttpRequest.readInputStreamAsString(is);
                 _response = JenHttpRequest.decodeJsonArrayString(responseString);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("err", e.getMessage());
             }
             return _response;
         }

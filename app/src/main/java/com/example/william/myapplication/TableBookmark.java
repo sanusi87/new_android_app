@@ -20,6 +20,7 @@ public class TableBookmark extends SQLiteOpenHelper{
     */
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableBookmark.TABLE_NAME
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+            "title TEXT, " +
             "post_id INTEGER, " +
             "date_added NUMERIC," +
             "date_closed NUMERIC);";

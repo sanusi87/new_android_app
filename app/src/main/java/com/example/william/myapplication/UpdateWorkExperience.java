@@ -69,7 +69,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
         tableJobRole = new TableJobRole(this);
 
         int savedId = 0;
-        int selectedWork = 0;
+        int selectedWork = -1;
 
         sharedPreferences = getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPreferences.getString("access_token", null);
@@ -125,6 +125,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
         final EditText exp = (EditText)findViewById(R.id.experience_text);
 
         Bundle extra = getIntent().getExtras();
+        Log.e("extra", ""+extra);
         if( extra != null ){
             // for updating existing job
             currentId = extra.getInt("id");
@@ -233,9 +234,9 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     errors.add("Please specify the month and year you start this work.");
                 }
 
-                Log.e("invalid", ""+Spinner.INVALID_POSITION);
-                Log.e("monthEnd", ""+monthEnd.getSelectedItemPosition());
-                Log.e("yearEnd", ""+yearEnd.getSelectedItemPosition());
+                //Log.e("invalid", ""+Spinner.INVALID_POSITION);
+                //Log.e("monthEnd", ""+monthEnd.getSelectedItemPosition());
+                //Log.e("yearEnd", ""+yearEnd.getSelectedItemPosition());
                 if( monthEnd.getSelectedItemPosition() != 0 || yearEnd.getSelectedItemPosition() != 0 ){
                     errors.add("Please specify both resignation month and year, or left both blank.");
                 }
@@ -350,15 +351,14 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     } catch (JSONException e) {
                         Log.e("jsonExcpt", e.getMessage());
                     }
-                    Log.e("obj", obj.toString());
+                    //Log.e("obj", obj.toString());
                     String[] s = {url, obj.toString()};
                     new PostWorkExp().execute(s);
 
                     Intent intent = new Intent();
                     intent.putExtra("id", currentId);
-                    if( finalSelectedWork > 0 ){
-                        intent.putExtra("selectedWork", finalSelectedWork);
-                    }
+                    Log.e("finalSelectedWork", ""+finalSelectedWork);
+                    intent.putExtra("selectedWork", finalSelectedWork);
                     setResult(Activity.RESULT_OK, intent);
                     finish();
                 }else{
