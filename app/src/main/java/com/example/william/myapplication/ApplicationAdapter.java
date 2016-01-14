@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
     private Context context;
@@ -113,7 +114,7 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
 
         positionTitle.setText( theApplication[6] );
         applicationDate.setText( theApplication[4] );
-        String applicationStatus = "";
+        String applicationStatus;
         int appStat = Integer.valueOf(theApplication[3]);
         if( appStat == TableApplication.STATUS_HIRED ) {
             applicationStatus = "Successful";
@@ -125,10 +126,10 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
             applicationStatus = "Processing";
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-        Date strDate = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+
         try {
-            strDate = sdf.parse( theApplication[7] );
+            Date strDate = sdf.parse( theApplication[7] );
             if (System.currentTimeMillis() > strDate.getTime()) {
                 applicationStatus = "Job Closed";
             }
@@ -152,7 +153,7 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
             @Override
             public void onClick(View v) {
                 String[] params = {Jenjobs.APPLICATION_URL+"/"+postId+"?access-token="+accessToken};
-                new DeleteRequest().execute();
+                new DeleteRequest().execute(params);
             }
         });
 
