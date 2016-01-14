@@ -324,7 +324,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }
 
         private void setupProfileFragment(View rootView) {
-
             profileLayout = (LinearLayout) rootView.findViewById(R.id.profileLayout);
             TableProfile tProfile = new TableProfile(getActivity());
             Profile theProfile = tProfile.getProfile();
@@ -354,15 +353,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             if( _dob != null ){
                 dob.setText( Jenjobs.date(_dob, null, "yyyy-MM-dd") );
             }
-
-            Button buttonUpdateProfile = (Button)rootView.findViewById(R.id.buttonUpdateProfile);
-            buttonUpdateProfile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), UpdateProfile.class);
-                    getActivity().startActivityForResult(intent, UPDATE_PROFILE);
-                }
-            });
 
             ImageView profileImage = (ImageView) rootView.findViewById(R.id.profile_image);
             if( theProfile.photo_file != null ){
@@ -945,7 +935,13 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
         switch (sectionNumber) {
             case PROFILE_FRAGMENT:
-                return super.onOptionsItemSelected(item);
+                if( clickedItem == R.id.action_update_profile ){
+                    Intent intent = new Intent(getApplicationContext(), UpdateProfile.class);
+                    startActivityForResult(intent, UPDATE_PROFILE);
+                    return true;
+                }else{
+                    return super.onOptionsItemSelected(item);
+                }
             case JOB_FRAGMENT:
                 if( clickedItem == R.id.filter_job_button ){
                     Intent intent = new Intent();
@@ -973,7 +969,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         MenuInflater inflater = getMenuInflater();
         switch (sectionNumber) {
             case PROFILE_FRAGMENT:
-                //inflater.inflate(R.menu.profile, menu);
+                inflater.inflate(R.menu.profile, menu);
                 break;
             case JOB_FRAGMENT:
                 inflater.inflate(R.menu.job_search_menu, menu);
