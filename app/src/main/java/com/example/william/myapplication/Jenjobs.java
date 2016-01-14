@@ -26,6 +26,8 @@ public class Jenjobs {
     public static final String JOB_SPEC_URL = "http://api.jenjobs.com/parameters/job-spec";
     public static final String JOB_DETAILS = "http://api.jenjobs.com/jobs/search";
     public static final String ATTACH_RESUME = "http://api.jenjobs.com/jobseeker/attachment";
+    public static final String REGISTRATION_URL = "http://api.jenjobs.com/register/jobseeker";
+    public static final String FORGOT_PASSWORD_URL = "http://api.jenjobs.com/forgot-password/jobseeker";
 
     public static HashMap getJobType(){
         HashMap<Integer, String> a = new HashMap<>();
