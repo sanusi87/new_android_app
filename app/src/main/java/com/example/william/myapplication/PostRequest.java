@@ -1,7 +1,12 @@
 package com.example.william.myapplication;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,7 +29,33 @@ import java.io.UnsupportedEncodingException;
 * */
 
 public class PostRequest extends AsyncTask<String, Void, JSONObject> {
+
+    public static int UPLOAD_RESUME_ATTACHMENT = 1;
+
+    private Context context;
+    private TextView textView;
+    private int REQUEST_TYPE = 0;
+
+    SharedPreferences sharedPref;
+    String accessToken;
+    int js_profile_id;
+
     public PostRequest(){}
+
+    public PostRequest(Context context){
+        this.context = context;
+        sharedPref = context.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        accessToken = sharedPref.getString("access_token", null);
+        js_profile_id = sharedPref.getInt("js_profile_id", 0);
+    }
+
+    public void setViewToUpdate(TextView tv){
+        textView = tv;
+    }
+
+    public void setRequestType(int requestType){
+        REQUEST_TYPE = requestType;
+    }
 
     @Override
     protected JSONObject doInBackground(String... params) {
@@ -63,6 +94,22 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
     protected void onPostExecute(JSONObject result) {
         //super.onPostExecute(result);
         //Log.e("reqresult", ""+result);
+        if( result != null ){
+            if( REQUEST_TYPE == UPLOAD_RESUME_ATTACHMENT ){
+                // if successul
+                if( result.optInt( "status_code" ) == 1 ){
+                    if( textView != null ){
+                        textView.setText(result.optString("resume") );
+                    }
+
+                    TableProfile tableProfile = new TableProfile(context);
+                    ContentValues cv = new ContentValues();
+                    cv.put("resume_file", result.optString("resume_url"));
+                    tableProfile.updateProfile(cv, js_profile_id);
+                }
+                Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 }

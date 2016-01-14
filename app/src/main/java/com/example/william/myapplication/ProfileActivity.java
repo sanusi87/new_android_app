@@ -863,16 +863,21 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             * */
             updateAttachedResume = (LinearLayout)rootView.findViewById(R.id.updateAttachedResume);
             attachedResume = (TextView)rootView.findViewById(R.id.attachedResume);
+            if( theProfile.resume_file != null && theProfile.resume_file.length() > 0 ){
+                attachedResume.setText( theProfile.resume_file.substring( theProfile.resume_file.lastIndexOf("/")+1 , theProfile.resume_file.length() ) );
+            }
 
             updateAttachedResume.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new FileChooser(context).setFileListener(new FileChooser.FileSelectedListener() {
+                    String[] allowedExtension = {"doc","docx","odt","pdf","ppt","txt"};
+                    FileChooser fileChooser = new FileChooser(getActivity());
+                    fileChooser.setExtension(allowedExtension);
+                    fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
                         @Override
                         public void fileSelected(File file) {
-                            Log.e("file", ""+file);
-                            Log.e("file", ""+file.getName());
-                            Log.e("file", ""+file.getAbsolutePath());
+                            // file.getAbsolutePath() === /storage/emulated/0/Download/CG_resume.pdf
+                            // file.getName() === CG_resume.pdf
 
                             try {
                                 byte[] buffer = new byte[8192];
@@ -881,25 +886,26 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 InputStream inputStream = new FileInputStream(file);
                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                                while( (bytesRead = inputStream.read(buffer)) != -1 ){
-                                    baos.write( buffer, 0, bytesRead );
+                                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                    baos.write(buffer, 0, bytesRead);
                                 }
                                 byte[] byteArray = baos.toByteArray();
                                 String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-                                Log.e("encoded", encodedFile);
+                                //Log.e("encoded", encodedFile);
 
                                 JSONObject fileParam = new JSONObject();
                                 fileParam.put("name", file.getName());
                                 fileParam.put("attachment", encodedFile);
 
-                                /*
                                 String[] params = {
                                         Jenjobs.ATTACH_RESUME+"?access-token="+accessToken,
                                         fileParam.toString()
                                 };
-                                new PostRequest().execute(params);
-                                */
+                                PostRequest postRequest = new PostRequest(context);
+                                postRequest.setRequestType(PostRequest.UPLOAD_RESUME_ATTACHMENT);
+                                postRequest.setViewToUpdate(attachedResume);
+                                postRequest.execute(params);
 
                             } catch (FileNotFoundException e) {
                                 Toast.makeText(context, "File not found!", Toast.LENGTH_LONG).show();
@@ -908,6 +914,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             }
                         }
                     });
+                    fileChooser.showDialog();
                 }
             });
 
