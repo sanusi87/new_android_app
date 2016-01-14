@@ -24,17 +24,10 @@
                 android:textSize="18sp"
                 android:layout_weight="6" />
 
-            <Button
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:id="@+id/buttonUpdateProfile"
-                android:layout_weight="1"
-                android:background="@android:drawable/ic_menu_edit"
-                 />
-
         </LinearLayout>
 
-        <View style="@style/AppThemeBorderBottom" />
+        <View style="@style/AppThemeBorderBottom"
+            android:layout_marginBottom="10dp" />
 
         <LinearLayout
             android:orientation="horizontal"
