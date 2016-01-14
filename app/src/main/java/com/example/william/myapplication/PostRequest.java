@@ -61,8 +61,8 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
     protected JSONObject doInBackground(String... params) {
         JSONObject _response = null;
 
-        final HttpClient httpclient = new DefaultHttpClient();
-        final HttpPost httppost = new HttpPost( params[0] );
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost( params[0] );
 
         httppost.addHeader("Content-Type", "application/json");
         httppost.addHeader("Accept", "application/json");
