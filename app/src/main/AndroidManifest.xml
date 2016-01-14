@@ -58,7 +58,6 @@
         <activity
             android:name=".SelectPositionLevel"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".SelectSpecAndRole" />
         <activity
             android:name=".UpdateWorkExperience"
             android:label="@string/title_activity_update_work_experience" />
@@ -67,6 +66,7 @@
         <activity android:name=".SelectSingleJobSpec" />
         <activity android:name=".SelectJobRole" />
         <activity android:name=".SelectSingleJobRole" />
+        <activity android:name=".SelectJobType" />
         <activity
             android:name=".UpdateEducation"
             android:label="@string/title_activity_update_education" />
@@ -109,7 +109,6 @@
             android:name=".SelectGraduationYear"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".UpdateSalary" />
-        <activity android:name=".SelectJobType" />
         <activity
             android:name=".UpdateNoticePeriod"
             android:theme="@android:style/Theme.Dialog" />
