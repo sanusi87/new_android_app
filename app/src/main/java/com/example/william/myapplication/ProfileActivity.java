@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -38,6 +40,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -91,15 +97,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     public static final int UPDATE_ATTACHED_RESUME = 21;
     public static final int UPDATE_ADDITIONAL_INFO = 22;
     public static final int UPDATE_PROFILE = 23;
+    public static final int SELECT_RESUME_FILE = 24;
 
     private static TextView resumeVisibility;
     private static TextView jobSeeking;
     private static TextView jobPreference;
+    private static TextView attachedResume;
     private static LinearLayout skill;
     private static LinearLayout language;
     private static TextView additionalInfo;
     private static LinearLayout listOfWorkExp;
     private static LinearLayout listOfEducation;
+    private static LinearLayout updateAttachedResume;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -849,7 +858,55 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             /*
             * attached resume
             * */
+            updateAttachedResume = (LinearLayout)rootView.findViewById(R.id.updateAttachedResume);
+            attachedResume = (TextView)rootView.findViewById(R.id.attachedResume);
 
+            updateAttachedResume.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new FileChooser(context).setFileListener(new FileChooser.FileSelectedListener() {
+                        @Override
+                        public void fileSelected(File file) {
+                            Log.e("file", ""+file);
+                            Log.e("file", ""+file.getName());
+                            Log.e("file", ""+file.getAbsolutePath());
+
+                            try {
+                                byte[] buffer = new byte[8192];
+                                int bytesRead;
+
+                                InputStream inputStream = new FileInputStream(file);
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                                while( (bytesRead = inputStream.read(buffer)) != -1 ){
+                                    baos.write( buffer, 0, bytesRead );
+                                }
+                                byte[] byteArray = baos.toByteArray();
+                                String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+                                Log.e("encoded", encodedFile);
+
+                                JSONObject fileParam = new JSONObject();
+                                fileParam.put("name", file.getName());
+                                fileParam.put("attachment", encodedFile);
+
+                                /*
+                                String[] params = {
+                                        Jenjobs.ATTACH_RESUME+"?access-token="+accessToken,
+                                        fileParam.toString()
+                                };
+                                new PostRequest().execute(params);
+                                */
+
+                            } catch (FileNotFoundException e) {
+                                Toast.makeText(context, "File not found!", Toast.LENGTH_LONG).show();
+                            } catch (IOException | JSONException e) {
+                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
+            });
 
             /*
             * additional info

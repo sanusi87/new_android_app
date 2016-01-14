@@ -2,7 +2,6 @@ package com.example.william.myapplication;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,15 +24,7 @@ import java.io.UnsupportedEncodingException;
 * */
 
 public class PostRequest extends AsyncTask<String, Void, JSONObject> {
-    private View v;
-    private int viewType;
-
     public PostRequest(){}
-
-    public PostRequest( String url, String jsonObjectString, View v, int viewType ){
-        this.v = v; // TextView, EditText
-        this.viewType = viewType; // 1, 2
-    }
 
     @Override
     protected JSONObject doInBackground(String... params) {
