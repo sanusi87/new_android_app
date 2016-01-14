@@ -15,6 +15,7 @@ public class Jenjobs {
 
     public static final String PROFILE_URL = "http://api.jenjobs.com/jobseeker/profile";
     public static final String APPLICATION_URL = "http://api.jenjobs.com/jobseeker/application";
+    public static final String APPLICATION_STATUS_URL = "http://api.jenjobs.com/jobseeker/application-status";
     public static final String WORK_EXPERIENCE_URL = "http://api.jenjobs.com/jobseeker/work-experience";
     public static final String EDUCATION_URL = "http://api.jenjobs.com/jobseeker/qualification";
     public static final String JOB_PREFERENCE_URL = "http://api.jenjobs.com/jobseeker/job-preference";
@@ -27,7 +28,7 @@ public class Jenjobs {
     public static final String ATTACH_RESUME = "http://api.jenjobs.com/jobseeker/attachment";
 
     public static HashMap getJobType(){
-        HashMap a = new HashMap<Integer, String>();
+        HashMap<Integer, String> a = new HashMap<>();
         a.put(1, "Permanent");
         a.put(2, "Contract");
         a.put(3, "Part-Time/Temporary");
@@ -36,7 +37,7 @@ public class Jenjobs {
     }
 
     public static HashMap getJobLevel(){
-        HashMap a = new HashMap<Integer, String>();
+        HashMap<Integer, String> a = new HashMap<>();
         a.put(1, "Non-Executive");
         a.put(2, "Executive");
         a.put(3, "Management");
@@ -47,7 +48,7 @@ public class Jenjobs {
     }
 
     public static HashMap getCurrency(){
-        HashMap a = new HashMap<Integer, String>();
+        HashMap<Integer, String> a = new HashMap<>();
         a.put(1, "AUD");
         a.put(2, "THB");
         a.put(3, "EUR");
@@ -110,7 +111,7 @@ public class Jenjobs {
     "87": "Utilities"
     */
     public static HashMap getIndustry(){
-        HashMap a = new HashMap<Integer, String>();
+        HashMap<Integer, String> a = new HashMap<>();
         a.put(49, "Accounting Firms");
         a.put(50, "Advertising / PR / Events");
         a.put(51, "Aerospace / Aviation");
@@ -161,7 +162,7 @@ public class Jenjobs {
     }
     */
     public static HashMap getJobSeekingStatus(){
-        HashMap a = new HashMap<>();
+        HashMap<Integer, String> a = new HashMap<>();
         a.put(2, "Actively looking");
         a.put(3, "Open to good offer");
         a.put(4, "Satisfied with current job");
@@ -192,7 +193,7 @@ public class Jenjobs {
     }
     */
     public static HashMap getLanguage(){
-        HashMap a = new HashMap<Integer, String>();
+        HashMap<Integer, String> a = new HashMap<>();
         a.put(2, "Bahasa Melayu");
         a.put(3, "English");
         a.put(4, "French");
@@ -224,7 +225,7 @@ public class Jenjobs {
     }
     */
     public static HashMap getLanguageLevel(){
-        HashMap a = new HashMap<Integer, String>();
+        HashMap<Integer, String> a = new HashMap<>();
         a.put(1, "---");
         a.put(2, "Basic");
         a.put(3, "Good");
@@ -249,7 +250,7 @@ public class Jenjobs {
     }
     */
     public static HashMap getEducationLevel(){
-        HashMap a = new HashMap<Integer, String>();
+        HashMap<Integer, String> a = new HashMap<>();
         a.put(1, "Primary School/UPSR");
         a.put(2, "Secondary School/SRP/PMR");
         a.put(3, "Secondary School/\"O\" Level/SPM");
@@ -326,7 +327,7 @@ public class Jenjobs {
     }
     */
     public static HashMap getEducationField(){
-        HashMap a = new HashMap<Integer, String>();
+        HashMap<Integer, String> a = new HashMap<>();
         a.put(1, "Advertising/Media");
         a.put(2, "Agriculture");
         a.put(3, "Airline Transport");
@@ -387,7 +388,7 @@ public class Jenjobs {
     }
 
     public static HashMap getState(){
-        HashMap a = new HashMap();
+        HashMap<Integer, String> a = new HashMap<>();
         a.put(4, "Johor");
         a.put(10,"Kedah");
         a.put(22,"Kelantan");
@@ -408,7 +409,7 @@ public class Jenjobs {
     }
 
     public static HashMap getCountry(){
-        HashMap a = new HashMap<Integer, String>();
+        HashMap<Integer, String> a = new HashMap<>();
         a.put(1,"Afghanistan");
         a.put(2,"Albania");
         a.put(3,"Algeria");
@@ -649,9 +650,22 @@ public class Jenjobs {
     }
 
     public static HashMap getDialCode(){
-        HashMap a = new HashMap<Integer, String>();
+        HashMap<String, String> a = new HashMap<>();
         a.put("(+60)","Malaysia");
         a.put("(+44)","UK");
+        return a;
+    }
+
+    public static HashMap getApplicationStatus(){
+        HashMap<Integer, String> a = new HashMap<>();
+        a.put(0, "Unprocessed");
+        a.put(1, "Shortlisted");
+        a.put(2, "Interview");
+        a.put(4, "Rejected");
+        a.put(6, "KIV");
+        a.put(9, "Pre-Screened");
+        a.put(10, "Withdraw");
+        a.put(11, "Hired");
         return a;
     }
 
@@ -708,8 +722,7 @@ public class Jenjobs {
     }
 
     public static String[] listOfAvailabilityUnit(){
-        String[] a = {"Day", "Week", "Month"};
-        return a;
+        return new String[]{"Day", "Week", "Month"};
     }
 
 }
