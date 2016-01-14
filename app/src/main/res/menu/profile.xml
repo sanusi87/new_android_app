@@ -4,14 +4,9 @@
     tools:context="com.example.william.myapplication.ProfileActivity">
 
     <item
-        android:id="@+id/action_example"
-        android:title="@string/action_example"
-        app:showAsAction="withText|ifRoom" />
-
-    <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+        android:id="@+id/action_update_profile"
+        android:title="@string/update_profile"
+        android:icon="@android:drawable/ic_menu_edit"
+        app:showAsAction="always" />
 
 </menu>
