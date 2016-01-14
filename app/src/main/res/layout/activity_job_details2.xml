@@ -19,18 +19,23 @@
             android:id="@+id/applyButton" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/no_value"
             android:id="@+id/positionTitle"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/progressBar" />
+            android:id="@+id/progressBar"
+            android:indeterminate="true"
+            android:layout_marginTop="10dp" />
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
