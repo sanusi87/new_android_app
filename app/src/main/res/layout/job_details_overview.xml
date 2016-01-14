@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/location"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/jobType"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/jobLevel"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/jobSpecialisation"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/qualification"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/skill"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
@@ -174,7 +174,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/language"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
 
@@ -196,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_value"
                     android:id="@+id/closedOn"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
             </LinearLayout>
         </LinearLayout>
