@@ -3,6 +3,8 @@ package com.example.william.myapplication;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,6 +26,7 @@ public class JobSearch {
     private String defaultOrder = "o=date_posted";
     private int page = 1;
     private JobSearchAdapter adapter;
+    private ProgressBar loading;
 
     JobSearch(JobSearchAdapter adapter){
         orders.add(defaultOrder);
@@ -32,6 +35,10 @@ public class JobSearch {
 
     public void search(boolean newSearch){
         if( newSearch ){
+            if( loading != null ){
+                loading.setVisibility(View.VISIBLE);
+            }
+
             adapter.setJob(null);
             setPage(1);
         }
@@ -42,8 +49,8 @@ public class JobSearch {
 
     public void setKeyword(String keyword){
         if( keyword != null && keyword.length() > 0 ){
-            filters.add( "keyword="+keyword );
-            setOrderPreference( "relevance" );
+            filters.add("keyword=" + keyword);
+            setOrderPreference("relevance");
         }
     }
 
@@ -139,13 +146,17 @@ public class JobSearch {
 
     // setup search URL
     private String getSearchUrl(){
-        String filterUrl = "?page="+this.page + TextUtils.join("&", filters) + "&" + TextUtils.join("&", orders);
+        String filterUrl = "?page="+this.page + "&" + TextUtils.join("&", filters) + "&" + TextUtils.join("&", orders);
         Log.e("filter", filterUrl);
         return Jenjobs.JOB_DETAILS+filterUrl;
     }
 
     public void resetFilter(){
         filters.clear();
+    }
+
+    public void setLoading(ProgressBar loading) {
+        this.loading = loading;
     }
 
     // async task
@@ -167,9 +178,8 @@ public class JobSearch {
             httpget.addHeader("Content-Type", "application/json");
             httpget.addHeader("Accept", "application/json");
 
-            HttpResponse _http_response = null;
             try {
-                _http_response = httpclient.execute(httpget);
+                HttpResponse _http_response = httpclient.execute(httpget);
                 HttpEntity _entity = _http_response.getEntity();
                 InputStream is = _entity.getContent();
 
@@ -189,7 +199,6 @@ public class JobSearch {
 
         @Override
         protected void onPostExecute(final Object success) {
-            //Log.e("onPostEx", "" + success);
             if( success != null ){
                 ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
                 JSONObject jObj = (JSONObject) success;
@@ -204,6 +213,10 @@ public class JobSearch {
                     }
                     adapter.setJob( arr );
                     adapter.notifyDataSetChanged();
+
+                    if( loading != null ){
+                        loading.setVisibility(View.GONE);
+                    }
                 }
             }
         }

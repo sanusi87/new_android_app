@@ -27,6 +27,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -371,10 +372,12 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }
 
         private void setupJobFragment(View rootView) {
+            ProgressBar loading = (ProgressBar) rootView.findViewById(R.id.progressBar4);
             ListView lv = (ListView) rootView.findViewById(R.id.job_list_view);
             final JobSearchAdapter jobSearchAdapter = new JobSearchAdapter(getActivity());
 
             jobSearch = new JobSearch(jobSearchAdapter);
+            jobSearch.setLoading( loading );
             jobSearch.search(true);
 
             lv.setAdapter(jobSearchAdapter);
@@ -1014,7 +1017,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 KeywordFilter keywordFilter = (KeywordFilter) extra.get("keyword_filter");
                 if( keywordFilter != null ){
-                    jobSearch.setKeywordFilter(keywordFilter.name);
+                    jobSearch.setKeywordFilter(String.valueOf(keywordFilter.id));
                 }
 
                 String keyword = extra.getString("keyword");
@@ -1039,7 +1042,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ArrayList<String> _jobSpec = new ArrayList<>();
                     for(Object jobSpec : jobSpecs){
                         JobSpec __jobSpec = (JobSpec)jobSpec;
-                        _jobSpec.add(__jobSpec.name);
+                        _jobSpec.add(String.valueOf(__jobSpec.id));
                     }
                     jobSearch.setJobSpec(_jobSpec.toArray(new String[_jobSpec.size()]));
                 }
@@ -1049,7 +1052,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ArrayList<String> _jobRole = new ArrayList<>();
                     for(Object jobRole : jobRoles){
                         JobRole __jobRole = (JobRole)jobRole;
-                        _jobRole.add(__jobRole.name);
+                        _jobRole.add(String.valueOf(__jobRole.id));
                     }
                     jobSearch.setJobRole(_jobRole.toArray(new String[_jobRole.size()]));
                 }
@@ -1058,8 +1061,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 if( jobTypes != null && jobTypes.size() > 0 ){
                     ArrayList<String> _jobType = new ArrayList<>();
                     for(Object jobType : jobTypes){
-                        JobRole __jobType = (JobRole)jobType;
-                        _jobType.add(__jobType.name);
+                        JobType __jobType = (JobType)jobType;
+                        _jobType.add(String.valueOf(__jobType.id));
                     }
                     jobSearch.setJobType(_jobType.toArray(new String[_jobType.size()]));
                 }
@@ -1069,7 +1072,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ArrayList<String> _state = new ArrayList<>();
                     for(Object state : states){
                         State __state = (State)state;
-                        _state.add(__state.name);
+                        _state.add(String.valueOf(__state.id));
                     }
                     jobSearch.setState(_state.toArray(new String[_state.size()]));
                 }
@@ -1079,7 +1082,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ArrayList<String> _country = new ArrayList<>();
                     for(Object country : countries){
                         Country __country = (Country)country;
-                        _country.add(__country.name);
+                        _country.add(String.valueOf(__country.id));
                     }
                     jobSearch.setCountry(_country.toArray(new String[_country.size()]));
                 }
@@ -1089,7 +1092,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ArrayList<String> _positionLevel = new ArrayList<>();
                     for(Object positionLevel : positionLevels){
                         PositionLevel __positionLevel = (PositionLevel)positionLevel;
-                        _positionLevel.add(__positionLevel.name);
+                        _positionLevel.add(String.valueOf(__positionLevel.id));
                     }
                     jobSearch.setJobLevel(_positionLevel.toArray(new String[_positionLevel.size()]));
                 }

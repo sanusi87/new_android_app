@@ -4,20 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/durationPeriod"
-        android:layout_marginBottom="10dp" />
+        style="@style/AppThemePadding10">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/durationPeriod" />
+    </LinearLayout>
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:id="@+id/listOfPeriod"
-        android:layout_marginBottom="10dp"
-        android:choiceMode="singleChoice" />
+        android:choiceMode="singleChoice"
+        android:layout_weight="1" />
 
     <LinearLayout
         android:orientation="horizontal"

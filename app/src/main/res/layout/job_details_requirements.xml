@@ -24,6 +24,6 @@
             android:layout_height="wrap_content"
             android:text="@string/no_value"
             android:id="@+id/description"
-            android:textColor="@android:color/black" />
+            style="@style/AppThemeBaseLabelSub" />
     </LinearLayout>
 </ScrollView>

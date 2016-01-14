@@ -3,24 +3,23 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f3f3f3"
-    style="@style/AppThemePadding5">
+    style="@style/AppThemePadding10">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/job_title"
         android:id="@+id/job_title"
-        android:textColor="#096cc3" />
+        android:textColor="#096cc3"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/company"
-        android:id="@+id/company_name"
-        android:textColor="#666666" />
+        android:id="@+id/company_name" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -120,10 +119,22 @@
     </LinearLayout>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/job_description"
         android:id="@+id/job_description"
-        android:textColor="@color/light_gray" />
+        android:textColor="@color/light_gray"
+        android:padding="10dp" />
+
+    <View style="@style/AppThemeSeparator"
+        android:visibility="gone" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/no_value"
+        android:id="@+id/job_spec"
+        android:visibility="gone" />
 </LinearLayout>

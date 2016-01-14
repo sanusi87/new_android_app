@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class CurrencyAdapter extends BaseAdapter implements ListAdapter{
     public ArrayList<MyCurrency> currencies = new ArrayList<>();
@@ -19,14 +20,13 @@ public class CurrencyAdapter extends BaseAdapter implements ListAdapter{
     public CurrencyAdapter(Context context){
         this.context = context;
 
-        HashMap<Integer, String> fields = Jenjobs.getCurrency();
+        HashMap fields = Jenjobs.getCurrency();
         //ArrayList<JobSeekingStatus> tempArr = new ArrayList<>();
 
-        Iterator i = fields.entrySet().iterator();
-        while( i.hasNext() ){
-            HashMap.Entry e = (HashMap.Entry)i.next();
+        for (Object o : fields.entrySet()) {
+            HashMap.Entry e = (HashMap.Entry) o;
             //tempArr.add(new JobSeekingStatus( (int)e.getKey(), String.valueOf(e.getValue()) ));
-            currencies.add(new MyCurrency( (int)e.getKey(), String.valueOf(e.getValue()) ));
+            currencies.add(new MyCurrency((int) e.getKey(), String.valueOf(e.getValue())));
         }
     }
 
@@ -57,7 +57,7 @@ public class CurrencyAdapter extends BaseAdapter implements ListAdapter{
         TextView tvName = (TextView) v.findViewById(android.R.id.text1);
         tvName.setText(c.name);
         tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
-        v.setBackgroundColor(context.getResources().getColor(R.color.white));
+        //v.setBackgroundColor(context.getResources().getColor(R.color.white));
 
         return v;
     }

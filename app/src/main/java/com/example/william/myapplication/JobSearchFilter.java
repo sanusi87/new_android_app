@@ -313,7 +313,7 @@ public class JobSearchFilter extends Activity {
         }else if( requestCode == INTENT_GET_TYPE ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                ArrayList<JobType> selectedValues = (ArrayList<JobType>) filters.get("jobtype");
+                ArrayList<JobType> selectedValues = (ArrayList<JobType>) filters.get("jobType");
                 ArrayList<String> selectedLabels = new ArrayList<>();
 
                 if( selectedValues != null ){

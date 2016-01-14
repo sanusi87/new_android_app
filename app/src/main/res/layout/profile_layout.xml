@@ -232,16 +232,4 @@
                 style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/online_resume"
-                android:id="@+id/online_resume_button" />
-        </LinearLayout>
-
-    </LinearLayout>
+</LinearLayout>
