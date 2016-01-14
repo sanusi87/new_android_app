@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,11 +22,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 
 public class MainService extends Service{
@@ -36,6 +40,7 @@ public class MainService extends Service{
     String accessToken;
 
     TableApplication tableApplication;
+    HashMap applicationStatus;
 
     public class LocalBinder extends Binder {
         MainService getService() {
@@ -79,8 +84,8 @@ public class MainService extends Service{
     }
 
     // This is the old onStart method that will be called on the pre-2.0
-// platform.  On 2.0 or later we override onStartCommand() so this
-// method will not be called.
+    // platform.  On 2.0 or later we override onStartCommand() so this
+    // method will not be called.
     @Override
     public void onStart(Intent intent, int startId) {
         handleCommand(intent);
@@ -94,15 +99,14 @@ public class MainService extends Service{
         return START_STICKY;
     }
 
+    // +- setInterval()  - to run for every 30 seconds
     final Handler handler = new Handler();
-
     Runnable updateData = new Runnable(){
         @Override
         public void run() {
-                    // TODO - check for network connectivity first, only then can proceed
-
+            // TODO - check for network connectivity first, only then can proceed
             Cursor applications = tableApplication.getActiveApplication();
-            Log.e("active apps",""+applications.getCount());
+            //Log.e("active apps",""+applications.getCount());
             if (applications.getCount() > 0) {
                 applications.moveToFirst();
 
@@ -113,8 +117,8 @@ public class MainService extends Service{
                     applications.moveToNext();
                 }
 
-                String[] params = {Jenjobs.APPLICATION_URL + "?id=" + arr.toString() + "&access-token=" + accessToken};
-                Log.e("url",params[0]);
+                String[] params = {Jenjobs.APPLICATION_STATUS_URL + "?id=" + arr.toString() + "&access-token=" + accessToken};
+                //Log.e("url",params[0]);
                 new CheckApplication().execute(params);
             }
             applications.close();
@@ -127,6 +131,7 @@ public class MainService extends Service{
         mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
         tableApplication = new TableApplication(getApplicationContext());
+        applicationStatus = Jenjobs.getApplicationStatus();
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
         if( accessToken != null ){
@@ -145,9 +150,9 @@ public class MainService extends Service{
         @Override
         protected JSONArray doInBackground(String... params) {
             JSONArray _response = null;
-            Log.e("appurl", ""+params[0]);
-            final HttpClient httpclient = new DefaultHttpClient();
-            final HttpGet httpget = new HttpGet(params[0]);
+            //Log.e("appurl", ""+params[0]);
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpGet httpget = new HttpGet(params[0]);
             httpget.addHeader("Content-Type", "application/json");
             httpget.addHeader("Accept", "application/json");
 
@@ -168,7 +173,29 @@ public class MainService extends Service{
         protected void onPostExecute(JSONArray success) {
             Log.e("onGet", "" + success);
             if( success != null ){
+                for(int i=0;i<success.length();i++){
+                    try {
+                        JSONObject app = success.getJSONObject(i);
 
+                        int status = app.optInt("status");
+                        int applicationId = app.optInt("id");
+                        Log.e("status", ""+status);
+                        Log.e("appid", ""+applicationId);
+
+                        String statusText = (String) applicationStatus.get(status);
+
+                        if( tableApplication.isDifferentApplicationStatus( applicationId, status ) ){
+                            showNotification();
+
+                            ContentValues cv = new ContentValues();
+                            cv.put("status", status);
+                            cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
+                            tableApplication.updateApplication(cv, applicationId);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
