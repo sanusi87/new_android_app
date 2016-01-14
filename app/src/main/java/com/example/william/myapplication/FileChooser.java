@@ -24,9 +24,9 @@ public class FileChooser {
     private File currentPath;
 
     // filter on file extension
-    private String extension = null;
-    public void setExtension(String extension) {
-        this.extension = (extension == null) ? null : extension.toLowerCase();
+    private String[] extension = null;
+    public void setExtension(String[] extension) {
+        this.extension = (extension == null) ? null : extension;
     }
 
     // file selection event handling
@@ -89,7 +89,8 @@ public class FileChooser {
                         } else if (extension == null) {
                             return true;
                         } else {
-                            return file.getName().toLowerCase().endsWith(extension);
+                            //return file.getName().toLowerCase().endsWith(extension);
+                            return extensionCheck( file.getName().toLowerCase() );
                         }
                     } else {
                         return false;
@@ -133,5 +134,19 @@ public class FileChooser {
         } else {
             return new File(currentPath, fileChosen);
         }
+    }
+
+    /*
+    * check for extension
+    * */
+    private boolean extensionCheck( String fileName ){
+        if( this.extension != null ){
+            for( String _extension : this.extension ){
+                if( fileName.endsWith(_extension) ){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
