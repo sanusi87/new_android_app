@@ -64,6 +64,7 @@
                 android:id="@+id/login_button"
                 android:layout_weight="1"
                 android:layout_marginRight="5dp" />
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -84,7 +85,16 @@
                 android:layout_height="wrap_content"
                 android:text="@string/forgot_text"
                 android:id="@+id/forgot_button"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/job_search"
+                android:id="@+id/job_search"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"/>
 
         </LinearLayout>
     </LinearLayout>
