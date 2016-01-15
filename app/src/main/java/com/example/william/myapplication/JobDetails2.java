@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,21 +46,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class JobDetails2 extends ActionBarActivity {
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
 
     TextView positionTitle;
     int jobPostingId = 0;
@@ -122,7 +108,7 @@ public class JobDetails2 extends ActionBarActivity {
             public void onClick(View v) {
                 Profile profile = tableProfile.getProfile();
 
-                ArrayList<String> errors = new ArrayList<String>();
+                ArrayList<String> errors = new ArrayList<>();
 
                 // if got resume file, send application without checking anything
                 if( profile.resume_file != null && profile.resume_file.length() > 0 ){
@@ -228,12 +214,53 @@ public class JobDetails2 extends ActionBarActivity {
         });
 
         loading = (ProgressBar)findViewById(R.id.progressBar);
+        LinearLayout ll = (LinearLayout)findViewById(R.id.loginLayout);
+        TextView notice = (TextView)ll.findViewById(R.id.noticeText);
+        notice.setText("Please login or register to apply.");
+
+        // hide apply, show login+register
+        if( accessToken == null ){
+            ll.setVisibility(View.VISIBLE);
+            applyButton.setVisibility(View.GONE);
+        }
+
+        // check for application
+        if( jobPostingId > 0 ){
+            Cursor application = tableApplication.getApplication(jobPostingId);
+            if( application.getCount() > 0 ){
+                applyButton.setText(getResources().getString(R.string.already_applied));
+                applyButton.setOnClickListener(null);
+            }else{
+                applyButton.setEnabled(true);
+                applyButton.setClickable(true);
+            }
+        }
 
         Cursor jobBookmark = tableBookmark.getBookmark(jobPostingId);
-        if( jobBookmark.moveToFirst() ){
+        //if( jobBookmark.moveToFirst() ){
             // if bookmark found
-        }
+        //}
         jobBookmark.close();
+
+        // handle login button
+        Button loginButton = (Button)findViewById(R.id.login_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // handle register button
+        Button registerButton = (Button)findViewById(R.id.register_button);
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -362,20 +389,11 @@ public class JobDetails2 extends ActionBarActivity {
             jobDetails = success;
             Log.e("onPostEx", "" + success);
             if( success != null ){
-                mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-                mViewPager = (ViewPager) findViewById(R.id.container);
+                SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+                ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
                 mViewPager.setAdapter(mSectionsPagerAdapter);
                 positionTitle.setText(success.optString("title"));
                 loading.setVisibility(View.GONE);
-
-                Cursor application = tableApplication.getApplication(jobPostingId);
-                if( application.getCount() > 0 ){
-                    applyButton.setText(getResources().getString(R.string.already_applied));
-                    applyButton.setOnClickListener(null);
-                }else{
-                    applyButton.setEnabled(true);
-                    applyButton.setClickable(true);
-                }
             }else{
                 Cursor job = tableJob.getJob(jobPostingId);
                 if( job.moveToFirst() ){
