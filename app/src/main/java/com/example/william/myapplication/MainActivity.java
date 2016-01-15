@@ -35,6 +35,9 @@ public class MainActivity extends Activity {
     private EditText emailView;
     private EditText passwordView;
     Button loginButton;
+    Button registerButton;
+    Button forgotButton;
+    Button jobSearch;
     private UserLoginTask mAuthTask = null;
 
     @Override
@@ -55,8 +58,9 @@ public class MainActivity extends Activity {
         passwordView = (EditText) findViewById(R.id.password_input);
 
         loginButton = (Button) findViewById(R.id.login_button);
-        Button registerButton = (Button) findViewById(R.id.register_button);
-        Button forgotButton = (Button) findViewById(R.id.forgot_button);
+        registerButton = (Button) findViewById(R.id.register_button);
+        forgotButton = (Button) findViewById(R.id.forgot_button);
+        jobSearch = (Button) findViewById(R.id.job_search);
 
         // handle login button click
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -67,8 +71,8 @@ public class MainActivity extends Activity {
 
                 mAuthTask = new UserLoginTask(email, password);
                 mAuthTask.execute((Void) null);
-                loginButton.setEnabled(false);
-                loginButton.setClickable(false);
+
+                toggleButtonState(false);
             }
         });
 
@@ -90,6 +94,14 @@ public class MainActivity extends Activity {
             }
         });
 
+        jobSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), JobSearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
         // check for sharedPreference data
         String accessToken = sharedPref.getString("access_token", null);
         if( accessToken != null ){
@@ -98,6 +110,17 @@ public class MainActivity extends Activity {
             startActivity(intent);
             finish();
         }
+    }
+
+    public void toggleButtonState( boolean state ){
+        loginButton.setEnabled(state);
+        loginButton.setClickable(state);
+        registerButton.setEnabled(state);
+        registerButton.setClickable(state);
+        jobSearch.setEnabled(state);
+        jobSearch.setClickable(state);
+        forgotButton.setEnabled(state);
+        forgotButton.setClickable(state);
     }
 
     // onPause event
@@ -122,7 +145,7 @@ public class MainActivity extends Activity {
             Object _response = null;
 
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost( "http://api.jenjobs.com/oauth2/token" );
+            HttpPost httppost = new HttpPost( Jenjobs.AUTH_URL );
             httppost.addHeader("Content-Type", "application/json");
             httppost.addHeader("Accept", "application/json");
 
@@ -184,8 +207,7 @@ public class MainActivity extends Activity {
                         Toast.makeText(getApplicationContext(), "Unknown error!", Toast.LENGTH_LONG).show();
                     }
 
-                    loginButton.setEnabled(true);
-                    loginButton.setClickable(true);
+                    toggleButtonState(true);
                 }
             }
         }

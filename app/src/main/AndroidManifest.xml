@@ -126,7 +126,8 @@
             android:label="@string/title_activity_job_details2" />
         <activity
             android:name=".SelectKeywordFilter"
-            android:theme="@android:style/Theme.Dialog"/>
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".JobSearchActivity"></activity>
     </application>
 
 </manifest>
