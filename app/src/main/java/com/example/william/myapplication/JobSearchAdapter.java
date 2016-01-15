@@ -34,9 +34,6 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
         }
     }
 
-
-    // ---------
-
     @Override
     public int getCount() {
         return jobList != null ? jobList.size() : 0;
@@ -80,9 +77,9 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             });
 
             //Log.e("position%2", ""+(position%2));
-            if( position%2 == 1 ){
-                v.setBackgroundColor( context.getResources().getColor(R.color.bright_white));
-            }
+            //if( position%2 == 1 ){
+            //    v.setBackgroundColor( context.getResources().getColor(R.color.bright_white));
+            //}
 
             int showSalary = p.optInt( "salary_display" );
             String salary;
