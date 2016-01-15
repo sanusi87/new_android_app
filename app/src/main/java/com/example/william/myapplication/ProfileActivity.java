@@ -196,13 +196,17 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
 
             defaultPage = extras.getInt("defaultPage", defaultPage);
-            if( defaultPage == APPLICATION_FRAGMENT ){
-                mNavigationDrawerFragment.setTargetFragment(PlaceholderFragment.newInstance(APPLICATION_FRAGMENT), 0);
+            Log.e("intent_defaultPage", ""+defaultPage);
+
+            if( defaultPage > 0 ){
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                if( defaultPage == APPLICATION_FRAGMENT ){
+                    fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(APPLICATION_FRAGMENT)).commit();
+                }
             }
         }
 
         context = getApplicationContext();
-
         tableSkill = new TableSkill(context);
         tableWorkExperience = new TableWorkExperience(context);
         tableEducation = new TableEducation(context);
@@ -215,12 +219,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        Log.e("selectedPos", ""+position);
+        Log.e("_position", ""+position);
+        Log.e("_defaultPage", ""+defaultPage);
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
     }
 
     public void onSectionAttached(int number) {

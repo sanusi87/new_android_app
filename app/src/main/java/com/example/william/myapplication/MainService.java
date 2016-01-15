@@ -83,6 +83,7 @@ public class MainService extends Service{
             .setContentTitle(statusText)  // the label of the entry
             .setContentText(contentText)  // the contents of the entry
             .setContentIntent(contentIntent)  // The intent to send when the entry is clicked
+            .setAutoCancel(true)
             .build();
 
         // Send the notification.
@@ -179,7 +180,7 @@ public class MainService extends Service{
             Log.e("onGet", "" + success);
             if( success != null ){
                 Intent intent = new Intent();
-                intent.putExtra("statusText", "Application status has been updated.");
+                intent.putExtra("statusText", "Notification");
                 intent.putExtra("defaultPage", ProfileActivity.APPLICATION_FRAGMENT);
                 intent.setClass(getApplicationContext(), ProfileActivity.class);
 
