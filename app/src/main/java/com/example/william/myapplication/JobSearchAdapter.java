@@ -97,7 +97,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             vSalary.setText(salary);
 
             ((TextView) v.findViewById(R.id.company_name)).setText(p.optString("company_name") );
-            ((TextView) v.findViewById(R.id.job_location)).setText(p.optString("job_location"));
+            ((TextView) v.findViewById(R.id.job_location)).setText(Html.fromHtml(p.optString("job_location")));
             ((TextView) v.findViewById(R.id.job_type)).setText(p.optString("job_type"));
             ((TextView) v.findViewById(R.id.date_closed)).setText( Jenjobs.date(p.optString("date_closed"), "dd MMM yyyy", "yyyy-MM-dd hh:mm:ss" ) );
             ((TextView) v.findViewById(R.id.job_description)).setText(Html.fromHtml(p.optString("job_desc_brief")));
