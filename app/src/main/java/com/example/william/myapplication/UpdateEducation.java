@@ -436,10 +436,12 @@ public class UpdateEducation extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(JSONObject result) {
-            if( result.optInt("id") > 0 ){
-                ContentValues cv = new ContentValues();
-                cv.put("_id", result.optInt("id"));
-                tableEducation.updateEducation(cv, currentEducationId);
+            if( result != null ) {
+                if (result.optInt("id") > 0) {
+                    ContentValues cv = new ContentValues();
+                    cv.put("_id", result.optInt("id"));
+                    tableEducation.updateEducation(cv, currentEducationId);
+                }
             }
         }
 

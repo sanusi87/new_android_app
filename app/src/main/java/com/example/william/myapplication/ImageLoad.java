@@ -39,7 +39,9 @@ public class ImageLoad extends AsyncTask<Void, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap result) {
         super.onPostExecute(result);
-        imageView.setImageBitmap(result);
+        if( result != null ){
+            imageView.setImageBitmap(result);
+        }
     }
 
 }

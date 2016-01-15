@@ -50,6 +50,8 @@ public class DeleteRequest extends AsyncTask<String, Void, JSONObject> {
 
     @Override
     protected void onPostExecute(JSONObject result) {
-        Log.e("deleted?", result.toString());
+        if( result != null ){
+            Log.e("deleted?", result.toString());
+        }
     }
 }

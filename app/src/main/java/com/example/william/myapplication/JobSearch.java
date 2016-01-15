@@ -173,8 +173,8 @@ public class JobSearch {
         protected Object doInBackground(Void... params) {
             Object _response = null;
 
-            final HttpClient httpclient = new DefaultHttpClient();
-            final HttpGet httpget = new HttpGet(_url);
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpGet httpget = new HttpGet(_url);
             httpget.addHeader("Content-Type", "application/json");
             httpget.addHeader("Accept", "application/json");
 
@@ -198,7 +198,7 @@ public class JobSearch {
 
 
         @Override
-        protected void onPostExecute(final Object success) {
+        protected void onPostExecute(Object success) {
             if( success != null ){
                 ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
                 JSONObject jObj = (JSONObject) success;
