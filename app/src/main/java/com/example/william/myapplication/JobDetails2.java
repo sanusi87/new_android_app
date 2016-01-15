@@ -352,7 +352,7 @@ public class JobDetails2 extends ActionBarActivity {
                 String responseString = JenHttpRequest.readInputStreamAsString(is);
                 _response = JenHttpRequest.decodeJsonObjectString(responseString);
             } catch (IOException e) {
-                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Network Error!", Toast.LENGTH_SHORT).show();
             }
             return _response;
         }
@@ -376,6 +376,17 @@ public class JobDetails2 extends ActionBarActivity {
                     applyButton.setEnabled(true);
                     applyButton.setClickable(true);
                 }
+            }else{
+                Cursor job = tableJob.getJob(jobPostingId);
+                if( job.moveToFirst() ){
+                    String savedJobDetails = job.getString(3);
+                    try {
+                        jobDetails = new JSONObject(savedJobDetails);
+                    } catch (JSONException e) {
+                        Log.e("err", e.getMessage());
+                    }
+                }
+                job.close();
             }
         }
     }
