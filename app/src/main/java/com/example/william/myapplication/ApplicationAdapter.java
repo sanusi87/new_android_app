@@ -30,17 +30,6 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
         Cursor _applications = tableApplication.getActiveApplication();
         if( _applications.moveToFirst() ){
             while( !_applications.isAfterLast() ){
-                /*
-                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //0
-                "_id INTEGER, " + //1
-                "post_id INTEGER, " + //2
-                "status INTEGER(3), " + //3
-                "date_created NUMERIC," + //4
-                "date_updated NUMERIC," + //5
-                "title TEXT," + //6
-                "closed NUMERIC//7
-                */
-
                 int id = _applications.getInt(0);
                 int idOnServer = _applications.getInt(1);
                 int postId = _applications.getInt(2);
@@ -119,18 +108,6 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
         }else{
             applicationStatus = "Processing";
         }
-
-        /*
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-        try {
-            Date strDate = sdf.parse( theApplication[7] );
-            if (System.currentTimeMillis() > strDate.getTime()) {
-                applicationStatus = "Job Closed";
-            }
-        } catch (ParseException e) {
-            Log.e("error", e.getMessage());
-        }
-        */
 
         if( theApplication[7].equals("1") ){
             applicationStatus = "Job Closed";
