@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -18,14 +19,15 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
     private Context context;
     public ArrayList<String[]> applications;
     public String accessToken;
+    private TableApplication tableApplication;
 
     public ApplicationAdapter( Context context, String accessToken ){
         this.context = context;
         applications = new ArrayList<>();
         this.accessToken = accessToken;
 
-        TableApplication tableApplication = new TableApplication(context);
-        Cursor _applications = tableApplication.getApplication(0);
+        tableApplication = new TableApplication(context);
+        Cursor _applications = tableApplication.getActiveApplication();
         if( _applications.moveToFirst() ){
             while( !_applications.isAfterLast() ){
                 /*
@@ -112,6 +114,8 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
             applicationStatus = "Received";
         }else if( appStat == TableApplication.STATUS_REJECTED ){
             applicationStatus = "Unsuccessful";
+        }else if( appStat == TableApplication.STATUS_CLOSED ){
+            applicationStatus = "Job Closed";
         }else{
             applicationStatus = "Processing";
         }
@@ -144,11 +148,18 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
             }
         });
 
+        final View finalV = v;
         withdrawButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View _v) {
                 String[] params = {Jenjobs.APPLICATION_URL+"/"+postId+"?access-token="+accessToken};
                 new DeleteRequest().execute(params);
+
+                boolean isDeleted = tableApplication.deleteApplication(postId);
+                if( isDeleted ){
+                    Toast.makeText(context, "Application withdrawn.", Toast.LENGTH_LONG).show();
+                    finalV.setVisibility(View.GONE);
+                }
             }
         });
 

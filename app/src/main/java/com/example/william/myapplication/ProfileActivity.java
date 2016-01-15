@@ -263,17 +263,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     private static LinearLayout profileLayout = null;
 
     public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private TextView sectionLabel;
         private static final String ARG_SECTION_NUMBER = "section_number";
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         public static PlaceholderFragment newInstance(int sectionNo) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -577,7 +568,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     String positionTitle = cw.getString(2);
                     String companyName = cw.getString(3);
                     String dateStart = cw.getString(12);
-                    String dateResign = cw.getString(13);
+                    //String dateResign = cw.getString(13);
 
                     final View v = getActivity().getLayoutInflater().inflate(R.layout.each_work_experience, null);
                     listOfWorkExp.addView(v);
