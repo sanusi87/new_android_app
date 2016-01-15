@@ -405,6 +405,13 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             ListView lv = (ListView)rootView.findViewById(R.id.listOfApplication);
             ApplicationAdapter applicationAdapter = new ApplicationAdapter(context, accessToken);
             lv.setAdapter(applicationAdapter);
+
+            int totalApplication = lv.getChildCount();
+            if( totalApplication == 0 ){
+                LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.no_item);
+                ll.setVisibility(View.VISIBLE);
+                ((TextView)ll.findViewById(R.id.noticeText)).setText("No active application found!");
+            }
         }
 
         private void setupSettingsFragment(View rootView) {
