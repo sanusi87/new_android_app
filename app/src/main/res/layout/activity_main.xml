@@ -4,31 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     style="@style/AppThemePadding10"
-    tools:context=".MainActivity">
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:indeterminate="true"
-        android:indeterminateBehavior="cycle"
-        android:layout_alignParentTop="true" />
+    tools:context=".MainActivity"
+    android:gravity="center_vertical">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/linearLayout"
-        android:baselineAligned="false"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView"
             android:contentDescription="@string/jenjobs_logo"
             android:src="@drawable/jenjobs_logo" />
 
@@ -36,7 +22,6 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp">
 
             <EditText
@@ -54,8 +39,7 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:layout_width="0dp"
@@ -78,7 +62,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/login_text"
                 android:id="@+id/login_button"
-                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:layout_marginRight="5dp" />
             <Button
@@ -86,7 +69,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/register_text"
                 android:id="@+id/register_button"
-                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:layout_marginLeft="5dp" />
 
@@ -98,18 +80,12 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/forgot_text"
                 android:id="@+id/forgot_button"
-                android:layout_gravity="center_horizontal"
                 android:layout_weight="1" />
 
         </LinearLayout>
-
-
     </LinearLayout>
-
-
-
 </RelativeLayout>

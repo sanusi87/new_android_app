@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -35,8 +34,8 @@ public class MainActivity extends Activity {
 
     private EditText emailView;
     private EditText passwordView;
+    Button loginButton;
     private UserLoginTask mAuthTask = null;
-    private ProgressBar mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +50,11 @@ public class MainActivity extends Activity {
         new TableProfile(this);
 
         sharedPref = this.getSharedPreferences(JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        mProgress = (ProgressBar) findViewById(R.id.progressBar);
-        mProgress.setVisibility(View.INVISIBLE);
 
         emailView = (EditText) findViewById(R.id.username_input);
         passwordView = (EditText) findViewById(R.id.password_input);
 
-        Button loginButton = (Button) findViewById(R.id.login_button);
+        loginButton = (Button) findViewById(R.id.login_button);
         Button registerButton = (Button) findViewById(R.id.register_button);
         Button forgotButton = (Button) findViewById(R.id.forgot_button);
 
@@ -65,12 +62,13 @@ public class MainActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProgress.setVisibility(View.VISIBLE);
                 String email = emailView.getText().toString();
                 String password = passwordView.getText().toString();
 
                 mAuthTask = new UserLoginTask(email, password);
                 mAuthTask.execute((Void) null);
+                loginButton.setEnabled(false);
+                loginButton.setClickable(false);
             }
         });
 
@@ -78,7 +76,8 @@ public class MainActivity extends Activity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -86,7 +85,8 @@ public class MainActivity extends Activity {
         forgotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -100,15 +100,12 @@ public class MainActivity extends Activity {
         }
     }
 
-
-
     // onPause event
     @Override
     public void onPause() {
         super.onPause();
 
     }
-
 
     public class UserLoginTask extends AsyncTask<Void, Void, JSONObject> {
 
@@ -122,19 +119,10 @@ public class MainActivity extends Activity {
 
         @Override
         protected JSONObject doInBackground(Void... params) {
-            /*
-            Intent intent = new Intent();
-            intent.putExtra("username", mEmail);
-            intent.putExtra("password", mPassword);
-            intent.putExtra("grant_type", "password");
-            intent.putExtra("client_id", "testclient");
-            intent.putExtra("client_secret", "testpass");
-            */
-
             Object _response = null;
 
-            final HttpClient httpclient = new DefaultHttpClient();
-            final HttpPost httppost = new HttpPost( "http://api.jenjobs.com/oauth2/token" );
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost( "http://api.jenjobs.com/oauth2/token" );
             httppost.addHeader("Content-Type", "application/json");
             httppost.addHeader("Accept", "application/json");
 
@@ -168,19 +156,6 @@ public class MainActivity extends Activity {
                 Log.e("IOException", e.getMessage());
             }
 
-            /*
-            JenHttpRequest jenReq = new JenHttpRequest(JenHttpRequest.POST_REQUEST, "http://api.jenjobs.com/oauth2/token", intent);
-            while( jenReq.response == null ){
-                // keep waiting
-            }
-
-            Log.e("response2", "" + jenReq.response);
-
-            if( jenReq.response != null ){
-                return (JSONObject)jenReq.response;
-            }
-            */
-
             return (JSONObject) _response;
         }
 
@@ -189,11 +164,6 @@ public class MainActivity extends Activity {
             mAuthTask = null;
 
             if (success != null) {
-                Log.e("finished", ""+success);
-                mProgress.setVisibility(View.INVISIBLE);
-
-                Log.e("finished3", ""+success.optString("name"));
-
                 if( success.optString("access_token") != null ){
                     SharedPreferences.Editor spEdit = sharedPref.edit();
                     spEdit.putString("access_token", success.optString("access_token"));
@@ -213,9 +183,10 @@ public class MainActivity extends Activity {
                     }else{
                         Toast.makeText(getApplicationContext(), "Unknown error!", Toast.LENGTH_LONG).show();
                     }
-                }
 
-                mProgress.setVisibility(View.INVISIBLE);
+                    loginButton.setEnabled(true);
+                    loginButton.setClickable(true);
+                }
             }
         }
 

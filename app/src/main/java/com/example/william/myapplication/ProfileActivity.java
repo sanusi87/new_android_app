@@ -129,6 +129,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     static TableJobPreference tableJobPreference;
     static TableLanguage tableLanguage;
 
+    // if this activity was opened by notification, set the default fragment to be opened,
+    // then updated it depends on the notification
+    int defaultPage = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,6 +193,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 //extras.remove("downloadData");
                 extras.clear();
+            }
+
+            defaultPage = extras.getInt("defaultPage", defaultPage);
+            if( defaultPage == APPLICATION_FRAGMENT ){
+                mNavigationDrawerFragment.setTargetFragment(PlaceholderFragment.newInstance(APPLICATION_FRAGMENT), 0);
             }
         }
 
