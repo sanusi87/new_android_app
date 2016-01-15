@@ -81,6 +81,7 @@ public class TableProfile extends SQLiteOpenHelper{
 		db.execSQL(TableAddress.SQL_CREATE_ENTRIES);
         db.execSQL(TableJobPreferenceLocation.SQL_CREATE_ENTRIES);
         db.execSQL(TableInvitation.SQL_CREATE_ENTRIES);
+        db.execSQL(TableForgotPassword.SQL_CREATE_ENTRIES);
 
         // insert subscription
         ContentValues cv1 = new ContentValues();
@@ -101,21 +102,23 @@ public class TableProfile extends SQLiteOpenHelper{
         // end insert subscription
 
         // insert settings
-        String[] ss = {"notification_alert"};
-        for( int i=0;i<ss.length;i++ ){
-            ContentValues cv8 = new ContentValues();
-            cv8.put("setting_key", ss[i]);
-            cv8.put("setting_value", 1);
-            db.insert(TableSettings.TABLE_NAME, null, cv8);
-        }
+        ContentValues cv88 = new ContentValues();
+        cv88.put("setting_key", "notification_alert");
+        cv88.put("setting_value", 1);
+        db.insert(TableSettings.TABLE_NAME, null, cv88);
 
-        String[] s = {"workexp", "education", "profile", "jobseek", "jobpref", "attachment", "language"};
-        for( int i=0;i<s.length;i++ ){
-            ContentValues cv8 = new ContentValues();
-            cv8.put("setting_key", "completeness_"+s[i]);
-            cv8.put("setting_value", false);
-            db.insert(TableSettings.TABLE_NAME, null, cv8);
-        }
+        ContentValues cv888 = new ContentValues();
+        cv888.put("setting_key", "max_password_reset_request");
+        cv888.put("setting_value", 4);
+        db.insert(TableSettings.TABLE_NAME, null, cv888);
+
+        //String[] s = {"workexp", "education", "profile", "jobseek", "jobpref", "attachment", "language"};
+        //for (String value : s) {
+        //    ContentValues cv8 = new ContentValues();
+        //    cv8.put("setting_key", "completeness_" + value);
+        //    cv8.put("setting_value", false);
+        //    db.insert(TableSettings.TABLE_NAME, null, cv8);
+        //}
         // end insert settings
 
         ArrayList<String[]> countries = TableCountry.initialise();
@@ -163,6 +166,7 @@ public class TableProfile extends SQLiteOpenHelper{
         db.execSQL(TableCountry.SQL_DELETE_ENTRIES);
         db.execSQL(TableAddress.SQL_DELETE_ENTRIES);
         db.execSQL(TableInvitation.SQL_DELETE_ENTRIES);
+        db.execSQL(TableForgotPassword.SQL_DELETE_ENTRIES);
         onCreate(db);
     }
 
@@ -184,6 +188,7 @@ public class TableProfile extends SQLiteOpenHelper{
         db.execSQL(TableCountry.SQL_DELETE_ENTRIES);
         db.execSQL(TableAddress.SQL_DELETE_ENTRIES);
         db.execSQL(TableInvitation.SQL_DELETE_ENTRIES);
+        db.execSQL(TableForgotPassword.SQL_DELETE_ENTRIES);
         onCreate(db);
     }
 
