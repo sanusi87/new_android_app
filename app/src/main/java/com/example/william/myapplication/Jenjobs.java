@@ -13,6 +13,7 @@ public class Jenjobs {
     public static final String DATABASE_NAME = "jenjobs";
     public static final int DATABASE_VERSION = 1;
 
+    public static final String AUTH_URL = "http://api.jenjobs.com/oauth2/token";
     public static final String PROFILE_URL = "http://api.jenjobs.com/jobseeker/profile";
     public static final String APPLICATION_URL = "http://api.jenjobs.com/jobseeker/application";
     public static final String APPLICATION_STATUS_URL = "http://api.jenjobs.com/jobseeker/application-status";
