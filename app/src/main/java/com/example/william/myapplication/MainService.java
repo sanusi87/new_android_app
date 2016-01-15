@@ -11,9 +11,11 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -27,6 +29,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,7 +37,8 @@ import java.util.HashMap;
 
 public class MainService extends Service{
     private NotificationManager mNM;
-    private int NOTIFICATION = R.string.local_service_started;
+    private int NOTIFICATION_APPLICATION = 1;
+    private int NOTIFICATION = 1; // set default to application notification
 
     SharedPreferences sharedPref;
     String accessToken;
@@ -60,27 +64,29 @@ public class MainService extends Service{
         //showNotification();
     //}
 
-    private void showNotification() {
+    private void showNotification(Intent intent) {
         // In this sample, we'll use the same text for the ticker and the expanded notification
-        CharSequence text = getText(R.string.local_service_started);
+        //CharSequence text = getText(R.string.local_service_started);
+
+        Bundle extra = intent.getExtras();
+        String statusText = extra.getString("statusText");
+        String contentText = extra.getString("contentText");
 
         // The PendingIntent to launch our activity if the user selects this notification
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         // Set the info for the views that show in the notification panel.
         Notification notification = new Notification.Builder(this)
             .setSmallIcon(R.drawable.icon)  // the status icon
-            .setTicker(text)  // the status text
+            //.setTicker(statusText)  // the status text
             .setWhen(System.currentTimeMillis())  // the time stamp
-            .setContentTitle(getText(R.string.local_service_label))  // the label of the entry
-            .setContentText(text)  // the contents of the entry
+            .setContentTitle(statusText)  // the label of the entry
+            .setContentText(contentText)  // the contents of the entry
             .setContentIntent(contentIntent)  // The intent to send when the entry is clicked
             .build();
 
         // Send the notification.
         mNM.notify(NOTIFICATION, notification);
-
     }
 
     // This is the old onStart method that will be called on the pre-2.0
@@ -106,7 +112,7 @@ public class MainService extends Service{
         public void run() {
             // TODO - check for network connectivity first, only then can proceed
             Cursor applications = tableApplication.getActiveApplication();
-            //Log.e("active apps",""+applications.getCount());
+            Log.e("active apps",""+applications.getCount());
             if (applications.getCount() > 0) {
                 applications.moveToFirst();
 
@@ -150,7 +156,6 @@ public class MainService extends Service{
         @Override
         protected JSONArray doInBackground(String... params) {
             JSONArray _response = null;
-            //Log.e("appurl", ""+params[0]);
             HttpClient httpclient = new DefaultHttpClient();
             HttpGet httpget = new HttpGet(params[0]);
             httpget.addHeader("Content-Type", "application/json");
@@ -173,28 +178,41 @@ public class MainService extends Service{
         protected void onPostExecute(JSONArray success) {
             Log.e("onGet", "" + success);
             if( success != null ){
+                Intent intent = new Intent();
+                intent.putExtra("statusText", "Application status has been updated.");
+                intent.putExtra("defaultPage", ProfileActivity.APPLICATION_FRAGMENT);
+                intent.setClass(getApplicationContext(), ProfileActivity.class);
+
+                int applicationUpdated = 0;
                 for(int i=0;i<success.length();i++){
                     try {
                         JSONObject app = success.getJSONObject(i);
 
                         int status = app.optInt("status");
-                        int applicationId = app.optInt("id");
+                        int postId = app.getInt("post_id");
                         Log.e("status", ""+status);
-                        Log.e("appid", ""+applicationId);
+                        Log.e("postid", ""+postId);
 
                         String statusText = (String) applicationStatus.get(status);
+                        Log.e("so?", ""+tableApplication.isDifferentApplicationStatus( postId, status ));
+                        if( tableApplication.isDifferentApplicationStatus( postId, status ) ){
 
-                        if( tableApplication.isDifferentApplicationStatus( applicationId, status ) ){
-                            showNotification();
+                            applicationUpdated++;
 
                             ContentValues cv = new ContentValues();
                             cv.put("status", status);
-                            cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
-                            tableApplication.updateApplication(cv, applicationId);
+                            cv.put("date_updated", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
+                            boolean isUpdated = tableApplication.updateApplication(cv, postId);
+                            Log.e("isUpdated", "" + isUpdated);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                }
+
+                if( applicationUpdated > 0 ){
+                    intent.putExtra("contentText", "Your application status has been updated.");
+                    showNotification(intent);
                 }
             }
         }
