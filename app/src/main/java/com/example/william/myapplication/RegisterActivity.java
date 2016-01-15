@@ -1,5 +1,8 @@
 package com.example.william.myapplication;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -31,6 +34,8 @@ import java.util.Iterator;
 public class RegisterActivity extends ActionBarActivity {
 
     Button registerButton;
+    SharedPreferences sharedPref;
+    String enteredEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,7 @@ public class RegisterActivity extends ActionBarActivity {
         if( getSupportActionBar() != null ){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 
         registerButton = (Button)findViewById(R.id.registerButton);
 
@@ -76,6 +82,8 @@ public class RegisterActivity extends ActionBarActivity {
                         obj.put("email", _emailAddress);
                         obj.put("password", _password);
                         obj.put("repeat_password", _repeatPassword);
+
+                        enteredEmail = _emailAddress;
 
                         String[] params = {
                                 Jenjobs.REGISTRATION_URL,
@@ -135,6 +143,44 @@ public class RegisterActivity extends ActionBarActivity {
                     if( result.getInt("status_code") == 1 ){
                         // success
                         Toast.makeText(getApplicationContext(), result.getString("status_text"), Toast.LENGTH_LONG).show();
+
+                        // successfull registration return access token, so save this token
+                        /*
+                        {
+                            "status_code": 1,
+                            "status_text": "Registration successful!",
+                            "token": {
+                                "access_token": "30b309f726d7b6485f4674e6b97a94efb624c32f",
+                                "expires_in": 86400,
+                                "token_type": "Bearer",
+                                "scope": null,
+                                "refresh_token": "7d3ad377dab650c688f891d9ed1d400a3bbfe3f9"
+                            }
+                        }
+                        */
+                        // and start ProfileActivity and finish();
+
+                        String token = result.getString("token");
+                        if( token != null ){
+                            JSONObject success = new JSONObject(token);
+                            String accessToken = success.optString("access_token");
+                            if( accessToken != null ){
+                                SharedPreferences.Editor spEdit = sharedPref.edit();
+                                spEdit.putString("access_token", accessToken);
+                                spEdit.putString("email", enteredEmail);
+                                spEdit.apply();
+
+                                Toast.makeText(getApplicationContext(), "Registration success!", Toast.LENGTH_LONG).show();
+
+                                Intent intent2 = new Intent();
+                                intent2.putExtra("downloadData", true);
+                                intent2.setClass(getApplicationContext(), ProfileActivity.class);
+                                startActivity(intent2);
+                                finish();
+                            }
+                        }else{
+                            Toast.makeText(getApplicationContext(), "Registration success, but empty access token returned. Please try to login.", Toast.LENGTH_LONG).show();
+                        }
                     }else{
                         // failed
                         JSONObject _statusText = new JSONObject(result.getString("error"));
