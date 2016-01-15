@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /*
 * {
@@ -77,15 +78,16 @@ public class TableApplication extends SQLiteOpenHelper {
         return db.rawQuery(strSQL, args);
     }
 
-    public boolean isDifferentApplicationStatus(int applicationId, int newStatus){
-        String string = "SELECT status FROM "+TableApplication.TABLE_NAME+" WHERE id=?";
-        String[] args = {String.valueOf(applicationId)};
+    public boolean isDifferentApplicationStatus(int postId, int newStatus){
+        String string = "SELECT status,post_id FROM "+TableApplication.TABLE_NAME+" WHERE post_id=?";
+        String[] args = {String.valueOf(postId)};
         Cursor c = db.rawQuery(string, args);
 
         if( c.moveToFirst() ){
             int _status = c.getInt(0);
+            Log.e("saved", ""+_status);
+            Log.e("post_id", ""+c.getInt(1));
             c.close();
-
             if( _status != newStatus ){
                 return true;
             }
@@ -100,7 +102,7 @@ public class TableApplication extends SQLiteOpenHelper {
 
     public boolean updateApplication(ContentValues cv2, int existingID){
         String[] _id = {String.valueOf(existingID)};
-        int affectedRows = db.update(TableApplication.TABLE_NAME, cv2, "id=?", _id);
+        int affectedRows = db.update(TableApplication.TABLE_NAME, cv2, "post_id=?", _id);
         return affectedRows > 0;
     }
 
