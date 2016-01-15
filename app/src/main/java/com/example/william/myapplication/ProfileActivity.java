@@ -191,7 +191,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 String[] subscriptionUrl = {Jenjobs.SUBSCRIPTION_URL};
                 new DownloadDataTask(DOWNLOAD_SUBSCRIPTION).execute(subscriptionUrl);
 
-                //extras.remove("downloadData");
                 extras.clear();
             }
 
