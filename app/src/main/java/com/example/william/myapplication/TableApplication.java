@@ -25,6 +25,7 @@ public class TableApplication extends SQLiteOpenHelper {
     public static final int STATUS_SHORTLISTED = 1;
     public static final int STATUS_INTERVIEW = 2;
     public static final int STATUS_REJECTED = 4;
+    public static final int STATUS_CLOSED = 5;
     public static final int STATUS_KIV = 6;
     public static final int STATUS_PRESCREENED = 9;
     public static final int STATUS_WITHDRAWN = 10;
@@ -109,7 +110,7 @@ public class TableApplication extends SQLiteOpenHelper {
     public boolean deleteApplication(int id){
         String _id = String.valueOf(id);
         String[] param = {_id};
-        int affectedRows = db.delete(TableApplication.TABLE_NAME, "id=?", param);
+        int affectedRows = db.delete(TableApplication.TABLE_NAME, "post_id=?", param);
         return affectedRows > 0;
     }
 }
