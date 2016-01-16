@@ -109,7 +109,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     private static TextView additionalInfo;
     private static LinearLayout listOfWorkExp;
     private static LinearLayout listOfEducation;
-    private static LinearLayout updateAttachedResume;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -341,7 +340,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             email.setText( theProfile.email );
             mobile_no.setText( theProfile.mobile_no );
             ic_no.setText( theProfile.ic );
-            gender.setText( theProfile.gender );
+            gender.setText(theProfile.gender);
 
             if( theProfile.country_id > 0 ){
                 TableCountry tableCountry = new TableCountry(getActivity());
@@ -532,6 +531,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }
 
         private void setupOnlineResumeFragment(View rootView) {
+            final TableProfile tProfile = new TableProfile(getActivity());
+            final Profile theProfile = tProfile.getProfile();
+
             /*
             * add work exp
             * update work exp is from the dynamic content
@@ -546,6 +548,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }
             });
 
+            final LinearLayout workExpQuestion = (LinearLayout)rootView.findViewById(R.id.workExpQuestion);
             listOfWorkExp = (LinearLayout)rootView.findViewById(R.id.listOfWorkExperience);
             Cursor cw = tableWorkExperience.getWorkExperience();
             if( cw.moveToFirst() ){
@@ -614,8 +617,46 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     cw.moveToNext();
                 }
             }else{
-                // if no work experience found
+                // if no work experience found + no_work_exp = 0
+                if( !theProfile.no_work_exp ){
+                    workExpQuestion.setVisibility(View.VISIBLE);
+                }
             }
+
+            Button haveWorkExp = (Button)rootView.findViewById(R.id.haveWorkExp);
+            Button noWorkExp = (Button)rootView.findViewById(R.id.noWorkExp);
+
+            haveWorkExp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(),  UpdateWorkExperience.class);
+                    getActivity().startActivityForResult(intent, ADD_WORK_EXP);
+                }
+            });
+
+            noWorkExp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // save
+                    ContentValues cv = new ContentValues();
+                    cv.put("no_work_exp", 1);
+                    tProfile.updateProfile(cv, theProfile._id);
+
+                    // hide layout
+                    workExpQuestion.setVisibility(View.GONE);
+
+                    // post
+                    // JSONObject _param = new JSONObject();
+                    // TODO - post no_work_exp to server
+                    //_param.put("", );
+                    String[] param = {
+                            Jenjobs.PROFILE_URL+"?access-token="+accessToken,
+
+                    };
+                    new PostRequest().execute(param);
+                }
+            });
 
             /*
             * add education
@@ -678,9 +719,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ce.moveToNext();
                 }
             }
-
-            TableProfile tProfile = new TableProfile(getActivity());
-            Profile theProfile = tProfile.getProfile();
 
             /*
             * resume visibility
@@ -791,7 +829,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
 
             /*
-            * TODO - language
+            * language
             * */
             language = (LinearLayout) rootView.findViewById(R.id.listOfLanguage);
 
@@ -860,16 +898,17 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             /*
             * attached resume
             * */
-            updateAttachedResume = (LinearLayout)rootView.findViewById(R.id.updateAttachedResume);
+            LinearLayout updateAttachedResume = (LinearLayout) rootView.findViewById(R.id.updateAttachedResume);
             attachedResume = (TextView)rootView.findViewById(R.id.attachedResume);
             if( theProfile.resume_file != null && theProfile.resume_file.length() > 0 ){
                 attachedResume.setText( theProfile.resume_file.substring( theProfile.resume_file.lastIndexOf("/")+1 , theProfile.resume_file.length() ) );
             }
 
+            final ProgressBar progressBar = (ProgressBar)rootView.findViewById(R.id.progressBar2);
             updateAttachedResume.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String[] allowedExtension = {"doc","docx","odt","pdf","ppt","txt"};
+                    String[] allowedExtension = {"doc", "docx", "odt", "pdf", "ppt", "txt"};
                     FileChooser fileChooser = new FileChooser(getActivity());
                     fileChooser.setExtension(allowedExtension);
                     fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
@@ -891,19 +930,22 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 byte[] byteArray = baos.toByteArray();
                                 String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-                                //Log.e("encoded", encodedFile);
-
                                 JSONObject fileParam = new JSONObject();
                                 fileParam.put("name", file.getName());
                                 fileParam.put("attachment", encodedFile);
 
                                 String[] params = {
-                                        Jenjobs.ATTACH_RESUME+"?access-token="+accessToken,
+                                        Jenjobs.ATTACH_RESUME + "?access-token=" + accessToken,
                                         fileParam.toString()
                                 };
+
+                                attachedResume.setText("");
+                                progressBar.setVisibility(View.VISIBLE);
+
                                 PostRequest postRequest = new PostRequest(context);
                                 postRequest.setRequestType(PostRequest.UPLOAD_RESUME_ATTACHMENT);
                                 postRequest.setViewToUpdate(attachedResume);
+                                postRequest.setProgressBar(progressBar);
                                 postRequest.execute(params);
 
                             } catch (FileNotFoundException e) {
@@ -1532,7 +1574,13 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             ContentValues cv3 = new ContentValues();
                             cv3.put("address1", jsonAddr.getString("address1"));
                             cv3.put("address2", jsonAddr.getString("address2"));
-                            cv3.put("postcode", jsonAddr.getString("postcode") == null ? 0 : jsonAddr.getInt("postcode"));
+
+                            String postCodeStr = jsonAddr.getString("postcode");
+                            int postCode = 0;
+                            if( postCodeStr != null && !postCodeStr.equals("null") ){
+                                postCode = Integer.valueOf(postCodeStr);
+                            }
+                            cv3.put("postcode", postCode);
                             cv3.put("city_id", jsonAddr.getInt("city_id"));
                             cv3.put("city_name", jsonAddr.getString("city_name"));
                             cv3.put("state_id", jsonAddr.getInt("state_id"));
@@ -1618,8 +1666,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 }
                             }
                         }
-
-
                     } catch (JSONException e) {
                         Log.e("workExpExcp", e.getMessage());
                     }
