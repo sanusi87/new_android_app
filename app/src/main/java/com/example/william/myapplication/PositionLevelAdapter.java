@@ -15,11 +15,12 @@ public class PositionLevelAdapter extends BaseAdapter implements ListAdapter{
 
     public ArrayList<PositionLevel> positionLevel = new ArrayList<>();
     private Context context;
+    private boolean single = false;
 
     public PositionLevelAdapter(Context context){
         this.context = context;
 
-        HashMap<Integer, String> positionLevels = Jenjobs.getJobLevel();
+        HashMap positionLevels = Jenjobs.getPositionLevel();
         ArrayList<PositionLevel> tempArr = new ArrayList<>();
 
         for (Object o : positionLevels.entrySet()) {
@@ -66,7 +67,11 @@ public class PositionLevelAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+            if( this.single ){
+                v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+            }else{
+                v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+            }
         }
         PositionLevel c = (PositionLevel) getItem(position);
         TextView tvName = (TextView) v.findViewById(android.R.id.text1);
@@ -75,5 +80,9 @@ public class PositionLevelAdapter extends BaseAdapter implements ListAdapter{
         v.setBackgroundColor(context.getResources().getColor(R.color.white));
 
         return v;
+    }
+
+    public void setSingle(boolean single) {
+        this.single = single;
     }
 }
