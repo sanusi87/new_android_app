@@ -47,11 +47,12 @@
             android:label="@string/title_activity_profile" />
         <activity
             android:name=".RegisterActivity"
-            android:label="@string/register_text" />
+            android:label="@string/register_text"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ForgotPasswordActivity"
-            android:label="@string/forgot_password_text" />
-        <activity android:name=".JobDetails" />
+            android:label="@string/forgot_password_text"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".JobSearchFilter"
             android:label="@string/title_activity_job_search_filter" />
@@ -62,25 +63,27 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".UpdateWorkExperience"
-            android:label="@string/title_activity_update_work_experience" />
+            android:label="@string/update_work_exp" />
         `
         <activity android:name=".SelectJobSpec" />
         <activity android:name=".SelectSingleJobSpec" />
         <activity android:name=".SelectJobRole" />
         <activity android:name=".SelectSingleJobRole" />
-        <activity android:name=".SelectJobType" />
+        <activity
+            android:name=".SelectJobType"
+            android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".UpdateEducation"
-            android:label="@string/title_activity_update_education" />
+            android:label="@string/update_education" />
         <activity
             android:name=".UpdateJobPreference"
-            android:label="@string/title_activity_update_job_preference" />
+            android:label="@string/update_job_preference" />
         <activity
             android:name=".UpdateJobSeeking"
-            android:label="@string/title_activity_update_job_seeking" />
+            android:label="@string/update_job_seeking" />
         <activity
             android:name=".UpdateResumeVisibility"
-            android:label="@string/title_activity_update_resume_visibility"
+            android:label="@string/update_resume_visibility"
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".SelectJobSeekingStatus"
@@ -110,7 +113,9 @@
         <activity
             android:name=".SelectGraduationYear"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".UpdateSalary" />
+        <activity
+            android:name=".UpdateSalary"
+            android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".UpdateNoticePeriod"
             android:theme="@android:style/Theme.Dialog" />
@@ -122,12 +127,18 @@
             android:name=".SelectLanguageLevel"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".JobDetails2"
+            android:name=".JobDetails"
             android:label="@string/title_activity_job_details2" />
         <activity
             android:name=".SelectKeywordFilter"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".JobSearchActivity"></activity>
+        <activity
+            android:name=".JobSearchActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".SelectJobIndustry"
+            android:label="@string/title_activity_select_job_industry"
+            android:theme="@android:style/Theme.Dialog" />
     </application>
 
 </manifest>
