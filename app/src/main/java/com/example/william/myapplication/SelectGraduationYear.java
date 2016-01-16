@@ -29,7 +29,7 @@ public class SelectGraduationYear extends Activity {
         for( int y = currentYear; y > currentYear-50; y-- ){
             years.add(y);
         }
-        lv.setAdapter(new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, years));
+        lv.setAdapter(new ArrayAdapter<Integer>(this, R.layout.spinner_item, years));
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
