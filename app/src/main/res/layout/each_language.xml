@@ -1,57 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:weightSum="5"
-    style="@style/AppThemePadding5">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:weightSum="5"
-        android:layout_weight="5"
-        android:id="@+id/languageContainer">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_value"
-            android:id="@+id/languageName"
-            style="@style/AppThemeBaseLabelSub" />
+        style="@style/AppThemePadding5">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical">
+            android:weightSum="5"
+            android:layout_weight="5"
+            android:id="@+id/languageContainer">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
-                android:id="@+id/spokenLanguageLevel"
-                android:layout_weight="1"
-                style="@style/AppThemeBaseTextValue" />
+                android:id="@+id/languageName"
+                style="@style/AppThemeBaseLabelSub" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/no_value"
-                android:id="@+id/writtenLanguageLevel"
-                android:layout_weight="1"
-                style="@style/AppThemeBaseTextValue" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/no_value"
+                    android:id="@+id/spokenLanguageLevel"
+                    android:layout_weight="1"
+                    style="@style/AppThemeBaseTextValue"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/no_value"
+                    android:id="@+id/writtenLanguageLevel"
+                    android:layout_weight="1"
+                    style="@style/AppThemeBaseTextValue"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp" />
+            </LinearLayout>
         </LinearLayout>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:text="@string/close"
+            android:id="@+id/deleteLanguageButton"
+            android:layout_weight="1" />
+
     </LinearLayout>
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:text="@string/close"
-        android:id="@+id/deleteLanguageButton"
-        android:layout_weight="1" />
-
+    <View style="@style/AppThemeSeparator" />
 </LinearLayout>
