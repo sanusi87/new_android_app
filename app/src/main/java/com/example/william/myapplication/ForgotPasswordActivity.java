@@ -102,6 +102,7 @@ public class ForgotPasswordActivity extends ActionBarActivity {
                 Log.e("UnsupportedEncoding", e.getMessage());
             } catch (IOException e) {
                 Log.e("IOException", e.getMessage());
+                Toast.makeText(getApplicationContext(), "Network error!", Toast.LENGTH_LONG).show();
             }
 
             return _response;
