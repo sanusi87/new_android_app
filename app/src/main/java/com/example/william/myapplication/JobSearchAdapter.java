@@ -70,7 +70,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View _v) {
-                    Intent intent = new Intent(context, JobDetails2.class);
+                    Intent intent = new Intent(context, JobDetails.class);
                     intent.putExtra("post_id", postId);
                     context.startActivity(intent);
                 }
