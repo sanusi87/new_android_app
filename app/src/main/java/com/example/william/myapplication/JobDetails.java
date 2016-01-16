@@ -71,7 +71,7 @@ public class JobDetails extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_job_details2);
+        setContentView(R.layout.activity_job_details);
         if( getSupportActionBar() != null ){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
