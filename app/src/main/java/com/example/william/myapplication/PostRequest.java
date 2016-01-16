@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
 
     private Context context;
     private TextView textView;
+    private ProgressBar progressBar;
     private int REQUEST_TYPE = 0;
 
     SharedPreferences sharedPref;
@@ -51,6 +54,10 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
 
     public void setViewToUpdate(TextView tv){
         textView = tv;
+    }
+
+    public void setProgressBar(ProgressBar pg){
+        progressBar = pg;
     }
 
     public void setRequestType(int requestType){
@@ -109,6 +116,10 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
                 }
                 Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
             }
+        }
+
+        if( progressBar != null ){
+            progressBar.setVisibility(View.GONE);
         }
     }
 
