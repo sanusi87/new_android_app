@@ -1,476 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".JobDetails">
+    tools:context=".JobDetails2"
+    android:orientation="vertical"
+    style="@style/AppThemePadding10">
 
-    <LinearLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:orientation="vertical"
-        style="@style/AppThemePadding10">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/loginLayout">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="6"
-            android:layout_marginBottom="10dp">
+            android:background="@color/white"
+            style="@style/AppThemePadding10">
 
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/back"
-                android:id="@+id/backToSearch"
-                android:layout_weight="2" />
-
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/bookmark"
-                android:id="@+id/bookmark"
-                android:layout_weight="2" />
-
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/apply"
-                android:id="@+id/applyNow"
-                android:layout_weight="2" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/no_value"
-            android:id="@+id/jobTitle"
-            android:textSize="20sp" />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="20dp">
+                android:id="@+id/noticeIcon"
+                android:contentDescription="@string/no_value"
+                android:src="@drawable/ic_info_black_24dp" />
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/overview"
-                android:textSize="18sp" />
-
-            <View style="@style/AppThemeBorderBottom"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp" />
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/job_location"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/location"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/job_type"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/jobType"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/job_level"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/jobLevel"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/spec"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/jobSpecialisation"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/qualification"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/qualification"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/skills"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/skill"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/languages"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/language"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/date_closed"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/closedOn"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-            </LinearLayout>
+                android:text="Small Text"
+                android:id="@+id/noticeText"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/black" />
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="20dp">
-            <TextView
+            android:layout_height="wrap_content">
+
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/description"
-                android:textSize="18sp" />
-            <View style="@style/AppThemeBorderBottom"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no_value" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
+                android:text="@string/login_text"
+                android:id="@+id/login_button"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp" />
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/employer"
-                android:textSize="18sp" />
-
-            <View style="@style/AppThemeBorderBottom"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp" />
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/imageView3"
-                    android:contentDescription="@string/company_logo"
-                    android:src="@drawable/profile_image"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        style="@style/AppThemeBaseLabel"
-                        android:textColor="@color/blue"
-                        android:padding="5dp"
-                        android:gravity="center_horizontal" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/registration_number"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/registration_number"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/industry"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/industry"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/working_hours"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/registration_number"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/benefits"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/benefits"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/website"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/website"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/facebook_page"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_value"
-                        android:id="@+id/registration_number"
-                        style="@style/AppThemeBaseTextValue"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
-
-                <View style="@style/AppThemeSeparator" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/AppThemePadding5">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/worklocation"
-                        style="@style/AppThemeBaseLabel" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/profile_image"
-                        android:layout_gravity="center_horizontal"
-                        android:contentDescription="@string/worklocation" />
-
-
-                </LinearLayout>
-
-            </LinearLayout>
+                android:text="@string/register_text"
+                android:id="@+id/register_button"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp" />
         </LinearLayout>
 
     </LinearLayout>
-</ScrollView>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/apply"
+            android:id="@+id/applyButton" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/no_value"
+            android:id="@+id/positionTitle"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:indeterminate="true"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:id="@+id/no_item"
+        style="@style/AppThemePadding10"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/noticeIcon2"
+            android:contentDescription="@string/no_value"
+            android:src="@drawable/ic_info_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/noticeText2"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+</LinearLayout>
