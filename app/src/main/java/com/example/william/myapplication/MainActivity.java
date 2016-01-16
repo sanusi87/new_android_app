@@ -176,7 +176,9 @@ public class MainActivity extends Activity {
             } catch (UnsupportedEncodingException e) {
                 Log.e("UnsupportedEncoding", e.getMessage());
             } catch (IOException e) {
-                Log.e("IOException", e.getMessage());
+                //Log.e("IOException", e.getMessage());
+                Toast.makeText(getApplicationContext(), "Network error!", Toast.LENGTH_LONG).show();
+                toggleButtonState(true);
             }
 
             return (JSONObject) _response;
