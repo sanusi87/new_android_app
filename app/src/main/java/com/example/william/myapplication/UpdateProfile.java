@@ -48,6 +48,7 @@ public class UpdateProfile extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_update_layout);
+        setTitle(getText(R.string.my_profile));
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 
@@ -133,6 +134,7 @@ public class UpdateProfile extends FragmentActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), UpdateName.class);
                 intent.putExtra("the_text", fullName.getText());
+                intent.putExtra("the_title", getText(R.string.fullname));
                 startActivityForResult(intent, SELECT_NAME);
             }
         });
@@ -142,6 +144,7 @@ public class UpdateProfile extends FragmentActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), UpdateName.class);
                 intent.putExtra("the_text", emailAddress.getText());
+                intent.putExtra("the_title", getText(R.string.email));
                 startActivityForResult(intent, SELECT_EMAIL);
             }
         });
