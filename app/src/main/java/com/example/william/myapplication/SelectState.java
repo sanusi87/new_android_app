@@ -19,7 +19,7 @@ public class SelectState extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_state);
-        setTitle("Select State");
+        setTitle(getText(R.string.select_state));
 
         final ListView lv = (ListView)findViewById(R.id.listOfStates);
         final StateAdapter ca = new StateAdapter(getApplicationContext());
