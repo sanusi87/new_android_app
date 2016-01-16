@@ -18,7 +18,7 @@ public class SelectGender extends Activity {
 
         ListView lv = (ListView)findViewById(R.id.listOfGender);
         final String[] genders = {"Male", "Female"};
-        lv.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, genders));
+        lv.setAdapter(new ArrayAdapter<>(this, R.layout.spinner_item, genders));
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
