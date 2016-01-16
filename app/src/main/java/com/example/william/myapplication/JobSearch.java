@@ -4,7 +4,10 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -213,11 +216,17 @@ public class JobSearch {
                     }
                     adapter.setJob( arr );
                     adapter.notifyDataSetChanged();
-
-                    if( loading != null ){
-                        loading.setVisibility(View.GONE);
-                    }
                 }
+            }else{
+                View v = ((ViewGroup)loading.getParent());
+                LinearLayout ll = (LinearLayout)v.findViewById(R.id.no_item);
+                ll.setVisibility(View.VISIBLE);
+
+                ((TextView)ll.findViewById(R.id.noticeText)).setText("No job postings found!");
+            }
+
+            if( loading != null ){
+                loading.setVisibility(View.GONE);
             }
         }
     }
