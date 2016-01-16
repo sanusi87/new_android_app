@@ -39,7 +39,7 @@ public class Jenjobs {
         return a;
     }
 
-    public static HashMap getJobLevel(){
+    public static HashMap getPositionLevel(){
         HashMap<Integer, String> a = new HashMap<>();
         a.put(1, "Non-Executive");
         a.put(2, "Executive");
@@ -704,7 +704,8 @@ public class Jenjobs {
 
         _listOfMonth.add("--none--");
         for( int i=1; i <= 12; i++ ){
-            _listOfMonth.add(String.valueOf(i));
+            String dateStr = "01 "+( i < 10 ? "0"+i : i )+" 2016";
+            _listOfMonth.add(Jenjobs.date(dateStr, "MMMM", "dd MM yyyy"));
         }
 
         // TODO: arraylist to string array
