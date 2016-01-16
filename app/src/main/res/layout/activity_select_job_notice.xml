@@ -15,7 +15,9 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
-            android:id="@+id/durationPeriod" />
+            android:id="@+id/durationPeriod"
+            android:hint="@string/notice_period"
+            style="@style/AppThemeBaseTextValue" />
     </LinearLayout>
 
     <ListView
@@ -32,6 +34,7 @@
         android:weightSum="2">
 
         <Button
+            style="@style/AppThemeBaseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ok"
@@ -39,6 +42,7 @@
             android:layout_weight="1" />
 
         <Button
+            style="@style/AppThemeBaseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"

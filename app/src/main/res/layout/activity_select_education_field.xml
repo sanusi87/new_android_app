@@ -19,6 +19,7 @@
         android:weightSum="2">
 
         <Button
+            style="@style/AppThemeBaseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ok"
@@ -26,6 +27,7 @@
             android:layout_weight="1" />
 
         <Button
+            style="@style/AppThemeBaseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
