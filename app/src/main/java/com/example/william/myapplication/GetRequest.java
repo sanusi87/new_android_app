@@ -45,7 +45,8 @@ public class GetRequest extends AsyncTask<Void, Void, Object> {
             }
             //return _response;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("IOException", e.getMessage());
+            // TODO - toast network error
         }
         return _response;
     }
