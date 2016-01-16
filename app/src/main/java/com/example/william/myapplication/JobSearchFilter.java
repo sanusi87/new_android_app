@@ -3,18 +3,20 @@ package com.example.william.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class JobSearchFilter extends Activity {
+public class JobSearchFilter extends ActionBarActivity {
 
     private static int INTENT_GET_STATE = 1;
     private static int INTENT_GET_LEVEL = 2;
@@ -22,6 +24,8 @@ public class JobSearchFilter extends Activity {
     private static int INTENT_GET_SPEC = 4;
     private static int INTENT_GET_ROLE = 5;
     private static int INTENT_GET_TYPE = 6;
+    private static int INTENT_GET_KEYWORD_FILTER = 7;
+    private static int INTENT_GET_KEYWORD = 8;
 
     private TextView selectedOtherCountry;
     private TextView selectedPositionLevel;
@@ -29,6 +33,8 @@ public class JobSearchFilter extends Activity {
     private TextView selectedJobSpec;
     private TextView selectedJobRole;
     private TextView selectedJobType;
+    private TextView selectedKeywordFilter;
+    private TextView enteredKeyword;
 
     private CheckBox directEmployerCb;
     private CheckBox recruitmentAgencyCb;
@@ -39,6 +45,12 @@ public class JobSearchFilter extends Activity {
     private ArrayList<JobSpec> selectedJobSpecValues = new ArrayList<>();
     private ArrayList<JobRole> selectedJobRoleValues = new ArrayList<>();
     private ArrayList<JobType> selectedJobTypeValues = new ArrayList<>();
+    private KeywordFilter keywordFilter;
+
+    //Spinner keywordFilterInput;
+    //EditText keywordInput;
+    EditText salaryMinInput;
+    EditText salaryMaxInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +58,15 @@ public class JobSearchFilter extends Activity {
         setContentView(R.layout.activity_job_search_filter);
 
         // keyword filter
-        final Spinner keywordFilterInput = (Spinner)findViewById(R.id.keyword_filter_spinner);
-        KeywordFilterAdapter kwa = new KeywordFilterAdapter(getApplicationContext());
-        keywordFilterInput.setAdapter(kwa);
+        //keywordFilterInput = (Spinner)findViewById(R.id.keyword_filter_spinner);
+        //KeywordFilterAdapter kwa = new KeywordFilterAdapter(getApplicationContext());
+        //keywordFilterInput.setAdapter(kwa);
         // keyword
-        final EditText keywordInput = (EditText)findViewById(R.id.keyword);
+        //keywordInput = (EditText)findViewById(R.id.keyword);
         // min salary
-        final EditText salaryMinInput = (EditText)findViewById(R.id.minimum_salary);
+        salaryMinInput = (EditText)findViewById(R.id.minimum_salary);
         // max salary
-        final EditText salaryMaxInput = (EditText)findViewById(R.id.maximum_salary);
+        salaryMaxInput = (EditText)findViewById(R.id.maximum_salary);
         // position level
         //ListView positionLevelInput = (ListView)findViewById(R.id.position_level);
 
@@ -65,6 +77,8 @@ public class JobSearchFilter extends Activity {
         selectedJobSpec = (TextView)findViewById(R.id.selectedSpec);
         selectedJobRole = (TextView)findViewById(R.id.selectedRole);
         selectedJobType = (TextView)findViewById(R.id.selectedJobType);
+        enteredKeyword = (TextView)findViewById(R.id.enteredKeyword);
+        selectedKeywordFilter = (TextView)findViewById(R.id.selectedKeywordFilter);
 
         TextView directEmployer = (TextView) findViewById(R.id.direct_employer);
         directEmployerCb = (CheckBox)findViewById(R.id.direct_employer_checkbox);
@@ -72,69 +86,32 @@ public class JobSearchFilter extends Activity {
         TextView recruitmentAgency = (TextView) findViewById(R.id.recruitment_agency);
         recruitmentAgencyCb = (CheckBox)findViewById(R.id.recruitment_agency_checkBox);
 
-        Button searchButton = (Button)findViewById(R.id.startSearch);
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        Bundle extra = getIntent().getExtras();
+        keywordFilter = new KeywordFilter(1,"Position Title");
+        if( extra != null ){
+            keywordFilter = (KeywordFilter) extra.get("keyword_filter");
+        }
+
+        if( keywordFilter != null ){
+            selectedKeywordFilter.setText(keywordFilter.name);
+        }
+
+        LinearLayout enterKeyword = (LinearLayout)findViewById(R.id.enterKeyword);
+        enterKeyword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-
-                if( keywordFilterInput.getSelectedItem() != null ){
-                    intent.putExtra("keyword_filter", (KeywordFilter) keywordFilterInput.getSelectedItem());
-                }
-
-                if( keywordInput.getText().toString().length() > 0 ){
-                    intent.putExtra("keyword", keywordInput.getText().toString());
-                }
-
-                if( salaryMinInput.getText().toString().length() > 0 ){
-                    intent.putExtra("salary_min", salaryMinInput.getText().toString());
-                }
-
-                if( salaryMaxInput.getText().toString().length() > 0 ){
-                    intent.putExtra("salary_max", salaryMaxInput.getText().toString());
-                }
-
-                if( selectedJobSpecValues.size() > 0 ){
-                    intent.putExtra("job_spec", selectedJobSpecValues);
-                }
-
-                if( selectedJobRoleValues.size() > 0 ){
-                    intent.putExtra("job_role", selectedJobRoleValues);
-                }
-
-                if( selectedJobTypeValues.size() > 0 ){
-                    intent.putExtra("job_type", selectedJobTypeValues);
-                }
-
-                if( selectedMalaysiaStateValues.size() > 0 ){
-                    intent.putExtra("state", selectedMalaysiaStateValues);
-                }
-
-                if( selectedOtherCountryValues.size() > 0 ){
-                    intent.putExtra("country", selectedOtherCountryValues);
-                }
-
-                if( selectedPositionLevelValues.size() > 0 ){
-                    intent.putExtra("position_level", selectedPositionLevelValues);
-                }
-
-                boolean postedDirectEmployer = directEmployerCb.isChecked();
-                intent.putExtra("direct_employer", postedDirectEmployer);
-
-                boolean postedRecruitmentAgency = recruitmentAgencyCb.isChecked();
-                intent.putExtra("recruitment_agency", postedRecruitmentAgency);
-
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+                Intent intent = new Intent(getApplicationContext(), UpdateName.class);
+                intent.putExtra("the_title", getText(R.string.keyword));
+                startActivityForResult(intent, INTENT_GET_KEYWORD);
             }
         });
 
-        Button cancelButton = (Button)findViewById(R.id.closeJobSearchFilter);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        LinearLayout selectKeywordFilter = (LinearLayout)findViewById(R.id.selectKeywordFilter);
+        selectKeywordFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(Activity.RESULT_CANCELED);
-                finish();
+                Intent intent = new Intent(getApplicationContext(), SelectKeywordFilter.class);
+                startActivityForResult(intent, INTENT_GET_KEYWORD_FILTER);
             }
         });
 
@@ -207,6 +184,7 @@ public class JobSearchFilter extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SelectPositionLevel.class);
+                intent.putExtra("single", false);
                 // passed selected values if user want to reselect
                 if( selectedPositionLevelValues.size() > 0 ){
                     intent.putExtra("positionlevel", selectedPositionLevelValues);
@@ -232,18 +210,90 @@ public class JobSearchFilter extends Activity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.job_search_filter, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int clickedItem = item.getItemId();
+        if( clickedItem == R.id.perform_filter ){
+            /*
+            * perform filter
+            * */
+            Intent intent = new Intent();
+
+            //if( keywordFilterInput.getSelectedItem() != null ){
+            //    intent.putExtra("keyword_filter", (KeywordFilter) keywordFilterInput.getSelectedItem());
+            //}
+
+            if( keywordFilter != null ){
+                intent.putExtra("keyword_filter", keywordFilter);
+            }
+
+            if( enteredKeyword.getText().toString().length() > 0 ){
+                intent.putExtra("keyword", enteredKeyword.getText().toString());
+            }
+
+            if( salaryMinInput.getText().toString().length() > 0 ){
+                intent.putExtra("salary_min", salaryMinInput.getText().toString());
+            }
+
+            if( salaryMaxInput.getText().toString().length() > 0 ){
+                intent.putExtra("salary_max", salaryMaxInput.getText().toString());
+            }
+
+            if( selectedJobSpecValues.size() > 0 ){
+                intent.putExtra("job_spec", selectedJobSpecValues);
+            }
+
+            if( selectedJobRoleValues.size() > 0 ){
+                intent.putExtra("job_role", selectedJobRoleValues);
+            }
+
+            if( selectedJobTypeValues.size() > 0 ){
+                intent.putExtra("job_type", selectedJobTypeValues);
+            }
+
+            if( selectedMalaysiaStateValues.size() > 0 ){
+                intent.putExtra("state", selectedMalaysiaStateValues);
+            }
+
+            if( selectedOtherCountryValues.size() > 0 ){
+                intent.putExtra("country", selectedOtherCountryValues);
+            }
+
+            if( selectedPositionLevelValues.size() > 0 ){
+                intent.putExtra("position_level", selectedPositionLevelValues);
+            }
+
+            boolean postedDirectEmployer = directEmployerCb.isChecked();
+            intent.putExtra("direct_employer", postedDirectEmployer);
+
+            boolean postedRecruitmentAgency = recruitmentAgencyCb.isChecked();
+            intent.putExtra("recruitment_agency", postedRecruitmentAgency);
+
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        }
+        return true;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
         if (requestCode == INTENT_GET_STATE) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                ArrayList<State> selectedValues = (ArrayList<State>) filters.get("state");
+                ArrayList selectedValues = (ArrayList) filters.get("state");
                 ArrayList<String> selectedLabels = new ArrayList<>();
 
                 if( selectedValues != null ){
                     for( int i=0;i<selectedValues.size();i++ ){
-                        State c = selectedValues.get(i);
+                        State c = (State) selectedValues.get(i);
                         selectedLabels.add(c.name);
                     }
                     selectedMalaysiaStateValues = selectedValues;
@@ -253,12 +303,12 @@ public class JobSearchFilter extends Activity {
         }else if( requestCode == INTENT_GET_COUNTRY ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                ArrayList<Country> selectedValues = (ArrayList<Country>) filters.get("country");
+                ArrayList selectedValues = (ArrayList) filters.get("country");
                 ArrayList<String> selectedLabels = new ArrayList<>();
 
                 if( selectedValues != null ){
                     for( int i=0;i<selectedValues.size();i++ ){
-                        Country c = selectedValues.get(i);
+                        Country c = (Country) selectedValues.get(i);
                         selectedLabels.add(c.name);
                     }
                     selectedOtherCountryValues = selectedValues;
@@ -324,6 +374,20 @@ public class JobSearchFilter extends Activity {
                     selectedJobTypeValues = selectedValues;
                     selectedJobType.setText(TextUtils.join(",",selectedLabels));
                 }
+            }
+        }else if( requestCode == INTENT_GET_KEYWORD_FILTER ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                keywordFilter = (KeywordFilter) filters.get("keyword_filter");
+
+                if( keywordFilter != null ){
+                    selectedKeywordFilter.setText(keywordFilter.name);
+                }
+            }
+        }else if( requestCode == INTENT_GET_KEYWORD ){
+            if (resultCode == RESULT_OK) {
+                Bundle filters = data.getExtras();
+                enteredKeyword.setText(filters.getString("the_name"));
             }
         }
     }
