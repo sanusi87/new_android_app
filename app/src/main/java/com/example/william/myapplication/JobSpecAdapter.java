@@ -25,11 +25,14 @@ public class JobSpecAdapter extends BaseAdapter implements ListAdapter{
         TableJobSpec tableJobSpec = new TableJobSpec(context);
         Cursor c = tableJobSpec.getAllJobSpec();
 
-        c.moveToFirst();
-        for( int i=0;i<c.getCount();i++ ){
-            //Log.e("xx", ""+c.getInt(0));
-            jobspec.add(new JobSpec(c.getInt(0), c.getString(1)));
-            c.moveToNext();
+        if( c.moveToFirst() ){
+            for( int i=0;i<c.getCount();i++ ){
+                jobspec.add(new JobSpec(c.getInt(0), c.getString(1)));
+                c.moveToNext();
+            }
+        }else{
+            // no job spec found, so download
+
         }
     }
 
