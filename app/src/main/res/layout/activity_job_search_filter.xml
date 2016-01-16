@@ -1,301 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    style="@style/AppThemePadding10"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:layout_weight="1">
 
-    <ScrollView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        style="@style/AppThemePadding10">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/search_keyword_by"
-                    style="@style/AppThemeBaseLabel" />
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
-                    <Spinner
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/keyword_filter_spinner"
-                        android:spinnerMode="dropdown" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/keyword"
-                    style="@style/AppThemeBaseLabel" />
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/keyword"
-                    android:inputType="text"
-                    android:hint="@string/keyword"
-                    android:theme="@style/AppThemeBaseTextValue" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/salary"
-                    style="@style/AppThemeBaseLabel" />
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:weightSum="2">
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/minimum_salary"
-                        android:inputType="numberSigned"
-                        android:layout_weight="1"
-                        android:hint="@string/mininum"
-                        style="@style/AppThemeBaseTextValue" />
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/maximum_salary"
-                        android:inputType="numberSigned"
-                        android:layout_weight="1"
-                        android:hint="@string/maximum"
-                        style="@style/AppThemeBaseTextValue" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/selectJobType"
-                android:layout_margin="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/job_type"
-                    style="@style/AppThemeBaseLabel" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/selectedJobType"
-                    style="@style/AppThemeBaseTextValue" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/selectSpec"
-                android:layout_margin="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/spec"
-                    style="@style/AppThemeBaseLabel" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/selectedSpec"
-                    style="@style/AppThemeBaseTextValue" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/selectRole"
-                android:layout_margin="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/role"
-                    style="@style/AppThemeBaseLabel" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/selectedRole"
-                    style="@style/AppThemeBaseTextValue" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/selectMalaysiaState"
-                android:layout_margin="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/malaysia_state"
-                    android:id="@+id/malaysiaText"
-                    style="@style/AppThemeBaseLabel" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/selectedMalaysiaState" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/selectOtherCountry"
-                android:layout_margin="10dp">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/other"
-                    style="@style/AppThemeBaseLabel" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/selectedOtherCountry" />
-            </LinearLayout>
-
-            <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:id="@+id/selectKeywordFilter">
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="10dp"
-                android:id="@+id/selectPositionLevel">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/position_level"
-                    style="@style/AppThemeBaseLabel" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/selectedPositionLevel" />
-            </LinearLayout>
+                android:text="@string/search_keyword_by"
+                style="@style/AppThemeBaseLabel" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/no_value"
+                android:id="@+id/selectedKeywordFilter"
+                style="@style/AppThemeBaseTextValue" />
+        </LinearLayout>
+
+        <View style="@style/AppThemeBorderBottom" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:id="@+id/enterKeyword">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/keyword"
+                style="@style/AppThemeBaseLabel" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/no_value"
+                android:id="@+id/enteredKeyword"
+                style="@style/AppThemeBaseTextValue" />
+
+        </LinearLayout>
+
+        <View style="@style/AppThemeBorderBottom" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/salary"
+                style="@style/AppThemeBaseLabel" />
 
             <LinearLayout
-                android:orientation="vertical"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="2">
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/minimum_salary"
+                    android:inputType="numberSigned"
+                    android:layout_weight="1"
+                    android:hint="@string/mininum"
+                    style="@style/AppThemeBaseTextValue" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/maximum_salary"
+                    android:inputType="numberSigned"
+                    android:layout_weight="1"
+                    android:hint="@string/maximum"
+                    style="@style/AppThemeBaseTextValue" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View style="@style/AppThemeBorderBottom" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/selectJobType"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/job_type"
+                style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/selectedJobType"
+                style="@style/AppThemeBaseTextValue" />
+        </LinearLayout>
+
+        <View style="@style/AppThemeBorderBottom" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/selectSpec"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/spec"
+                style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/selectedSpec"
+                style="@style/AppThemeBaseTextValue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/selectRole"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/role"
+                style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/selectedRole"
+                style="@style/AppThemeBaseTextValue" />
+        </LinearLayout>
+
+        <View style="@style/AppThemeBorderBottom" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/selectMalaysiaState"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/malaysia_state"
+                android:id="@+id/malaysiaText"
+                style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/selectedMalaysiaState"
+                style="@style/AppThemeBaseTextValue" />
+        </LinearLayout>
+
+        <View style="@style/AppThemeBorderBottom" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/selectOtherCountry"
+            android:layout_margin="10dp">
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp">
+                android:text="@string/other"
+                style="@style/AppThemeBaseLabel" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/selectedOtherCountry"
+                style="@style/AppThemeBaseTextValue" />
+        </LinearLayout>
+
+        <View style="@style/AppThemeBorderBottom" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp"
+            android:id="@+id/selectPositionLevel">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/position_level"
+                style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/selectedPositionLevel"
+                style="@style/AppThemeBaseTextValue" />
+        </LinearLayout>
+
+        <View style="@style/AppThemeBorderBottom" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/AppThemeBaseLabel"
+                android:text="@string/posted_by" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:weightSum="12"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/AppThemeBaseLabel"
-                    android:text="@string/posted_by" />
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
+                    android:text="@string/direct_employer"
+                    android:id="@+id/direct_employer"
+                    style="@style/AppThemeBaseLabelSub"
+                    android:layout_weight="12" />
+                <CheckBox
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:weightSum="12"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/direct_employer"
-                        android:id="@+id/direct_employer"
-                        style="@style/AppThemeBaseLabel"
-                        android:gravity="center_vertical"
-                        android:layout_weight="12"
-                        android:textColor="@android:color/tertiary_text_light" />
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/direct_employer_checkbox"
-                        android:layout_weight="1" />
-                </LinearLayout>
+                    android:id="@+id/direct_employer_checkbox"
+                    android:layout_weight="1" />
+            </LinearLayout>
 
-                <View style="@style/AppThemeBorderBottom" />
+            <View style="@style/AppThemeSeparator" />
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="12"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:weightSum="12"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
+                    android:text="@string/ra"
+                    android:id="@+id/recruitment_agency"
+                    style="@style/AppThemeBaseLabelSub"
+                    android:layout_weight="12" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ra"
-                        android:id="@+id/recruitment_agency"
-                        style="@style/AppThemeBaseLabel"
-                        android:gravity="center_vertical"
-                        android:layout_weight="12"
-                        android:textColor="@android:color/tertiary_text_light" />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/recruitment_agency_checkBox"
+                    android:layout_weight="1" />
 
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/recruitment_agency_checkBox"
-                        android:layout_weight="1" />
-
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Search"
-            android:id="@+id/startSearch"
-            android:layout_weight="1" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel"
-            android:id="@+id/closeJobSearchFilter"
-            android:layout_weight="1" />
     </LinearLayout>
-</LinearLayout>
+</ScrollView>
 

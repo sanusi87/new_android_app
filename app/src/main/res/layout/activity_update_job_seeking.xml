@@ -27,7 +27,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/no_value"
-            android:id="@+id/selectedJobSeekingStatus" />
+            android:id="@+id/selectedJobSeekingStatus"
+            style="@style/AppThemeBaseTextValue" />
     </LinearLayout>
 
     <View style="@style/AppThemeBorderBottom" />
@@ -52,7 +53,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/no_value"
-            android:id="@+id/selectedCountry" />
+            android:id="@+id/selectedCountry"
+            style="@style/AppThemeBaseTextValue" />
     </LinearLayout>
 
     <View style="@style/AppThemeBorderBottom"
@@ -133,12 +135,22 @@
 
             <CheckBox
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/license"
                 android:checked="false"
                 android:layout_weight="1"
-                android:focusable="true" />
+                android:focusable="true"
+                android:gravity="top" />
         </LinearLayout>
+    </LinearLayout>
+
+    <View style="@style/AppThemeBorderBottom" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/AppThemePadding10">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -158,13 +170,14 @@
 
             <CheckBox
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/own_transport"
                 android:singleLine="false"
                 android:checked="false"
-                android:focusable="true" />
+                android:focusable="true"
+                android:layout_weight="1"
+                android:gravity="top" />
         </LinearLayout>
-
     </LinearLayout>
 
     <View style="@style/AppThemeBorderBottom" />
@@ -175,12 +188,14 @@
         android:layout_height="wrap_content"
         android:weightSum="2">
         <Button
+            style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/save"
             android:id="@+id/save_jobseeking_information"
             android:layout_weight="1" />
         <Button
+            style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/cancel"

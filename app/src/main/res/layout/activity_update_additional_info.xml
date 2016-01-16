@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".UpdateAdditionalInfo"
     android:orientation="vertical"
     style="@style/AppThemePadding10">
@@ -21,7 +21,8 @@
             android:hint="@string/summary"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="10dp"
+            style="@style/AppThemeBaseTextValue" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,7 +30,8 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/limit3000hint"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            style="@style/AppThemeBaseTextValue" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,12 +51,14 @@
         android:weightSum="2">
 
         <Button
+            style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/save"
             android:id="@+id/okButton"
             android:layout_weight="1" />
         <Button
+            style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/cancel"

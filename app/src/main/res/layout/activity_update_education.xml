@@ -55,7 +55,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
-                android:id="@+id/enteredSchool" />
+                android:id="@+id/enteredSchool"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -78,7 +79,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
-                android:id="@+id/enteredMajor" />
+                android:id="@+id/enteredMajor"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -128,7 +130,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
-                android:id="@+id/enteredGrade" />
+                android:id="@+id/enteredGrade"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -154,7 +157,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
-                android:id="@+id/selectedGraduationYear" />
+                android:id="@+id/selectedGraduationYear"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -177,7 +181,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
-                android:id="@+id/enteredEducationInfo" />
+                android:id="@+id/enteredEducationInfo"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -188,13 +193,15 @@
             android:layout_height="wrap_content"
             android:weightSum="2">
             <Button
-                android:layout_width="wrap_content"
+                style="@style/AppThemeBaseButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/save"
                 android:id="@+id/okButton"
                 android:layout_weight="1" />
             <Button
-                android:layout_width="wrap_content"
+                style="@style/AppThemeBaseButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel"
                 android:id="@+id/cancelButton"

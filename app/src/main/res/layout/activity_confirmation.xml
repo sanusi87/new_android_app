@@ -14,7 +14,8 @@
         android:text="@string/confirm"
         android:gravity="center_horizontal"
         android:layout_marginBottom="5dp"
-        style="@style/AppThemeBaseLabel" />
+        style="@style/AppThemeBaseLabel"
+        android:textColor="@color/white" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -23,7 +24,7 @@
         android:weightSum="2">
 
         <Button
-            style="?android:attr/buttonStyleSmall"
+            style="@style/AppThemeBaseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/yes"
@@ -31,7 +32,7 @@
             android:layout_weight="1" />
 
         <Button
-            style="?android:attr/buttonStyleSmall"
+            style="@style/AppThemeBaseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/no"

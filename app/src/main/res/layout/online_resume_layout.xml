@@ -100,11 +100,53 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="@string/no_work_experience" />
+                        android:text="@string/no_work_experience"
+                        style="@style/AppThemeBaseTextValue" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    android:background="@color/light_gray"
+                    android:id="@+id/workExpQuestion"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/haveAnyWorkExp"
+                        android:id="@+id/textView"
+                        android:textColor="@color/white" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            style="@style/AppThemeBaseButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/yes"
+                            android:id="@+id/haveWorkExp"
+                            android:layout_weight="1" />
+
+                        <Button
+                            style="@style/AppThemeBaseButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/no"
+                            android:id="@+id/noWorkExp"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <Button
-                    style="?android:attr/buttonStyleSmall"
+                    style="@style/AppThemeBaseButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/add_work_exp"
@@ -138,11 +180,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="@string/no_education" />
+                        android:text="@string/no_education"
+                        style="@style/AppThemeBaseTextValue" />
                 </LinearLayout>
 
                 <Button
-                    style="?android:attr/buttonStyleSmall"
+                    style="@style/AppThemeBaseButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/add_education"
@@ -180,7 +223,7 @@
                 </LinearLayout>
 
                 <Button
-                    style="?android:attr/buttonStyleSmall"
+                    style="@style/AppThemeBaseButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/add_skill"
@@ -217,7 +260,7 @@
                 </LinearLayout>
 
                 <Button
-                    style="?android:attr/buttonStyleSmall"
+                    style="@style/AppThemeBaseButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/add_language"
@@ -239,12 +282,27 @@
                     android:layout_height="wrap_content"
                     android:text="@string/attached_resume"
                     style="@style/AppThemeBaseLabel" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/attachedResume"
-                    style="@style/AppThemeBaseTextValue" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/progressBar2"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_value"
+                        android:id="@+id/attachedResume"
+                        style="@style/AppThemeBaseTextValue" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <View style="@style/AppThemeBorderBottom" />

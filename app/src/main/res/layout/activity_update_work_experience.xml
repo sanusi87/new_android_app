@@ -59,18 +59,22 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/AppThemePadding10">
+            style="@style/AppThemePadding10"
+            android:id="@+id/selectJobType">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/employment_type"
                 style="@style/AppThemeBaseLabel" />
-            <Spinner
-                android:layout_width="match_parent"
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/employment_type"
-                android:spinnerMode="dropdown" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/no_value"
+                android:id="@+id/selectedJobType"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -79,18 +83,21 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/AppThemePadding10">
+            style="@style/AppThemePadding10"
+            android:id="@+id/selectPositionLevel">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/job_level"
+                android:text="@string/position_level"
                 style="@style/AppThemeBaseLabel" />
-            <Spinner
-                android:layout_width="match_parent"
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/job_level"
-                android:spinnerMode="dropdown" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/no_value"
+                android:id="@+id/selectedPositionLevel" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -112,12 +119,12 @@
                 android:layout_height="wrap_content"
                 android:weightSum="2">
                 <Spinner
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/currency"
                     android:layout_weight="1" />
                 <EditText
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/salary_amount"
                     android:hint="@string/amount"
@@ -187,11 +194,13 @@
                 android:text="@string/company_industry"
                 android:singleLine="true"
                 style="@style/AppThemeBaseLabel" />
-            <Spinner
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/company_industry"
-                android:spinnerMode="dropdown" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/no_value"
+                android:id="@+id/selectedIndustry"
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -210,20 +219,46 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:weightSum="2">
-                <Spinner
-                    android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/month_start"
-                    android:layout_weight="1"
-                    android:spinnerMode="dropdown" />
-                <Spinner
-                    android:layout_width="wrap_content"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/month"
+                        style="@style/AppThemeBaseLabelSub" />
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/month_start"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/year_start"
-                    android:layout_weight="1"
-                    android:spinnerMode="dropdown" />
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/year"
+                        style="@style/AppThemeBaseLabelSub" />
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/year_start"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
 
@@ -246,23 +281,51 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/end_date2"
                 style="@style/AppThemeBaseTextValue" />
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:weightSum="2">
-                <Spinner
-                    android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/month_end"
-                    android:layout_weight="1"
-                    android:spinnerMode="dropdown" />
-                <Spinner
-                    android:layout_width="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/month"
+                        style="@style/AppThemeBaseLabelSub" />
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/month_end"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/year_end"
-                    android:layout_weight="1"
-                    android:spinnerMode="dropdown" />
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/year"
+                        style="@style/AppThemeBaseLabelSub" />
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/year_end"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -305,13 +368,15 @@
             android:layout_height="wrap_content"
             android:weightSum="2">
             <Button
-                android:layout_width="wrap_content"
+                style="@style/AppThemeBaseButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/save"
                 android:id="@+id/okButton"
                 android:layout_weight="1" />
             <Button
-                android:layout_width="wrap_content"
+                style="@style/AppThemeBaseButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel"
                 android:id="@+id/cancelButton"

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".UpdateSalary"
     android:orientation="vertical"
     style="@style/AppThemePadding10">
@@ -11,27 +11,31 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/AppThemePadding10">
+        android:layout_marginBottom="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/currency"
-            style="@style/AppThemeBaseLabel" />
+            style="@style/AppThemeBaseLabel"
+            android:textColor="@android:color/white" />
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/currency"
-            style="@style/AppThemeBaseTextValue" />
+            style="@style/AppThemeBaseTextValue"
+            android:background="@android:color/white"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/AppThemePadding10">
+        android:layout_marginBottom="5dp">
 
         <EditText
             android:layout_width="match_parent"
@@ -49,10 +53,21 @@
         android:layout_height="wrap_content">
 
         <Button
+            style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/ok"
-            android:id="@+id/save" />
+            android:id="@+id/save"
+            android:layout_weight="1" />
+
+        <Button
+            style="@style/AppThemeBaseButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:id="@+id/cancelButton"
+            android:layout_weight="1" />
+
     </LinearLayout>
 
 </LinearLayout>
