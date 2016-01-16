@@ -6,7 +6,7 @@
     <item
         android:id="@+id/action_update_profile"
         android:title="@string/update_profile"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/ic_mode_edit_white_24dp"
         app:showAsAction="always" />
 
 </menu>

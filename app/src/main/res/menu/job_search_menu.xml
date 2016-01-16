@@ -6,6 +6,7 @@
     <item
         android:id="@+id/filter_job_button"
         android:title="@string/filter_job"
-        app:showAsAction="withText|ifRoom" />
+        android:icon="@drawable/ic_settings_white_24dp"
+        app:showAsAction="always" />
 
 </menu>
