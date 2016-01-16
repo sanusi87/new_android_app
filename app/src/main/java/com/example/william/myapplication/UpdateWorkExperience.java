@@ -36,11 +36,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UpdateWorkExperience extends ActionBarActivity {
 
     private static final int SELECT_JOB_SPEC = 1;
     private static final int SELECT_JOB_ROLE = 2;
+    private static final int SELECT_INDUSTRY = 3;
+    private static final int SELECT_JOB_TYPE = 4;
+    private static final int SELECT_POSITION_LEVEL = 5;
 
     TableWorkExperience tableWorkExperience;
     TableJobSpec tableJobSpec;
@@ -50,14 +54,22 @@ public class UpdateWorkExperience extends ActionBarActivity {
     String accessToken;
     int profileId;
 
-    LinearLayout jobSpec;
     TextView selectedJobSpec;
-    LinearLayout jobRole;
     TextView selectedJobRole;
+    TextView selectedIndustry;
+    TextView selectedJobType;
+    TextView selectedPositionLevel;
 
-    int theJobSpec = 0;
-    int theJobRole = 0;
+    //int theJobSpec = 0;
+    //int theJobRole = 0;
     int currentId = 0; // the local db index
+    //int theIndustry = 0;
+
+    JobSpec _jobSpec;
+    JobRole _jobRole;
+    JobType _jobType;
+    Industry _industry;
+    PositionLevel _positionLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,17 +90,13 @@ public class UpdateWorkExperience extends ActionBarActivity {
         final EditText positionTitle = (EditText)findViewById(R.id.position_title);
         final EditText companyName = (EditText)findViewById(R.id.company_name);
 
-        // job type
-        final Spinner employmentType = (Spinner)findViewById(R.id.employment_type);
-        final JobTypeAdapter jta = new JobTypeAdapter(this);
-        jta.setSingle(true);
-        employmentType.setAdapter(jta);
+        LinearLayout selectJobType = (LinearLayout)findViewById(R.id.selectJobType);
+        selectedJobType = (TextView)findViewById(R.id.selectedJobType);
+        HashMap listOfJobType = Jenjobs.getJobType();
 
-        // job level
-        final Spinner jobLevel = (Spinner)findViewById(R.id.job_level);
-        JobLevelAdapter jla = new JobLevelAdapter(this);
-        jla.setSingle(true);
-        jobLevel.setAdapter(jla);
+        LinearLayout selectPositionLevel = (LinearLayout)findViewById(R.id.selectPositionLevel);
+        selectedPositionLevel = (TextView)findViewById(R.id.selectedPositionLevel);
+        HashMap listOfPositionLevel = Jenjobs.getPositionLevel();
 
         // currency
         final Spinner currency = (Spinner)findViewById(R.id.currency);
@@ -96,16 +104,20 @@ public class UpdateWorkExperience extends ActionBarActivity {
         currency.setAdapter(ca);
         final EditText salary = (EditText)findViewById(R.id.salary_amount);
 
-        jobSpec = (LinearLayout)findViewById(R.id.selectJobSpec);
+        LinearLayout selectJobSpec = (LinearLayout)findViewById(R.id.selectJobSpec);
         selectedJobSpec = (TextView)findViewById(R.id.selectedJobSpec);
 
-        jobRole = (LinearLayout)findViewById(R.id.selectJobRole);
+        LinearLayout selectJobRole = (LinearLayout)findViewById(R.id.selectJobRole);
         selectedJobRole = (TextView)findViewById(R.id.selectedJobRole);
 
         // industry
-        final Spinner industry = (Spinner)findViewById(R.id.company_industry);
-        IndustryAdapter ia = new IndustryAdapter(this);
-        industry.setAdapter(ia);
+        //final Spinner industry = (Spinner)findViewById(R.id.company_industry);
+        //IndustryAdapter ia = new IndustryAdapter(this);
+        //industry.setAdapter(ia);
+
+        LinearLayout selectIndustry = (LinearLayout)findViewById(R.id.selectIndustry);
+        selectedIndustry = (TextView)findViewById(R.id.selectedIndustry);
+        HashMap listOfIndustry = Jenjobs.getIndustry();
 
         final Spinner monthStart = (Spinner)findViewById(R.id.month_start);
         final Spinner monthEnd = (Spinner)findViewById(R.id.month_end);
@@ -115,8 +127,8 @@ public class UpdateWorkExperience extends ActionBarActivity {
         String[] listOfMonth = Jenjobs.listOfMonth();
         String[] listOfYear = Jenjobs.listOfYear();
 
-        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listOfMonth);
-        ArrayAdapter<String> yearAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listOfYear);
+        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, listOfMonth);
+        ArrayAdapter<String> yearAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, listOfYear);
         monthStart.setAdapter(monthAdapter);
         monthEnd.setAdapter(monthAdapter);
         yearStart.setAdapter(yearAdapter);
@@ -141,32 +153,49 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 salary.setText(w.getString(10));
 
                 currency.setSelection( ca.findPosition( w.getInt(11) ) );
-                employmentType.setSelection(jta.findPosition(w.getInt(6)));
-                jobLevel.setSelection(jla.findPosition(w.getInt(7)));
-                industry.setSelection(ia.findPosition(w.getInt(8)));
+                //employmentType.setSelection(jta.findPosition(w.getInt(6)));
+                //jobLevel.setSelection(jla.findPosition(w.getInt(7)));
+                //industry.setSelection(ia.findPosition(w.getInt(8)));
 
-                theJobSpec = w.getInt( 4 );
-                JobSpec _jobSpec = tableJobSpec.findById(theJobSpec);
+                int __jobLevelId = w.getInt(7);
+                String __jobLevelName = (String) listOfPositionLevel.get(__jobLevelId);
+                _positionLevel = new PositionLevel(__jobLevelId, __jobLevelName);
+
+                int __jobSpecId = w.getInt(4);
+                _jobSpec = tableJobSpec.findById(__jobSpecId);
                 selectedJobSpec.setText(_jobSpec.name);
 
-                theJobRole = w.getInt(5);
-                JobRole _jobRole = tableJobRole.findById( theJobRole );
+                int __jobRoleId = w.getInt(5);
+                _jobRole = tableJobRole.findById( __jobRoleId );
                 selectedJobRole.setText(_jobRole.name);
 
-                String startDate = w.getString( 12 );
-                String[] startDatePart = startDate.split("\\-");
-                int a = Integer.valueOf(startDatePart[1]);
-                if( a < 10 ){ startDatePart[1] = ""+a; }
-                monthStart.setSelection( monthAdapter.getPosition( startDatePart[1] ) );
-                yearStart.setSelection( yearAdapter.getPosition( startDatePart[0] ) );
+                int __industryId = w.getInt(8);
+                String __industryName = (String)listOfIndustry.get(__industryId);
+                _industry = new Industry(__industryId, __industryName);
+                selectedIndustry.setText(__industryName);
+
+                int __jobTypeId = w.getInt(6);
+                String __jobTypeName = (String) listOfJobType.get(__jobTypeId);
+                _jobType = new JobType(__jobTypeId, __jobTypeName);
+                selectedJobType.setText(__jobTypeName);
+
+                String startDate = w.getString(12);
+                // String[] startDatePart = startDate.split("\\-");
+                // get month from date (index 1)
+                //int a = Integer.valueOf(  );
+                //if( a < 10 ){ startDatePart[1] = ""+a; }
+                String _selectedMonth = Jenjobs.date(startDate, "MM", "dd-MM-yyyy");
+                String _selectedYear = Jenjobs.date(startDate, "yyyy", "dd-MM-yyyy");
+                monthStart.setSelection( monthAdapter.getPosition( _selectedMonth ) );
+                yearStart.setSelection( yearAdapter.getPosition( _selectedYear ) );
 
                 String endDate = w.getString( 13 );
-                Log.e("endDate", ""+endDate);
                 if( endDate != null && !endDate.equals("null") ){
-                    String[] endDatePart = endDate.split( "\\-" );
-                    Log.e("endDatePart", ""+endDatePart.length);
-                    monthEnd.setSelection( monthAdapter.getPosition( endDatePart[1] ) );
-                    yearEnd.setSelection( yearAdapter.getPosition( endDatePart[0] ) );
+                    //String[] endDatePart = endDate.split( "\\-" );
+                    String __selectedMonth = Jenjobs.date(endDate, "MM", "dd-MM-yyyy");
+                    String __selectedYear = Jenjobs.date(endDate, "yyyy", "dd-MM-yyyy");
+                    monthEnd.setSelection( monthAdapter.getPosition( __selectedMonth ) );
+                    yearEnd.setSelection( yearAdapter.getPosition( __selectedYear ) );
                 }
 
                 if( !w.getString(9).equals("null") ){
@@ -176,10 +205,13 @@ public class UpdateWorkExperience extends ActionBarActivity {
 
             }
             w.close();
+            setTitle(getText(R.string.update_work_exp));
+        }else{
+            setTitle(getText(R.string.add_work_exp));
         }
 
         // event binding
-        jobSpec.setOnClickListener(new View.OnClickListener() {
+        selectJobSpec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -188,18 +220,46 @@ public class UpdateWorkExperience extends ActionBarActivity {
             }
         });
 
-        jobRole.setOnClickListener(new View.OnClickListener() {
+        selectJobRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("selectedJobSpec", "" + theJobSpec);
                 if( !selectedJobSpec.getText().equals(getResources().getString(R.string.no_value)) ){
                     Intent intent = new Intent();
-                    intent.putExtra("jobspecid", theJobSpec);
+                    intent.putExtra("jobspecid", _jobSpec.id);
                     intent.setClass(getApplicationContext(), SelectSingleJobRole.class);
                     startActivityForResult(intent, SELECT_JOB_ROLE);
                 }else{
                     Toast.makeText(getApplicationContext(), "Please select job specialisation first.", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        selectIndustry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), SelectJobIndustry.class);
+                startActivityForResult(intent, SELECT_INDUSTRY);
+            }
+        });
+
+        selectJobType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("single", true);
+                intent.setClass(getApplicationContext(), SelectJobType.class);
+                startActivityForResult(intent, SELECT_JOB_TYPE);
+            }
+        });
+
+        selectPositionLevel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("single", true);
+                intent.setClass(getApplicationContext(), SelectPositionLevel.class);
+                startActivityForResult(intent, SELECT_POSITION_LEVEL);
             }
         });
 
@@ -222,11 +282,11 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     errors.add("Please enter the company name.");
                 }
 
-                if( employmentType.getSelectedItemPosition() == Spinner.INVALID_POSITION ){
+                if( _jobType == null ){
                     errors.add("Please select the employment type.");
                 }
 
-                if( jobLevel.getSelectedItemPosition() == Spinner.INVALID_POSITION ){
+                if( _positionLevel != null ){
                     errors.add("Please select the job level.");
                 }
 
@@ -241,7 +301,8 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     errors.add("Please specify both resignation month and year, or left both blank.");
                 }
 
-                if( industry.getSelectedItemPosition() == Spinner.INVALID_POSITION ){
+                //if( industry.getSelectedItemPosition() == Spinner.INVALID_POSITION ){
+                if( _industry == null ){
                     errors.add("Please select the company industry.");
                 }
 
@@ -281,17 +342,13 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     String theCompanyName = companyName.getText().toString();
                     cv.put("company", theCompanyName);
 
-                    cv.put("job_spec_id", theJobSpec);
-                    cv.put("job_role_id", theJobRole);
+                    cv.put("job_spec_id", _jobSpec.id);
+                    cv.put("job_role_id", _jobRole.id);
+                    cv.put("job_type_id", _jobType.id);
+                    cv.put("job_level_id", _positionLevel.id);
 
-                    JobType jt = (JobType)employmentType.getSelectedItem();
-                    cv.put("job_type_id", jt.id);
-
-                    JobLevel jl = (JobLevel)jobLevel.getSelectedItem();
-                    cv.put("job_level_id", jl.id);
-
-                    Industry ind = (Industry)industry.getSelectedItem();
-                    cv.put("industry_id", ind.id);
+                    //Industry ind = (Industry)industry.getSelectedItem();
+                    cv.put("industry_id", _industry.id);
 
                     String experience = exp.getText().toString();
                     cv.put("experience", experience);
@@ -303,14 +360,14 @@ public class UpdateWorkExperience extends ActionBarActivity {
 
                     String _monthStart = monthStart.getSelectedItem().toString();
                     String _yearStart = yearStart.getSelectedItem().toString();
-                    String startedOn = _yearStart+"-"+_monthStart+"-01";
+                    String startedOn = Jenjobs.date(_yearStart+" "+_monthStart+" 01", "yyyy-MM-dd", "yyyy MMMM dd");
                     cv.put("started_on", startedOn);
 
                     String endOn = null;
                     if( monthEnd.getSelectedItemPosition() != 0 || yearEnd.getSelectedItemPosition() != 0 ){
                         String _monthEnd = monthEnd.getSelectedItem().toString();
                         String _yearEnd = yearEnd.getSelectedItem().toString();
-                        endOn = _yearEnd+"-"+_monthEnd+"-01";
+                        endOn = Jenjobs.date(_yearEnd+" "+_monthEnd+" 01", "yyyy-MM-dd", "yyyy MMMM dd");
                     }
                     cv.put("resigned_on", ""+endOn);
                     cv.put("update_at", Jenjobs.date(null, "yyyy-MM-dd", null));
@@ -335,11 +392,11 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     url += "?access-token=" + accessToken;
 
                     try {
-                        obj.put("job_spec_id", theJobSpec);
-                        obj.put("job_role_id", theJobRole);
-                        obj.put("job_type_id", jt.id);
-                        obj.put("job_level_id", jl.id);
-                        obj.put("industry_id", ind.id);
+                        obj.put("job_spec_id", _jobSpec.id);
+                        obj.put("job_role_id", _jobRole.id);
+                        obj.put("job_type_id", _jobType.id);
+                        obj.put("job_level_id", _positionLevel.id);
+                        obj.put("industry_id", _industry.id);
                         obj.put("currency_id", _currency.id);
                         obj.put("position", thePositionTitle);
                         obj.put("company", theCompanyName);
@@ -384,12 +441,13 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 JobSpec jobSpec = (JobSpec)extra.get("jobspec");
                 if( jobSpec != null ){
                     selectedJobSpec.setText(jobSpec.name);
-                    theJobSpec = jobSpec.id;
+                    //theJobSpec = jobSpec.id;
+                    _jobSpec = jobSpec;
                 }
 
                 // reset job role
                 selectedJobRole.setText(getResources().getString(R.string.no_value));
-                theJobRole = 0;
+                _jobRole = null;
             }
         }else if( requestCode == SELECT_JOB_ROLE ){
             if (resultCode == RESULT_OK) {
@@ -397,7 +455,34 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 JobRole jobrole = (JobRole)extra.get("jobrole");
                 if( jobrole != null ) {
                     selectedJobRole.setText(jobrole.name);
-                    theJobRole = jobrole.id;
+                    _jobRole = jobrole;
+                }
+            }
+        }else if( requestCode == SELECT_INDUSTRY ){
+            if (resultCode == RESULT_OK) {
+                Bundle extra = data.getExtras();
+                Industry industry = (Industry)extra.get("industry");
+                if( industry != null ) {
+                    selectedIndustry.setText(industry.name);
+                    _industry = industry;
+                }
+            }
+        }else if( requestCode == SELECT_JOB_TYPE ){
+            if (resultCode == RESULT_OK) {
+                Bundle extra = data.getExtras();
+                JobType jobType = (JobType)extra.get("jobType");
+                if( jobType != null ) {
+                    _jobType = jobType;
+                    selectedJobType.setText(_jobType.name);
+                }
+            }
+        }else if( requestCode == SELECT_POSITION_LEVEL ){
+            if (resultCode == RESULT_OK) {
+                Bundle extra = data.getExtras();
+                PositionLevel positionLevel = (PositionLevel)extra.get("positionlevel");
+                if( positionLevel != null ) {
+                    _positionLevel = positionLevel;
+                    selectedPositionLevel.setText(_positionLevel.name);
                 }
             }
         }
