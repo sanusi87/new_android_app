@@ -120,7 +120,7 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.putExtra("post_id", postId);
-                intent.setClass(context, JobDetails2.class);
+                intent.setClass(context, JobDetails.class);
                 context.startActivity(intent);
             }
         });
