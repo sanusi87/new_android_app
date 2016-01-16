@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class JobTypeAdapter extends BaseAdapter implements ListAdapter{
     public ArrayList<JobType> jobtype = new ArrayList<>();
@@ -21,13 +20,9 @@ public class JobTypeAdapter extends BaseAdapter implements ListAdapter{
         this.context = context;
 
         HashMap fields = Jenjobs.getJobType();
-        //ArrayList<JobSeekingStatus> tempArr = new ArrayList<>();
-
-        Iterator i = fields.entrySet().iterator();
-        while( i.hasNext() ){
-            HashMap.Entry e = (HashMap.Entry)i.next();
-            //tempArr.add(new JobSeekingStatus( (int)e.getKey(), String.valueOf(e.getValue()) ));
-            jobtype.add(new JobType( (int)e.getKey(), String.valueOf(e.getValue()) ));
+        for (Object o : fields.entrySet()) {
+            HashMap.Entry e = (HashMap.Entry) o;
+            jobtype.add(new JobType((int) e.getKey(), String.valueOf(e.getValue())));
         }
     }
 
@@ -48,20 +43,27 @@ public class JobTypeAdapter extends BaseAdapter implements ListAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        JobType c = (JobType) getItem(position);
+
         View v = convertView;
+        TextView tvName = null;
+
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
             if( this.single ){
-                v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+                v = vi.inflate(R.layout.spinner_item, parent, false);
+                tvName = (TextView) v.findViewById(R.id.spinner_item);
             }else{
                 v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+                tvName = (TextView) v.findViewById(android.R.id.text1);
+                tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
             }
         }
-        JobType c = (JobType) getItem(position);
-        TextView tvName = (TextView) v.findViewById(android.R.id.text1);
-        tvName.setText(c.name);
-        tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
+
+        if( tvName != null ){
+            tvName.setText(c.name);
+        }
         //v.setBackgroundColor(context.getResources().getColor(R.color.light_gray));
 
         return v;
@@ -71,6 +73,7 @@ public class JobTypeAdapter extends BaseAdapter implements ListAdapter{
         this.single = inflateSingle;
     }
 
+    /*
     public int findPosition( int theCode ){
         int index = 0;
         for(int i=0;i< this.jobtype.size();i++){
@@ -81,4 +84,5 @@ public class JobTypeAdapter extends BaseAdapter implements ListAdapter{
         }
         return index;
     }
+    */
 }

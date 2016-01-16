@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class JobSeekingAdapter extends BaseAdapter implements ListAdapter{
 
@@ -23,13 +24,12 @@ public class JobSeekingAdapter extends BaseAdapter implements ListAdapter{
     public JobSeekingAdapter( Context context ){
         this.context = context;
 
-        HashMap<Integer, String> fields = Jenjobs.getJobSeekingStatus();
+        HashMap fields = Jenjobs.getJobSeekingStatus();
         ArrayList<JobSeekingStatus> tempArr = new ArrayList<>();
 
-        Iterator i = fields.entrySet().iterator();
-        while( i.hasNext() ){
-            HashMap.Entry e = (HashMap.Entry)i.next();
-            tempArr.add(new JobSeekingStatus( (int)e.getKey(), String.valueOf(e.getValue()) ));
+        for (Object o : fields.entrySet()) {
+            HashMap.Entry e = (HashMap.Entry) o;
+            tempArr.add(new JobSeekingStatus((int) e.getKey(), String.valueOf(e.getValue())));
         }
 
         Collections.sort(tempArr, new Comparator<JobSeekingStatus>() {
@@ -69,10 +69,10 @@ public class JobSeekingAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+            v = vi.inflate(R.layout.spinner_item, parent, false);
         }
         JobSeekingStatus c = (JobSeekingStatus) getItem(position);
-        TextView tvName = (TextView) v.findViewById(android.R.id.text1);
+        TextView tvName = (TextView) v.findViewById(R.id.spinner_item);
         tvName.setText(c.name);
         tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
         v.setBackgroundColor(context.getResources().getColor(R.color.white));

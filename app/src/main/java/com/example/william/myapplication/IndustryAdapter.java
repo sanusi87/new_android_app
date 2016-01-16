@@ -47,10 +47,10 @@ public class IndustryAdapter extends BaseAdapter implements ListAdapter{
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
-            v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+            v = vi.inflate(R.layout.spinner_item, parent, false);
         }
         Industry c = (Industry) getItem(position);
-        TextView tvName = (TextView) v.findViewById(android.R.id.text1);
+        TextView tvName = (TextView) v.findViewById(R.id.spinner_item);
         tvName.setText(c.name);
         tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
         //v.setBackgroundColor(context.getResources().getColor(R.color.white));
