@@ -37,6 +37,7 @@ public class UpdateAdditionalInfo extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_additional_info);
+        setTitle(getText(R.string.update_additional_info));
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         tProfile = new TableProfile(getApplicationContext());

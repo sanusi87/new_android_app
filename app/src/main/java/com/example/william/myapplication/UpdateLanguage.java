@@ -105,6 +105,9 @@ public class UpdateLanguage extends ActionBarActivity {
                 }
                 cl.close();
             }
+            setTitle(getText(R.string.update_language));
+        }else{
+            setTitle(getText(R.string.add_language));
         }
 
         nativeValueLabel.setOnClickListener(new View.OnClickListener() {

@@ -59,6 +59,7 @@ public class UpdateJobSeeking extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_job_seeking);
+        setTitle(getText(R.string.update_job_seeking));
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         final int profileId = sharedPref.getInt("js_profile_id", 0);

@@ -61,7 +61,7 @@ public class UpdateJobPreference extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_job_preference);
-        setTitle("Update Job Preference");
+        setTitle(getText(R.string.update_job_preference));
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 

@@ -187,6 +187,7 @@ public class UpdateEducation extends ActionBarActivity {
                     school = enteredSchool.getText().toString();
                 }
                 intent.putExtra("the_text", school);
+                intent.putExtra("the_title", getText(R.string.school));
                 startActivityForResult(intent, ENTER_SCHOOL);
             }
         });
@@ -201,6 +202,7 @@ public class UpdateEducation extends ActionBarActivity {
                     major = enteredMajor.getText().toString();
                 }
                 intent.putExtra("the_text", major);
+                intent.putExtra("the_title", getText(R.string.education_major));
                 startActivityForResult(intent, ENTER_MAJOR);
             }
         });
@@ -215,6 +217,7 @@ public class UpdateEducation extends ActionBarActivity {
                     grade = enteredGrade.getText().toString();
                 }
                 intent.putExtra("the_text", grade);
+                intent.putExtra("the_title", getText(R.string.grade));
                 startActivityForResult(intent, ENTER_GRADE);
             }
         });
@@ -230,6 +233,7 @@ public class UpdateEducation extends ActionBarActivity {
                 }
                 intent.putExtra("the_text", info);
                 intent.putExtra("multiline", true);
+                intent.putExtra("the_title", getText(R.string.education_info));
                 startActivityForResult(intent, ENTER_EDUCATION_INFO);
             }
         });

@@ -19,9 +19,16 @@ public class UpdateName extends Activity {
 
         Bundle extra = getIntent().getExtras();
         String currentText = extra.getString("the_text");
+
+        // set this if u wish to submit the text entered
         final String url = extra.getString("url");
         final String jsonString = extra.getString("json");
+
+        // enable multiline?
         boolean multiline = extra.getBoolean("multiline");
+
+        String theTitle = extra.getString("the_title");
+        setTitle(theTitle);
 
         final EditText t = (EditText)findViewById(R.id.theText);
         t.setText(currentText);

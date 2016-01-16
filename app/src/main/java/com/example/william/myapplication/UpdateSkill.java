@@ -37,6 +37,7 @@ public class UpdateSkill extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_skill);
+        setTitle(getText(R.string.skill));
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         tSkill = new TableSkill(getApplicationContext());
