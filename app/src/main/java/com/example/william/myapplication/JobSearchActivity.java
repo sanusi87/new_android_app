@@ -14,6 +14,10 @@ public class JobSearchActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.job_layout);
+        setTitle("Job Search");
+        if( getSupportActionBar() != null ){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         ProgressBar loading = (ProgressBar) findViewById(R.id.progressBar4);
         ListView lv = (ListView) findViewById(R.id.job_list_view);
