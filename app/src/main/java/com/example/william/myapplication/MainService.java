@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -29,9 +28,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 
@@ -44,6 +40,7 @@ public class MainService extends Service{
     String accessToken;
 
     TableApplication tableApplication;
+    TableSettings tableSettings;
     HashMap applicationStatus;
 
     public class LocalBinder extends Binder {
@@ -111,25 +108,28 @@ public class MainService extends Service{
     Runnable updateData = new Runnable(){
         @Override
         public void run() {
-            // TODO - check for network connectivity first, only then can proceed
-            Cursor applications = tableApplication.getActiveApplication();
-            Log.e("active apps",""+applications.getCount());
-            if (applications.getCount() > 0) {
-                applications.moveToFirst();
+            String notificationAlert = tableSettings.getSetting("notification_alert");
+            // if notification alert is enabled
+            if( Integer.valueOf(notificationAlert) > 0 ){
+                // TODO - check for network connectivity first, only then can proceed
+                Cursor applications = tableApplication.getActiveApplication();
+                Log.e("active apps",""+applications.getCount());
+                if (applications.getCount() > 0) {
+                    applications.moveToFirst();
 
-                JSONArray arr = new JSONArray();
-                while (!applications.isAfterLast()) {
-                    int postId = applications.getInt(2);
-                    arr.put(postId);
-                    applications.moveToNext();
+                    JSONArray arr = new JSONArray();
+                    while (!applications.isAfterLast()) {
+                        int postId = applications.getInt(2);
+                        arr.put(postId);
+                        applications.moveToNext();
+                    }
+
+                    String[] params = {Jenjobs.APPLICATION_STATUS_URL + "?id=" + arr.toString() + "&access-token=" + accessToken};
+                    //Log.e("url",params[0]);
+                    new CheckApplication().execute(params);
                 }
-
-                String[] params = {Jenjobs.APPLICATION_STATUS_URL + "?id=" + arr.toString() + "&access-token=" + accessToken};
-                //Log.e("url",params[0]);
-                new CheckApplication().execute(params);
+                applications.close();
             }
-            applications.close();
-
             handler.postDelayed(updateData, 30000);
         }
     };
@@ -137,8 +137,10 @@ public class MainService extends Service{
     private void handleCommand(Intent intent){
         mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
+        tableSettings = new TableSettings(getApplicationContext());
         tableApplication = new TableApplication(getApplicationContext());
         applicationStatus = Jenjobs.getApplicationStatus();
+
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
         if( accessToken != null ){
