@@ -216,4 +216,7 @@
     <string name="year">Year</string>
     <string name="keyword_filter">Keyword Filter</string>
     <string name="haveAnyWorkExp">Do you have any work experience?</string>
+    <string name="title_activity_employer_profile">EmployerProfile</string>
+    <string name="company_info">Company Info</string>
+    <string name="company_location">Company Location</string>
 </resources>
