@@ -26,11 +26,11 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
                 android:id="@+id/companyLogo"
                 android:contentDescription="@string/company_logo"
-                android:src="@drawable/profile_image"
+                android:src="@drawable/ic_portrait_black_48dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp" />
@@ -197,9 +197,9 @@
                     style="@style/AppThemeBaseLabel" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/profile_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:src="@drawable/ic_place_black_48dp"
                     android:layout_gravity="center_horizontal"
                     android:contentDescription="@string/worklocation"
                     android:id="@+id/workLocationImage" />
