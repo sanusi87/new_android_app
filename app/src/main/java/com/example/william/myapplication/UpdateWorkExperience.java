@@ -494,7 +494,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
         @Override
         protected JSONObject doInBackground(String... params) {
             JSONObject _response = null;
-
+            Log.e("postObject", params[1]);
             final HttpClient httpclient = new DefaultHttpClient();
             final HttpPost httppost = new HttpPost( params[0] );
 
