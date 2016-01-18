@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -68,6 +69,8 @@ public class JobDetails extends ActionBarActivity {
     TableLanguage tableLanguage;
     TableBookmark tableBookmark;
 
+    static Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +78,8 @@ public class JobDetails extends ActionBarActivity {
         if( getSupportActionBar() != null ){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        context = this;
 
         jobDetails = null;
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
@@ -407,6 +412,10 @@ public class JobDetails extends ActionBarActivity {
                     String savedJobDetails = job.getString(3);
                     try {
                         jobDetails = new JSONObject(savedJobDetails);
+                        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+                        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
+                        mViewPager.setAdapter(mSectionsPagerAdapter);
+                        positionTitle.setText(jobDetails.getString("title"));
                     } catch (JSONException e) {
                         Log.e("err", e.getMessage());
                     }
@@ -457,16 +466,33 @@ public class JobDetails extends ActionBarActivity {
                 new ImageLoad(companyDetails.getString("logo_file"), companyLogo).execute();
 
                 ((TextView)v.findViewById(R.id.companyName)).setText( jobDetails.optString("company") );
-                ((TextView)v.findViewById(R.id.companyRegistrationNumber)).setText( companyDetails.optString("registration_no") );
-                ((TextView)v.findViewById(R.id.companyIndustry)).setText( companyDetails.optString("industry") );
-                ((TextView)v.findViewById(R.id.companyWorkingHours)).setText( companyDetails.optString("work_hour") );
-                ((TextView)v.findViewById(R.id.companyBenefits)).setText( companyDetails.optString("benefits") );
-                ((TextView)v.findViewById(R.id.companyWebsite)).setText( companyDetails.optString( "website" ) );
-                ((TextView)v.findViewById(R.id.companyFacebookPage)).setText( companyDetails.optString( "fb_page" ) );
+                ((TextView)v.findViewById(R.id.companyRegistrationNumber)).setText(companyDetails.optString("registration_no"));
+                ((TextView)v.findViewById(R.id.companyIndustry)).setText(companyDetails.optString("industry"));
+                ((TextView)v.findViewById(R.id.companyWorkingHours)).setText(companyDetails.optString("work_hour"));
+                ((TextView)v.findViewById(R.id.companyBenefits)).setText(companyDetails.optString("benefits"));
+                ((TextView)v.findViewById(R.id.companyWebsite)).setText(companyDetails.optString("website"));
+                ((TextView)v.findViewById(R.id.companyFacebookPage)).setText(companyDetails.optString("fb_page"));
 
                 ImageView workLocationImage = (ImageView)v.findViewById(R.id.workLocationImage);
                 new ImageLoad(companyDetails.getString("map_image"), workLocationImage).execute();
 
+                final String latitude = companyDetails.optString("latitude");
+                final String longitude = companyDetails.optString("longitude");
+
+                if( Float.valueOf(latitude) > 0 && Float.valueOf(longitude) > 0 ){
+                    workLocationImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //Uri gmmIntentUri = Uri.parse("google.streetview:cbll=46.414382,10.013988");
+                            Uri gmmIntentUri = Uri.parse("geo:"+latitude+","+longitude+"?z=16");
+                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                            mapIntent.setPackage("com.google.android.apps.maps");
+                            if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+                                context.startActivity(mapIntent);
+                            }
+                        }
+                    });
+                }
             } catch (JSONException e) {
                 Log.e("compErr", e.getMessage());
             }
