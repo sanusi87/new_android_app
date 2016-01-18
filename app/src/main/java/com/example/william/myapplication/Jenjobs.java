@@ -2,6 +2,7 @@ package com.example.william.myapplication;
 
 import android.util.Log;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -697,6 +698,32 @@ public class Jenjobs {
             Log.e("newdateErr", e.getMessage());
         }
         return newDate;
+    }
+
+    /*
+    * month-year duration only
+    * supported date format == yyyy-MM-dd
+    * */
+    public static String calculateDuration(String startDate, String endDate){
+        SimpleDateFormat outputFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+        try {
+            Date _startDate = outputFormatter.parse(startDate);
+            Date _endDate = outputFormatter.parse(endDate);
+
+            Calendar startCalendar = Calendar.getInstance();
+            startCalendar.setTime(_startDate);
+            Calendar endCalendar = Calendar.getInstance();
+            endCalendar.setTime(_endDate);
+
+            int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
+            int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+
+            return diffYear+"y "+diffMonth+"m";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static String[] listOfMonth(){
