@@ -139,6 +139,7 @@
             android:name=".SelectJobIndustry"
             android:label="@string/title_activity_select_job_industry"
             android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".EmployerProfile"></activity>
     </application>
 
 </manifest>
