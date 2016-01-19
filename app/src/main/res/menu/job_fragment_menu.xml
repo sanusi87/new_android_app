@@ -9,4 +9,9 @@
         android:icon="@drawable/ic_settings_white_24dp"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/about_job_ads"
+        android:title="@string/about"
+        app:showAsAction="collapseActionView" />
+
 </menu>
