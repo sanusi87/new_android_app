@@ -1,5 +1,8 @@
 package com.example.william.myapplication;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -773,5 +776,4 @@ public class Jenjobs {
     public static String[] listOfAvailabilityUnit(){
         return new String[]{"Day", "Week", "Month"};
     }
-
 }
