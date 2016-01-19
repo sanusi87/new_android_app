@@ -9,5 +9,6 @@ public class AboutJobSearch extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_job_search);
+        setTitle(getText(R.string.about_job_posting));
     }
 }
