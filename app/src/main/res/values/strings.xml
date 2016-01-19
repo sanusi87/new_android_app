@@ -12,7 +12,7 @@
     <string name="register_text">Register</string>
     <string name="forgot_text">Forgot Password?</string>
     <string name="jenjobs_logo">JenJOBS Logo</string>
-    <string name="no_value">no_value</string>
+    <string name="no_value"/>
     <string name="fullname">Full Name</string>
     <string name="email">Email</string>
     <string name="icno">I/C</string>
