@@ -578,17 +578,27 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     String positionTitle = cw.getString(2);
                     String companyName = cw.getString(3);
                     String dateStart = cw.getString(12);
-                    //String dateResign = cw.getString(13);
+                    String dateResign = cw.getString(13);
+
+                    String durationRange = Jenjobs.date(dateStart, null, "yyyy-MM-dd")+" - ";
+                    String durationCount = "";
+                    if( dateResign.length() == 0 ){
+                        durationRange += "Present";
+                        durationCount = Jenjobs.calculateDuration( dateStart, Jenjobs.date(null, null, "yyyy-MM-dd") );
+                    }else{
+                        durationRange += Jenjobs.date(dateResign, null, "yyyy-MM-dd");
+                        durationCount = Jenjobs.calculateDuration(dateStart, dateResign );
+                    }
 
                     final View v = getActivity().getLayoutInflater().inflate(R.layout.each_work_experience, null);
                     listOfWorkExp.addView(v);
 
                     ((TextView)v.findViewById(R.id.positionTitle)).setText( positionTitle );
                     ((TextView)v.findViewById(R.id.companyName)).setText( companyName );
-                    ((TextView)v.findViewById(R.id.startedOn)).setText( Jenjobs.date(dateStart, null, "yyyy-MM-dd") );
+                    ((TextView)v.findViewById(R.id.startedOn)).setText( durationRange );
 
                     // TODO: calculate duration
-                    //((TextView)v.findViewById(R.id.workDuration)).setText(  );
+                    ((TextView)v.findViewById(R.id.workDuration)).setText( durationCount );
 
                     // final int selectedWork = cw.getPosition();
                     LinearLayout updateWorkExp = (LinearLayout)v.findViewById(R.id.updateWorkExperience);
@@ -999,6 +1009,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     intent.setClass(getApplicationContext(), JobSearchFilter.class);
                     startActivityForResult(intent, FETCH_FILTER_PARAM);
                     return true;
+                }else if( clickedItem == R.id.about_job_ads ){
+                    Intent intent = new Intent();
+                    intent.setClass(getApplicationContext(), AboutJobSearch.class);
+                    startActivity(intent);
+                    return true;
                 }else{
                     return super.onOptionsItemSelected(item);
                 }
@@ -1023,7 +1038,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 inflater.inflate(R.menu.profile, menu);
                 break;
             case JOB_FRAGMENT:
-                inflater.inflate(R.menu.job_search_menu, menu);
+                inflater.inflate(R.menu.job_fragment_menu, menu);
                 break;
             case APPLICATION_FRAGMENT:
 
