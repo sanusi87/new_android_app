@@ -109,6 +109,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     private static TextView additionalInfo;
     private static LinearLayout listOfWorkExp;
     private static LinearLayout listOfEducation;
+    private static LinearLayout workExpQuestion;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -339,7 +340,15 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             name.setText( theProfile.name );
             email.setText( theProfile.email );
             mobile_no.setText( theProfile.mobile_no );
-            ic_no.setText( theProfile.ic );
+
+            if( theProfile.mobile_no != null && !theProfile.mobile_no.equals("null") ){
+                mobile_no.setText( theProfile.mobile_no );
+            }
+
+            if( theProfile.ic != null && !theProfile.ic.equals("null") ){
+                ic_no.setText( theProfile.ic );
+            }
+
             gender.setText(theProfile.gender);
 
             if( theProfile.country_id > 0 ){
@@ -351,7 +360,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
 
             String _dob = theProfile.dob;
-            if( _dob != null ){
+            if( _dob != null && !_dob.equals("null") ){
                 dob.setText( Jenjobs.date(_dob, null, "yyyy-MM-dd") );
             }
 
@@ -428,6 +437,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
             LinearLayout sms = (LinearLayout)rootView.findViewById(R.id.sms);
             final CheckBox smsCb = (CheckBox)rootView.findViewById(R.id.sms_checkbox);
+
+            int alert = Integer.valueOf(tableSettings.getSetting("notification_alert"));
+            if( alert > 0 ){ notificationCb.setChecked(true); }
 
             Cursor subscriptions = tableSubscription.getSubscription();
             if( subscriptions.moveToFirst() ){
@@ -548,7 +560,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }
             });
 
-            final LinearLayout workExpQuestion = (LinearLayout)rootView.findViewById(R.id.workExpQuestion);
+            workExpQuestion = (LinearLayout)rootView.findViewById(R.id.workExpQuestion);
             listOfWorkExp = (LinearLayout)rootView.findViewById(R.id.listOfWorkExperience);
             Cursor cw = tableWorkExperience.getWorkExperience();
             if( cw.moveToFirst() ){
@@ -596,8 +608,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ((TextView)v.findViewById(R.id.positionTitle)).setText( positionTitle );
                     ((TextView)v.findViewById(R.id.companyName)).setText( companyName );
                     ((TextView)v.findViewById(R.id.startedOn)).setText( durationRange );
-
-                    // TODO: calculate duration
                     ((TextView)v.findViewById(R.id.workDuration)).setText( durationCount );
 
                     // final int selectedWork = cw.getPosition();
@@ -621,6 +631,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             String[] param = {Jenjobs.WORK_EXPERIENCE_URL+"/"+actualId+"?access-token="+accessToken};
                             new DeleteRequest().execute(param);
                             tableWorkExperience.deleteWorkExperience(savedId);
+
+                            // get list of work exp left, if none, then show workExpQuestion
+                            if( listOfWorkExp.getChildCount() == 0 ){
+                                workExpQuestion.setVisibility(View.VISIBLE);
+                            }
                         }
                     });
 
@@ -662,7 +677,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     //_param.put("", );
                     String[] param = {
                             Jenjobs.PROFILE_URL+"?access-token="+accessToken,
-
+                            "{}"
                     };
                     new PostRequest().execute(param);
                 }
@@ -760,7 +775,12 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             });
 
             HashMap _jobseekingStatus = Jenjobs.getJobSeekingStatus();
-            jobSeeking.setText(_jobseekingStatus.get(theProfile.js_jobseek_status_id).toString());
+            Object jobseekingStatusText = _jobseekingStatus.get(theProfile.js_jobseek_status_id);
+            if( jobseekingStatusText != null ){
+                jobSeeking.setText(jobseekingStatusText.toString());
+            }else{
+                jobSeeking.setText(getText(R.string.no_value));
+            }
 
             /*
             * job preference
@@ -784,6 +804,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 String _savedCurrency = (String) currencies.get(savedCurrency);
 
                 String summary = _savedCurrency+" "+savedSalary+" per month";
+                if( savedSalary == null || savedSalary.equals("null") ){
+                    summary = getText(R.string.no_value).toString();
+                }
                 jobPreference.setText(summary);
             }
             tjp.close();
@@ -1194,10 +1217,22 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     final String positionTitle = c.getString(2);
                     String companyName = c.getString(3);
                     String dateStart = c.getString(12);
+                    String dateResign = c.getString(13);
 
                     ((TextView)v.findViewById(R.id.positionTitle)).setText(positionTitle);
                     ((TextView)v.findViewById(R.id.companyName)).setText( companyName );
-                    ((TextView)v.findViewById(R.id.startedOn)).setText(Jenjobs.date(dateStart, null, "yyyy-MM-dd"));
+
+                    String durationRange = Jenjobs.date(dateStart, "MMM yyyy", "yyyy-MM-dd")+" - ";
+                    String durationCount = "";
+                    if( dateResign.length() == 0 ){
+                        durationRange += "Present";
+                        durationCount = Jenjobs.calculateDuration( dateStart, Jenjobs.date(null, null, "yyyy-MM-dd") );
+                    }else{
+                        durationRange += Jenjobs.date(dateResign, "MMM yyyy", "yyyy-MM-dd");
+                        durationCount = Jenjobs.calculateDuration(dateStart, dateResign );
+                    }
+                    ((TextView)v.findViewById(R.id.startedOn)).setText( durationRange );
+                    ((TextView)v.findViewById(R.id.workDuration)).setText( durationCount );
 
                     if( prevWork < 0 ){
                         // TODO: bind events to new element
@@ -1233,6 +1268,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                     c.close();
                 }
+                workExpQuestion.setVisibility(View.GONE);
             }
         }else if( requestCode == ADD_EDU ){
             if (resultCode == RESULT_OK) {
@@ -1583,7 +1619,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         // save address
                         String address = String.valueOf(success.get("address"));
 
-                        if( address != null ){
+                        if( address != null && !address.equals("null") ){
                             JSONObject jsonAddr = new JSONObject(address);
 
                             ContentValues cv3 = new ContentValues();

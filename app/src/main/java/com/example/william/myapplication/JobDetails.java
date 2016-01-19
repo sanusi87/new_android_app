@@ -71,6 +71,7 @@ public class JobDetails extends ActionBarActivity {
 
     LinearLayout tabButton;
     ViewPager mViewPager;
+    SectionsPagerAdapter mSectionsPagerAdapter;
 
     static Context context;
 
@@ -78,9 +79,6 @@ public class JobDetails extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_details);
-        if( getSupportActionBar() != null ){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
 
         context = this;
 
@@ -113,6 +111,7 @@ public class JobDetails extends ActionBarActivity {
 
         // ------------- custom tab button
 
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
         tabButton = (LinearLayout)findViewById(R.id.tabButton);
         final Button overviewButton = (Button)findViewById(R.id.overviewButton);
@@ -457,7 +456,6 @@ public class JobDetails extends ActionBarActivity {
             jobDetails = success;
             Log.e("onPostEx", "" + success);
             if( success != null ){
-                SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
                 mViewPager.setAdapter(mSectionsPagerAdapter);
                 positionTitle.setText(success.optString("title"));
 
@@ -468,8 +466,6 @@ public class JobDetails extends ActionBarActivity {
                     String savedJobDetails = job.getString(3);
                     try {
                         jobDetails = new JSONObject(savedJobDetails);
-                        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-                        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
                         mViewPager.setAdapter(mSectionsPagerAdapter);
                         positionTitle.setText(jobDetails.getString("title"));
 

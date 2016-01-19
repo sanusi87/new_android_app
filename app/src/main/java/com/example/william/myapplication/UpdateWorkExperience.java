@@ -49,6 +49,8 @@ public class UpdateWorkExperience extends ActionBarActivity {
     TableWorkExperience tableWorkExperience;
     TableJobSpec tableJobSpec;
     TableJobRole tableJobRole;
+    TableProfile tableProfile;
+    //TableSettings tableSettings;
 
     SharedPreferences sharedPreferences;
     String accessToken;
@@ -71,6 +73,8 @@ public class UpdateWorkExperience extends ActionBarActivity {
     Industry _industry;
     PositionLevel _positionLevel;
 
+    //Profile profile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +83,8 @@ public class UpdateWorkExperience extends ActionBarActivity {
         tableWorkExperience = new TableWorkExperience(this);
         tableJobSpec = new TableJobSpec(this);
         tableJobRole = new TableJobRole(this);
+        tableProfile = new TableProfile(this);
+        //tableSettings = new TableSettings(this);
 
         int savedId = 0;
         int selectedWork = -1;
@@ -86,6 +92,8 @@ public class UpdateWorkExperience extends ActionBarActivity {
         sharedPreferences = getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPreferences.getString("access_token", null);
         profileId = sharedPreferences.getInt("js_profile_id", 0);
+
+        //profile = tableProfile.getProfile();
 
         final EditText positionTitle = (EditText)findViewById(R.id.position_title);
         final EditText companyName = (EditText)findViewById(R.id.company_name);
@@ -380,6 +388,11 @@ public class UpdateWorkExperience extends ActionBarActivity {
                         cv3.put("no_work_exp", 0); // set to got work exp
                         tableProfile.updateProfile(cv3, profileId);
                     }
+
+                    // update got work exp
+                    ContentValues _cv = new ContentValues();
+                    _cv.put("no_work_exp", 0);
+                    tableProfile.updateProfile(_cv,profileId);
 
                     // TODO: send POST request
                     JSONObject obj = new JSONObject();
