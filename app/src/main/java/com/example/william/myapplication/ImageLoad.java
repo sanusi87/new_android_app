@@ -3,6 +3,7 @@ package com.example.william.myapplication;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.io.InputStream;
@@ -10,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ImageLoad extends AsyncTask<Void, Void, Bitmap> {
-
     private String url;
     private ImageView imageView;
 
@@ -28,8 +28,7 @@ public class ImageLoad extends AsyncTask<Void, Void, Bitmap> {
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
+            return BitmapFactory.decodeStream(input);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,6 +40,8 @@ public class ImageLoad extends AsyncTask<Void, Void, Bitmap> {
         super.onPostExecute(result);
         if( result != null ){
             imageView.setImageBitmap(result);
+        }else{
+            imageView.setVisibility(View.GONE);
         }
     }
 
