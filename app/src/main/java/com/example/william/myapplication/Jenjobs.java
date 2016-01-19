@@ -716,8 +716,28 @@ public class Jenjobs {
             Calendar endCalendar = Calendar.getInstance();
             endCalendar.setTime(_endDate);
 
-            int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
-            int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+            //int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+
+            int diffMonth = 0;
+            int diffYear = 0;
+
+            int yearStart = startCalendar.get(Calendar.YEAR);
+            int yearEnd = endCalendar.get(Calendar.YEAR);
+            int monthStart = startCalendar.get(Calendar.MONTH);
+            int monthEnd = endCalendar.get(Calendar.MONTH);
+
+            if( yearStart == yearEnd ){ // yearStart == yearEnd
+                diffYear = 0;
+                diffMonth = monthEnd - monthStart;
+            }else{ // yearStart < yearEnd
+                diffYear = yearEnd - yearStart;
+                if( monthEnd < monthStart ){
+                    diffYear--;
+                    diffMonth = (monthEnd+12) - monthStart;
+                }else{
+                    diffMonth = monthEnd - monthStart;
+                }
+            }
 
             return diffYear+"y "+diffMonth+"m";
         } catch (ParseException e) {
@@ -734,8 +754,6 @@ public class Jenjobs {
             String dateStr = "01 "+( i < 10 ? "0"+i : i )+" 2016";
             _listOfMonth.add(Jenjobs.date(dateStr, "MMMM", "dd MM yyyy"));
         }
-
-        // TODO: arraylist to string array
         return _listOfMonth.toArray(new String[_listOfMonth.size()]);
     }
 
