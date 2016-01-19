@@ -1009,6 +1009,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     intent.setClass(getApplicationContext(), JobSearchFilter.class);
                     startActivityForResult(intent, FETCH_FILTER_PARAM);
                     return true;
+                }else if( clickedItem == R.id.about_job_ads ){
+                    Intent intent = new Intent();
+                    intent.setClass(getApplicationContext(), AboutJobSearch.class);
+                    startActivity(intent);
+                    return true;
                 }else{
                     return super.onOptionsItemSelected(item);
                 }
@@ -1033,7 +1038,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 inflater.inflate(R.menu.profile, menu);
                 break;
             case JOB_FRAGMENT:
-                inflater.inflate(R.menu.job_search_menu, menu);
+                inflater.inflate(R.menu.job_fragment_menu, menu);
                 break;
             case APPLICATION_FRAGMENT:
 
