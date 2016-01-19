@@ -220,4 +220,6 @@
     <string name="company_info">Company Info</string>
     <string name="company_location">Company Location</string>
     <string name="about">About</string>
+    <string name="about_desc">Posting job ads</string>
+    <string name="about_job_posting">About JenJOBS Job Search</string>
 </resources>
