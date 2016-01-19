@@ -99,6 +99,9 @@ public class UpdateJobPreference extends Activity {
 
         if( c.moveToFirst() ){
             String savedSalary = c.getString(0);
+            if( savedSalary == null && savedSalary.equals("null") ){
+                savedSalary = "";
+            }
 
             insertedSalary.setText(savedSalary);
             selectedCurrency.setText((String)listOfCurrencies.get( c.getInt(1) ) );
