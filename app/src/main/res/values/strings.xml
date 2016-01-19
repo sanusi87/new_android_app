@@ -54,6 +54,7 @@
     <string name="company">Company</string>
     <string name="salary">Salary</string>
     <string name="date_closed">Date Closed</string>
+    <string name="closed_on">Closed on</string>
     <string name="job_type">Job Type</string>
     <string name="job_location">Location</string>
     <string name="filter_job">Filter</string>
