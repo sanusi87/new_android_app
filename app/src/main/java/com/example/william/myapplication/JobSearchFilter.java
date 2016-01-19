@@ -387,7 +387,7 @@ public class JobSearchFilter extends ActionBarActivity {
         }else if( requestCode == INTENT_GET_KEYWORD ){
             if (resultCode == RESULT_OK) {
                 Bundle filters = data.getExtras();
-                enteredKeyword.setText(filters.getString("the_name"));
+                enteredKeyword.setText(filters.getString("the_text"));
             }
         }
     }
