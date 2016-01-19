@@ -46,7 +46,13 @@ public class TableJob extends SQLiteOpenHelper{
     }
 
     public Long addJob(ContentValues cv){
-        return db.insert(TableJob.TABLE_NAME, null, cv);
+        Cursor job = getJob(cv.getAsInteger("id"));
+        Long insertId = (long) 0;
+        if( job.getCount() == 0 ){
+            insertId = db.insert(TableJob.TABLE_NAME, null, cv);
+        }
+        job.close();
+        return insertId;
     }
 
     public boolean updateJob(ContentValues cv){
