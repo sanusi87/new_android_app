@@ -1,187 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+    <LinearLayout android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            style="@style/AppThemePadding5">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/job_location"
+                style="@style/AppThemeBaseLabel" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/AppThemePadding5">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/job_location"
-                    style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/location"
+                style="@style/AppThemeBaseLabelSub"
+                android:layout_marginLeft="8dp" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/location"
-                    style="@style/AppThemeBaseLabelSub"
-                    android:layout_marginLeft="8dp" />
-            </LinearLayout>
+        <View style="@style/AppThemeSeparator" />
 
-            <View style="@style/AppThemeSeparator" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/AppThemePadding5">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/job_type"
+                style="@style/AppThemeBaseLabel" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/AppThemePadding5">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/job_type"
-                    style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/jobType"
+                style="@style/AppThemeBaseLabelSub"
+                android:layout_marginLeft="8dp" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/jobType"
-                    style="@style/AppThemeBaseLabelSub"
-                    android:layout_marginLeft="8dp" />
-            </LinearLayout>
+        <View style="@style/AppThemeSeparator" />
 
-            <View style="@style/AppThemeSeparator" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/AppThemePadding5">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/job_level"
+                style="@style/AppThemeBaseLabel" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/AppThemePadding5">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/job_level"
-                    style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/jobLevel"
+                style="@style/AppThemeBaseLabelSub"
+                android:layout_marginLeft="8dp" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/jobLevel"
-                    style="@style/AppThemeBaseLabelSub"
-                    android:layout_marginLeft="8dp" />
-            </LinearLayout>
+        <View style="@style/AppThemeSeparator" />
 
-            <View style="@style/AppThemeSeparator" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/AppThemePadding5">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/spec"
+                style="@style/AppThemeBaseLabel" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/AppThemePadding5">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/spec"
-                    style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/jobSpecialisation"
+                style="@style/AppThemeBaseLabelSub"
+                android:layout_marginLeft="8dp" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/jobSpecialisation"
-                    style="@style/AppThemeBaseLabelSub"
-                    android:layout_marginLeft="8dp" />
-            </LinearLayout>
+        <View style="@style/AppThemeSeparator" />
 
-            <View style="@style/AppThemeSeparator" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/AppThemePadding5">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/qualification"
+                style="@style/AppThemeBaseLabel" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/AppThemePadding5">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/qualification"
-                    style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/qualification"
+                style="@style/AppThemeBaseLabelSub"
+                android:layout_marginLeft="8dp" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/qualification"
-                    style="@style/AppThemeBaseLabelSub"
-                    android:layout_marginLeft="8dp" />
-            </LinearLayout>
+        <View style="@style/AppThemeSeparator" />
 
-            <View style="@style/AppThemeSeparator" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/AppThemePadding5">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/skills"
+                style="@style/AppThemeBaseLabel" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/AppThemePadding5">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/skills"
-                    style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/skill"
+                style="@style/AppThemeBaseLabelSub"
+                android:layout_marginLeft="8dp" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/skill"
-                    style="@style/AppThemeBaseLabelSub"
-                    android:layout_marginLeft="8dp" />
-            </LinearLayout>
+        <View style="@style/AppThemeSeparator" />
 
-            <View style="@style/AppThemeSeparator" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/AppThemePadding5">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/languages"
+                style="@style/AppThemeBaseLabel" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/AppThemePadding5">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/languages"
-                    style="@style/AppThemeBaseLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/language"
+                style="@style/AppThemeBaseLabelSub"
+                android:layout_marginLeft="8dp" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/language"
-                    style="@style/AppThemeBaseLabelSub"
-                    android:layout_marginLeft="8dp" />
-            </LinearLayout>
+        <View style="@style/AppThemeSeparator" />
 
-            <View style="@style/AppThemeSeparator" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/AppThemePadding5">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date_closed"
+                style="@style/AppThemeBaseLabel" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/AppThemePadding5">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/date_closed"
-                    style="@style/AppThemeBaseLabel" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_value"
-                    android:id="@+id/closedOn"
-                    style="@style/AppThemeBaseLabelSub"
-                    android:layout_marginLeft="8dp" />
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_value"
+                android:id="@+id/closedOn"
+                style="@style/AppThemeBaseLabelSub"
+                android:layout_marginLeft="8dp" />
         </LinearLayout>
     </LinearLayout>
+</ScrollView>
