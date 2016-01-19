@@ -69,6 +69,9 @@ public class JobDetails extends ActionBarActivity {
     TableLanguage tableLanguage;
     TableBookmark tableBookmark;
 
+    LinearLayout tabButton;
+    ViewPager mViewPager;
+
     static Context context;
 
     @Override
@@ -107,6 +110,58 @@ public class JobDetails extends ActionBarActivity {
         }else{
             Toast.makeText(getApplicationContext(), "Job posting ID not found!", Toast.LENGTH_SHORT).show();
         }
+
+        // ------------- custom tab button
+
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        tabButton = (LinearLayout)findViewById(R.id.tabButton);
+        final Button overviewButton = (Button)findViewById(R.id.overviewButton);
+        Button descriptionButton = (Button)findViewById(R.id.descriptionButton);
+        Button companyButton = (Button)findViewById(R.id.companyButton);
+
+        overviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(0, true);
+            }
+        });
+
+        descriptionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(1, true);
+            }
+        });
+
+        companyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(2, true);
+            }
+        });
+
+        /*
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.e("pos", "" + position);
+                if( position == 0 ){
+                    overviewButton.
+                }else if( position == 1 ){
+
+                }else if( position == 2 ){
+
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
+        */
+        // ------------- custom tab button
 
         positionTitle = (TextView)findViewById(R.id.positionTitle);
         applyButton = (Button)findViewById(R.id.applyButton);
@@ -280,7 +335,7 @@ public class JobDetails extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.job_details, menu);
-        // TODO - change this to show/hide menu
+        // TODO - change this to show(true)/hide(false) menu
         return false;
     }
 
@@ -403,9 +458,10 @@ public class JobDetails extends ActionBarActivity {
             Log.e("onPostEx", "" + success);
             if( success != null ){
                 SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-                ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
                 mViewPager.setAdapter(mSectionsPagerAdapter);
                 positionTitle.setText(success.optString("title"));
+
+                tabButton.setVisibility(View.VISIBLE);
             }else{
                 Cursor job = tableJob.getJob(jobPostingId);
                 if( job.moveToFirst() ){
@@ -416,6 +472,8 @@ public class JobDetails extends ActionBarActivity {
                         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
                         mViewPager.setAdapter(mSectionsPagerAdapter);
                         positionTitle.setText(jobDetails.getString("title"));
+
+                        tabButton.setVisibility(View.VISIBLE);
                     } catch (JSONException e) {
                         Log.e("err", e.getMessage());
                     }
@@ -471,15 +529,16 @@ public class JobDetails extends ActionBarActivity {
                 ((TextView)v.findViewById(R.id.companyWorkingHours)).setText(companyDetails.optString("work_hour"));
                 ((TextView)v.findViewById(R.id.companyBenefits)).setText(companyDetails.optString("benefits"));
                 ((TextView)v.findViewById(R.id.companyWebsite)).setText(companyDetails.optString("website"));
-                ((TextView)v.findViewById(R.id.companyFacebookPage)).setText(companyDetails.optString("fb_page"));
+                ((TextView)v.findViewById(R.id.companyFacebookPage)).setText(companyDetails.optString("facebook_page"));
 
                 ImageView workLocationImage = (ImageView)v.findViewById(R.id.workLocationImage);
                 new ImageLoad(companyDetails.getString("map_image"), workLocationImage).execute();
 
-                final String latitude = companyDetails.optString("latitude");
-                final String longitude = companyDetails.optString("longitude");
+                // this is work location
+                final String latitude = jobDetails.optString("latitude");
+                final String longitude = jobDetails.optString("longitude");
 
-                if( Float.valueOf(latitude) > 0 && Float.valueOf(longitude) > 0 ){
+                if( Float.parseFloat(latitude) > 0 && Float.parseFloat(longitude) > 0 ){
                     workLocationImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -489,10 +548,13 @@ public class JobDetails extends ActionBarActivity {
                             mapIntent.setPackage("com.google.android.apps.maps");
                             if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
                                 context.startActivity(mapIntent);
+                            }else{
+                                Toast.makeText(context, "Google Maps not found!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 }
+
             } catch (JSONException e) {
                 Log.e("compErr", e.getMessage());
             }
