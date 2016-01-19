@@ -3,138 +3,164 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/AppThemePadding10">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/job_title"
-        android:id="@+id/job_title"
-        android:textColor="#096cc3"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/company"
-        android:id="@+id/company_name" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/salary"
-        android:id="@+id/salary" />
-
+    style="@style/AppThemePadding10"
+    android:background="@color/white">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#e6e6e6"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp">
+        android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="3dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/job_location"
-                android:id="@+id/textView8"
-                android:layout_centerVertical="true"
-                android:textStyle="italic"
-                android:textColor="@android:color/holo_blue_dark" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/no_value"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/job_title"
+            android:id="@+id/job_title"
+            android:textColor="#096cc3"
+            android:textStyle="bold"
+            android:layout_weight="1" />
 
-                android:id="@+id/job_location"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/textView8"
-                android:layout_marginStart="5dp" />
-        </RelativeLayout>
+        <ImageButton
+            android:layout_width="16dp"
+            android:layout_height="match_parent"
+            android:id="@+id/bookmarkButton"
+            android:contentDescription="@string/no_value"
+            android:src="@drawable/ic_turned_in_not_black_24dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:maxWidth="50dp"
+            android:background="@android:color/transparent" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="3dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/job_type"
-                android:id="@+id/textView9"
-                android:layout_centerVertical="true"
-                android:textStyle="italic"
-                android:textColor="@android:color/holo_blue_dark" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/no_value"
-                android:id="@+id/job_type"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/textView9"
-                android:layout_marginStart="5dp" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/date_closed"
-                android:id="@+id/textView10"
-                android:layout_centerVertical="true"
-                android:textStyle="italic"
-                android:textColor="@android:color/holo_blue_dark" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/no_value"
-                android:id="@+id/date_closed"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/textView10"
-                android:layout_marginStart="5dp" />
-        </RelativeLayout>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
+    <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/job_description"
-        android:id="@+id/job_description"
-        android:textColor="@color/light_gray"
-        android:padding="10dp" />
+        android:orientation="vertical"
+        android:id="@+id/jobDetailsContainer">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/company"
+            android:id="@+id/company_name"
+            android:textColor="@android:color/black" />
 
-    <View style="@style/AppThemeSeparator"
-        android:visibility="gone" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/salary"
+            android:id="@+id/salary" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/no_value"
-        android:id="@+id/job_spec"
-        android:visibility="gone" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:id="@+id/locationIcon"
+                    android:src="@drawable/ic_room_black_24dp"
+                    android:contentDescription="@string/no_value"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:paddingLeft="-4dp"
+                    android:paddingRight="-4dp"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp"
+                    android:background="@android:color/transparent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/no_value"
+                    android:id="@+id/job_location"
+                    android:layout_toEndOf="@+id/locationIcon"
+                    android:layout_marginStart="5dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:id="@+id/jobTypeIcon"
+                    android:src="@drawable/ic_work_black_24dp"
+                    android:contentDescription="@string/no_value"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:paddingLeft="-4dp"
+                    android:paddingRight="-4dp"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp"
+                    android:background="@android:color/transparent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/no_value"
+                    android:id="@+id/job_type"
+                    android:layout_toEndOf="@+id/jobTypeIcon"
+                    android:layout_marginStart="5dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:id="@+id/expiredIcon"
+                    android:src="@drawable/ic_timer_off_black_24dp"
+                    android:contentDescription="@string/no_value"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:paddingLeft="-4dp"
+                    android:paddingRight="-4dp"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp"
+                    android:background="@android:color/transparent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/no_value"
+                    android:id="@+id/date_closed"
+                    android:layout_toEndOf="@+id/expiredIcon"
+                    android:layout_marginStart="5dp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/job_description"
+            android:id="@+id/job_description"
+            android:textColor="@color/dark_gray"
+            android:background="@drawable/border_left"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:padding="5dp"
+            android:textSize="12sp" />
+
+        <View style="@style/AppThemeSeparator"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/no_value"
+            android:id="@+id/job_spec"
+            android:visibility="gone" />
+    </LinearLayout>
 </LinearLayout>

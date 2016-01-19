@@ -375,7 +375,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             ProgressBar loading = (ProgressBar) rootView.findViewById(R.id.progressBar4);
             ListView lv = (ListView) rootView.findViewById(R.id.job_list_view);
             final JobSearchAdapter jobSearchAdapter = new JobSearchAdapter(getActivity());
-
+            jobSearchAdapter.setAccessToken(accessToken);
             jobSearch = new JobSearch(jobSearchAdapter);
             jobSearch.setLoading( loading );
             jobSearch.search(true);
