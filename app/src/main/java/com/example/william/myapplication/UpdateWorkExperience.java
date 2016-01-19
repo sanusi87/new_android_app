@@ -160,6 +160,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 int __jobLevelId = w.getInt(7);
                 String __jobLevelName = (String) listOfPositionLevel.get(__jobLevelId);
                 _positionLevel = new PositionLevel(__jobLevelId, __jobLevelName);
+                selectedPositionLevel.setText(__jobLevelName);
 
                 int __jobSpecId = w.getInt(4);
                 _jobSpec = tableJobSpec.findById(__jobSpecId);
@@ -180,20 +181,15 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 selectedJobType.setText(__jobTypeName);
 
                 String startDate = w.getString(12);
-                // String[] startDatePart = startDate.split("\\-");
-                // get month from date (index 1)
-                //int a = Integer.valueOf(  );
-                //if( a < 10 ){ startDatePart[1] = ""+a; }
-                String _selectedMonth = Jenjobs.date(startDate, "MM", "dd-MM-yyyy");
-                String _selectedYear = Jenjobs.date(startDate, "yyyy", "dd-MM-yyyy");
-                monthStart.setSelection( monthAdapter.getPosition( _selectedMonth ) );
+                String _selectedMonth = Jenjobs.date(startDate, "MMMM", "dd-MM-yyyy");
+                String _selectedYear = startDate.substring(0,4);
+                monthStart.setSelection(monthAdapter.getPosition(_selectedMonth));
                 yearStart.setSelection( yearAdapter.getPosition( _selectedYear ) );
 
                 String endDate = w.getString( 13 );
                 if( endDate != null && !endDate.equals("null") ){
-                    //String[] endDatePart = endDate.split( "\\-" );
-                    String __selectedMonth = Jenjobs.date(endDate, "MM", "dd-MM-yyyy");
-                    String __selectedYear = Jenjobs.date(endDate, "yyyy", "dd-MM-yyyy");
+                    String __selectedMonth = Jenjobs.date(endDate, "MMMM", "dd-MM-yyyy");
+                    String __selectedYear = endDate.substring(0,4);
                     monthEnd.setSelection( monthAdapter.getPosition( __selectedMonth ) );
                     yearEnd.setSelection( yearAdapter.getPosition( __selectedYear ) );
                 }
@@ -286,7 +282,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     errors.add("Please select the employment type.");
                 }
 
-                if( _positionLevel != null ){
+                if( _positionLevel == null ){
                     errors.add("Please select the job level.");
                 }
 
@@ -294,10 +290,10 @@ public class UpdateWorkExperience extends ActionBarActivity {
                     errors.add("Please specify the month and year you start this work.");
                 }
 
-                //Log.e("invalid", ""+Spinner.INVALID_POSITION);
-                //Log.e("monthEnd", ""+monthEnd.getSelectedItemPosition());
-                //Log.e("yearEnd", ""+yearEnd.getSelectedItemPosition());
-                if( monthEnd.getSelectedItemPosition() != 0 || yearEnd.getSelectedItemPosition() != 0 ){
+                if( ( monthEnd.getSelectedItemPosition() != 0 && yearEnd.getSelectedItemPosition() != 0 )
+                        || ( monthEnd.getSelectedItemPosition() == 0 && yearEnd.getSelectedItemPosition() == 0 ) ){
+                    // (both selected || both not selected) -- ok
+                }else{
                     errors.add("Please specify both resignation month and year, or left both blank.");
                 }
 
