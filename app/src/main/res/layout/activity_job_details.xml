@@ -1,28 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".JobDetails2"
-    android:orientation="vertical"
-    style="@style/AppThemePadding10">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+    <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/loginLayout">
+        android:orientation="vertical"
+        style="@style/AppThemePadding10">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/loginLayout"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                style="@style/AppThemePadding10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/noticeIcon"
+                    android:contentDescription="@string/no_value"
+                    android:src="@drawable/ic_info_black_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Small Text"
+                    android:id="@+id/noticeText"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    style="@style/AppThemeBaseButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_text"
+                    android:id="@+id/login_button"
+                    android:layout_weight="1"
+                    android:layout_marginRight="5dp" />
+                <Button
+                    style="@style/AppThemeBaseButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/register_text"
+                    android:id="@+id/register_button"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                style="@style/AppThemeBaseButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/apply"
+                android:id="@+id/applyButton" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/no_value"
+                android:id="@+id/positionTitle"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:indeterminate="true"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tabButton"
+            android:layout_marginBottom="5dp">
+
+            <Button
+                style="@style/AppThemeBaseButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/overview"
+                android:id="@+id/overviewButton"
+                android:layout_weight="1" />
+
+            <Button
+                style="@style/AppThemeBaseButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/description"
+                android:id="@+id/descriptionButton"
+                android:layout_weight="1" />
+
+            <Button
+                style="@style/AppThemeBaseButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/company"
+                android:id="@+id/companyButton"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            style="@style/AppThemePadding10">
+            android:id="@+id/no_item"
+            style="@style/AppThemePadding10"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/noticeIcon"
+                android:id="@+id/noticeIcon2"
                 android:contentDescription="@string/no_value"
                 android:src="@drawable/ic_info_black_24dp" />
 
@@ -31,99 +158,10 @@
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Small Text"
-                android:id="@+id/noticeText"
+                android:id="@+id/noticeText2"
                 android:gravity="center_vertical"
                 android:textColor="@android:color/black" />
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                style="@style/AppThemeBaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/login_text"
-                android:id="@+id/login_button"
-                android:layout_weight="1"
-                android:layout_marginRight="5dp" />
-            <Button
-                style="@style/AppThemeBaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/register_text"
-                android:id="@+id/register_button"
-                android:layout_weight="1"
-                android:layout_marginLeft="5dp" />
-        </LinearLayout>
-
     </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            style="@style/AppThemeBaseButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/apply"
-            android:id="@+id/applyButton" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/no_value"
-            android:id="@+id/positionTitle"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:textColor="@android:color/black"
-            android:textSize="20sp" />
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:indeterminate="true"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp" />
-    </LinearLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:id="@+id/no_item"
-        style="@style/AppThemePadding10"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/noticeIcon2"
-            android:contentDescription="@string/no_value"
-            android:src="@drawable/ic_info_black_24dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/noticeText2"
-            android:gravity="center_vertical"
-            android:textColor="@android:color/black" />
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>
