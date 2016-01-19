@@ -139,7 +139,7 @@
     <string name="skills">Skills</string>
     <string name="malaysia">Malaysia</string>
     <string name="other">Other Countries</string>
-    <string name="title_activity_job_search_filter">JobSearchFilter</string>
+    <string name="job_search_filter">Job Search Filter</string>
     <string name="Search">Search</string>
     <string name="ok">OK</string>
     <string name="update_work_exp">Update Work Experience</string>
