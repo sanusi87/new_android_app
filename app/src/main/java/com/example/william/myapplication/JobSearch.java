@@ -20,6 +20,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class JobSearch {
@@ -52,7 +54,11 @@ public class JobSearch {
 
     public void setKeyword(String keyword){
         if( keyword != null && keyword.length() > 0 ){
-            filters.add("keyword=" + keyword);
+            try {
+                filters.add( "keyword="+URLEncoder.encode(keyword, "utf-8") );
+            } catch (UnsupportedEncodingException e) {
+                Log.e("error", e.getMessage());
+            }
             setOrderPreference("relevance");
         }
     }
