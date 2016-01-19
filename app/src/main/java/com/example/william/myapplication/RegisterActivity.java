@@ -68,6 +68,10 @@ public class RegisterActivity extends ActionBarActivity {
                     errors.add("Please complete the form!");
                 }
 
+                if( _password.length() < 6 ){
+                    errors.add("Minimum password length is 6 characters!");
+                }
+
                 if( !_password.equals(_repeatPassword) ){
                     errors.add("Password and Password Repeat do not match!");
                 }
