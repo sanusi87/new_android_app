@@ -219,4 +219,5 @@
     <string name="title_activity_employer_profile">EmployerProfile</string>
     <string name="company_info">Company Info</string>
     <string name="company_location">Company Location</string>
+    <string name="about">About</string>
 </resources>
