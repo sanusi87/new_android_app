@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
@@ -74,7 +76,7 @@ public class MainService extends Service{
 
         // Set the info for the views that show in the notification panel.
         Notification notification = new Notification.Builder(this)
-            .setSmallIcon(R.drawable.icon)  // the status icon
+            .setSmallIcon(R.drawable.jenjobs_notification)  // the status icon
             //.setTicker(statusText)  // the status text
             .setWhen(System.currentTimeMillis())  // the time stamp
             .setContentTitle(statusText)  // the label of the entry
@@ -110,7 +112,7 @@ public class MainService extends Service{
         public void run() {
             String notificationAlert = tableSettings.getSetting("notification_alert");
             // if notification alert is enabled
-            if( Integer.valueOf(notificationAlert) > 0 ){
+            if( isOnline() && Integer.valueOf(notificationAlert) > 0 ){
                 // TODO - check for network connectivity first, only then can proceed
                 Cursor applications = tableApplication.getActiveApplication();
                 Log.e("active apps",""+applications.getCount());
@@ -125,7 +127,6 @@ public class MainService extends Service{
                     }
 
                     String[] params = {Jenjobs.APPLICATION_STATUS_URL + "?id=" + arr.toString() + "&access-token=" + accessToken};
-                    //Log.e("url",params[0]);
                     new CheckApplication().execute(params);
                 }
                 applications.close();
@@ -179,7 +180,7 @@ public class MainService extends Service{
 
         @Override
         protected void onPostExecute(JSONArray success) {
-            Log.e("onGet", "" + success);
+            //Log.e("onGet", "" + success);
             if( success != null ){
                 Intent intent = new Intent();
                 intent.putExtra("statusText", "Notification");
@@ -193,11 +194,11 @@ public class MainService extends Service{
 
                         int status = app.optInt("status");
                         int postId = app.getInt("post_id");
-                        Log.e("status", ""+status);
-                        Log.e("postid", ""+postId);
+                        //Log.e("status", ""+status);
+                        //Log.e("postid", ""+postId);
 
                         String statusText = (String) applicationStatus.get(status);
-                        Log.e("so?", ""+tableApplication.isDifferentApplicationStatus( postId, status ));
+                        //Log.e("so?", ""+tableApplication.isDifferentApplicationStatus( postId, status ));
                         if( tableApplication.isDifferentApplicationStatus( postId, status ) ){
 
                             applicationUpdated++;
@@ -206,7 +207,7 @@ public class MainService extends Service{
                             cv.put("status", status);
                             cv.put("date_updated", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
                             boolean isUpdated = tableApplication.updateApplication(cv, postId);
-                            Log.e("isUpdated", "" + isUpdated);
+                            //Log.e("isUpdated", "" + isUpdated);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -219,5 +220,11 @@ public class MainService extends Service{
                 }
             }
         }
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }
