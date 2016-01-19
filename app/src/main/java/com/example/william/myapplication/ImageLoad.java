@@ -41,7 +41,9 @@ public class ImageLoad extends AsyncTask<Void, Void, Bitmap> {
         if( result != null ){
             imageView.setImageBitmap(result);
         }else{
-            imageView.setVisibility(View.GONE);
+            if( imageView.getId() == R.id.workLocationImage ){
+                imageView.setVisibility(View.GONE);
+            }
         }
     }
 
