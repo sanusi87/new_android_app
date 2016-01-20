@@ -46,6 +46,11 @@
         <item name="android:textColor">@color/light_gray</item>
     </style>
 
+    <style name="AppThemeBaseTextInput">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
     <style name="AppThemeBaseButton">
         <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
         <item name="android:textColor">@android:color/black</item>
