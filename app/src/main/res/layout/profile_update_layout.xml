@@ -171,7 +171,6 @@
                     android:inputType="textPhonetic"
                     style="@style/AppThemeBaseTextInput" />
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
@@ -179,14 +178,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             style="@style/AppThemePadding10"
+            android:id="@+id/selectIdentityCardNumber"
             android:visibility="gone">
 
-            <CheckBox
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sms_job_alert"
-                android:id="@+id/checkBox"
-                android:checked="false" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/identityCardNumber"
+                style="@style/AppThemeBaseLabel" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/identityCardNumber"
+                style="@style/AppThemeBaseTextValue"
+                android:text="@string/no_value" />
 
         </LinearLayout>
 
