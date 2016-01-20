@@ -224,4 +224,7 @@
     <string name="about_desc">Posting job ads</string>
     <string name="about_job_posting">About JenJOBS Job Search</string>
     <string name="bookmarked_on">Bookmarked on</string>
+    <string name="identityCardNumber">Identity Card Number</string>
+
+    <item type="id" name="TAG_JOB_ROLE_ID"/>
 </resources>
