@@ -223,4 +223,5 @@
     <string name="about">About</string>
     <string name="about_desc">Posting job ads</string>
     <string name="about_job_posting">About JenJOBS Job Search</string>
+    <string name="bookmarked_on">Bookmarked on</string>
 </resources>
