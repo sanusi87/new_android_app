@@ -39,7 +39,7 @@
                     android:layout_weight="1"
                     android:autoText="false"
                     android:hint="@string/username"
-                    style="@style/AppThemeBaseTextValue"
+                    style="@style/AppThemeBaseTextInput"
                     android:focusable="true" />
 
             </LinearLayout>
@@ -57,7 +57,7 @@
                     android:id="@+id/password_input"
                     android:layout_weight="1"
                     android:hint="@string/password"
-                    style="@style/AppThemeBaseTextValue" />
+                    style="@style/AppThemeBaseTextInput" />
             </LinearLayout>
 
         </LinearLayout>

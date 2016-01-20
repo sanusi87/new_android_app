@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:id="@+id/fullname_profile"
-                style="@style/AppThemeBaseTextInput"
+                style="@style/AppThemeBaseTextValue"
                 android:text="@string/no_value" />
 
         </LinearLayout>
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:id="@+id/selectedNationality"
-                style="@style/AppThemeBaseTextInput"
+                style="@style/AppThemeBaseTextValue"
                 android:text="@string/no_value" />
 
         </LinearLayout>
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/selectedDateOfBirth"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
 
         </LinearLayout>
 
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/selectedGender"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -133,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/email"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
 
         </LinearLayout>
 
@@ -162,7 +162,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/dial_code"
-                    style="@style/AppThemeBaseTextInput" />
+                    style="@style/AppThemeBaseTextValue" />
 
                 <EditText
                     android:layout_width="match_parent"

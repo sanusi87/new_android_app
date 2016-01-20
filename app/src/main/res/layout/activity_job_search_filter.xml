@@ -28,7 +28,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
                 android:id="@+id/selectedKeywordFilter"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -52,7 +52,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
                 android:id="@+id/enteredKeyword"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
 
         </LinearLayout>
 
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/selectedJobType"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -135,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/selectedSpec"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <LinearLayout
@@ -154,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/selectedRole"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/selectedMalaysiaState"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -198,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/selectedOtherCountry"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -219,7 +219,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/selectedPositionLevel"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
