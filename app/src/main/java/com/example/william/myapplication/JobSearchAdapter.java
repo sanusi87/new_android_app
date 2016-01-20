@@ -92,7 +92,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             final String company = p.optString("company_name");
             int showSalary = p.optInt("salary_display");
             final String _dateClosed = Jenjobs.date(dateClosed, "dd MMM yyyy", "yyyy-MM-dd hh:mm:ss");
-            boolean isBookmarked = false;
+            //boolean isBookmarked = false;
 
             TextView jobTitle = (TextView) v.findViewById(R.id.job_title);
             jobTitle.setText(postTitle);
@@ -134,11 +134,13 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             ((TextView) v.findViewById(R.id.job_spec)).setText(Html.fromHtml(p.optString("job_spec")));
 
             final ImageButton bookmarkButton = (ImageButton)v.findViewById(R.id.bookmarkButton);
-            final Cursor bookmarkList = tableBookmark.getBookmark(postId);
-            Log.e("bm", postTitle+"="+(bookmarkList.getCount()>0));
-            if( bookmarkList.getCount() > 0 ){
+            bookmarkButton.setImageDrawable(bookmark); // reset drawable
+
+            Cursor bookmarkList = tableBookmark.getBookmark(postId);
+            if( bookmarkList.getCount() > 0) {
+                Log.e("bookmarked", postTitle+"=1,"+position);
                 bookmarkButton.setImageDrawable(bookmarked);
-                isBookmarked = true;
+                //isBookmarked = true;
             }
             bookmarkList.close();
 
@@ -147,17 +149,18 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                 bookmarkButton.setClickable(false);
             }
 
-            Log.e("bm", postTitle+"="+isBookmarked);
+            //Log.e("bm", postTitle+"="+isBookmarked);
 
-            final boolean finalIsBookmarked = isBookmarked;
+            //final boolean finalIsBookmarked = isBookmarked;
             bookmarkButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if( accessToken == null ){
                         Toast.makeText(context, "Please login or register to use this feature", Toast.LENGTH_SHORT).show();
                     }else{
-                        if(finalIsBookmarked){
+                        if(bookmarkButton.getDrawable() == bookmarked){
                             bookmarkButton.setImageDrawable(bookmark);
+
                             // delete bookmark
                             tableBookmark.deleteBookmark(postId);
 
@@ -166,9 +169,11 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
 
                             // post to server
                             String[] param = {Jenjobs.BOOKMARK_URL + "/"+postId+"?access-token=" + accessToken,"{}"};
+                            Log.e("url-delete", Jenjobs.BOOKMARK_URL + "/"+postId+"?access-token=" + accessToken);
                             new DeleteRequest().execute(param);
                         }else{
                             bookmarkButton.setImageDrawable(bookmarked);
+
                             // save bookmark
                             ContentValues cv = new ContentValues();
                             cv.put("title", postTitle);
@@ -191,6 +196,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                             try {
                                 obj.put("post_id", postId);
                                 String[] param = {Jenjobs.BOOKMARK_URL + "?access-token=" + accessToken,obj.toString()};
+                                Log.e("url-post", Jenjobs.BOOKMARK_URL + "/"+postId+"?access-token=" + accessToken);
                                 new PostRequest().execute(param);
                             } catch (JSONException e) {
                                 Log.e("err", e.getMessage());
