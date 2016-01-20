@@ -190,26 +190,5 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="2">
-            <Button
-                style="@style/AppThemeBaseButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/save"
-                android:id="@+id/okButton"
-                android:layout_weight="1" />
-            <Button
-                style="@style/AppThemeBaseButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/cancel"
-                android:id="@+id/cancelButton"
-                android:layout_weight="1" />
-        </LinearLayout>
-
     </LinearLayout>
 </ScrollView>
