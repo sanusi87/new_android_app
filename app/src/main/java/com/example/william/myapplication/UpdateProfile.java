@@ -8,10 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -27,12 +31,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class UpdateProfile extends FragmentActivity {
+public class UpdateProfile extends ActionBarActivity{
 
     private static int SELECT_NATIONALITY = 1;
     private static int SELECT_NAME = 2;
     private static int SELECT_GENDER = 3;
     private static int SELECT_EMAIL = 4;
+    private static int SELECT_IDENTITY_CARD_NO = 5;
 
     SharedPreferences sharedPref;
 
@@ -42,7 +47,12 @@ public class UpdateProfile extends FragmentActivity {
     private TextView selectedGender;
     private static TextView selectedDoB;
     private TextView fullName;
+    private TextView identityCardNumber;
     private TextView emailAddress;
+    EditText mobileNumber;
+
+    String accessToken;
+    int profileId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +61,15 @@ public class UpdateProfile extends FragmentActivity {
         setTitle(getText(R.string.my_profile));
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        accessToken = sharedPref.getString("access_token", null);
+        profileId = sharedPref.getInt("js_profile_id", 0);
 
         // list of labels
-        final TextView labelName = (TextView)findViewById(R.id.labelName);
-        final TextView labelNationality = (TextView)findViewById(R.id.labelNationality);
-        final TextView labelDob = (TextView)findViewById(R.id.labelDob);
-        final TextView labelGender = (TextView)findViewById(R.id.labelGender);
-        final TextView labelMobileNo = (TextView)findViewById(R.id.labelMobileNo);
+        //final TextView labelName = (TextView)findViewById(R.id.labelName);
+        //final TextView labelNationality = (TextView)findViewById(R.id.labelNationality);
+        //final TextView labelDob = (TextView)findViewById(R.id.labelDob);
+        //final TextView labelGender = (TextView)findViewById(R.id.labelGender);
+        //final TextView labelMobileNo = (TextView)findViewById(R.id.labelMobileNo);
 
         // load db
         TableProfile tProfile = new TableProfile(this);
@@ -65,6 +77,9 @@ public class UpdateProfile extends FragmentActivity {
 
         LinearLayout selectFullName = (LinearLayout)findViewById(R.id.selectFullName);
         fullName = (TextView)findViewById(R.id.fullname_profile);
+
+        LinearLayout selectIdentityCardNumber = (LinearLayout)findViewById(R.id.selectIdentityCardNumber);
+        identityCardNumber = (TextView)findViewById(R.id.identityCardNumber);
 
         LinearLayout selectEmailAddress = (LinearLayout)findViewById(R.id.selectSecondaryEmail);
         emailAddress = (TextView)findViewById(R.id.email);
@@ -79,13 +94,16 @@ public class UpdateProfile extends FragmentActivity {
         selectedGender = (TextView)findViewById(R.id.selectedGender);
 
         final Spinner dialCode = (Spinner)findViewById(R.id.dial_code);
-        final EditText mobileNumber = (EditText)findViewById(R.id.mobile_no);
+        mobileNumber = (EditText)findViewById(R.id.mobile_no);
         final DialCodeAdapter dca = new DialCodeAdapter(this);
         dialCode.setAdapter(dca);
 
         // populate input
         fullName.setText(theProfile.name);
         emailAddress.setText(theProfile.email);
+        selectedGender.setText(theProfile.gender);
+        identityCardNumber.setText(theProfile.ic);
+
         if( theProfile.country_id > 0 ){
             TableCountry tCountry = new TableCountry(this);
             Country theCountry = tCountry.findCountryById(theProfile.country_id);
@@ -93,23 +111,22 @@ public class UpdateProfile extends FragmentActivity {
             selectedNationalityValues = theCountry;
         }
 
-        if( !theProfile.dob.equals("") ){
+        if( !theProfile.dob.equals("") && !theProfile.dob.equals("null") ){
             selectedDoB.setText(Jenjobs.date(theProfile.dob, null, "yyyy-MM-dd"));
         }
 
-        selectedGender.setText(theProfile.gender);
-        Log.e("dialcode", ""+theProfile.dial_code);
-        if( theProfile.dial_code != null ){
+        if( theProfile.dial_code != null && theProfile.dial_code.length() > 0 ){
             dialCode.setSelection(dca.findDialCodePosition(theProfile.dial_code));
             selectedDialCodeValue = theProfile.dial_code;
+            mobileNumber.setText( theProfile.mobile_no );
         }else{
-            if( theProfile.mobile_no != null ){
+            if( theProfile.mobile_no != null && !theProfile.mobile_no.equals("null") ){
                 // get dial code
                 String[] parts = theProfile.mobile_no.split("\\)");
                 if( parts.length == 2 ){
                     String dialCodePart = parts[0].replaceAll("[^0-9]", "");
-                    dialCode.setSelection( dca.findDialCodePosition( dialCodePart ) );
-                    mobileNumber.setText( parts[1] );
+                    dialCode.setSelection(dca.findDialCodePosition(dialCodePart));
+                    mobileNumber.setText(parts[1]);
                 }else{
                     mobileNumber.setText( parts[0] );
                 }
@@ -136,6 +153,16 @@ public class UpdateProfile extends FragmentActivity {
                 intent.putExtra("the_text", fullName.getText());
                 intent.putExtra("the_title", getText(R.string.fullname));
                 startActivityForResult(intent, SELECT_NAME);
+            }
+        });
+
+        selectIdentityCardNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UpdateName.class);
+                intent.putExtra("the_text", identityCardNumber.getText());
+                intent.putExtra("the_title", getText(R.string.identityCardNumber));
+                startActivityForResult(intent, SELECT_IDENTITY_CARD_NO);
             }
         });
 
@@ -181,157 +208,166 @@ public class UpdateProfile extends FragmentActivity {
                         dpFragment.setArguments(b);
                     }
                 }
-                dpFragment.show( getSupportFragmentManager(), "datepickerdob" );
+                dpFragment.show(getSupportFragmentManager(), "datepickerdob" );
             }
         });
+    }
 
-        // bind ok and cancel
-        Button okButton = (Button)findViewById(R.id.okButton);
-        Button cancelButton = (Button)findViewById(R.id.cancelButton);
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<String> errors = new ArrayList<String>();
-                String accessToken = sharedPref.getString("access_token", null);
-                int profileId = sharedPref.getInt("js_profile_id", 0);
-                String theFullName = fullName.getText().toString();
-                String theDateOfBirth = selectedDoB.getText().toString();
-                String theEmailAddress = emailAddress.getText().toString();
-                String theGender = selectedGender.getText().toString();
-                String theMobileNumber = mobileNumber.getText().toString();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.save, menu);
+        return true;
+    }
 
-                if( theFullName.equals("") ){
-                    errors.add("Please enter your full name.");
-                    //labelName.setTextColor(getResources().getColor(R.color.red));
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int clickedItem = item.getItemId();
+        if (clickedItem == R.id.save) {
+            ArrayList<String> errors = new ArrayList<>();
+            String theFullName = fullName.getText().toString();
+            String theDateOfBirth = selectedDoB.getText().toString();
+            String theEmailAddress = emailAddress.getText().toString();
+            String theGender = selectedGender.getText().toString();
+            String theMobileNumber = mobileNumber.getText().toString();
+            String theIdentityCardNumber = identityCardNumber.getText().toString();
+
+            if( theFullName.equals("") ){
+                errors.add("Please enter your full name.");
+                //labelName.setTextColor(getResources().getColor(R.color.red));
+            }
+
+            int theCountryId = 127;
+            if( selectedNationalityValues == null ){
+                errors.add("Please set your nationanlity.");
+                //labelNationality.setTextColor(getResources().getColor(R.color.red));
+            }else{
+                theCountryId = selectedNationalityValues.id;
+            }
+
+            if( theDateOfBirth.equals(getResources().getString(R.string.no_value)) ){
+                errors.add("Please set your date of birth.");
+                //labelDob.setTextColor(getResources().getColor(R.color.red));
+            }
+
+            if( theGender.equals(getResources().getString(R.string.no_value)) ){
+                errors.add("Please set your gender.");
+                //labelGender.setTextColor(getResources().getColor(R.color.red));
+            }
+
+            if( ( selectedDialCodeValue == null || selectedDialCodeValue.equals("") ) || theMobileNumber.equals("") ){
+                errors.add("Please set your mobile number.");
+                //labelMobileNo.setTextColor(getResources().getColor(R.color.red));
+            }
+
+            if( errors.size() == 0 ){
+                TableProfile tableProfile = new TableProfile(getApplicationContext());
+                // insert
+                ContentValues cv = new ContentValues();
+                cv.put("name", theFullName);
+                cv.put("country_id", theCountryId);
+                cv.put("dob", Jenjobs.date(theDateOfBirth, "yyyy-MM-dd", "dd MMM yyyy"));
+
+                if( !theEmailAddress.equals("") ){
+                    cv.put("email", theEmailAddress);
                 }
 
-                int theCountryId = 127;
-                if( selectedNationalityValues == null ){
-                    errors.add("Please set your nationanlity.");
-                    //labelNationality.setTextColor(getResources().getColor(R.color.red));
-                }else{
-                    theCountryId = selectedNationalityValues.id;
+                if( !theGender.equals(getResources().getString(R.string.no_value)) ){
+                    cv.put("gender", theGender);
                 }
 
-                if( theDateOfBirth.equals(getResources().getString(R.string.no_value)) ){
-                    errors.add("Please set your date of birth.");
-                    //labelDob.setTextColor(getResources().getColor(R.color.red));
+                if( selectedDialCodeValue != null && !selectedDialCodeValue.equals("") && !theMobileNumber.equals("") ){
+                    cv.put("dial_code", selectedDialCodeValue);
+                    cv.put("mobile_no", theMobileNumber);
                 }
 
-                if( theGender.equals(getResources().getString(R.string.no_value)) ){
-                    errors.add("Please set your gender.");
-                    //labelGender.setTextColor(getResources().getColor(R.color.red));
-                }
+                tableProfile.updateProfile(cv, profileId);
 
-                if( ( selectedDialCodeValue == null || selectedDialCodeValue.equals("") ) || theMobileNumber.equals("") ){
-                    errors.add("Please set your mobile number.");
-                    //labelMobileNo.setTextColor(getResources().getColor(R.color.red));
-                }
-
-                if( errors.size() == 0 ){
-                    TableProfile tableProfile = new TableProfile(getApplicationContext());
-                    // insert
-                    ContentValues cv = new ContentValues();
-                    cv.put("name", theFullName);
-                    cv.put("country_id", theCountryId);
-                    cv.put("dob", Jenjobs.date(theDateOfBirth, "yyyy-MM-dd", "dd MMM yyyy"));
-
+                // post
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("name", theFullName);
+                    obj.put("country_id",selectedNationalityValues.id);
+                    obj.put("dob", Jenjobs.date(theDateOfBirth, "yyyy-MM-dd", "dd MMM yyyy"));
                     if( !theEmailAddress.equals("") ){
-                        cv.put("email", theEmailAddress);
+                        obj.put("email", theEmailAddress);
                     }
-
                     if( !theGender.equals(getResources().getString(R.string.no_value)) ){
-                        cv.put("gender", theGender);
+                        obj.put("gender", theGender);
                     }
-
                     if( selectedDialCodeValue != null && !selectedDialCodeValue.equals("") && !theMobileNumber.equals("") ){
-                        cv.put("dial_code", selectedDialCodeValue);
-                        cv.put("mobile_no", theMobileNumber);
+                        obj.put("dial_code", selectedDialCodeValue);
+                        obj.put("mobile_no", theMobileNumber);
                     }
 
-                    tableProfile.updateProfile(cv, profileId);
-
-                    // post
-                    JSONObject obj = new JSONObject();
-                    try {
-                        obj.put("name", theFullName);
-                        obj.put("country_id",selectedNationalityValues.id);
-                        obj.put("dob", Jenjobs.date(theDateOfBirth, "yyyy-MM-dd", "dd MMM yyyy"));
-                        if( !theEmailAddress.equals("") ){
-                            obj.put("email", theEmailAddress);
-                        }
-                        if( !theGender.equals(getResources().getString(R.string.no_value)) ){
-                            obj.put("gender", theGender);
-                        }
-                        if( selectedDialCodeValue != null && !selectedDialCodeValue.equals("") && !theMobileNumber.equals("") ){
-                            obj.put("dial_code", selectedDialCodeValue);
-                            obj.put("mobile_no", theMobileNumber);
-                        }
-
-                        String[] s = {"http://api.jenjobs.com/jobseeker/profile?access-token=" + accessToken, obj.toString()};
-                        new PostRequest().execute(s);
-                    } catch (JSONException e) {
-                        Log.e("jsonExc", e.getMessage());
-                    }
-                }else{
-                    Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_SHORT).show();
+                    String[] s = {Jenjobs.PROFILE_URL+"?access-token=" + accessToken, obj.toString()};
+                    new PostRequest().execute(s);
+                } catch (JSONException e) {
+                    Log.e("jsonExc", e.getMessage());
                 }
 
                 Intent intent = new Intent();
                 intent.putExtra("saved", "ok");
                 setResult(Activity.RESULT_OK, intent);
                 finish();
+            }else{
+                Toast.makeText(getApplicationContext(), TextUtils.join(" ", errors), Toast.LENGTH_LONG).show();
             }
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult(Activity.RESULT_CANCELED);
-                finish();
-            }
-        });
+        }
+        return true;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Bundle extra = null;
-        if( data != null ){
-            extra = data.getExtras();
-        }
-
         if ( requestCode == SELECT_NATIONALITY ) {
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                Country selectedValues = (Country) filters.get("country");
-                if( selectedValues != null ){
-                    selectedNationalityValues = selectedValues;
-                    nationality.setText(selectedValues.name);
+                if( data != null ){
+                    Bundle filters = data.getExtras();
+                    Country selectedValues = (Country) filters.get("country");
+                    if( selectedValues != null ){
+                        selectedNationalityValues = selectedValues;
+                        nationality.setText(selectedValues.name);
+                    }
                 }
             }
         }else if( requestCode == SELECT_GENDER ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                String selectedValues = (String) filters.get("gender");
-                if( selectedValues != null ){
-                    selectedGender.setText(selectedValues);
+                if( data != null ){
+                    Bundle filters = data.getExtras();
+                    String selectedValues = (String) filters.get("gender");
+                    if( selectedValues != null ){
+                        selectedGender.setText(selectedValues);
+                    }
                 }
             }
         }else if( requestCode == SELECT_NAME ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                String selectedValues = (String) filters.get("the_text");
-                if( selectedValues != null && selectedValues != "" ){
-                    fullName.setText(selectedValues);
+                if( data != null ){
+                    Bundle filters = data.getExtras();
+                    String selectedValues = (String) filters.get("the_text");
+                    if( selectedValues != null && !selectedValues.equals("") ){
+                        fullName.setText(selectedValues);
+                    }
                 }
             }
         }else if( requestCode == SELECT_EMAIL ){
             if (resultCode == RESULT_OK) {
-                Bundle filters = data.getExtras();
-                String selectedValues = (String) filters.get("the_text");
-                if( selectedValues != null && selectedValues != "" ){
-                    emailAddress.setText(selectedValues);
+                if( data != null ){
+                    Bundle filters = data.getExtras();
+                    String selectedValues = (String) filters.get("the_text");
+                    if( selectedValues != null && !selectedValues.equals("") ){
+                        emailAddress.setText(selectedValues);
+                    }
+                }
+            }
+        }else if( requestCode == SELECT_IDENTITY_CARD_NO ){
+            if (resultCode == RESULT_OK) {
+                if( data != null ){
+                    Bundle filters = data.getExtras();
+                    String selectedValues = (String) filters.get("the_text");
+                    if( selectedValues != null && !selectedValues.equals("") ){
+                        identityCardNumber.setText(selectedValues);
+                    }
                 }
             }
         }
@@ -346,6 +382,7 @@ public class UpdateProfile extends FragmentActivity {
 
         public DatePickerFragment(){}
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
