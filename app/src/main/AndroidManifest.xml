@@ -102,9 +102,6 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".UpdateProfile" />
         <activity
-            android:name=".Confirmation"
-            android:theme="@android:style/Theme.Dialog" />
-        <activity
             android:name=".SelectEducationLevel"
             android:theme="@android:style/Theme.Dialog" />
         <activity
@@ -140,7 +137,7 @@
             android:label="@string/title_activity_select_job_industry"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".EmployerProfile" />
-        <activity android:name=".AboutJobSearch"></activity>
+        <activity android:name=".AboutJobSearch" />
     </application>
 
 </manifest>
