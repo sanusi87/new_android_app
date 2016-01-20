@@ -130,7 +130,8 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -148,9 +149,9 @@
                 android:id="@+id/ic_no"
                 android:layout_weight="1"
                 style="@style/AppThemeBaseTextValue" />
+            <View style="@style/AppThemeSeparator" />
         </LinearLayout>
 
-        <View style="@style/AppThemeSeparator" />
 
         <LinearLayout
             android:orientation="horizontal"
