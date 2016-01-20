@@ -59,9 +59,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     public static final int PROFILE_FRAGMENT = 1;
     public static final int JOB_FRAGMENT = 2;
     public static final int APPLICATION_FRAGMENT = 3;
-    public static final int SETTINGS_FRAGMENT = 4;
-    public static final int ONLINE_RESUME_FRAGMENT = 5;
-    public static final int LOG_OUT_FRAGMENT = 6;
+    public static final int BOOKMARK_FRAGMENT = 4;
+    public static final int SETTINGS_FRAGMENT = 5;
+    public static final int ONLINE_RESUME_FRAGMENT = 6;
+    public static final int LOG_OUT_FRAGMENT = 7;
 
     /*
     * download sections
@@ -195,8 +196,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
 
             defaultPage = extras.getInt("defaultPage", defaultPage);
-            Log.e("intent_defaultPage", ""+defaultPage);
-
             if( defaultPage > 0 ){
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 if( defaultPage == APPLICATION_FRAGMENT ){
@@ -218,8 +217,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        Log.e("_position", ""+position);
-        Log.e("_defaultPage", ""+defaultPage);
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
@@ -241,6 +238,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 break;
             case ONLINE_RESUME_FRAGMENT:
                 mTitle = getString(R.string.online_resume);
+                break;
+            case BOOKMARK_FRAGMENT:
+                mTitle = getString(R.string.bookmark);
                 break;
         }
         restoreActionBar();
@@ -292,6 +292,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     rootView = inflater.inflate(R.layout.application_layout, container, false);
                     setupApplicationFragment(rootView);
                     break;
+                case BOOKMARK_FRAGMENT:
+                    rootView = inflater.inflate(R.layout.bookmark_layout, container, false);
+                    setupBookmarkFragment(rootView);
+                    break;
                 case SETTINGS_FRAGMENT:
                     rootView = inflater.inflate(R.layout.settings_layout, container, false);
                     setupSettingsFragment(rootView);
@@ -339,10 +343,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
             name.setText( theProfile.name );
             email.setText( theProfile.email );
-            mobile_no.setText( theProfile.mobile_no );
 
             if( theProfile.mobile_no != null && !theProfile.mobile_no.equals("null") ){
-                mobile_no.setText( theProfile.mobile_no );
+                mobile_no.setText(theProfile.mobile_no);
             }
 
             if( theProfile.ic != null && !theProfile.ic.equals("null") ){
@@ -385,15 +388,13 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 int previousLastPosition = 0;
 
                 @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                }
+                public void onScrollStateChanged(AbsListView view, int scrollState) {}
 
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                     final int lastPosition = firstVisibleItem + visibleItemCount;
                     if (lastPosition == totalItemCount) {
                         if (previousLastPosition != lastPosition) {
-                            //Log.e("load", "more more");
                             jobSearch.setPage(jobSearch.getPage() + 1);
                             jobSearch.search(false);
                         }
@@ -1007,6 +1008,20 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             });
         }
 
+        private void setupBookmarkFragment(View rootView){
+            LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.no_item);
+            ((TextView)ll.findViewById(R.id.noticeText)).setText("No bookmark found!");
+
+            ListView lv = (ListView)rootView.findViewById(R.id.listOfBookmark);
+            BookmarkAdapter bookmarkAdapter = new BookmarkAdapter(context, accessToken);
+            bookmarkAdapter.setActivity(getActivity());
+            bookmarkAdapter.setNoItemView(ll);
+            lv.setAdapter(bookmarkAdapter);
+
+            if( bookmarkAdapter.getCount() == 0 ){
+                ll.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     /*
@@ -1046,6 +1061,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 return super.onOptionsItemSelected(item);
             case ONLINE_RESUME_FRAGMENT:
                 return super.onOptionsItemSelected(item);
+            case BOOKMARK_FRAGMENT:
+                return super.onOptionsItemSelected(item);
         }
         return true;
     }
@@ -1064,7 +1081,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 inflater.inflate(R.menu.job_fragment_menu, menu);
                 break;
             case APPLICATION_FRAGMENT:
-
+                break;
+            case BOOKMARK_FRAGMENT:
                 break;
             case SETTINGS_FRAGMENT:
 
