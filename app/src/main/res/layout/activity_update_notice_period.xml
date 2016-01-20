@@ -24,7 +24,7 @@
                 android:ems="10"
                 android:id="@+id/availability"
                 android:hint="@string/notice_period"
-                style="@style/AppThemeBaseTextValue"
+                style="@style/AppThemeBaseTextInput"
                 android:layout_weight="1" />
 
             <Spinner

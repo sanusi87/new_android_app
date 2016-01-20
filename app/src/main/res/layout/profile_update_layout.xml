@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:id="@+id/fullname_profile"
-                style="@style/AppThemeBaseTextValue"
+                style="@style/AppThemeBaseTextInput"
                 android:text="@string/no_value" />
 
         </LinearLayout>
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:id="@+id/selectedNationality"
-                style="@style/AppThemeBaseTextValue"
+                style="@style/AppThemeBaseTextInput"
                 android:text="@string/no_value" />
 
         </LinearLayout>
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/selectedDateOfBirth"
-                style="@style/AppThemeBaseTextValue" />
+                style="@style/AppThemeBaseTextInput" />
 
         </LinearLayout>
 
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/selectedGender"
-                style="@style/AppThemeBaseTextValue" />
+                style="@style/AppThemeBaseTextInput" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -133,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
                 android:id="@+id/email"
-                style="@style/AppThemeBaseTextValue" />
+                style="@style/AppThemeBaseTextInput" />
 
         </LinearLayout>
 
@@ -162,14 +162,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/dial_code"
-                    style="@style/AppThemeBaseTextValue" />
+                    style="@style/AppThemeBaseTextInput" />
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/mobile_no"
                     android:inputType="textPhonetic"
-                    style="@style/AppThemeBaseTextValue" />
+                    style="@style/AppThemeBaseTextInput" />
             </LinearLayout>
 
         </LinearLayout>

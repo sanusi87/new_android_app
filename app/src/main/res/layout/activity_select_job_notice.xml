@@ -17,7 +17,7 @@
             android:ems="10"
             android:id="@+id/durationPeriod"
             android:hint="@string/notice_period"
-            style="@style/AppThemeBaseTextValue" />
+            style="@style/AppThemeBaseTextInput" />
     </LinearLayout>
 
     <ListView

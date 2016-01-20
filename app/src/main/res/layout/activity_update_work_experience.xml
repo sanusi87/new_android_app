@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/position_title"
                 android:inputType="text"
-                style="@style/AppThemeBaseTextValue" />
+                style="@style/AppThemeBaseTextInput" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/company_name"
                 android:inputType="text"
-                style="@style/AppThemeBaseTextValue" />
+                style="@style/AppThemeBaseTextInput" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -74,7 +74,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
                 android:id="@+id/selectedJobType"
-                style="@style/AppThemeBaseTextValue" />
+                style="@style/AppThemeBaseTextInput" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -129,7 +129,7 @@
                     android:id="@+id/salary_amount"
                     android:hint="@string/amount"
                     android:layout_weight="1"
-                    style="@style/AppThemeBaseTextValue" />
+                    style="@style/AppThemeBaseTextInput" />
             </LinearLayout>
         </LinearLayout>
 
@@ -153,7 +153,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
                 android:id="@+id/selectedJobSpec"
-                style="@style/AppThemeBaseTextValue" />
+                style="@style/AppThemeBaseTextInput" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -176,7 +176,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
                 android:id="@+id/selectedJobRole"
-                style="@style/AppThemeBaseTextValue" />
+                style="@style/AppThemeBaseTextInput" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -200,7 +200,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
                 android:id="@+id/selectedIndustry"
-                style="@style/AppThemeBaseTextValue" />
+                style="@style/AppThemeBaseTextInput" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -280,7 +280,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/end_date2"
-                style="@style/AppThemeBaseTextValue" />
+                style="@style/AppThemeBaseTextInput" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -347,7 +347,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/exp2"
-                style="@style/AppThemeBaseTextValue" />
+                style="@style/AppThemeBaseTextInput" />
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -357,7 +357,7 @@
                 android:maxLength="3000"
                 android:nestedScrollingEnabled="true"
                 android:inputType="text|textMultiLine"
-                style="@style/AppThemeBaseTextValue"
+                style="@style/AppThemeBaseTextInput"
                 android:singleLine="false"
                 android:layout_weight="1" />
         </LinearLayout>

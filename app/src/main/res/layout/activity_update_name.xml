@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/theText"
         android:inputType="text"
-        style="@style/AppThemeBaseTextValue" />
+        style="@style/AppThemeBaseTextInput" />
 
     <LinearLayout
         android:orientation="horizontal"

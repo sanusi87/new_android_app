@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/currency"
-            style="@style/AppThemeBaseTextValue"
+            style="@style/AppThemeBaseTextInput"
             android:background="@android:color/white"
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp" />
@@ -44,7 +44,7 @@
             android:ems="10"
             android:id="@+id/salary"
             android:hint="@string/salary"
-            style="@style/AppThemeBaseTextValue" />
+            style="@style/AppThemeBaseTextInput" />
     </LinearLayout>
 
     <LinearLayout
