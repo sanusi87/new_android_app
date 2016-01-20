@@ -74,7 +74,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
                 android:id="@+id/selectedJobType"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -153,7 +153,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
                 android:id="@+id/selectedJobSpec"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -176,7 +176,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
                 android:id="@+id/selectedJobRole"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -200,7 +200,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_value"
                 android:id="@+id/selectedIndustry"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
 
         <View style="@style/AppThemeBorderBottom" />
@@ -280,7 +280,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/end_date2"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -347,7 +347,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/exp2"
-                style="@style/AppThemeBaseTextInput" />
+                style="@style/AppThemeBaseTextValue" />
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
