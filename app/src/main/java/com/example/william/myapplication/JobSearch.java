@@ -157,8 +157,12 @@ public class JobSearch {
 
     // setup search URL
     private String getSearchUrl(){
-        String filterUrl = "?page="+this.page + "&" + TextUtils.join("&", filters) + "&" + TextUtils.join("&", orders);
-        Log.e("filter", filterUrl);
+        String filterUrl = "?page="+this.page;
+        if( filters.size() > 0 ){
+            filterUrl += "&" + TextUtils.join("&", filters);
+        }
+        filterUrl += "&" + TextUtils.join("&", orders);
+        //Log.e("filter", filterUrl);
         return Jenjobs.JOB_DETAILS+filterUrl;
     }
 
@@ -179,6 +183,7 @@ public class JobSearch {
         public int OBJECT_TYPE = 1;
 
         GetRequest( String target ){
+            Log.e("url", target);
             this._url = target;
         }
 
@@ -211,12 +216,17 @@ public class JobSearch {
 
         @Override
         protected void onPostExecute(Object success) {
+            View v = ((ViewGroup)loading.getParent());
+            LinearLayout ll = (LinearLayout)v.findViewById(R.id.no_item);
+
             if( success != null ){
                 ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
                 JSONObject jObj = (JSONObject) success;
                 JSONArray jArr = jObj.optJSONArray("data");
-                if( jArr != null && jArr.length() > 0 && adapter.getCount() > 0 ){
-                    View v = ((ViewGroup)loading.getParent());
+                //Log.e("jArr", ""+jArr);
+
+                if( jArr != null && jArr.length() > 0 ){
+                    //Log.e("jArr.length", ""+jArr.length());
                     (v.findViewById(R.id.no_item)).setVisibility(View.GONE);
                     (v.findViewById(R.id.job_list_view)).setVisibility(View.VISIBLE);
 
@@ -230,23 +240,16 @@ public class JobSearch {
                     adapter.setJob( arr );
                     adapter.notifyDataSetChanged();
                 }else{
-                    View v = ((ViewGroup)loading.getParent());
-                    LinearLayout ll = (LinearLayout)v.findViewById(R.id.no_item);
                     ll.setVisibility(View.VISIBLE);
                     ((TextView)ll.findViewById(R.id.noticeText)).setText("No job postings found!");
                     (v.findViewById(R.id.job_list_view)).setVisibility(View.GONE);
                 }
             }else{
-                View v = ((ViewGroup)loading.getParent());
-                LinearLayout ll = (LinearLayout)v.findViewById(R.id.no_item);
                 ll.setVisibility(View.VISIBLE);
                 ((TextView)ll.findViewById(R.id.noticeText)).setText("No job postings found!");
                 (v.findViewById(R.id.job_list_view)).setVisibility(View.GONE);
             }
-
-            if( loading != null ){
-                loading.setVisibility(View.GONE);
-            }
+            loading.setVisibility(View.GONE);
         }
     }
 }
