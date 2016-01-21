@@ -8,14 +8,14 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/AppThemePadding5"
         android:weightSum="4"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        style="@style/AppThemePadding5">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="4"
             android:gravity="center_vertical"
             android:id="@+id/itemDetails">
@@ -24,11 +24,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_value"
-                style="@style/AppThemeBaseLabel"
-                android:id="@+id/positionTitle" />
+                android:id="@+id/positionTitle"
+                style="@style/AppThemeBaseLabel" />
 
             <LinearLayout
                 android:orientation="horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -38,7 +40,8 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/bookmarked_on"
                     style="@style/AppThemeBaseTextValue"
-                    android:paddingRight="5dp" />
+                    android:paddingRight="5dp"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -51,6 +54,8 @@
 
             <LinearLayout
                 android:orientation="horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -60,7 +65,8 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/closed_on"
                     android:paddingRight="5dp"
-                    style="@style/AppThemeBaseTextValue" />
+                    style="@style/AppThemeBaseTextValue"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="wrap_content"

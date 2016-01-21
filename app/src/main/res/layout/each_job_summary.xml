@@ -82,7 +82,8 @@
                     android:text="@string/no_value"
                     android:id="@+id/job_location"
                     android:layout_toEndOf="@+id/locationIcon"
-                    android:layout_marginStart="5dp" />
+                    android:layout_marginStart="5dp"
+                    android:textColor="@android:color/black" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -108,7 +109,8 @@
                     android:text="@string/no_value"
                     android:id="@+id/job_type"
                     android:layout_toEndOf="@+id/jobTypeIcon"
-                    android:layout_marginStart="5dp" />
+                    android:layout_marginStart="5dp"
+                    android:textColor="@android:color/black" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -134,36 +136,68 @@
                     android:text="@string/no_value"
                     android:id="@+id/date_closed"
                     android:layout_toEndOf="@+id/expiredIcon"
-                    android:layout_marginStart="5dp" />
+                    android:layout_marginStart="5dp"
+                    android:textColor="@android:color/black" />
             </RelativeLayout>
         </LinearLayout>
 
-        <TextView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/job_description"
-            android:id="@+id/job_description"
-            android:textColor="@color/dark_gray"
-            android:background="@drawable/border_left"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="10dp"
-            android:textSize="12sp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:paddingRight="10dp"
-            android:paddingLeft="10dp" />
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:id="@+id/expandItemContainer">
 
-        <View style="@style/AppThemeSeparator"
-            android:visibility="gone" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="@string/no_value"
+                android:src="@drawable/ic_expand_more_black_48dp"
+                android:tint="@color/blue" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/no_value"
-            android:id="@+id/job_spec"
-            android:visibility="gone" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/more"
+                android:textSize="12sp"
+                android:textColor="@color/blue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/moreItem"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/job_description"
+                android:id="@+id/job_description"
+                android:textColor="@color/dark_gray"
+                android:background="@drawable/border_left"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:textSize="12sp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp" />
+
+            <View style="@style/AppThemeSeparator" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/no_value"
+                android:id="@+id/job_spec"
+                android:textSize="12sp" />
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>
