@@ -12,7 +12,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class SelectJobRole extends Activity {
-
+    int viewIndex = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +23,7 @@ public class SelectJobRole extends Activity {
         int jobSpecId = 200;
         if( extra != null ){
             jobSpecId = extra.getInt("jobspecid");
+            viewIndex = extra.getInt("jsViewIndex");
         }
 
         final ListView lv = (ListView)findViewById(R.id.listOfJobRole);
@@ -58,6 +59,7 @@ public class SelectJobRole extends Activity {
 
                 Intent intent = new Intent();
                 intent.putExtra("jobrole", values);
+                intent.putExtra("viewIndex", viewIndex);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
