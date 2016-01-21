@@ -110,12 +110,10 @@ public class MainService extends Service{
     Runnable updateData = new Runnable(){
         @Override
         public void run() {
-            String notificationAlert = tableSettings.getSetting("notification_alert");
-            // if notification alert is enabled
-            if( isOnline() && Integer.valueOf(notificationAlert) > 0 ){
+            if( isOnline() ){
                 // TODO - check for network connectivity first, only then can proceed
                 Cursor applications = tableApplication.getActiveApplication();
-                Log.e("active apps",""+applications.getCount());
+                //Log.e("active apps",""+applications.getCount());
                 if (applications.getCount() > 0) {
                     applications.moveToFirst();
 
@@ -182,11 +180,6 @@ public class MainService extends Service{
         protected void onPostExecute(JSONArray success) {
             //Log.e("onGet", "" + success);
             if( success != null ){
-                Intent intent = new Intent();
-                intent.putExtra("statusText", "Notification");
-                intent.putExtra("defaultPage", ProfileActivity.APPLICATION_FRAGMENT);
-                intent.setClass(getApplicationContext(), ProfileActivity.class);
-
                 int applicationUpdated = 0;
                 for(int i=0;i<success.length();i++){
                     try {
@@ -215,10 +208,35 @@ public class MainService extends Service{
                 }
 
                 if( applicationUpdated > 0 ){
-                    intent.putExtra("contentText", "Your application status has been updated.");
-                    showNotification(intent);
+                    String notificationAlert = tableSettings.getSetting("notification_alert");
+                    // if notification alert is enabled
+                    if( Integer.valueOf(notificationAlert) > 0 ){
+                        Intent intent = new Intent();
+                        intent.putExtra("statusText", "Notification");
+                        intent.putExtra("defaultPage", ProfileActivity.APPLICATION_FRAGMENT);
+                        intent.setClass(getApplicationContext(), ProfileActivity.class);
+                        intent.putExtra("contentText", "Your application status has been updated.");
+
+                        showNotification(intent);
+                    }
                 }
             }
+        }
+    }
+
+    // check application
+    public class CheckInvitationAndRequest extends AsyncTask<String, Void, JSONArray> {
+
+        public CheckInvitationAndRequest(){}
+
+        @Override
+        protected JSONArray doInBackground(String... params) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray success) {
+
         }
     }
 
