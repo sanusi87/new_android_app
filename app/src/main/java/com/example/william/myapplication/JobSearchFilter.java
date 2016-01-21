@@ -67,16 +67,13 @@ public class JobSearchFilter extends ActionBarActivity {
     EditText salaryMinInput;
     EditText salaryMaxInput;
 
-    private TableJobSpec tableJobSpec;
-    private TableJobRole tableJobRole;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_search_filter);
 
-        tableJobSpec = new TableJobSpec(this);
-        tableJobRole = new TableJobRole(this);
+        TableJobSpec tableJobSpec = new TableJobSpec(this);
+        TableJobRole tableJobRole = new TableJobRole(this);
 
         selectedJobSpecAdapter = new SelectedJobSpecAdapter(getApplicationContext());
         listOfSelectedJobSpec = (LinearLayout)findViewById(R.id.listOfSelectedJobSpec);
@@ -299,7 +296,6 @@ public class JobSearchFilter extends ActionBarActivity {
         });
 
         selectedJobSpecAdapter.setJobSpec(selectedJobSpecValues);
-
         listOfSelectedJobSpecInner.setAdapter(selectedJobSpecAdapter);
         listOfSelectedJobSpec.addView(listOfSelectedJobSpecInner);
 
@@ -343,6 +339,7 @@ public class JobSearchFilter extends ActionBarActivity {
                 Intent intent = new Intent(getApplicationContext(), SelectJobType.class);
                 intent.putExtra("single", false);
                 // get a list of already selected states and update the Extra to be submitted to next activity
+                intent.putExtra("jobtype", selectedJobTypeValues);
                 startActivityForResult(intent, INTENT_GET_TYPE);
             }
         });
@@ -354,9 +351,7 @@ public class JobSearchFilter extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SelectState.class);
                 // passed selected values if user want to reselect
-                if( selectedMalaysiaStateValues.size() > 0 ){
-                    intent.putExtra("state", selectedMalaysiaStateValues);
-                }
+                intent.putExtra("state", selectedMalaysiaStateValues);
                 // get a list of already selected states and update the Extra to be submitted to next activity
                 startActivityForResult(intent, INTENT_GET_STATE);
             }
@@ -369,9 +364,8 @@ public class JobSearchFilter extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SelectCountry.class);
                 // passed selected values if user want to reselect
-                if( selectedOtherCountryValues.size() > 0 ){
-                    intent.putExtra("country", selectedOtherCountryValues);
-                }
+                intent.putExtra("country", selectedOtherCountryValues);
+                intent.putExtra("remove_malaysia", true);
                 // get a list of already selected states and update the Extra to be submitted to next activity
                 startActivityForResult(intent, INTENT_GET_COUNTRY);
             }
@@ -385,9 +379,7 @@ public class JobSearchFilter extends ActionBarActivity {
                 Intent intent = new Intent(getApplicationContext(), SelectPositionLevel.class);
                 intent.putExtra("single", false);
                 // passed selected values if user want to reselect
-                if( selectedPositionLevelValues.size() > 0 ){
-                    intent.putExtra("positionlevel", selectedPositionLevelValues);
-                }
+                intent.putExtra("positionlevel", selectedPositionLevelValues);
                 // get a list of already selected states and update the Extra to be submitted to next activity
                 startActivityForResult(intent, INTENT_GET_LEVEL);
             }
@@ -486,6 +478,32 @@ public class JobSearchFilter extends ActionBarActivity {
 
             setResult(Activity.RESULT_OK, intent);
             finish();
+        }else if( clickedItem == R.id.clear_filter ){
+            CharSequence noValue = getText(R.string.no_value);
+            // reset values
+            keywordFilter = new KeywordFilter(1,"Position Title");
+            enteredKeyword.setText(noValue);
+            salaryMinInput.setText(noValue);
+            salaryMaxInput.setText(noValue);
+            selectedJobSpecValues.clear();
+            _jobRoleBasedOnView.clear();
+            selectedJobTypeValues.clear();
+            selectedMalaysiaStateValues.clear();
+            selectedOtherCountryValues.clear();
+            selectedPositionLevelValues.clear();
+            directEmployerCb.setChecked(false);
+            recruitmentAgencyCb.setChecked(false);
+
+            // reset views
+            selectedJobSpecAdapter.setJobSpec(null);
+            listOfSelectedJobSpec.setVisibility(View.GONE);
+            //selectedJobSpecAdapter.notifyDataSetChanged();
+            selectedJobType.setText(noValue);
+            selectedJobSpec.setText(noValue);
+            selectedMalaysiaState.setText(noValue);
+            selectedOtherCountry.setText(noValue);
+            selectedPositionLevel.setText(noValue);
+
         }
         return true;
     }
@@ -614,7 +632,7 @@ public class JobSearchFilter extends ActionBarActivity {
                 Bundle filters = data.getExtras();
                 ArrayList<JobType> selectedValues = (ArrayList<JobType>) filters.get("jobType");
                 ArrayList<String> selectedLabels = new ArrayList<>();
-
+                Log.e("selectedValues", ""+selectedValues);
                 if( selectedValues != null ){
                     for( int i=0;i<selectedValues.size();i++ ){
                         JobType c = selectedValues.get(i);
