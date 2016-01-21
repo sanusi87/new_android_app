@@ -68,9 +68,11 @@ public class JobSearch {
     }
 
     public void setOrderPreference( String order ){
+        orders.clear();
         if( order != null ){
-            orders.clear();
             orders.add("o=" + order);
+        }else{
+            orders.add(defaultOrder);
         }
     }
 
@@ -161,6 +163,8 @@ public class JobSearch {
     }
 
     public void resetFilter(){
+        this.page = 1;
+        setOrderPreference(null);
         filters.clear();
     }
 
@@ -200,11 +204,10 @@ public class JobSearch {
                     _response = JenHttpRequest.decodeJsonObjectString(responseString);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("getJobErr", e.getMessage());
             }
             return _response;
         }
-
 
         @Override
         protected void onPostExecute(Object success) {
@@ -212,7 +215,11 @@ public class JobSearch {
                 ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
                 JSONObject jObj = (JSONObject) success;
                 JSONArray jArr = jObj.optJSONArray("data");
-                if( jArr != null ){
+                if( jArr != null && jArr.length() > 0 && adapter.getCount() > 0 ){
+                    View v = ((ViewGroup)loading.getParent());
+                    (v.findViewById(R.id.no_item)).setVisibility(View.GONE);
+                    (v.findViewById(R.id.job_list_view)).setVisibility(View.VISIBLE);
+
                     for( int i=0;i< jArr.length();i++ ){
                         try {
                             arr.add(jArr.getJSONObject(i));
@@ -222,13 +229,19 @@ public class JobSearch {
                     }
                     adapter.setJob( arr );
                     adapter.notifyDataSetChanged();
+                }else{
+                    View v = ((ViewGroup)loading.getParent());
+                    LinearLayout ll = (LinearLayout)v.findViewById(R.id.no_item);
+                    ll.setVisibility(View.VISIBLE);
+                    ((TextView)ll.findViewById(R.id.noticeText)).setText("No job postings found!");
+                    (v.findViewById(R.id.job_list_view)).setVisibility(View.GONE);
                 }
             }else{
                 View v = ((ViewGroup)loading.getParent());
                 LinearLayout ll = (LinearLayout)v.findViewById(R.id.no_item);
                 ll.setVisibility(View.VISIBLE);
-
                 ((TextView)ll.findViewById(R.id.noticeText)).setText("No job postings found!");
+                (v.findViewById(R.id.job_list_view)).setVisibility(View.GONE);
             }
 
             if( loading != null ){
