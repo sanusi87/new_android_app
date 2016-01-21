@@ -10,9 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +35,8 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
     Drawable bookmark;
     Drawable bookmarked;
 
+    ArrayList<Integer> expandedItem;
+
     public JobSearchAdapter( Context context ){
         this.context = context;
         tableBookmark = new TableBookmark(context);
@@ -39,6 +44,8 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
 
         bookmark = context.getResources().getDrawable(R.drawable.ic_turned_in_not_black_24dp);
         bookmarked = context.getResources().getDrawable(R.drawable.ic_turned_in_black_24dp);
+
+        expandedItem = new ArrayList<>();
     }
 
     public void setAccessToken( String token ){
@@ -73,7 +80,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View v = convertView;
         if (v == null) {
             LayoutInflater vi;
@@ -92,7 +99,6 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             final String company = p.optString("company_name");
             int showSalary = p.optInt("salary_display");
             final String _dateClosed = Jenjobs.date(dateClosed, "dd MMM yyyy", "yyyy-MM-dd hh:mm:ss");
-            //boolean isBookmarked = false;
 
             TextView jobTitle = (TextView) v.findViewById(R.id.job_title);
             jobTitle.setText(postTitle);
@@ -138,9 +144,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
 
             Cursor bookmarkList = tableBookmark.getBookmark(postId);
             if( bookmarkList.getCount() > 0) {
-                Log.e("bookmarked", postTitle+"=1,"+position);
                 bookmarkButton.setImageDrawable(bookmarked);
-                //isBookmarked = true;
             }
             bookmarkList.close();
 
@@ -149,9 +153,6 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                 bookmarkButton.setClickable(false);
             }
 
-            //Log.e("bm", postTitle+"="+isBookmarked);
-
-            //final boolean finalIsBookmarked = isBookmarked;
             bookmarkButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -203,6 +204,35 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                             }
                         }
                     }
+                }
+            });
+
+            final LinearLayout expandItemContainer = (LinearLayout)v.findViewById(R.id.expandItemContainer);
+            final LinearLayout moreItem = (LinearLayout)v.findViewById(R.id.moreItem);
+
+            if( expandedItem.indexOf(position) == -1 ){
+                // reset
+                moreItem.setVisibility(View.GONE);
+                expandItemContainer.setVisibility(View.VISIBLE);
+            }else{
+                // retain
+                moreItem.setVisibility(View.VISIBLE);
+                expandItemContainer.setVisibility(View.GONE);
+            }
+
+            // set
+            expandItemContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    expandedItem.add(position);
+
+                    Animation in = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
+                    moreItem.startAnimation(in);
+                    moreItem.setVisibility(View.VISIBLE);
+
+                    Animation out = AnimationUtils.makeOutAnimation(context, true);
+                    expandItemContainer.startAnimation(out);
+                    expandItemContainer.setVisibility(View.GONE);
                 }
             });
         }
