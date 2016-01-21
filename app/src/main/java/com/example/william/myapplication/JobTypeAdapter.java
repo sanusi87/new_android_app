@@ -57,14 +57,14 @@ public class JobTypeAdapter extends BaseAdapter implements ListAdapter{
             }else{
                 v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
                 tvName = (TextView) v.findViewById(android.R.id.text1);
-                //tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
             }
         }
 
         if( tvName != null ){
             tvName.setText(c.name);
+            tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
         }
-        //v.setBackgroundColor(context.getResources().getColor(R.color.light_gray));
+        v.setBackgroundColor(context.getResources().getColor(R.color.white));
 
         return v;
     }
