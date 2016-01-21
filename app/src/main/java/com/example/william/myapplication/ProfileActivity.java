@@ -260,6 +260,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
      */
     private static int sectionNumber;
     private static JobSearch jobSearch;
+    private Bundle searchParameters = new Bundle();
     private static LinearLayout profileLayout = null;
 
     public static class PlaceholderFragment extends Fragment {
@@ -1045,6 +1046,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 if( clickedItem == R.id.filter_job_button ){
                     Intent intent = new Intent();
                     intent.setClass(getApplicationContext(), JobSearchFilter.class);
+                    // send back the intent
+                    intent.putExtra("searchParameters", searchParameters);
                     startActivityForResult(intent, FETCH_FILTER_PARAM);
                     return true;
                 }else if( clickedItem == R.id.about_job_ads ){
@@ -1128,23 +1131,27 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 KeywordFilter keywordFilter = (KeywordFilter) extra.get("keyword_filter");
                 if( keywordFilter != null ){
                     jobSearch.setKeywordFilter(String.valueOf(keywordFilter.id));
+                    searchParameters.putSerializable("keyword_filter", keywordFilter);
                 }
 
                 String keyword = extra.getString("keyword");
                 if( keyword != null ){
                     jobSearch.setKeyword(keyword);
+                    searchParameters.putString("keyword", keyword);
                 }
 
                 String _salaryMin = extra.getString("salary_min");
                 if( _salaryMin != null ){
                     int salaryMin = Integer.valueOf(_salaryMin);
                     jobSearch.setSalaryMin(salaryMin);
+                    searchParameters.putString("salary_min", _salaryMin);
                 }
 
                 String _salaryMax = extra.getString("salary_max");
                 if( _salaryMax != null ){
                     int salaryMax = Integer.valueOf(_salaryMax);
                     jobSearch.setSalaryMax(salaryMax);
+                    searchParameters.putString("salary_max", _salaryMax);
                 }
 
                 ArrayList jobSpecs = (ArrayList) extra.get("job_spec");
@@ -1155,6 +1162,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         _jobSpec.add(String.valueOf(__jobSpec.id));
                     }
                     jobSearch.setJobSpec(_jobSpec.toArray(new String[_jobSpec.size()]));
+                    searchParameters.putStringArrayList("job_spec", _jobSpec);
                 }
 
                 ArrayList jobRoles = (ArrayList) extra.get("job_role");
@@ -1165,6 +1173,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         _jobRole.add(String.valueOf(__jobRole.id));
                     }
                     jobSearch.setJobRole(_jobRole.toArray(new String[_jobRole.size()]));
+                    searchParameters.putStringArrayList("job_role", _jobRole);
                 }
 
                 ArrayList jobTypes = (ArrayList) extra.get("job_type");
@@ -1175,6 +1184,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         _jobType.add(String.valueOf(__jobType.id));
                     }
                     jobSearch.setJobType(_jobType.toArray(new String[_jobType.size()]));
+                    searchParameters.putStringArrayList("job_type", _jobType);
                 }
 
                 ArrayList states = (ArrayList) extra.get("state");
@@ -1185,6 +1195,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         _state.add(String.valueOf(__state.id));
                     }
                     jobSearch.setState(_state.toArray(new String[_state.size()]));
+                    searchParameters.putStringArrayList("state", _state);
                 }
 
                 ArrayList countries = (ArrayList) extra.get("country");
@@ -1195,6 +1206,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         _country.add(String.valueOf(__country.id));
                     }
                     jobSearch.setCountry(_country.toArray(new String[_country.size()]));
+                    searchParameters.putStringArrayList("country", _country);
                 }
 
                 ArrayList positionLevels = (ArrayList) extra.get("position_level");
@@ -1205,14 +1217,17 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         _positionLevel.add(String.valueOf(__positionLevel.id));
                     }
                     jobSearch.setJobLevel(_positionLevel.toArray(new String[_positionLevel.size()]));
+                    searchParameters.putStringArrayList("position_level", _positionLevel);
                 }
 
 
                 boolean directEmployer = extra.getBoolean("direct_employer");
                 jobSearch.setDirectEmployer(directEmployer);
+                searchParameters.putBoolean("direct_employer", directEmployer);
 
                 boolean recruitmentAgency = extra.getBoolean("recruitment_agency");
                 jobSearch.setAdvertiser(recruitmentAgency); // same different
+                searchParameters.putBoolean("recruitment_agency", recruitmentAgency);
 
                 jobSearch.search(true);
             }
