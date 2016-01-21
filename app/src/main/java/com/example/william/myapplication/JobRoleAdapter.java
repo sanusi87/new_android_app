@@ -10,6 +10,9 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class JobRoleAdapter extends BaseAdapter implements ListAdapter{
 
@@ -24,12 +27,26 @@ public class JobRoleAdapter extends BaseAdapter implements ListAdapter{
         TableJobRole tableJobRole = new TableJobRole(context);
         Cursor c = tableJobRole.getAllJobRole(jobSpecId);
         if( c.moveToFirst() ){
+            ArrayList<JobRole> tempArr = new ArrayList<>();
             while( !c.isAfterLast() ){
-
-                jobrole.add(new JobRole(c.getInt(0), c.getInt(1), c.getString(2)));
-
+                tempArr.add(new JobRole(c.getInt(0), c.getInt(1), c.getString(2)));
                 c.moveToNext();
             }
+
+            Collections.sort(tempArr, new Comparator<JobRole>() {
+                @Override
+                public int compare(JobRole lhs, JobRole rhs) {
+                    String[] t = {lhs.name, rhs.name};
+                    Arrays.sort(t);
+                    if (t[0].equals(lhs.name)) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                }
+            });
+
+            jobrole = tempArr;
         }
     }
 

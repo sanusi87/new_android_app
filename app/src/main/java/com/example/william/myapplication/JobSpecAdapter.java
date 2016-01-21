@@ -11,6 +11,9 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class JobSpecAdapter extends BaseAdapter implements ListAdapter{
 
@@ -22,18 +25,32 @@ public class JobSpecAdapter extends BaseAdapter implements ListAdapter{
         this.context = context;
 
         // TODO: populate jobspec
+        ArrayList<JobSpec> tempArr = new ArrayList<>();
         TableJobSpec tableJobSpec = new TableJobSpec(context);
         Cursor c = tableJobSpec.getAllJobSpec();
-
         if( c.moveToFirst() ){
             for( int i=0;i<c.getCount();i++ ){
-                jobspec.add(new JobSpec(c.getInt(0), c.getString(1)));
+                tempArr.add(new JobSpec(c.getInt(0), c.getString(1)));
                 c.moveToNext();
             }
         }else{
             // no job spec found, so download
-
         }
+
+        Collections.sort(tempArr, new Comparator<JobSpec>() {
+            @Override
+            public int compare(JobSpec lhs, JobSpec rhs) {
+                String[] t = {lhs.name, rhs.name};
+                Arrays.sort(t);
+                if (t[0].equals(lhs.name)) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        });
+
+        jobspec = tempArr;
     }
 
     @Override
