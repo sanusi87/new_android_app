@@ -33,8 +33,6 @@ public class CountryAdapter extends BaseAdapter implements ListAdapter {
         //    tempArr.add(new Country( (int)e.getKey(), String.valueOf(e.getValue()) ));
         //}
 
-
-
         Collections.sort(tempArr, new Comparator<Country>() {
             @Override
             public int compare(Country lhs, Country rhs) {
@@ -89,5 +87,15 @@ public class CountryAdapter extends BaseAdapter implements ListAdapter {
 
     public void setLayoutSingle(boolean layoutSingle) {
         this.layoutSingle = layoutSingle;
+    }
+
+    public void removeMalaysia(){
+        for(int i=0;i<country.size();i++){
+            Country _country = country.get(i);
+            if( _country.id == 127 ){
+                country.remove(i);
+                break;
+            }
+        }
     }
 }
