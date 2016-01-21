@@ -4,6 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 public class TableJobRole extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "job_role";
@@ -46,4 +50,37 @@ public class TableJobRole extends SQLiteOpenHelper{
         return null;
     }
 
+    public ArrayList<JobRole> findByJobSpec(String jobSpecId, ArrayList<String> jobRoleId){
+        ArrayList<JobRole> myJobRole = new ArrayList<>();
+        if( jobRoleId != null && jobRoleId.size() > 0 ){
+            ArrayList<String> params = new ArrayList<>();
+            params.add(jobSpecId);
+
+            ArrayList<String> placeHolder = new ArrayList<>();
+            for( String roleId : jobRoleId ){
+                placeHolder.add("?");
+                params.add(roleId);
+            }
+
+            String strSQL = "SELECT * FROM (SELECT * FROM "+TABLE_NAME+" WHERE job_spec_id=?) A WHERE id IN("+ TextUtils.join(",", placeHolder)+")";
+            Cursor c = db.rawQuery(strSQL, params.toArray(new String[params.size()]));
+
+            if(c.moveToFirst()){
+                while(!c.isAfterLast()){
+                    //c.getString(0);
+                    //c.getString(1);
+                    //c.getString(2);
+                    //Log.e("jobRole", c.getString(2));
+                    myJobRole.add(new JobRole(c.getInt(0),c.getInt(1),c.getString(2)));
+                    c.moveToNext();
+                }
+            }else{
+                //Log.e("c.moveToFirst", "false");
+            }
+            c.close();
+        }else{
+            //Log.e("jobRoleId.size", "0");
+        }
+        return myJobRole;
+    }
 }
