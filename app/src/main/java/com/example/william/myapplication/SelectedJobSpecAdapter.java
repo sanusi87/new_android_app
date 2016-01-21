@@ -31,7 +31,10 @@ public class SelectedJobSpecAdapter extends BaseAdapter implements ListAdapter{
 
     public void setJobSpec( ArrayList<JobSpec> _jobSpec ){
         listOfJobSpec.clear();
-        listOfJobSpec.addAll(_jobSpec);
+        listOfJobRole.clear();
+        if( _jobSpec != null ){
+            listOfJobSpec.addAll(_jobSpec);
+        }
         notifyDataSetChanged();
     }
 
