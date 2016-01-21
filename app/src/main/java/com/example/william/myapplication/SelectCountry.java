@@ -25,13 +25,22 @@ public class SelectCountry extends Activity {
 
         Bundle extra = getIntent().getExtras();
         boolean single = false;
+        boolean removeMalaysia = false;
+
         // checked selected index
         if( extra != null ){
-            single = (boolean) extra.get("single");
+            single = extra.getBoolean("single");
+            removeMalaysia = extra.getBoolean("remove_malaysia");
+
             if( single ){
                 ca.setLayoutSingle(true);
                 ((ViewGroup)lv.getParent()).getChildAt(1).setVisibility(View.GONE);
             }
+
+            if( removeMalaysia ){
+                ca.removeMalaysia();
+            }
+
             lv.setAdapter(ca);
 
             ArrayList selectedCountries = (ArrayList) extra.get("country");

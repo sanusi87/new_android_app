@@ -28,7 +28,7 @@ public class SelectState extends Activity {
         boolean single = false;
         // checked selected index
         if( extra != null ){
-            single = (boolean)extra.get("single");
+            single = extra.getBoolean("single");
             ca.setLayoutSingle(single);
             lv.setAdapter(ca);
 
