@@ -29,14 +29,19 @@ public class SelectedJobSpecAdapter extends BaseAdapter implements ListAdapter{
         listOfJobRole = new ArrayList<>();
     }
 
+    /*
     public void setJobSpec( ArrayList<JobSpec> _jobSpec ){
-        listOfJobSpec.clear();
+        resetJobSpec();
         listOfJobRole.clear();
         if( _jobSpec != null ){
             listOfJobSpec.addAll(_jobSpec);
+            for(int i=0;i<_jobSpec.size();i++){
+                listOfJobRole.add(i, null);
+            }
         }
         notifyDataSetChanged();
     }
+    */
 
     @Override
     public int getCount() {
@@ -55,6 +60,7 @@ public class SelectedJobSpecAdapter extends BaseAdapter implements ListAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        //Log.e("---", "getView");
         View v = convertView;
         if (v == null) {
             LayoutInflater vi;
@@ -66,7 +72,7 @@ public class SelectedJobSpecAdapter extends BaseAdapter implements ListAdapter{
 
         ((TextView)v.findViewById(R.id.currentJobSpec)).setText(js.name);
         ((TextView)v.findViewById(R.id.currentJobRole)).setText("Click to select job role");
-        //Log.e("listOfJobRole.size", ""+listOfJobRole.size());
+        //Log.e("listOfJobRole.size", "" + listOfJobRole.size());
         if( listOfJobRole.size() > 0 ){
             //Log.e("position", ""+position);
             //for(int i=0;i<listOfJobRole.size();i++){
@@ -77,15 +83,20 @@ public class SelectedJobSpecAdapter extends BaseAdapter implements ListAdapter{
                     //Log.e("r.name", ""+r.name);
                 //}
             //}
-            ArrayList<JobRole> savedRole = listOfJobRole.get(position);
-            //Log.e("savedRole.size", "" + savedRole.size());
-            if( savedRole.size() > 0 ){
-                ArrayList<String> jobRoleNames = new ArrayList<>();
-                for(JobRole r : savedRole){
-                    jobRoleNames.add(r.name);
+
+            try{
+                ArrayList<JobRole> savedRole = listOfJobRole.get(position);
+                //Log.e("savedRole.size", "" + savedRole);
+                if( savedRole != null && savedRole.size() > 0 ){
+                    ArrayList<String> jobRoleNames = new ArrayList<>();
+                    for(JobRole r : savedRole){
+                        jobRoleNames.add(r.name);
+                    }
+                    //Log.e("jobRoleNames", TextUtils.join(",", jobRoleNames));
+                    ((TextView) v.findViewById(R.id.currentJobRole)).setText(TextUtils.join(",", jobRoleNames));
                 }
-                //Log.e("jobRoleNames", TextUtils.join(",", jobRoleNames));
-                ((TextView) v.findViewById(R.id.currentJobRole)).setText(TextUtils.join(",", jobRoleNames));
+            }catch(IndexOutOfBoundsException e){
+                Log.e("IndexOutOfBound", e.getMessage());
             }
         }
         v.setTag(R.id.TAG_JOB_ROLE_ID, js);
@@ -99,14 +110,10 @@ public class SelectedJobSpecAdapter extends BaseAdapter implements ListAdapter{
 
     public void addJobSpec(JobSpec c) {
         listOfJobSpec.add(c);
+        listOfJobRole.add(listOfJobSpec.size()-1, null);
     }
 
     public void setJobRole(int viewIndex, ArrayList<JobRole> jobRoles){
-        try{
-            listOfJobRole.remove(viewIndex);
-        }catch(IndexOutOfBoundsException e){
-            //
-        }
-        listOfJobRole.add(viewIndex, jobRoles);
+        listOfJobRole.set(viewIndex, jobRoles);
     }
 }

@@ -127,60 +127,24 @@ public class JobSearchFilter extends ActionBarActivity {
                 ArrayList<String> selectedJobSpecLabels = new ArrayList<>();
                 if( _selectedJobSpec != null && _selectedJobSpec.size() > 0 ){
                     for( int i=0;i<_selectedJobSpec.size();i++ ){
-                        String _js = _selectedJobSpec.get(i);
-                        JobSpec __js = tableJobSpec.findById(Integer.valueOf(_js));
+                        String _js = _selectedJobSpec.get(i); // job_spec_id
+                        JobSpec __js = tableJobSpec.findById(Integer.valueOf(_js)); // job_spec
                         selectedJobSpecValues.add(__js);
                         selectedJobSpecLabels.add(__js.name);
 
+                        selectedJobSpecAdapter.addJobSpec(__js);
+
                         ArrayList<JobRole> myJobRoles = tableJobRole.findByJobSpec(String.valueOf(__js.id), _selectedJobRole);
-                        //Log.e("myJobRoles.size", ""+myJobRoles.size());
-                        selectedJobSpecAdapter.setJobRole(i, myJobRoles);
+
+                        Log.e("myJobRoles.size", i+"="+myJobRoles.size());
                         _jobRoleBasedOnView.add(i, myJobRoles);
+                        selectedJobSpecAdapter.setJobRole(i, myJobRoles);
                     }
                     listOfSelectedJobSpec.setVisibility(View.VISIBLE);
                 }
                 selectedJobSpec.setText(TextUtils.join(",", selectedJobSpecLabels));
-                selectedJobSpecAdapter.setJobSpec(selectedJobSpecValues);
-
-                // set list view height
-                int totalHeight = 0;
-                for (int i = 0; i < selectedJobSpecAdapter.getCount(); i++) {
-                    View listItem = selectedJobSpecAdapter.getView(i, null, listOfSelectedJobSpecInner);
-                    listItem.measure(0, 0);
-                    totalHeight += listItem.getMeasuredHeight();
-                }
-
-                ViewGroup.LayoutParams params = listOfSelectedJobSpecInner.getLayoutParams();
-                params.height = totalHeight + (listOfSelectedJobSpecInner.getDividerHeight() * (selectedJobSpecAdapter.getCount() - 1));
-                listOfSelectedJobSpecInner.setLayoutParams(params);
-                listOfSelectedJobSpecInner.requestLayout();
-                // end hack
-
-
-                //ArrayList<String> selectedJobRoleLabels = new ArrayList<>();
-                /*
-                if( _selectedJobRole != null && _selectedJobRole.size() > 0 ){
-                    for( String _jr : _selectedJobRole ){
-                        JobRole __jr = tableJobRole.findById(Integer.valueOf(_jr));
-                        //selectedJobRoleLabels.add(__jr.name);
-
-                        //selectedJobRoleValues.add(__js);
-                        //TODO --
-
-                        _jobRoleBasedOnView.get
-
-                        int viewIndex = 0;
-                        for (int i = 0; i < selectedJobSpecAdapter.getCount(); i++) {
-                            View listItem = selectedJobSpecAdapter.getView(i, null, listOfSelectedJobSpecInner);
-                            JobSpec taggedJobSpec = (JobSpec) listItem.getTag(R.id.TAG_JOB_ROLE_ID);
-                            if( taggedJobSpec.id ){
-
-                            }
-                        }
-                    }
-                }
-                */
-                //selectedJob.setText(TextUtils.join(",", selectedJobRoleLabels));
+                //selectedJobSpecAdapter.setJobSpec(selectedJobSpecValues);
+                recalculateHeight();
 
                 //---
                 ArrayList<String> _selectedJobType = searchParameters.getStringArrayList("job_type");
@@ -295,7 +259,7 @@ public class JobSearchFilter extends ActionBarActivity {
             }
         });
 
-        selectedJobSpecAdapter.setJobSpec(selectedJobSpecValues);
+        //selectedJobSpecAdapter.setJobSpec(selectedJobSpecValues);
         listOfSelectedJobSpecInner.setAdapter(selectedJobSpecAdapter);
         listOfSelectedJobSpec.addView(listOfSelectedJobSpecInner);
 
@@ -303,7 +267,6 @@ public class JobSearchFilter extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), SelectJobRole.class);
-
 
                 //Log.e("savedtag", ""+view.getTag(R.id.TAG_JOB_ROLE_ID));
                 JobSpec jsInTag = (JobSpec) view.getTag(R.id.TAG_JOB_ROLE_ID);
@@ -313,23 +276,6 @@ public class JobSearchFilter extends ActionBarActivity {
                 startActivityForResult(intent, INTENT_GET_ROLE);
             }
         });
-
-        /*
-        LinearLayout selectRole = (LinearLayout)findViewById(R.id.selectRole);
-        selectRole.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if( selectedJobSpecValues.size() == 0 ){
-                    Toast.makeText(getApplicationContext(), "Please select the job specialisation(s) first.", Toast.LENGTH_LONG).show();
-                }else{
-                    Intent intent = new Intent(getApplicationContext(), SelectJobRole.class);
-                    intent.putExtra("job_spec", selectedJobSpecValues);
-                    // get a list of already selected states and update the Extra to be submitted to next activity
-                    startActivityForResult(intent, INTENT_GET_ROLE);
-                }
-            }
-        });
-        */
 
         // select job type
         LinearLayout selectJobType = (LinearLayout)findViewById(R.id.selectJobType);
@@ -495,7 +441,7 @@ public class JobSearchFilter extends ActionBarActivity {
             recruitmentAgencyCb.setChecked(false);
 
             // reset views
-            selectedJobSpecAdapter.setJobSpec(null);
+            selectedJobSpecAdapter.resetJobSpec();
             listOfSelectedJobSpec.setVisibility(View.GONE);
             //selectedJobSpecAdapter.notifyDataSetChanged();
             selectedJobType.setText(noValue);
@@ -576,10 +522,11 @@ public class JobSearchFilter extends ActionBarActivity {
                         selectedLabels.add(c.name);
                         //selectedJobSpecAdapter.addJobSpec(c);
                         _jobRoleBasedOnView.add(null);
+                        selectedJobSpecAdapter.addJobSpec(c);
                     }
                     selectedJobSpecValues = selectedValues;
                     selectedJobSpec.setText(TextUtils.join(",", selectedLabels));
-                    selectedJobSpecAdapter.setJobSpec(selectedJobSpecValues);
+                    //selectedJobSpecAdapter.setJobSpec(selectedJobSpecValues);
 
                     // set list view height
                     int totalHeight = 0;
@@ -610,7 +557,7 @@ public class JobSearchFilter extends ActionBarActivity {
                     }
                     //selectedJobRoleValues = selectedValues;
                     //selectedJobRole.setText(TextUtils.join(",", selectedLabels));
-
+                    // TODO
                     //Log.e("viewIndex", ""+viewIndex);
                     if( viewIndex != -1 ){
                         //Log.e("_jobRoleSize", ""+_jobRoleBasedOnView.size());
@@ -620,11 +567,14 @@ public class JobSearchFilter extends ActionBarActivity {
                             //Log.e("err_"+viewIndex,e.getMessage());
                         }
                         _jobRoleBasedOnView.add(viewIndex, selectedValues); // re-set
+                        selectedJobSpecAdapter.setJobRole(viewIndex, selectedValues);
+                        selectedJobSpecAdapter.notifyDataSetChanged();
 
                         View v = listOfSelectedJobSpecInner.getChildAt(viewIndex);
                         TextView tv = (TextView)v.findViewById(R.id.currentJobRole);
                         tv.setText(TextUtils.join(",", selectedLabels));
                     }
+                    recalculateHeight();
                 }
             }
         }else if( requestCode == INTENT_GET_TYPE ){
@@ -632,7 +582,7 @@ public class JobSearchFilter extends ActionBarActivity {
                 Bundle filters = data.getExtras();
                 ArrayList<JobType> selectedValues = (ArrayList<JobType>) filters.get("jobType");
                 ArrayList<String> selectedLabels = new ArrayList<>();
-                Log.e("selectedValues", ""+selectedValues);
+                //Log.e("selectedValues", ""+selectedValues);
                 if( selectedValues != null ){
                     for( int i=0;i<selectedValues.size();i++ ){
                         JobType c = selectedValues.get(i);
@@ -657,6 +607,20 @@ public class JobSearchFilter extends ActionBarActivity {
                 enteredKeyword.setText(filters.getString("the_text"));
             }
         }
+    }
+
+    private void recalculateHeight(){
+        int totalHeight = 0;
+        for (int i = 0; i < selectedJobSpecAdapter.getCount(); i++) {
+            View listItem = selectedJobSpecAdapter.getView(i, null, listOfSelectedJobSpecInner);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listOfSelectedJobSpecInner.getLayoutParams();
+        params.height = totalHeight + (listOfSelectedJobSpecInner.getDividerHeight() * (selectedJobSpecAdapter.getCount() - 1));
+        listOfSelectedJobSpecInner.setLayoutParams(params);
+        listOfSelectedJobSpecInner.requestLayout();
     }
 
 }

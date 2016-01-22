@@ -32,6 +32,7 @@ public class JobSearch {
     private int page = 1;
     private JobSearchAdapter adapter;
     private ProgressBar loading;
+    private boolean continueRequest = true;
 
     JobSearch(JobSearchAdapter adapter){
         orders.add(defaultOrder);
@@ -45,11 +46,61 @@ public class JobSearch {
             }
 
             adapter.setJob(null);
+            continueRequest = true;
             setPage(1);
         }
 
-        GetRequest gr = new GetRequest( getSearchUrl() );
-        gr.execute();
+        if( continueRequest ){
+            GetRequest gr = new GetRequest();
+            gr.setResultListener(new GetRequest.ResultListener() {
+                @Override
+                public void processResult(JSONObject success) {
+                    View v = ((ViewGroup) loading.getParent());
+                    LinearLayout ll = (LinearLayout) v.findViewById(R.id.no_item);
+
+                    if (success != null) {
+                        ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
+                        JSONObject jObj = (JSONObject) success;
+                        JSONArray jArr = jObj.optJSONArray("data");
+                        //Log.e("jArr", ""+jArr);
+
+                        if (jArr != null && jArr.length() > 0) {
+                            //Log.e("jArr.length", ""+jArr.length());
+                            (v.findViewById(R.id.no_item)).setVisibility(View.GONE);
+                            (v.findViewById(R.id.job_list_view)).setVisibility(View.VISIBLE);
+
+                            for (int i = 0; i < jArr.length(); i++) {
+                                try {
+                                    arr.add(jArr.getJSONObject(i));
+                                } catch (JSONException e) {
+                                    Log.e("injecting", "" + e.getMessage());
+                                }
+                            }
+                            adapter.setJob(arr);
+                        } else {
+                            //Log.e("page", ""+page);
+                            if (page == 1) {
+                                ll.setVisibility(View.VISIBLE);
+                                ((TextView) ll.findViewById(R.id.noticeText)).setText("No job postings found!");
+                                (v.findViewById(R.id.job_list_view)).setVisibility(View.GONE);
+                            } else {
+                                continueRequest = false;
+                            }
+                        }
+                    } else {
+                        ll.setVisibility(View.VISIBLE);
+                        ((TextView) ll.findViewById(R.id.noticeText)).setText("No job postings found!");
+                        (v.findViewById(R.id.job_list_view)).setVisibility(View.GONE);
+                    }
+                    loading.setVisibility(View.GONE);
+                    adapter.notifyDataSetChanged();
+                }
+            });
+            String[] args = {getSearchUrl()};
+            gr.execute(args);
+        }else{
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void setKeyword(String keyword){
@@ -177,6 +228,7 @@ public class JobSearch {
     }
 
     // async task
+    /*
     public class GetRequest extends AsyncTask<Void, Void, Object> {
 
         public String _url;
@@ -252,4 +304,5 @@ public class JobSearch {
             loading.setVisibility(View.GONE);
         }
     }
+    */
 }

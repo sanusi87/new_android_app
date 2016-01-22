@@ -187,7 +187,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                             g.setResultListener(new GetRequest.ResultListener() {
                                 @Override
                                 public void processResult(JSONObject success) {
-                                    Log.e("err", ""+success);
+                                    //Log.e("err", ""+success);
                                     if( success != null && success.toString().length() > 0 ){
                                         ContentValues cv2 = new ContentValues();
                                         cv2.put("id", postId);
@@ -199,7 +199,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                                     }
                                 }
                             });
-                            String[] args = {Jenjobs.JOB_DETAILS};
+                            String[] args = {Jenjobs.JOB_DETAILS+"/"+postId};
                             g.execute(args);
 
                             // post to server
