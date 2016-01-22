@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -184,13 +183,24 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                             tableBookmark.addBookmark(cv);
 
                             // save job
-                            ContentValues cv2 = new ContentValues();
-                            cv2.put("id", postId);
-                            cv2.put("title", postTitle);
-                            cv2.put("company", company);
-                            cv2.put("job_data", p.toString());
-                            cv2.put("date_closed", dateClosed);
-                            tableJob.addJob(cv2);
+                            GetRequest g = new GetRequest();
+                            g.setResultListener(new GetRequest.ResultListener() {
+                                @Override
+                                public void processResult(JSONObject success) {
+                                    Log.e("err", ""+success);
+                                    if( success != null && success.toString().length() > 0 ){
+                                        ContentValues cv2 = new ContentValues();
+                                        cv2.put("id", postId);
+                                        cv2.put("title", postTitle);
+                                        cv2.put("company", company);
+                                        cv2.put("job_data", success.toString());
+                                        cv2.put("date_closed", dateClosed);
+                                        tableJob.addJob(cv2);
+                                    }
+                                }
+                            });
+                            String[] args = {Jenjobs.JOB_DETAILS};
+                            g.execute(args);
 
                             // post to server
                             JSONObject obj = new JSONObject();
@@ -208,7 +218,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             });
 
             final LinearLayout expandItemContainer = (LinearLayout)v.findViewById(R.id.expandItemContainer);
-            final LinearLayout moreItem = (LinearLayout)v.findViewById(R.id.moreItem);
+            final LinearLayout moreItem = (LinearLayout) v.findViewById(R.id.moreItem);
 
             if( expandedItem.indexOf(position) == -1 ){
                 // reset
