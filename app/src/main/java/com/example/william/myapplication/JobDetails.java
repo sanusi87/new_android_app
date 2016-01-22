@@ -446,7 +446,7 @@ public class JobDetails extends ActionBarActivity {
                 String responseString = JenHttpRequest.readInputStreamAsString(is);
                 _response = JenHttpRequest.decodeJsonObjectString(responseString);
             } catch (IOException e) {
-                Toast.makeText(getApplicationContext(), "Network Error!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "Network Error!", Toast.LENGTH_SHORT).show();
             }
             return _response;
         }
@@ -458,7 +458,6 @@ public class JobDetails extends ActionBarActivity {
             if( success != null ){
                 mViewPager.setAdapter(mSectionsPagerAdapter);
                 positionTitle.setText(success.optString("title"));
-
                 tabButton.setVisibility(View.VISIBLE);
             }else{
                 Cursor job = tableJob.getJob(jobPostingId);
@@ -468,7 +467,6 @@ public class JobDetails extends ActionBarActivity {
                         jobDetails = new JSONObject(savedJobDetails);
                         mViewPager.setAdapter(mSectionsPagerAdapter);
                         positionTitle.setText(jobDetails.getString("title"));
-
                         tabButton.setVisibility(View.VISIBLE);
                     } catch (JSONException e) {
                         Log.e("err", e.getMessage());
