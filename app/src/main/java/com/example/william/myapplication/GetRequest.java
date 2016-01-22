@@ -52,10 +52,10 @@ public class GetRequest extends AsyncTask<String, Void, Object> {
 
     @Override
     protected void onPostExecute(Object success) {
-        Log.e("onPostEx", "" + success);
-        if( success != null ){
-            Log.e("onPostEx", ""+success);
-        }
+        //Log.e("onPostEx", "" + success);
+        //if( success != null ){
+            //Log.e("onPostEx", ""+success);
+        //}
 
         if( OBJECT_TYPE == JenHttpRequest.JSON_OBJECT ){
             resultListener.processResult((JSONObject) success);
