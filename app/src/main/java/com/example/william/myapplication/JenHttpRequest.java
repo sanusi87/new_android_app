@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class JenHttpRequest {
+    public static int JSON_OBJECT = 1;
     public static int JSON_ARRAY = 2;
 
     // used to decode json object
