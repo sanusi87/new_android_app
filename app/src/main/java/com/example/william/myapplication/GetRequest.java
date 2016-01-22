@@ -8,31 +8,28 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class GetRequest extends AsyncTask<Void, Void, Object> {
+public class GetRequest extends AsyncTask<String, Void, Object> {
 
-    public String _url;
     public int OBJECT_TYPE = 1;
 
-    GetRequest( String target ){
-        this._url = target;
-    }
+    public GetRequest(){}
 
     @Override
-    protected Object doInBackground(Void... params) {
+    protected Object doInBackground(String... params) {
         Object _response = null;
 
         final HttpClient httpclient = new DefaultHttpClient();
-        final HttpGet httpget = new HttpGet(_url);
+        final HttpGet httpget = new HttpGet(params[0]);
         httpget.addHeader("Content-Type", "application/json");
         httpget.addHeader("Accept", "application/json");
 
-        HttpResponse _http_response = null;
         try {
-            _http_response = httpclient.execute(httpget);
+            HttpResponse _http_response = httpclient.execute(httpget);
             HttpEntity _entity = _http_response.getEntity();
             InputStream is = _entity.getContent();
 
@@ -42,6 +39,7 @@ public class GetRequest extends AsyncTask<Void, Void, Object> {
                 OBJECT_TYPE = JenHttpRequest.JSON_ARRAY;
             }else{
                 _response = JenHttpRequest.decodeJsonObjectString(responseString);
+                OBJECT_TYPE = JenHttpRequest.JSON_OBJECT;
             }
             //return _response;
         } catch (IOException e) {
@@ -53,10 +51,24 @@ public class GetRequest extends AsyncTask<Void, Void, Object> {
 
 
     @Override
-    protected void onPostExecute(final Object success) {
+    protected void onPostExecute(Object success) {
         Log.e("onPostEx", "" + success);
         if( success != null ){
             Log.e("onPostEx", ""+success);
         }
+
+        if( OBJECT_TYPE == JenHttpRequest.JSON_OBJECT ){
+            resultListener.processResult((JSONObject) success);
+        }
+    }
+
+    public interface ResultListener {
+        void processResult(JSONObject success); // available listener method
+    }
+
+    private ResultListener resultListener;
+    public GetRequest setResultListener(ResultListener resultListener){
+        this.resultListener = resultListener;
+        return this;
     }
 }
