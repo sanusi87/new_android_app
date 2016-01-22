@@ -1111,22 +1111,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         if (requestCode == FETCH_FILTER_PARAM) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                // TODO - process returned search parameter
-                /*
-                intent.putExtra("keyword_filter", (KeywordFilter) keywordFilterInput.getSelectedItem());
-                intent.putExtra("keyword", keywordInput.getText().toString());
-                intent.putExtra("salary_min", salaryMinInput.getText().toString());
-                intent.putExtra("salary_max", salaryMaxInput.getText().toString());
-                intent.putExtra("job_spec", selectedJobSpecValues);
-                intent.putExtra("job_role", selectedJobRoleValues);
-                intent.putExtra("state", selectedMalaysiaStateValues);
-                intent.putExtra("country", selectedOtherCountryValues);
-                intent.putExtra("position_level", selectedPositionLevelValues);
-                intent.putExtra("direct_employer", postedDirectEmployer);
-                intent.putExtra("recruitment_agency", postedRecruitmentAgency);
-                */
-
                 jobSearch.resetFilter();
+                searchParameters.clear();
 
                 KeywordFilter keywordFilter = (KeywordFilter) extra.get("keyword_filter");
                 if( keywordFilter != null ){
@@ -1210,6 +1196,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }
 
                 ArrayList positionLevels = (ArrayList) extra.get("position_level");
+                //Log.e("positionLevels", ""+positionLevels);
                 if( positionLevels != null && positionLevels.size() > 0 ){
                     ArrayList<String> _positionLevel = new ArrayList<>();
                     for(Object positionLevel : positionLevels){
@@ -1218,6 +1205,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     }
                     jobSearch.setJobLevel(_positionLevel.toArray(new String[_positionLevel.size()]));
                     searchParameters.putStringArrayList("position_level", _positionLevel);
+                }else{
+                    if( positionLevels != null ){
+                        Log.e("positionLevels", ""+positionLevels.size());
+                    }
                 }
 
 
@@ -1229,6 +1220,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 jobSearch.setAdvertiser(recruitmentAgency); // same different
                 searchParameters.putBoolean("recruitment_agency", recruitmentAgency);
 
+                // TODO--
                 jobSearch.search(true);
             }
         }else if( requestCode == ADD_WORK_EXP ){
@@ -1268,7 +1260,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ((TextView)v.findViewById(R.id.workDuration)).setText( durationCount );
 
                     if( prevWork < 0 ){
-                        // TODO: bind events to new element
                         final int selectedWork = listOfWorkExp.getChildCount()-1;
                         LinearLayout updateWorkExp = (LinearLayout)v.findViewById(R.id.updateWorkExperience);
                         updateWorkExp.setOnClickListener(new View.OnClickListener() {
@@ -1286,14 +1277,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         deleteButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View _v) {
-                                // TODO: delete view
                                 listOfWorkExp.removeView(v);
-
-                                // TODO: delete from server
                                 String[] param = {Jenjobs.WORK_EXPERIENCE_URL + "/" + actualId + "?access-token=" + accessToken};
                                 new DeleteRequest().execute(param);
-
-                                // TODO: delete record
                                 tableWorkExperience.deleteWorkExperience(id);
                             }
                         });
@@ -1308,7 +1294,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 final int id = extra.getInt("id");
                 // TODO: the index might changed one we have added or removed a child
                 int prevEdu = extra.getInt("currentViewPosition");
-                Log.e("returnedPos", ""+prevEdu);
+                //Log.e("returnedPos", ""+prevEdu);
                 final View v;
                 if( prevEdu >= 0 ){
                     v = listOfEducation.getChildAt(prevEdu);
