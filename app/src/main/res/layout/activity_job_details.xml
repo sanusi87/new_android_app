@@ -68,7 +68,9 @@
         <Button
             style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="35dp"
+            android:background="@drawable/button_success"
+            android:stateListAnimator="@null"
             android:text="@string/apply"
             android:id="@+id/applyButton" />
 
@@ -104,7 +106,9 @@
         <Button
             style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
+            android:background="@drawable/button_default"
+            android:stateListAnimator="@null"
             android:text="@string/overview"
             android:id="@+id/overviewButton"
             android:layout_weight="1" />
@@ -112,7 +116,9 @@
         <Button
             style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
+            android:background="@drawable/button_default"
+            android:stateListAnimator="@null"
             android:text="@string/description"
             android:id="@+id/descriptionButton"
             android:layout_weight="1" />
@@ -120,7 +126,9 @@
         <Button
             style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:background="@drawable/button_default"
+            android:layout_height="35dp"
+            android:stateListAnimator="@null"
             android:text="@string/company"
             android:id="@+id/companyButton"
             android:layout_weight="1" />

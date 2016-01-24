@@ -30,7 +30,9 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -38,8 +40,8 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/applied_on"
                     style="@style/AppThemeBaseTextValue"
-                    android:textStyle="bold"
-                    android:paddingRight="5dp" />
+                    android:paddingRight="5dp"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -47,13 +49,16 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/no_value"
                     android:id="@+id/applicationDate"
-                    style="@style/AppThemeBaseTextValue" />
+                    style="@style/AppThemeBaseTextValue"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -61,8 +66,8 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/status"
                     android:paddingRight="5dp"
-                    android:textStyle="bold"
-                    style="@style/AppThemeBaseTextValue" />
+                    style="@style/AppThemeBaseTextValue"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -70,7 +75,8 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/no_value"
                     android:id="@+id/jobStatus"
-                    style="@style/AppThemeBaseTextValue" />
+                    style="@style/AppThemeBaseTextValue"
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -84,7 +90,9 @@
             <Button
                 style="@style/AppThemeBaseButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
+                android:stateListAnimator="@null"
+                android:background="@drawable/button_danger"
                 android:text="@string/withdraw"
                 android:id="@+id/withdrawButton"
                 android:textSize="12sp" />

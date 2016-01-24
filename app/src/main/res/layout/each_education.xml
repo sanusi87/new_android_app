@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -63,9 +63,11 @@
             android:gravity="center_vertical">
 
             <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
+                style="@style/AppThemeBaseButton"
+                android:background="@drawable/button_danger"
+                android:stateListAnimator="@null"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:text="@string/close"
                 android:id="@+id/deleteButton" />
         </LinearLayout>

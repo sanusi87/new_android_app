@@ -148,7 +148,9 @@
                 <Button
                     style="@style/AppThemeBaseButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
+                    android:stateListAnimator="@null"
+                    android:background="@drawable/button_success"
                     android:id="@+id/add_work_exp"
                     android:gravity="center|center_horizontal"
                     android:text="@string/add_work_exp" />
@@ -187,7 +189,9 @@
                 <Button
                     style="@style/AppThemeBaseButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
+                    android:stateListAnimator="@null"
+                    android:background="@drawable/button_success"
                     android:id="@+id/add_education"
                     android:gravity="center|center_horizontal"
                     android:text="@string/add_education" />
@@ -225,7 +229,9 @@
                 <Button
                     style="@style/AppThemeBaseButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
+                    android:stateListAnimator="@null"
+                    android:background="@drawable/button_success"
                     android:id="@+id/add_skill"
                     android:gravity="center|center_horizontal"
                     android:text="@string/add_skill" />
@@ -262,7 +268,9 @@
                 <Button
                     style="@style/AppThemeBaseButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
+                    android:stateListAnimator="@null"
+                    android:background="@drawable/button_success"
                     android:id="@+id/add_language"
                     android:gravity="center|center_horizontal"
                     android:text="@string/add_language" />

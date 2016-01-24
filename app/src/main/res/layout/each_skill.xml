@@ -21,9 +21,11 @@
             style="@style/AppThemeBaseLabelSub" />
 
         <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            style="@style/AppThemeBaseButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:stateListAnimator="@null"
+            android:background="@drawable/button_danger"
             android:text="@string/close"
             android:id="@+id/deleteSkillButton"
             android:layout_weight="1" />

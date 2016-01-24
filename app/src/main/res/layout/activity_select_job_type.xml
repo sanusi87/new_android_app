@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".SelectJobType"
-    android:orientation="vertical"
-    style="@style/AppThemePadding10">
+    android:orientation="vertical">
 
     <ListView
         android:layout_width="match_parent"
@@ -18,22 +17,30 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingTop="4dp">
 
         <Button
             style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
+            android:stateListAnimator="@null"
+            android:background="@drawable/button_primary"
             android:text="@string/ok"
             android:id="@+id/okButton"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"/>
 
         <Button
             style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
+            android:stateListAnimator="@null"
+            android:background="@drawable/button_default"
             android:text="@string/cancel"
             android:id="@+id/cancelButton"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 </LinearLayout>

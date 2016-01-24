@@ -127,17 +127,21 @@
         <Button
             style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:text="@string/save"
             android:id="@+id/save_job_preferred"
+            android:stateListAnimator="@null"
+            android:background="@drawable/button_success"
             android:layout_weight="1" />
 
         <Button
             style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:text="@string/cancel"
             android:id="@+id/cancelButton"
+            android:stateListAnimator="@null"
+            android:background="@drawable/button_default"
             android:layout_weight="1" />
     </LinearLayout>
 

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/request_to_view"
+            android:id="@+id/messageText"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:weightSum="3">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:stateListAnimator="@null"
+            android:background="@drawable/button_primary"
+            android:text="@string/apply"
+            android:id="@+id/applyButton"
+            android:visibility="gone"
+            style="@style/AppThemeBaseButton" />
+
+        <Button
+            style="@style/AppThemeBaseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:stateListAnimator="@null"
+            android:text="@string/not_interested"
+            android:id="@+id/notInterestedButton"
+            android:visibility="gone"
+            android:background="@drawable/button_danger" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:stateListAnimator="@null"
+            android:background="@drawable/button_primary"
+            android:text="@string/allow"
+            android:id="@+id/allowButton"
+            android:visibility="gone"
+            style="@style/AppThemeBaseButton" />
+
+        <Button
+            style="@style/AppThemeBaseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:stateListAnimator="@null"
+            android:text="@string/reject"
+            android:id="@+id/rejectButton"
+            android:visibility="gone"
+            android:background="@drawable/button_danger" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/company"
+            android:textColor="@color/blue"
+            android:textSize="12sp"
+            android:layout_gravity="left"
+            android:gravity="left"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/jobPost"
+            android:textColor="@color/blue"
+            android:textSize="12sp"
+            android:layout_weight="1"
+            android:textAlignment="textEnd" />
+    </LinearLayout>
+
+</LinearLayout>
