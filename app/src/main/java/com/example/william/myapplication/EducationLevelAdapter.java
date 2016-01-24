@@ -67,20 +67,24 @@ public class EducationLevelAdapter extends BaseAdapter implements ListAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
+        TextView tvName = null;
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(context);
             if( this.single ){
-                v = vi.inflate(android.R.layout.simple_list_item_1, parent, false);
+                v = vi.inflate(R.layout.spinner_item, parent, false);
+                tvName = (TextView) v.findViewById(R.id.spinner_item);
             }else{
                 v = vi.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+                tvName = (TextView) v.findViewById(android.R.id.text1);
+                tvName.setTextAppearance(context, R.style.AppThemeBaseLabel);
+                tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
             }
         }
         EducationLevel c = (EducationLevel) getItem(position);
-        TextView tvName = (TextView) v.findViewById(android.R.id.text1);
-        tvName.setText(c.name);
-        tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
-        tvName.setTextAppearance(context, R.style.AppThemeBaseLabel);
+        if( tvName != null ){
+            tvName.setText(c.name);
+        }
         v.setBackgroundColor(context.getResources().getColor(R.color.white));
 
         return v;

@@ -16,7 +16,7 @@ public class EmploymentTypeAdapter extends BaseAdapter implements ListAdapter{
     private Context context;
     private boolean single = false;
 
-    public JobTypeAdapter(Context context){
+    public EmploymentTypeAdapter(Context context){
         this.context = context;
 
         HashMap fields = Jenjobs.getJobType();
@@ -43,8 +43,6 @@ public class EmploymentTypeAdapter extends BaseAdapter implements ListAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        JobType c = (JobType) getItem(position);
-
         View v = convertView;
         TextView tvName = null;
         if (v == null) {
@@ -60,7 +58,7 @@ public class EmploymentTypeAdapter extends BaseAdapter implements ListAdapter{
                 tvName.setTextColor(context.getResources().getColor(R.color.primary_material_dark));
             }
         }
-
+        JobType c = (JobType) getItem(position);
         if( tvName != null ){
             tvName.setText(c.name);
         }
