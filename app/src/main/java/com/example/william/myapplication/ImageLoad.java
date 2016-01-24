@@ -23,8 +23,7 @@ public class ImageLoad extends AsyncTask<Void, Void, Bitmap> {
     protected Bitmap doInBackground(Void... params) {
         try {
             URL urlConnection = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection) urlConnection
-                    .openConnection();
+            HttpURLConnection connection = (HttpURLConnection) urlConnection.openConnection();
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
