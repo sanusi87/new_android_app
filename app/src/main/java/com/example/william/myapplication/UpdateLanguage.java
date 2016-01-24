@@ -134,6 +134,7 @@ public class UpdateLanguage extends ActionBarActivity {
                 if( language != null ){
                     Intent intent = new Intent();
                     intent.setClass(getApplicationContext(), SelectLanguageLevel.class);
+                    intent.putExtra("type", 1);
                     startActivityForResult(intent, SELECT_SPOKEN);
                 }
             }
@@ -145,6 +146,7 @@ public class UpdateLanguage extends ActionBarActivity {
                 if( language != null ){
                     Intent intent = new Intent();
                     intent.setClass(getApplicationContext(), SelectLanguageLevel.class);
+                    intent.putExtra("type", 2);
                     startActivityForResult(intent, SELECT_WRITTEN);
                 }
             }
@@ -185,7 +187,14 @@ public class UpdateLanguage extends ActionBarActivity {
                         jsonString.put("native", language.isNative);
                         Log.e("langpost", jsonString.toString());
                         String[] param = {url, jsonString.toString()};
-                        new PostRequest().execute(param);
+                        PostRequest postRequest = new PostRequest();
+                        postRequest.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject result) {
+                                Log.e("language?", ""+result);
+                            }
+                        });
+                        postRequest.execute(param);
                     } catch (JSONException e) {
                         Log.e("jsonErr", e.getMessage());
                     }
