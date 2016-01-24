@@ -59,10 +59,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     public static final int PROFILE_FRAGMENT = 1;
     public static final int JOB_FRAGMENT = 2;
     public static final int APPLICATION_FRAGMENT = 3;
-    public static final int BOOKMARK_FRAGMENT = 4;
-    public static final int SETTINGS_FRAGMENT = 5;
-    public static final int ONLINE_RESUME_FRAGMENT = 6;
-    public static final int LOG_OUT_FRAGMENT = 7;
+    public static final int INVITATION_AND_REQUEST = 4;
+    public static final int BOOKMARK_FRAGMENT = 5;
+    public static final int SETTINGS_FRAGMENT = 6;
+    public static final int ONLINE_RESUME_FRAGMENT = 7;
+    public static final int LOG_OUT_FRAGMENT = 8;
 
     /*
     * download sections
@@ -133,6 +134,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     // if this activity was opened by notification, set the default fragment to be opened,
     // then updated it depends on the notification
     int defaultPage = 0;
+    static int jsProfileId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +151,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
 
-        int jsProfileId = sharedPref.getInt("js_profile_id", 0);
+        jsProfileId = sharedPref.getInt("js_profile_id", 0);
         String emailAddress = sharedPref.getString("email", null);
 
         // redirect to login if no access token found
@@ -242,6 +244,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             case BOOKMARK_FRAGMENT:
                 mTitle = getString(R.string.bookmark);
                 break;
+            case INVITATION_AND_REQUEST:
+                mTitle = getString(R.string.invitation_and_request);
+                break;
         }
         restoreActionBar();
     }
@@ -292,6 +297,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 case APPLICATION_FRAGMENT:
                     rootView = inflater.inflate(R.layout.application_layout, container, false);
                     setupApplicationFragment(rootView);
+                    break;
+                case INVITATION_AND_REQUEST:
+                    rootView = inflater.inflate(R.layout.invitation_and_request_layout, container, false);
+                    setupInvitationAndRequestFragment(rootView);
                     break;
                 case BOOKMARK_FRAGMENT:
                     rootView = inflater.inflate(R.layout.bookmark_layout, container, false);
@@ -492,7 +501,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         jsonString.put("status", cv.getAsInteger("status"));
 
                         String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
-                        new PostRequest().execute(param);
+                        PostRequest postRequest = new PostRequest();
+                        postRequest.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject result) {
+                                Log.e("subscribed?", ""+result);
+                            }
+                        });
+                        postRequest.execute(param);
                     } catch (JSONException e) {
                         Log.e("error", e.getMessage());
                     }
@@ -514,7 +530,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         jsonString.put("status", cv.getAsInteger("status"));
 
                         String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
-                        new PostRequest().execute(param);
+                        PostRequest postRequest = new PostRequest();
+                        postRequest.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject result) {
+                                Log.e("subscribed2?", ""+result);
+                            }
+                        });
+                        postRequest.execute(param);
                     } catch (JSONException e) {
                         Log.e("error", e.getMessage());
                     }
@@ -536,7 +559,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         jsonString.put("status", cv.getAsInteger("status"));
 
                         String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
-                        new PostRequest().execute(param);
+                        PostRequest postRequest = new PostRequest();
+                        postRequest.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject result) {
+                                Log.e("subscribed2?", ""+result);
+                            }
+                        });
+                        postRequest.execute(param);
                     } catch (JSONException e) {
                         Log.e("error", e.getMessage());
                     }
@@ -676,11 +706,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     // post
                     // JSONObject _param = new JSONObject();
                     // TODO - post no_work_exp to server
-                    //_param.put("", );
-                    String[] param = {
-                            Jenjobs.PROFILE_URL+"?access-token="+accessToken,
-                            "{}"
-                    };
+                    String[] param = {Jenjobs.PROFILE_URL+"?access-token="+accessToken,"{}"};
                     new PostRequest().execute(param);
                 }
             });
@@ -978,9 +1004,23 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 progressBar.setVisibility(View.VISIBLE);
 
                                 PostRequest postRequest = new PostRequest(context);
-                                postRequest.setRequestType(PostRequest.UPLOAD_RESUME_ATTACHMENT);
-                                postRequest.setViewToUpdate(attachedResume);
-                                postRequest.setProgressBar(progressBar);
+                                postRequest.setResultListener(new PostRequest.ResultListener() {
+                                    @Override
+                                    public void processResult(JSONObject result) {
+                                        if( result != null ){
+                                            // if successul
+                                            if( result.optInt( "status_code" ) == 1 ){
+                                                attachedResume.setText(result.optString("resume") );
+                                                TableProfile tableProfile = new TableProfile(context);
+                                                ContentValues cv = new ContentValues();
+                                                cv.put("resume_file", result.optString("resume_url"));
+                                                tableProfile.updateProfile(cv, jsProfileId);
+                                            }
+                                            Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
+                                            progressBar.setVisibility(View.GONE);
+                                        }
+                                    }
+                                });
                                 postRequest.execute(params);
 
                             } catch (FileNotFoundException e) {
@@ -1023,6 +1063,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 ll.setVisibility(View.VISIBLE);
             }
         }
+
+        private void setupInvitationAndRequestFragment(View rootView){
+            ListView lv = (ListView)rootView.findViewById(R.id.listOfInvitation);
+            InvitationAdapter invitationAdapter = new InvitationAdapter(context);
+            lv.setAdapter(invitationAdapter);
+
+            if( lv.getCount() == 0 ){
+                LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.no_item);
+                ll.setVisibility(View.VISIBLE);
+                ((TextView)ll.findViewById(R.id.noticeText)).setText("No request found!");
+            }
+        }
     }
 
     /*
@@ -1059,12 +1111,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     return super.onOptionsItemSelected(item);
                 }
             case APPLICATION_FRAGMENT:
-                return super.onOptionsItemSelected(item);
             case SETTINGS_FRAGMENT:
-                return super.onOptionsItemSelected(item);
             case ONLINE_RESUME_FRAGMENT:
-                return super.onOptionsItemSelected(item);
             case BOOKMARK_FRAGMENT:
+            case INVITATION_AND_REQUEST:
                 return super.onOptionsItemSelected(item);
         }
         return true;
@@ -1085,13 +1135,13 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 break;
             case APPLICATION_FRAGMENT:
                 break;
+            case INVITATION_AND_REQUEST:
+                break;
             case BOOKMARK_FRAGMENT:
                 break;
             case SETTINGS_FRAGMENT:
-
                 break;
             case ONLINE_RESUME_FRAGMENT:
-
                 break;
         }
 

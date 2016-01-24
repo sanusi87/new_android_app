@@ -8,11 +8,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class TableInvitation extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "invitation";
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME
-            +"' (id INTEGER, " +
+
+    public static int STATUS_ALLOWED = 1;
+    public static int STATUS_REJECTED = 2;
+    public static int STATUS_APPLIED = 1;
+    public static int STATUS_NOT_INTERESTED = 2;
+
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME+"' (id INTEGER, " +
             "post_id INTEGER, " +
-            "invitation_type INTEGER, " + // 1=resume view request, 2=job application invitation
-            "date_added NUMERIC);";
+            "post_title TEXT, " +
+            "emp_profile_id INTEGER, " +
+            "emp_profile_name TEXT, " +
+            "status INTEGER, " + //1=
+            "date_added NUMERIC, " +
+            "date_updated NUMERIC);";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
@@ -37,6 +46,7 @@ public class TableInvitation extends SQLiteOpenHelper {
             strSQL += " WHERE post_id=?";
             args = new String[]{String.valueOf(post_id)};
         }
+        strSQL += " ORDER BY id DESC";
         return db.rawQuery(strSQL, args);
     }
 
@@ -56,6 +66,11 @@ public class TableInvitation extends SQLiteOpenHelper {
         String _id = String.valueOf(existingID);
         String[] param = {_id};
         int affectedRows = db.delete(TABLE_NAME, "id=?", param);
+        return affectedRows > 0;
+    }
+
+    public boolean updateInvitation(ContentValues cv, int invitationID) {
+        int affectedRows = db.update(TABLE_NAME, cv, "id=?", new String[]{String.valueOf(invitationID)});
         return affectedRows > 0;
     }
 }
