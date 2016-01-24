@@ -134,8 +134,7 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".SelectJobIndustry"
-            android:label="@string/title_activity_select_job_industry"
-            android:theme="@android:style/Theme.Dialog" />
+            android:label="@string/title_activity_select_job_industry" />
         <activity android:name=".EmployerProfile" />
         <activity android:name=".AboutJobSearch" />
     </application>
