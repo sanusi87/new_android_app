@@ -207,17 +207,17 @@
     <string name="newsletter_desc">Emails of newsletter, promotion, career advise from JenJOBS</string>
     <string name="partners_desc">Promotion email from JenJOBS partners and affiliates</string>
     <string name="withdraw">Withdraw</string>
-    <string name="applied_on">Applied On</string>
+    <string name="applied_on">Applied on</string>
     <string name="status">Status</string>
     <string name="sms_desc">SMS Job Alert</string>
     <string name="update_profile">Update</string>
     <string name="select_state">Select State</string>
-    <string name="title_activity_select_job_industry">SelectJobIndustry</string>
+    <string name="title_activity_select_job_industry">Select Industry</string>
     <string name="month">Month</string>
     <string name="year">Year</string>
     <string name="keyword_filter">Keyword Filter</string>
     <string name="haveAnyWorkExp">Do you have any work experience?</string>
-    <string name="title_activity_employer_profile">EmployerProfile</string>
+    <string name="title_activity_employer_profile">Employer Profile</string>
     <string name="company_info">Company Info</string>
     <string name="company_location">Company Location</string>
     <string name="about">About</string>
@@ -227,6 +227,20 @@
     <string name="identityCardNumber">Identity Card Number</string>
     <string name="clear_filter">Clear Filter</string>
     <string name="more">More</string>
+    <string name="no_job_posting">\"No job postings found!\"</string>
+    <string name="invitation_and_request">Invitation and Request</string>
+    <string name="request_to_view">%1$s would like to view your online resume.</string>
+    <string name="invite_to_apply">%1$s have sent you an invitation to apply for %2$s.</string>
+    <string name="allow">Allow</string>
+    <string name="allowed">Allowed</string>
+    <string name="reject">Reject</string>
+    <string name="rejected">Rejected</string>
+    <string name="application_sent">Application sent</string>
+    <string name="not_interested">I\'m not interested</string>
+    <string name="language_level">Language Level</string>
+    <string name="spoken_language_level">Spoken Language Level</string>
+    <string name="written_language_level">Written Language Level</string>
+    <string name="select_language">Select Language</string>
 
     <item type="id" name="TAG_JOB_ROLE_ID"/>
 </resources>
