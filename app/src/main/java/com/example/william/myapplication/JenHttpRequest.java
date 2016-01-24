@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class JenHttpRequest {
+    public static int TYPE_STRING = 0;
     public static int JSON_OBJECT = 1;
     public static int JSON_ARRAY = 2;
 
