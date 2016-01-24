@@ -1,6 +1,5 @@
 package com.example.william.myapplication;
 
-import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -9,25 +8,17 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class JobSearch {
-    //private String url = "http://api.jenjobs.com/jobs/search";
-    private ArrayList<String> filters = new ArrayList<String>();
-    private ArrayList<String> orders = new ArrayList<String>();
+    private ArrayList<String> filters = new ArrayList<>();
+    private ArrayList<String> orders = new ArrayList<>();
     private String defaultOrder = "o=date_posted";
     private int page = 1;
     private JobSearchAdapter adapter;
@@ -59,10 +50,8 @@ public class JobSearch {
                     LinearLayout ll = (LinearLayout) v.findViewById(R.id.no_item);
 
                     if (success != null) {
-                        ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
-                        JSONObject jObj = (JSONObject) success;
-                        JSONArray jArr = jObj.optJSONArray("data");
-                        //Log.e("jArr", ""+jArr);
+                        ArrayList<JSONObject> arr = new ArrayList<>();
+                        JSONArray jArr = success.optJSONArray("data");
 
                         if (jArr != null && jArr.length() > 0) {
                             //Log.e("jArr.length", ""+jArr.length());
@@ -81,7 +70,7 @@ public class JobSearch {
                             //Log.e("page", ""+page);
                             if (page == 1) {
                                 ll.setVisibility(View.VISIBLE);
-                                ((TextView) ll.findViewById(R.id.noticeText)).setText("No job postings found!");
+                                ((TextView) ll.findViewById(R.id.noticeText)).setText(R.string.no_job_posting);
                                 (v.findViewById(R.id.job_list_view)).setVisibility(View.GONE);
                             } else {
                                 continueRequest = false;
@@ -89,7 +78,7 @@ public class JobSearch {
                         }
                     } else {
                         ll.setVisibility(View.VISIBLE);
-                        ((TextView) ll.findViewById(R.id.noticeText)).setText("No job postings found!");
+                        ((TextView) ll.findViewById(R.id.noticeText)).setText(R.string.no_job_posting);
                         (v.findViewById(R.id.job_list_view)).setVisibility(View.GONE);
                     }
                     loading.setVisibility(View.GONE);
@@ -130,7 +119,6 @@ public class JobSearch {
     public void setPage( int page ){
         if( page >= 0 ){
             this.page = page;
-            //filters.add( "page="+page );
         }
     }
 
@@ -226,83 +214,4 @@ public class JobSearch {
     public void setLoading(ProgressBar loading) {
         this.loading = loading;
     }
-
-    // async task
-    /*
-    public class GetRequest extends AsyncTask<Void, Void, Object> {
-
-        public String _url;
-        public int OBJECT_TYPE = 1;
-
-        GetRequest( String target ){
-            Log.e("url", target);
-            this._url = target;
-        }
-
-        @Override
-        protected Object doInBackground(Void... params) {
-            Object _response = null;
-
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpGet httpget = new HttpGet(_url);
-            httpget.addHeader("Content-Type", "application/json");
-            httpget.addHeader("Accept", "application/json");
-
-            try {
-                HttpResponse _http_response = httpclient.execute(httpget);
-                HttpEntity _entity = _http_response.getEntity();
-                InputStream is = _entity.getContent();
-
-                String responseString = JenHttpRequest.readInputStreamAsString(is);
-                if( responseString.substring(0,1).equals("[") ){
-                    _response = JenHttpRequest.decodeJsonArrayString(responseString);
-                    OBJECT_TYPE = JenHttpRequest.JSON_ARRAY;
-                }else{
-                    _response = JenHttpRequest.decodeJsonObjectString(responseString);
-                }
-            } catch (IOException e) {
-                Log.e("getJobErr", e.getMessage());
-            }
-            return _response;
-        }
-
-        @Override
-        protected void onPostExecute(Object success) {
-            View v = ((ViewGroup)loading.getParent());
-            LinearLayout ll = (LinearLayout)v.findViewById(R.id.no_item);
-
-            if( success != null ){
-                ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
-                JSONObject jObj = (JSONObject) success;
-                JSONArray jArr = jObj.optJSONArray("data");
-                //Log.e("jArr", ""+jArr);
-
-                if( jArr != null && jArr.length() > 0 ){
-                    //Log.e("jArr.length", ""+jArr.length());
-                    (v.findViewById(R.id.no_item)).setVisibility(View.GONE);
-                    (v.findViewById(R.id.job_list_view)).setVisibility(View.VISIBLE);
-
-                    for( int i=0;i< jArr.length();i++ ){
-                        try {
-                            arr.add(jArr.getJSONObject(i));
-                        } catch (JSONException e) {
-                            Log.e("injecting", "" + e.getMessage());
-                        }
-                    }
-                    adapter.setJob( arr );
-                    adapter.notifyDataSetChanged();
-                }else{
-                    ll.setVisibility(View.VISIBLE);
-                    ((TextView)ll.findViewById(R.id.noticeText)).setText("No job postings found!");
-                    (v.findViewById(R.id.job_list_view)).setVisibility(View.GONE);
-                }
-            }else{
-                ll.setVisibility(View.VISIBLE);
-                ((TextView)ll.findViewById(R.id.noticeText)).setText("No job postings found!");
-                (v.findViewById(R.id.job_list_view)).setVisibility(View.GONE);
-            }
-            loading.setVisibility(View.GONE);
-        }
-    }
-    */
 }
