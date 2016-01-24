@@ -104,7 +104,38 @@ public class JobDetails extends ActionBarActivity {
         if( extras != null ){
             jobPostingId = extras.getInt("post_id");
             String[] param = {Jenjobs.JOB_DETAILS+"/"+jobPostingId};
-            new GetJobRequest().execute(param);
+            GetRequest g = new GetRequest();
+            g.setResultListener(new GetRequest.ResultListener() {
+                @Override
+                public void processResult(JSONObject success) {
+                    jobDetails = success;
+                    Log.e("onPostEx", "" + success);
+                    if( success != null ){
+                        mViewPager.setAdapter(mSectionsPagerAdapter);
+                        positionTitle.setText(success.optString("title"));
+                        tabButton.setVisibility(View.VISIBLE);
+                    }else{
+                        Cursor job = tableJob.getJob(jobPostingId);
+                        if( job.moveToFirst() ){
+                            String savedJobDetails = job.getString(3);
+                            try {
+                                jobDetails = new JSONObject(savedJobDetails);
+                                mViewPager.setAdapter(mSectionsPagerAdapter);
+                                positionTitle.setText(jobDetails.getString("title"));
+                                tabButton.setVisibility(View.VISIBLE);
+                            } catch (JSONException e) {
+                                Log.e("err", e.getMessage());
+                            }
+                        }else{
+                            // if network error
+                            noItem.setVisibility(View.VISIBLE);
+                        }
+                        job.close();
+                    }
+                    loading.setVisibility(View.GONE);
+                }
+            });
+            g.execute(param);
         }else{
             Toast.makeText(getApplicationContext(), "Job posting ID not found!", Toast.LENGTH_SHORT).show();
         }
@@ -423,62 +454,6 @@ public class JobDetails extends ActionBarActivity {
                     return "SECTION 3";
             }
             return null;
-        }
-    }
-
-    /*
-    * download job data
-    * */
-    public class GetJobRequest extends AsyncTask<String, Void, JSONObject> {
-        @Override
-        protected JSONObject doInBackground(String... params) {
-            JSONObject _response = null;
-
-            final HttpClient httpclient = new DefaultHttpClient();
-            final HttpGet httpget = new HttpGet(params[0]);
-            httpget.addHeader("Content-Type", "application/json");
-            httpget.addHeader("Accept", "application/json");
-            try {
-                HttpResponse _http_response = httpclient.execute(httpget);
-                HttpEntity _entity = _http_response.getEntity();
-                InputStream is = _entity.getContent();
-
-                String responseString = JenHttpRequest.readInputStreamAsString(is);
-                _response = JenHttpRequest.decodeJsonObjectString(responseString);
-            } catch (IOException e) {
-                //Toast.makeText(context, "Network Error!", Toast.LENGTH_SHORT).show();
-            }
-            return _response;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject success) {
-            jobDetails = success;
-            Log.e("onPostEx", "" + success);
-            if( success != null ){
-                mViewPager.setAdapter(mSectionsPagerAdapter);
-                positionTitle.setText(success.optString("title"));
-                tabButton.setVisibility(View.VISIBLE);
-            }else{
-                Cursor job = tableJob.getJob(jobPostingId);
-                if( job.moveToFirst() ){
-                    String savedJobDetails = job.getString(3);
-                    try {
-                        jobDetails = new JSONObject(savedJobDetails);
-                        mViewPager.setAdapter(mSectionsPagerAdapter);
-                        positionTitle.setText(jobDetails.getString("title"));
-                        tabButton.setVisibility(View.VISIBLE);
-                    } catch (JSONException e) {
-                        Log.e("err", e.getMessage());
-                    }
-                }else{
-                    // if network error
-                    noItem.setVisibility(View.VISIBLE);
-                }
-                job.close();
-            }
-
-            loading.setVisibility(View.GONE);
         }
     }
 
