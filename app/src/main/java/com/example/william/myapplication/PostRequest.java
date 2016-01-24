@@ -35,9 +35,9 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
     public static int UPLOAD_RESUME_ATTACHMENT = 1;
 
     private Context context;
-    private TextView textView;
-    private ProgressBar progressBar;
-    private int REQUEST_TYPE = 0;
+    //private TextView textView;
+    //private ProgressBar progressBar;
+    //private int REQUEST_TYPE = 0;
 
     SharedPreferences sharedPref;
     String accessToken;
@@ -52,6 +52,7 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
         js_profile_id = sharedPref.getInt("js_profile_id", 0);
     }
 
+    /*
     public void setViewToUpdate(TextView tv){
         textView = tv;
     }
@@ -63,6 +64,7 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
     public void setRequestType(int requestType){
         REQUEST_TYPE = requestType;
     }
+    */
 
     @Override
     protected JSONObject doInBackground(String... params) {
@@ -99,8 +101,8 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
 
     @Override
     protected void onPostExecute(JSONObject result) {
-        //super.onPostExecute(result);
-        //Log.e("reqresult", ""+result);
+        resultListener.processResult(result);
+        /*
         if( result != null ){
             if( REQUEST_TYPE == UPLOAD_RESUME_ATTACHMENT ){
                 // if successul
@@ -121,6 +123,17 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
         if( progressBar != null ){
             progressBar.setVisibility(View.GONE);
         }
+        */
+    }
+
+    public interface ResultListener {
+        void processResult(JSONObject success); // available listener method
+    }
+
+    private ResultListener resultListener;
+    public PostRequest setResultListener(ResultListener resultListener){
+        this.resultListener = resultListener;
+        return this;
     }
 
 }
