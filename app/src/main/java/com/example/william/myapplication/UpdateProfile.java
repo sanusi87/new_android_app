@@ -18,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -230,7 +229,7 @@ public class UpdateProfile extends ActionBarActivity{
             String theEmailAddress = emailAddress.getText().toString();
             String theGender = selectedGender.getText().toString();
             String theMobileNumber = mobileNumber.getText().toString();
-            String theIdentityCardNumber = identityCardNumber.getText().toString();
+            //String theIdentityCardNumber = identityCardNumber.getText().toString();
 
             if( theFullName.equals("") ){
                 errors.add("Please enter your full name.");
@@ -301,7 +300,14 @@ public class UpdateProfile extends ActionBarActivity{
                     }
 
                     String[] s = {Jenjobs.PROFILE_URL+"?access-token=" + accessToken, obj.toString()};
-                    new PostRequest().execute(s);
+                    PostRequest postRequest = new PostRequest();
+                    postRequest.setResultListener(new PostRequest.ResultListener() {
+                        @Override
+                        public void processResult(JSONObject result) {
+                            Log.e("profileUpdated", ""+result);
+                        }
+                    });
+                    postRequest.execute(s);
                 } catch (JSONException e) {
                     Log.e("jsonExc", e.getMessage());
                 }
