@@ -207,8 +207,15 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                             try {
                                 obj.put("post_id", postId);
                                 String[] param = {Jenjobs.BOOKMARK_URL + "?access-token=" + accessToken,obj.toString()};
-                                Log.e("url-post", Jenjobs.BOOKMARK_URL + "/"+postId+"?access-token=" + accessToken);
-                                new PostRequest().execute(param);
+                                //Log.e("url-post", Jenjobs.BOOKMARK_URL + "/"+postId+"?access-token=" + accessToken);
+                                PostRequest postRequest = new PostRequest();
+                                postRequest.setResultListener(new PostRequest.ResultListener() {
+                                    @Override
+                                    public void processResult(JSONObject success) {
+                                        Log.e("bookmarked", ""+success);
+                                    }
+                                });
+                                postRequest.execute(param);
                             } catch (JSONException e) {
                                 Log.e("err", e.getMessage());
                             }
