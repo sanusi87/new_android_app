@@ -23,8 +23,8 @@ public class GetRequest extends AsyncTask<String, Void, Object> {
     protected Object doInBackground(String... params) {
         Object _response = null;
 
-        final HttpClient httpclient = new DefaultHttpClient();
-        final HttpGet httpget = new HttpGet(params[0]);
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpGet httpget = new HttpGet(params[0]);
         httpget.addHeader("Content-Type", "application/json");
         httpget.addHeader("Accept", "application/json");
 
