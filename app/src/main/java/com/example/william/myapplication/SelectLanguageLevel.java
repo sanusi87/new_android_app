@@ -14,6 +14,17 @@ public class SelectLanguageLevel extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_language_level);
+        setTitle(getText(R.string.language_level));
+
+        Bundle extra = getIntent().getExtras();
+        if( extra != null ){
+            int type = extra.getInt("type");
+            if( type == 1 ){
+                setTitle(getText(R.string.spoken_language_level));
+            }else{
+                setTitle(getText(R.string.written_language_level));
+            }
+        }
 
         ListView lv = (ListView)findViewById(R.id.listOfLanguageLevel);
         final LanguageLevelAdapter languageLevelAdapter = new LanguageLevelAdapter(this);

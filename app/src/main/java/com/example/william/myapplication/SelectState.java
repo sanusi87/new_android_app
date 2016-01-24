@@ -3,6 +3,7 @@ package com.example.william.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class SelectState extends Activity {
+public class SelectState extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,16 +92,5 @@ public class SelectState extends Activity {
                 }
             });
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // In order to not be too narrow, set the window size based on the screen resolution:
-        final int screen_width = getResources().getDisplayMetrics().widthPixels;
-        final int new_window_width = screen_width * 90 / 100;
-        WindowManager.LayoutParams layout = getWindow().getAttributes();
-        layout.width = Math.max(layout.width, new_window_width);
-        getWindow().setAttributes(layout);
     }
 }

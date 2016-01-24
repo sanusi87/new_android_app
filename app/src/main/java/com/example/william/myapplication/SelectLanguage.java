@@ -12,6 +12,7 @@ public class SelectLanguage extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_language);
+        setTitle(getText(R.string.select_language));
 
         final ListView listOfLanguage = (ListView)findViewById(R.id.listOfLanguage);
         final LanguageAdapter languageAdapter = new LanguageAdapter(this);

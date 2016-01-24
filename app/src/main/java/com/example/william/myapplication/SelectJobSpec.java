@@ -3,6 +3,7 @@ package com.example.william.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.WindowManager;
@@ -11,7 +12,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class SelectJobSpec extends Activity {
+public class SelectJobSpec extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,7 @@ public class SelectJobSpec extends Activity {
         });
     }
 
+    /*
     @Override
     protected void onStart() {
         super.onStart();
@@ -79,4 +81,5 @@ public class SelectJobSpec extends Activity {
         layout.width = Math.max(layout.width, new_window_width);
         getWindow().setAttributes(layout);
     }
+    */
 }

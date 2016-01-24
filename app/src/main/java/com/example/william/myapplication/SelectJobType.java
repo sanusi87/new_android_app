@@ -19,13 +19,13 @@ public class SelectJobType extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_job_type);
-        setTitle("Select Job Type");
+        setTitle("Select Employment Type");
 
         Button okbutton = (Button)findViewById(R.id.okButton);
         Button cancelButton = (Button)findViewById(R.id.cancelButton);
 
         final ListView listOfJobType = (ListView) findViewById(R.id.listOfJobType);
-        final JobTypeAdapter jta = new JobTypeAdapter(this);
+        final EmploymentTypeAdapter jta = new EmploymentTypeAdapter(getApplicationContext());
         boolean single = true;
 
         if( getIntent() != null ){

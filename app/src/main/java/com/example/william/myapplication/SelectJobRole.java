@@ -3,6 +3,7 @@ package com.example.william.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.WindowManager;
@@ -11,7 +12,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class SelectJobRole extends Activity {
+public class SelectJobRole extends ActionBarActivity {
     int viewIndex = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,16 +74,5 @@ public class SelectJobRole extends Activity {
                 finish();
             }
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // In order to not be too narrow, set the window size based on the screen resolution:
-        final int screen_width = getResources().getDisplayMetrics().widthPixels;
-        final int new_window_width = screen_width * 90 / 100;
-        WindowManager.LayoutParams layout = getWindow().getAttributes();
-        layout.width = Math.max(layout.width, new_window_width);
-        getWindow().setAttributes(layout);
     }
 }
