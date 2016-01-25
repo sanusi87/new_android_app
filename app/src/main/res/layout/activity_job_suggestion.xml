@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    style="@style/AppThemePadding10">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tabButton"
+        android:layout_marginBottom="5dp">
+
+        <Button
+            style="@style/AppThemeBaseButton"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@drawable/button_primary"
+            android:stateListAnimator="@null"
+            android:text="@string/matched_jobs"
+            android:id="@+id/jobMatcherButton"
+            android:layout_weight="1" />
+
+        <Button
+            style="@style/AppThemeBaseButton"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@drawable/button_primary"
+            android:stateListAnimator="@null"
+            android:text="@string/suggested_jobs"
+            android:id="@+id/jobSuggestedButton"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:id="@+id/no_item"
+        style="@style/AppThemePadding10"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/noticeIcon2"
+            android:contentDescription="@string/no_value"
+            android:src="@drawable/ic_info_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/noticeText2"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+</LinearLayout>
