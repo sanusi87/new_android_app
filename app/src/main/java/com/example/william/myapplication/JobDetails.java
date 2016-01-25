@@ -99,6 +99,8 @@ public class JobDetails extends ActionBarActivity {
         tableBookmark = new TableBookmark(this);
         // -----
 
+        final LinearLayout applyButtonContainer = (LinearLayout)findViewById(R.id.applyButtonContainer);
+
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if( extras != null ){
@@ -113,6 +115,8 @@ public class JobDetails extends ActionBarActivity {
                     if( success != null ){
                         mViewPager.setAdapter(mSectionsPagerAdapter);
                         positionTitle.setText(success.optString("title"));
+
+                        applyButtonContainer.setVisibility(View.VISIBLE);
                         tabButton.setVisibility(View.VISIBLE);
                     }else{
                         Cursor job = tableJob.getJob(jobPostingId);
@@ -122,6 +126,8 @@ public class JobDetails extends ActionBarActivity {
                                 jobDetails = new JSONObject(savedJobDetails);
                                 mViewPager.setAdapter(mSectionsPagerAdapter);
                                 positionTitle.setText(jobDetails.getString("title"));
+
+                                applyButtonContainer.setVisibility(View.VISIBLE);
                                 tabButton.setVisibility(View.VISIBLE);
                             } catch (JSONException e) {
                                 Log.e("err", e.getMessage());

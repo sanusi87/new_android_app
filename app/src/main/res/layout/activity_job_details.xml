@@ -42,28 +42,48 @@
 
             <Button
                 style="@style/AppThemeBaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
                 android:text="@string/login_text"
                 android:id="@+id/login_button"
                 android:layout_weight="1"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="5dp"
+                android:stateListAnimator="@null"
+                android:textColor="@android:color/black"
+                android:shadowColor="@android:color/transparent"
+                android:background="@drawable/button_default" />
             <Button
                 style="@style/AppThemeBaseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
                 android:text="@string/register_text"
                 android:id="@+id/register_button"
                 android:layout_weight="1"
-                android:layout_marginLeft="5dp" />
+                android:layout_marginLeft="5dp"
+                android:stateListAnimator="@null"
+                android:textColor="@android:color/black"
+                android:shadowColor="@android:color/transparent"
+                android:background="@drawable/button_default" />
         </LinearLayout>
 
     </LinearLayout>
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:indeterminate="true"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:visibility="visible" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/applyButtonContainer"
+        android:visibility="gone">
 
         <Button
             style="@style/AppThemeBaseButton"
@@ -84,16 +104,6 @@
             android:layout_marginBottom="5dp"
             android:textColor="@android:color/black"
             android:textSize="20sp" />
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:indeterminate="true"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
@@ -101,6 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tabButton"
+        android:visibility="gone"
         android:layout_marginBottom="5dp">
 
         <Button
@@ -111,6 +122,8 @@
             android:stateListAnimator="@null"
             android:text="@string/overview"
             android:id="@+id/overviewButton"
+            android:textColor="@android:color/black"
+            android:shadowColor="@android:color/transparent"
             android:layout_weight="1" />
 
         <Button
@@ -121,6 +134,8 @@
             android:stateListAnimator="@null"
             android:text="@string/description"
             android:id="@+id/descriptionButton"
+            android:textColor="@android:color/black"
+            android:shadowColor="@android:color/transparent"
             android:layout_weight="1" />
 
         <Button
@@ -131,6 +146,8 @@
             android:stateListAnimator="@null"
             android:text="@string/company"
             android:id="@+id/companyButton"
+            android:textColor="@android:color/black"
+            android:shadowColor="@android:color/transparent"
             android:layout_weight="1" />
     </LinearLayout>
 
