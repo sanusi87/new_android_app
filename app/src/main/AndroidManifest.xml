@@ -137,6 +137,10 @@
             android:label="@string/title_activity_select_job_industry" />
         <activity android:name=".EmployerProfile" />
         <activity android:name=".AboutJobSearch" />
+        <activity
+            android:name=".JobSuggestion"
+            android:label="@string/job_suggestion"
+            android:parentActivityName=".ProfileActivity"/>
     </application>
 
 </manifest>
