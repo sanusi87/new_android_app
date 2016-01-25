@@ -286,8 +286,10 @@ public class UpdateEducation extends ActionBarActivity {
                     cv.put("_id", remoteEducationId); // JenJOBS id
 
                     if( currentEducationId > 0 ){
+                        cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
                         tableEducation.updateEducation(cv, currentEducationId);
                     }else{
+                        cv.put("date_added", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
                         Long newEducationId = tableEducation.addEducation(cv);
                         currentEducationId = newEducationId.intValue();
                     }
