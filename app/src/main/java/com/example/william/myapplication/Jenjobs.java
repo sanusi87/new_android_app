@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -773,7 +774,8 @@ public class Jenjobs {
         return _listOfYear.toArray(new String[_listOfYear.size()]);
     }
 
-    public static String[] listOfAvailabilityUnit(){
-        return new String[]{"Day", "Week", "Month"};
+
+    public void saveFile(File file){
+
     }
 }
