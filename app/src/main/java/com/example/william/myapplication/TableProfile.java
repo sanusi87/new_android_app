@@ -52,7 +52,9 @@ public class TableProfile extends SQLiteOpenHelper{
             "no_work_exp TEXT, " + //1=no work, 0=got work //24
             "additional_info TEXT, " + //25
             "created_at NUMERIC, " + //26
-            "updated_at NUMERIC);"; //27
+            "updated_at NUMERIC," + //27
+            "resume_uri TEXT," +
+            "photo_uri TEXT);";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableProfile.TABLE_NAME+"'";
 
     public SQLiteDatabase db;

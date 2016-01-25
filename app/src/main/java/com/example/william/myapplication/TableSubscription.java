@@ -24,7 +24,8 @@ public class TableSubscription extends SQLiteOpenHelper{
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "subscription_name TEXT, " +
             "subscription_id INTEGER(4), " +
-            "status INTEGER(1));";
+            "status INTEGER(1)," +
+            "date_updated NUMERIC);";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableSubscription.TABLE_NAME+"'";
 
     public SQLiteDatabase db;

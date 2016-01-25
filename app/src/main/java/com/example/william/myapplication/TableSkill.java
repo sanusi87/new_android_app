@@ -14,7 +14,8 @@ public class TableSkill extends SQLiteOpenHelper{
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableSkill.TABLE_NAME+"' (" +
             "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "_id INTEGER, "+
-            "name TEXT);";
+            "name TEXT," +
+            "date_added NUMERIC);";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableSkill.TABLE_NAME+"'";
 
     public SQLiteDatabase db;

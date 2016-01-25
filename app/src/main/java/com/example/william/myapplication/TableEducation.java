@@ -31,7 +31,9 @@ public class TableEducation extends SQLiteOpenHelper{
             "country_id INTEGER(4), " +
             "grade TEXT, " +
             "info TEXT, " +
-            "date_graduated NUMERIC);";
+            "date_graduated NUMERIC," +
+            "date_added NUMERIC," +
+            "date_updated NUMERIC);";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableEducation.TABLE_NAME+"'";
 
     public SQLiteDatabase db;

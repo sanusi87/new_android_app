@@ -14,7 +14,8 @@ public class TableLanguage extends SQLiteOpenHelper{
             "language_id INTEGER, "+ //1
             "spoken_language_level_id INTEGER, "+ //2
             "written_language_level_id INTEGER, "+ //3
-            "native INTEGER(1));"; //4 0/1
+            "native INTEGER(1)," + //4 0/1
+            "date_added NUMERIC);";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableLanguage.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
