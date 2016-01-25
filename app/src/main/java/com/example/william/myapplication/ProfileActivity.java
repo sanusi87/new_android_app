@@ -382,6 +382,77 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 new ImageLoad(theProfile.photo_file, profileImage).execute();
             }
 
+            profileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String[] allowedExtension = {"jpg", "png", "gif", "jpeg", "bmp"};
+
+                    FileChooser fileChooser = new FileChooser(getActivity());
+                    fileChooser.setAdapter(new ImageAdapter());
+                    fileChooser.setExtension(allowedExtension);
+                    fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
+                        @Override
+                        public void fileSelected(File file) {
+                            // TODO -- update profile image, post and save to folder
+                            try {
+                                byte[] buffer = new byte[8192];
+                                int bytesRead;
+
+                                InputStream inputStream = new FileInputStream(file);
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                    baos.write(buffer, 0, bytesRead);
+                                }
+                                byte[] byteArray = baos.toByteArray();
+                                String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+                                JSONObject fileParam = new JSONObject();
+                                fileParam.put("name", file.getName());
+                                fileParam.put("type", "photo_file");
+                                fileParam.put("attachment", encodedFile);
+
+                                // TODO - add resume/profile photo into _POST
+                                String[] params = {
+                                        Jenjobs.ATTACH_RESUME + "?access-token=" + accessToken,
+                                        fileParam.toString()
+                                };
+
+                                //attachedResume.setText("");
+                                //progressBar.setVisibility(View.VISIBLE);
+
+                                PostRequest postRequest = new PostRequest(context);
+                                postRequest.setResultListener(new PostRequest.ResultListener() {
+                                    @Override
+                                    public void processResult(JSONObject result) {
+                                        if( result != null ){
+                                            // if successul
+                                            if( result.optInt( "status_code" ) == 1 ){
+                                                //attachedResume.setText(result.optString("resume") );
+                                                TableProfile tableProfile = new TableProfile(context);
+                                                ContentValues cv = new ContentValues();
+                                                cv.put("photo_file", result.optString("photo_url"));
+                                                tableProfile.updateProfile(cv, jsProfileId);
+                                            }
+                                            Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
+                                            //progressBar.setVisibility(View.GONE);
+                                        }
+                                    }
+                                });
+                                postRequest.execute(params);
+
+                            } catch (FileNotFoundException e) {
+                                Toast.makeText(context, "File not found!", Toast.LENGTH_LONG).show();
+                            } catch (IOException | JSONException e) {
+                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+
+                            // TODO -- update profile image
+                        }
+                    });
+                    fileChooser.showDialog();
+                }
+            });
         }
 
         private void setupJobFragment(View rootView) {
@@ -626,7 +697,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                     String durationRange = Jenjobs.date(dateStart, null, "yyyy-MM-dd")+" - ";
                     String durationCount = "";
-                    if( dateResign.length() == 0 ){
+                    if( dateResign.length() == 0 || dateResign.equals("null") ){
                         durationRange += "Present";
                         durationCount = Jenjobs.calculateDuration( dateStart, Jenjobs.date(null, null, "yyyy-MM-dd") );
                     }else{
@@ -993,6 +1064,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                                 JSONObject fileParam = new JSONObject();
                                 fileParam.put("name", file.getName());
+                                fileParam.put("type", "resume_file");
                                 fileParam.put("attachment", encodedFile);
 
                                 String[] params = {
