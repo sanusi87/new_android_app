@@ -12,7 +12,7 @@
     <string name="register_text">Register</string>
     <string name="forgot_text">Forgot Password?</string>
     <string name="jenjobs_logo">JenJOBS Logo</string>
-    <string name="no_value"/>
+    <string name="no_value" />
     <string name="fullname">Full Name</string>
     <string name="email">Email</string>
     <string name="icno">I/C</string>
@@ -241,6 +241,10 @@
     <string name="spoken_language_level">Spoken Language Level</string>
     <string name="written_language_level">Written Language Level</string>
     <string name="select_language">Select Language</string>
+    <string name="job_suggestion">Job Suggestion</string>
 
-    <item type="id" name="TAG_JOB_ROLE_ID"/>
+    <item name="TAG_JOB_ROLE_ID" type="id" />
+    <string name="title_activity_job_suggestion">Job Suggestion</string>
+    <string name="matched_jobs">Matched Jobs</string>
+    <string name="suggested_jobs">Suggested Jobs</string>
 </resources>
