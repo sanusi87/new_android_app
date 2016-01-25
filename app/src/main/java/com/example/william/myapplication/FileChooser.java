@@ -23,11 +23,16 @@ public class FileChooser {
     private ListView list;
     private Dialog dialog;
     private File currentPath;
+    private ImageAdapter imageAdapter;
 
     // filter on file extension
     private String[] extension = null;
     public void setExtension(String[] extension) {
         this.extension = (extension == null) ? null : extension;
+    }
+
+    public void setAdapter(ImageAdapter imageAdapter){
+        this.imageAdapter = imageAdapter;
     }
 
     // file selection event handling
@@ -115,13 +120,21 @@ public class FileChooser {
 
             // refresh the user interface
             dialog.setTitle(currentPath.getPath());
-            list.setAdapter(new ArrayAdapter(activity, android.R.layout.simple_list_item_1, fileList) {
-                @Override public View getView(int pos, View view, ViewGroup parent) {
-                    view = super.getView(pos, view, parent);
-                    ((TextView) view).setSingleLine(true);
-                    return view;
-                }
-            });
+
+            if( imageAdapter != null ){
+                imageAdapter.setCurrentPath(currentPath);
+                imageAdapter.setFileList(fileList);
+                imageAdapter.setActivity(activity);
+                list.setAdapter(imageAdapter);
+            }else{
+                list.setAdapter(new ArrayAdapter(activity, R.layout.spinner_item, fileList) {
+                    @Override public View getView(int pos, View view, ViewGroup parent) {
+                        view = super.getView(pos, view, parent);
+                        ((TextView) view).setSingleLine(true);
+                        return view;
+                    }
+                });
+            }
         }
     }
 
