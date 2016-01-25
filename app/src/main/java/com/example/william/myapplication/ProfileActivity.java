@@ -57,13 +57,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
      * list of fragment numbers
      */
     public static final int PROFILE_FRAGMENT = 1;
-    public static final int JOB_FRAGMENT = 2;
-    public static final int APPLICATION_FRAGMENT = 3;
-    public static final int INVITATION_AND_REQUEST = 4;
-    public static final int BOOKMARK_FRAGMENT = 5;
-    public static final int SETTINGS_FRAGMENT = 6;
-    public static final int ONLINE_RESUME_FRAGMENT = 7;
-    public static final int LOG_OUT_FRAGMENT = 8;
+    public static final int ONLINE_RESUME_FRAGMENT = 2;
+    public static final int JOB_FRAGMENT = 3;
+    public static final int APPLICATION_FRAGMENT = 4;
+    public static final int INVITATION_AND_REQUEST = 5;
+    public static final int BOOKMARK_FRAGMENT = 6;
+    public static final int JOB_SUGGESTION = 7;
+    public static final int SETTINGS_FRAGMENT = 8;
+    public static final int LOG_OUT_FRAGMENT = 9;
 
     /*
     * download sections
@@ -219,9 +220,16 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
+        int selectedItem = position+1;
+        if( selectedItem == JOB_SUGGESTION ){
+            Intent intent = new Intent(this, JobSuggestion.class);
+            startActivity(intent);
+            //finish(); // -- do not set this if you wanted to return
+        }else{
+            // update the main content by replacing fragments
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(selectedItem)).commit();
+        }
     }
 
     public void onSectionAttached(int number) {
@@ -240,6 +248,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 break;
             case ONLINE_RESUME_FRAGMENT:
                 mTitle = getString(R.string.online_resume);
+                break;
+            case JOB_SUGGESTION:
+                mTitle = getString(R.string.job_suggestion);
                 break;
             case BOOKMARK_FRAGMENT:
                 mTitle = getString(R.string.bookmark);
@@ -301,6 +312,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 case INVITATION_AND_REQUEST:
                     rootView = inflater.inflate(R.layout.invitation_and_request_layout, container, false);
                     setupInvitationAndRequestFragment(rootView);
+                    break;
+                case JOB_SUGGESTION:
+                    //rootView = inflater.inflate(R.layout.job_suggestion, container, false);
+                    //setupJobSuggestionFragment(rootView);
                     break;
                 case BOOKMARK_FRAGMENT:
                     rootView = inflater.inflate(R.layout.bookmark_layout, container, false);
@@ -377,7 +392,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 dob.setText( Jenjobs.date(_dob, null, "yyyy-MM-dd") );
             }
 
-            ImageView profileImage = (ImageView) rootView.findViewById(R.id.profile_image);
+            final ImageView profileImage = (ImageView) rootView.findViewById(R.id.profile_image);
             if( theProfile.photo_file != null ){
                 new ImageLoad(theProfile.photo_file, profileImage).execute();
             }
@@ -392,7 +407,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     fileChooser.setExtension(allowedExtension);
                     fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
                         @Override
-                        public void fileSelected(File file) {
+                        public void fileSelected(final File file) {
                             // TODO -- update profile image, post and save to folder
                             try {
                                 byte[] buffer = new byte[8192];
@@ -432,7 +447,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                                 TableProfile tableProfile = new TableProfile(context);
                                                 ContentValues cv = new ContentValues();
                                                 cv.put("photo_file", result.optString("photo_url"));
+                                                cv.put("photo_uri", file.getPath());
                                                 tableProfile.updateProfile(cv, jsProfileId);
+
+                                                new ImageLoad(result.optString("photo_url"), profileImage).execute();
                                             }
                                             Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
                                             //progressBar.setVisibility(View.GONE);
@@ -1045,7 +1063,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     fileChooser.setExtension(allowedExtension);
                     fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
                         @Override
-                        public void fileSelected(File file) {
+                        public void fileSelected(final File file) {
                             // file.getAbsolutePath() === /storage/emulated/0/Download/CG_resume.pdf
                             // file.getName() === CG_resume.pdf
 
@@ -1086,6 +1104,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                                 TableProfile tableProfile = new TableProfile(context);
                                                 ContentValues cv = new ContentValues();
                                                 cv.put("resume_file", result.optString("resume_url"));
+                                                cv.put("resume_uri", file.getPath());
                                                 tableProfile.updateProfile(cv, jsProfileId);
                                             }
                                             Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
@@ -1185,6 +1204,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             case APPLICATION_FRAGMENT:
             case SETTINGS_FRAGMENT:
             case ONLINE_RESUME_FRAGMENT:
+            case JOB_SUGGESTION:
             case BOOKMARK_FRAGMENT:
             case INVITATION_AND_REQUEST:
                 return super.onOptionsItemSelected(item);
@@ -1206,13 +1226,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 inflater.inflate(R.menu.job_fragment_menu, menu);
                 break;
             case APPLICATION_FRAGMENT:
-                break;
             case INVITATION_AND_REQUEST:
-                break;
+            case JOB_SUGGESTION:
             case BOOKMARK_FRAGMENT:
-                break;
             case SETTINGS_FRAGMENT:
-                break;
             case ONLINE_RESUME_FRAGMENT:
                 break;
         }
