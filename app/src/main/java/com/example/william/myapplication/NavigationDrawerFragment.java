@@ -100,14 +100,15 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
-                        getString(R.string.my_profile),
-                        getString(R.string.job_search),
-                        getString(R.string.application),
-                        getString(R.string.invitation_and_request),
-                        getString(R.string.bookmark),
-                        getString(R.string.action_settings),
-                        getString(R.string.online_resume),
-                        getString(R.string.log_out)
+                        getString(R.string.my_profile), //1
+                        getString(R.string.online_resume), //2
+                        getString(R.string.job_search), //3
+                        getString(R.string.application), //4
+                        getString(R.string.invitation_and_request), //5
+                        getString(R.string.bookmark), //6
+                        getString(R.string.job_suggestion), //7
+                        getString(R.string.action_settings), //8
+                        getString(R.string.log_out) //9
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
@@ -140,7 +141,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
+                R.drawable.ic_menu_white_48dp,             /* nav drawer image to replace 'Up' caret */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         ) {
