@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /*
 * {
@@ -86,8 +85,6 @@ public class TableApplication extends SQLiteOpenHelper {
 
         if( c.moveToFirst() ){
             int _status = c.getInt(0);
-            Log.e("saved", ""+_status);
-            Log.e("post_id", ""+c.getInt(1));
             c.close();
             if( _status != newStatus ){
                 return true;
@@ -97,8 +94,7 @@ public class TableApplication extends SQLiteOpenHelper {
     }
 
     public Long addApplication(ContentValues cv2){
-        Long insertId = db.insert(TableApplication.TABLE_NAME, null, cv2);
-        return insertId;
+        return db.insert(TableApplication.TABLE_NAME, null, cv2);
     }
 
     public boolean updateApplication(ContentValues cv2, int existingID){
