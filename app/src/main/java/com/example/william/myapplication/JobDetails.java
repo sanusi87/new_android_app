@@ -49,6 +49,7 @@ public class JobDetails extends ActionBarActivity {
 
     TextView positionTitle;
     int jobPostingId = 0;
+    int invitationId = 0;
     static JSONObject jobDetails = null;
     ProgressBar loading;
     Button applyButton;
@@ -58,15 +59,15 @@ public class JobDetails extends ActionBarActivity {
     String accessToken;
 
     TableProfile tableProfile;
-    TableJobPreference tableJobPreference;
-    TableJobPreferenceLocation tableJobPreferenceLocation;
+    //TableJobPreference tableJobPreference;
+    //TableJobPreferenceLocation tableJobPreferenceLocation;
     TableApplication tableApplication;
     TableJob tableJob;
-    TableWorkExperience tableWorkExperience;
-    TableEducation tableEducation;
-    TableSkill tableSkill;
-    TableLanguage tableLanguage;
-    TableBookmark tableBookmark;
+    //TableWorkExperience tableWorkExperience;
+    //TableEducation tableEducation;
+    //TableSkill tableSkill;
+    //TableLanguage tableLanguage;
+    //TableBookmark tableBookmark;
 
     LinearLayout tabButton;
     ViewPager mViewPager;
@@ -87,15 +88,15 @@ public class JobDetails extends ActionBarActivity {
 
         // -----
         tableProfile = new TableProfile(this);
-        tableJobPreference = new TableJobPreference(this);
-        tableJobPreferenceLocation = new TableJobPreferenceLocation(this);
+        //tableJobPreference = new TableJobPreference(this);
+        //tableJobPreferenceLocation = new TableJobPreferenceLocation(this);
         tableApplication = new TableApplication(this);
         tableJob = new TableJob(this);
-        tableWorkExperience = new TableWorkExperience(this);
-        tableEducation = new TableEducation(this);
-        tableSkill = new TableSkill(this);
-        tableLanguage = new TableLanguage(this);
-        tableBookmark = new TableBookmark(this);
+        //tableWorkExperience = new TableWorkExperience(this);
+        //tableEducation = new TableEducation(this);
+        //tableSkill = new TableSkill(this);
+        //tableLanguage = new TableLanguage(this);
+        //tableBookmark = new TableBookmark(this);
         // -----
 
         final LinearLayout applyButtonContainer = (LinearLayout)findViewById(R.id.applyButtonContainer);
@@ -104,13 +105,15 @@ public class JobDetails extends ActionBarActivity {
         Bundle extras = intent.getExtras();
         if( extras != null ){
             jobPostingId = extras.getInt("post_id");
+            invitationId = extras.getInt("invitation_id");
+
             String[] param = {Jenjobs.JOB_DETAILS+"/"+jobPostingId};
             GetRequest g = new GetRequest();
             g.setResultListener(new GetRequest.ResultListener() {
                 @Override
                 public void processResult(JSONObject success) {
                     jobDetails = success;
-                    Log.e("onPostEx", "" + success);
+                    //Log.e("onPostEx", "" + success);
                     if( success != null ){
                         mViewPager.setAdapter(mSectionsPagerAdapter);
                         positionTitle.setText(success.optString("title"));
@@ -205,70 +208,8 @@ public class JobDetails extends ActionBarActivity {
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View _v) {
-                Profile profile = tableProfile.getProfile();
-
-                ArrayList<String> errors = new ArrayList<>();
-
-                // if got resume file, send application without checking anything
-                if( profile.resume_file != null && profile.resume_file.length() > 0 ){
-
-                }else{
-                    // check for profile completeness
-                    if( profile.country_id == 0 ){
-                        errors.add("Please set your nationality!");
-                    }
-
-                    if( profile.dob == null ){
-                        errors.add("Please set your date of birth!");
-                    }
-
-                    if( profile.gender == null ){
-                        errors.add("Please set gender!");
-                    }
-
-                    if( profile.mobile_no == null ){
-                        errors.add("Please set mobile number!");
-                    }
-
-                    if( profile.access == null ){
-                        errors.add("Please update your resume visibility!");
-                    }
-
-                    if( profile.js_jobseek_status_id == 0 ){
-                        errors.add("Please update your jobseeking infomation!");
-                    }
-
-                    // work exp
-                    if( !profile.no_work_exp ){ // if no_work_exp == false // got work experience
-                        // check for entered work exp
-                        Cursor works = tableWorkExperience.getWorkExperience();
-                        if( works.getCount() == 0 ){
-                            errors.add("Please add your work experience!");
-                        }
-                        works.close();
-                    }
-
-                    // education
-                    Cursor edus = tableEducation.getEducation();
-                    if( edus.getCount() == 0 ){
-                        errors.add("Please add your qualification!");
-                    }
-                    edus.close();
-
-                    // skills
-                    Cursor skills = tableSkill.getSkill();
-                    if( skills.getCount() == 0 ){
-                        errors.add("Please add your skills!");
-                    }
-                    skills.close();
-
-                    // languages
-                    Cursor languages = tableLanguage.getLanguage(null);
-                    if( languages.getCount() == 0 ){
-                        errors.add("Please add your language proficiencies!");
-                    }
-                    languages.close();
-                }
+                //Profile profile = tableProfile.getProfile();
+                ArrayList<String> errors = tableProfile.isProfileComplete();
 
                 if( errors.size() == 0 ){
                     // TODO - save to local db (applicationTable)
@@ -280,13 +221,44 @@ public class JobDetails extends ActionBarActivity {
                     cv.put("closed", 0);
                     tableApplication.addApplication(cv);
 
+                    // attach invitation together with apply POST
+                    // TODO - handle invitation in apply POST request
+                    JSONObject obj = new JSONObject();
+                    if( invitationId > 0 ){
+                        try {
+                            obj.put("invitation_id", invitationId);
+                        } catch (JSONException e) {
+                            Log.e("err", "failed to put invitation ID to post");
+                        }
+                    }
+
                     // TODO - post to server
                     String[] params = {
                             Jenjobs.APPLICATION_URL+"/"+jobPostingId+"?access-token="+accessToken,
-                            "{}",
-                            "1"
+                            obj.toString()
                     };
-                    new SubmitApplication().execute(params);
+                    //new SubmitApplication().execute(params);
+                    PostRequest postRequest = new PostRequest();
+                    postRequest.setResultListener(new PostRequest.ResultListener() {
+                        @Override
+                        public void processResult(JSONObject success) {
+                            if( success != null ){
+                                Toast.makeText(getApplicationContext(), success.optString("status_text"), Toast.LENGTH_SHORT).show();
+
+                                // if success, update invitation
+                                if( invitationId > 0 && success.optInt("status_code") == 1 ){
+                                    TableInvitation tableInvitation = new TableInvitation(context);
+                                    ContentValues cv = new ContentValues();
+                                    cv.put("status", TableInvitation.STATUS_APPLIED);
+                                    cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
+                                    tableInvitation.updateInvitation(cv, invitationId);
+                                }
+                            }else{
+                                Toast.makeText(getApplicationContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    postRequest.execute(params);
 
                     // TODO - disabled button
                     applyButton.setEnabled(false);
@@ -316,7 +288,7 @@ public class JobDetails extends ActionBarActivity {
         loading = (ProgressBar)findViewById(R.id.progressBar);
         LinearLayout ll = (LinearLayout)findViewById(R.id.loginLayout);
         TextView notice = (TextView)ll.findViewById(R.id.noticeText);
-        notice.setText("Please login or register to apply.");
+        notice.setText(R.string.login_or_register_to_apply);
 
         // hide apply, show login+register
         if( accessToken == null ){
@@ -336,11 +308,11 @@ public class JobDetails extends ActionBarActivity {
             }
         }
 
-        Cursor jobBookmark = tableBookmark.getBookmark(jobPostingId);
+        //Cursor jobBookmark = tableBookmark.getBookmark(jobPostingId);
         //if( jobBookmark.moveToFirst() ){
             // if bookmark found
         //}
-        jobBookmark.close();
+        //jobBookmark.close();
 
         // handle login button
         Button loginButton = (Button)findViewById(R.id.login_button);
@@ -363,7 +335,7 @@ public class JobDetails extends ActionBarActivity {
         });
 
         noItem = (LinearLayout)findViewById(R.id.no_item);
-        ((TextView)findViewById(R.id.noticeText2)).setText("Network error!");
+        ((TextView)findViewById(R.id.noticeText2)).setText(R.string.network_error);
         ((ImageView)findViewById(R.id.noticeIcon2)).setImageDrawable(getResources().getDrawable(R.drawable.ic_warning_black_24dp));
     }
 
@@ -423,14 +395,8 @@ public class JobDetails extends ActionBarActivity {
 
             return rootView;
         }
-
-
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -438,8 +404,6 @@ public class JobDetails extends ActionBarActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             return PlaceholderFragment.newInstance(position + 1);
         }
 
@@ -539,14 +503,12 @@ public class JobDetails extends ActionBarActivity {
     * function used to set textviews
     * */
 
-    private void bookmarkThisJob() {
-
-    }
+    private void bookmarkThisJob() {}
 
     /*
     * post application
     * post bookmark
-    * */
+    * *
     public class SubmitApplication extends AsyncTask<String, Void, JSONObject> {
         int REQUEST_TYPE = 0;
         int POST_APPLICATION = 1;
@@ -595,11 +557,10 @@ public class JobDetails extends ActionBarActivity {
                     Toast.makeText(getApplicationContext(), getString(R.string.application_sent), Toast.LENGTH_SHORT).show();
                 }else if( REQUEST_TYPE == POST_BOOKMARK ){
 
-                }else{
-
-                }
+                }else{}
             }
         }
     }
+    */
 
 }

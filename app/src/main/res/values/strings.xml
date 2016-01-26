@@ -247,4 +247,9 @@
     <string name="title_activity_job_suggestion">Job Suggestion</string>
     <string name="matched_jobs">Matched Jobs</string>
     <string name="suggested_jobs">Suggested Jobs</string>
+    <string name="no_active_application">No active application found!</string>
+    <string name="no_request">No request found!</string>
+    <string name="login_or_register_to_apply">Please login or register to apply.</string>
+    <string name="network_error">Network error!</string>
+    <string name="view_job_details">View Job Details</string>
 </resources>

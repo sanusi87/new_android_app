@@ -30,7 +30,7 @@
             android:layout_height="35dp"
             android:stateListAnimator="@null"
             android:background="@drawable/button_primary"
-            android:text="@string/apply"
+            android:text="@string/view_job_details"
             android:id="@+id/applyButton"
             android:visibility="gone"
             style="@style/AppThemeBaseButton" />

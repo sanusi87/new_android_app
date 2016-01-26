@@ -154,7 +154,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         accessToken = sharedPref.getString("access_token", null);
 
         jsProfileId = sharedPref.getInt("js_profile_id", 0);
-        String emailAddress = sharedPref.getString("email", null);
+        //String emailAddress = sharedPref.getString("email", null);
 
         // redirect to login if no access token found
         if (accessToken == null) {
@@ -523,7 +523,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             if( totalApplication == 0 && applicationAdapter.getCount() == 0 ){
                 LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.no_item);
                 ll.setVisibility(View.VISIBLE);
-                ((TextView)ll.findViewById(R.id.noticeText)).setText("No active application found!");
+                ((TextView)ll.findViewById(R.id.noticeText)).setText(R.string.no_active_application);
             }
         }
 
@@ -1169,7 +1169,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             if( lv.getCount() == 0 && invitationAdapter.getCount() == 0 ){
                 LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.no_item);
                 ll.setVisibility(View.VISIBLE);
-                ((TextView)ll.findViewById(R.id.noticeText)).setText("No request found!");
+                ((TextView)ll.findViewById(R.id.noticeText)).setText(R.string.no_request);
             }
         }
     }

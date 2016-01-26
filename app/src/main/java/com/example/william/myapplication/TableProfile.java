@@ -58,9 +58,11 @@ public class TableProfile extends SQLiteOpenHelper{
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableProfile.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
+    private Context context;
 
     public TableProfile(Context context){
         super(context, Jenjobs.DATABASE_NAME , null, Jenjobs.DATABASE_VERSION);
+        this.context = context;
         db = this.getReadableDatabase();
     }
 
@@ -254,6 +256,78 @@ public class TableProfile extends SQLiteOpenHelper{
         String[] param = {_id};
         int affectedRows = db.delete(TableProfile.TABLE_NAME, "id=?", param);
         return affectedRows > 0;
+    }
+
+    public ArrayList<String> isProfileComplete(){
+        ArrayList<String> errors = new ArrayList<>();
+        TableWorkExperience tableWorkExperience = new TableWorkExperience(context);
+        TableEducation tableEducation = new TableEducation(context);
+        TableSkill tableSkill = new TableSkill(context);
+        TableLanguage tableLanguage = new TableLanguage(context);
+
+        Profile profile = getProfile();
+
+        // if got resume file, send application without checking anything
+        if( profile.resume_file != null && profile.resume_file.length() > 0 ){
+            return errors;
+        }else{
+            if( profile.country_id == 0 ){
+                errors.add("Please set your nationality!");
+            }
+
+            if( profile.dob == null ){
+                errors.add("Please set your date of birth!");
+            }
+
+            if( profile.gender == null ){
+                errors.add("Please set gender!");
+            }
+
+            if( profile.mobile_no == null ){
+                errors.add("Please set mobile number!");
+            }
+
+            if( profile.access == null ){
+                errors.add("Please update your resume visibility!");
+            }
+
+            if( profile.js_jobseek_status_id == 0 ){
+                errors.add("Please update your jobseeking infomation!");
+            }
+
+            // work exp
+            if( !profile.no_work_exp ){ // if no_work_exp == false // got work experience
+                // check for entered work exp
+                Cursor works = tableWorkExperience.getWorkExperience();
+                if( works.getCount() == 0 ){
+                    errors.add("Please add your work experience!");
+                }
+                works.close();
+            }
+
+            // education
+            Cursor edus = tableEducation.getEducation();
+            if( edus.getCount() == 0 ){
+                errors.add("Please add your qualification!");
+            }
+            edus.close();
+
+            // skills
+            Cursor skills = tableSkill.getSkill();
+            if( skills.getCount() == 0 ){
+                errors.add("Please add your skills!");
+            }
+            skills.close();
+
+            // languages
+            Cursor languages = tableLanguage.getLanguage(null);
+            if( languages.getCount() == 0 ){
+                errors.add("Please add your language proficiencies!");
+            }
+            languages.close();
+        }
+
+        return errors;
     }
 
     public class DownloadDataTask extends AsyncTask<String, Void, String> {

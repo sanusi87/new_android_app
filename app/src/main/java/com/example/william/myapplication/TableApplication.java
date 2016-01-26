@@ -109,5 +109,7 @@ public class TableApplication extends SQLiteOpenHelper {
         int affectedRows = db.delete(TableApplication.TABLE_NAME, "post_id=?", param);
         return affectedRows > 0;
     }
+
+
 }
 

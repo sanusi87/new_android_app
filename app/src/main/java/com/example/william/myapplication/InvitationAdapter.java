@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,14 +25,21 @@ import java.util.ArrayList;
 public class InvitationAdapter extends BaseAdapter implements ListAdapter{
     private Context context;
     private Activity activity;
-    private ArrayList<String[]> listOfInvitataion;
+    private ArrayList<String[]> listOfInvitation;
+
     private TableInvitation tableInvitation;
+    //private TableProfile tableProfile;
+    //private TableApplication tableApplication;
+    //private TableJob tableJob;
 
     public InvitationAdapter(Context context){
         this.context = context;
 
-        listOfInvitataion = new ArrayList<>();
+        listOfInvitation = new ArrayList<>();
         tableInvitation = new TableInvitation(context);
+        //tableProfile = new TableProfile(context);
+        //tableApplication = new TableApplication(context);
+        //tableJob = new TableJob(context);
 
         Cursor c = tableInvitation.getInvitation(0);
         if( c.moveToFirst() ){
@@ -47,7 +56,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                 String dateUpdated = c.getString(8);
 
                 String[] invitation = {id,postId,postTitle,empProfileId,empProfileName,status,dateAdded,dateUpdated};
-                listOfInvitataion.add(invitation);
+                listOfInvitation.add(invitation);
                 c.moveToNext();
             }
         }
@@ -55,12 +64,12 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
 
     @Override
     public int getCount() {
-        return listOfInvitataion.size();
+        return listOfInvitation.size();
     }
 
     @Override
     public String[] getItem(int position) {
-        return listOfInvitataion.get(position);
+        return listOfInvitation.get(position);
     }
 
     @Override
@@ -79,7 +88,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
 
         String[] invitation = getItem(position);
         final int invitationID = Integer.valueOf(invitation[0]);
-        final String postId = invitation[1];
+        final String jobPostingId = invitation[1];
         String positionTitle = invitation[2];
         String companyName = invitation[4];
         String status = invitation[5];
@@ -89,17 +98,17 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
         TextView jobPost = (TextView)v.findViewById(R.id.jobPost);
         final Button allowButton = (Button)v.findViewById(R.id.allowButton);
         final Button rejectButton = (Button)v.findViewById(R.id.rejectButton);
-        final Button applyButton = (Button)v.findViewById(R.id.applyButton);
+        final Button viewJobButton = (Button)v.findViewById(R.id.applyButton);
         final Button notInterestedButton = (Button)v.findViewById(R.id.notInterestedButton);
 
         allowButton.setVisibility(View.GONE);
         rejectButton.setVisibility(View.GONE);
-        applyButton.setVisibility(View.GONE);
+        viewJobButton.setVisibility(View.GONE);
         notInterestedButton.setVisibility(View.GONE);
 
         // if no job posting ID,
         // then it is a resume access request
-        if( postId.equals("") ){
+        if( jobPostingId.equals("") ){
             messageText.setText(String.format(context.getResources().getString(R.string.request_to_view), companyName));
             jobPost.setVisibility(View.GONE);
 
@@ -147,7 +156,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                         String[] param = {Jenjobs.INVITATION_URL, obj.toString()};
                         p.execute(param);
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e("replyInv", e.getMessage());
                     }
                 }
             });
@@ -181,38 +190,37 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                         String[] param = {Jenjobs.INVITATION_URL, obj.toString()};
                         p.execute(param);
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e("replyInv", e.getMessage());
                     }
                 }
             });
         }else{
             messageText.setText(String.format(context.getResources().getString(R.string.invite_to_apply), companyName, positionTitle));
-            jobPost.setVisibility(View.VISIBLE);
-            jobPost.setText(positionTitle);
+            //jobPost.setVisibility(View.VISIBLE);
+            //jobPost.setText(positionTitle);
 
             if( status.equals(TableInvitation.STATUS_APPLIED) ){
-                applyButton.setText(R.string.application_sent);
-                applyButton.setVisibility(View.VISIBLE);
-                applyButton.setEnabled(false);
-                applyButton.setClickable(false);
+                viewJobButton.setText(R.string.application_sent);
+                viewJobButton.setVisibility(View.VISIBLE);
+                viewJobButton.setEnabled(false);
+                viewJobButton.setClickable(false);
             }else if( status.equals(TableInvitation.STATUS_NOT_INTERESTED) ){
                 notInterestedButton.setVisibility(View.VISIBLE);
                 notInterestedButton.setEnabled(false);
                 notInterestedButton.setClickable(false);
             }else{
-                applyButton.setVisibility(View.VISIBLE);
+                viewJobButton.setVisibility(View.VISIBLE);
                 notInterestedButton.setVisibility(View.VISIBLE);
             }
 
-            applyButton.setOnClickListener(new View.OnClickListener() {
+            viewJobButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View _v) {
-                    ((Button)_v).setText(R.string.application_sent);
-                    _v.setEnabled(false);
-                    _v.setClickable(false);
-                    notInterestedButton.setVisibility(View.GONE);
-
-                    // TODO - check resume completeness, submit application
+                    Intent intent = new Intent();
+                    intent.putExtra("post_id", jobPostingId);
+                    intent.putExtra("invitation_id", invitationID); //TODO - handle invitation ID in job-details
+                    intent.setClass(context, JobDetails.class);
+                    activity.startActivity(intent);
                 }
             });
 
@@ -221,7 +229,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                 public void onClick(View _v) {
                     _v.setEnabled(false);
                     _v.setClickable(false);
-                    applyButton.setVisibility(View.GONE);
+                    viewJobButton.setVisibility(View.GONE);
 
                     ContentValues cv = new ContentValues();
                     cv.put("status", TableInvitation.STATUS_NOT_INTERESTED);
@@ -231,15 +239,17 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                 }
             });
 
+            /*
             jobPost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View _v) {
                     Intent intent = new Intent();
                     intent.setClass(context, JobDetails.class);
-                    intent.putExtra("post_id", Integer.valueOf(postId));
+                    intent.putExtra("post_id", Integer.valueOf(jobPostingId));
                     activity.startActivity(intent);
                 }
             });
+            */
         }
 
         company.setText(companyName);
