@@ -516,10 +516,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         private void setupApplicationFragment(View rootView) {
             ListView lv = (ListView)rootView.findViewById(R.id.listOfApplication);
             ApplicationAdapter applicationAdapter = new ApplicationAdapter(context, accessToken);
+            applicationAdapter.setActivity(getActivity());
             lv.setAdapter(applicationAdapter);
 
             int totalApplication = lv.getChildCount();
-            if( totalApplication == 0 ){
+            if( totalApplication == 0 && applicationAdapter.getCount() == 0 ){
                 LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.no_item);
                 ll.setVisibility(View.VISIBLE);
                 ((TextView)ll.findViewById(R.id.noticeText)).setText("No active application found!");
@@ -1162,9 +1163,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         private void setupInvitationAndRequestFragment(View rootView){
             ListView lv = (ListView)rootView.findViewById(R.id.listOfInvitation);
             InvitationAdapter invitationAdapter = new InvitationAdapter(context);
+            invitationAdapter.setActivity(getActivity());
             lv.setAdapter(invitationAdapter);
 
-            if( lv.getCount() == 0 ){
+            if( lv.getCount() == 0 && invitationAdapter.getCount() == 0 ){
                 LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.no_item);
                 ll.setVisibility(View.VISIBLE);
                 ((TextView)ll.findViewById(R.id.noticeText)).setText("No request found!");
