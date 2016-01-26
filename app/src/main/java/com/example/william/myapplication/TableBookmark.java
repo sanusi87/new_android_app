@@ -18,13 +18,13 @@ public class TableBookmark extends SQLiteOpenHelper{
         "title": "Artisan"
     }
     */
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableBookmark.TABLE_NAME
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "title TEXT, " +
             "post_id INTEGER, " +
             "date_added NUMERIC," +
             "date_closed NUMERIC);";
-    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableBookmark.TABLE_NAME+"'";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
     private Context context;
@@ -54,7 +54,7 @@ public class TableBookmark extends SQLiteOpenHelper{
     */
 
     public Cursor getBookmark(int post_id){
-        String strSQL = "SELECT * FROM "+TableBookmark.TABLE_NAME;
+        String strSQL = "SELECT * FROM "+TABLE_NAME;
         String[] args = null;
         if( post_id > 0 ){
             strSQL += " WHERE post_id=?";
@@ -64,12 +64,12 @@ public class TableBookmark extends SQLiteOpenHelper{
     }
 
     public Long addBookmark(ContentValues cv){
-        return db.insert(TableBookmark.TABLE_NAME, null, cv);
+        return db.insert(TABLE_NAME, null, cv);
     }
 
     public boolean updateBookmark(ContentValues cv, int existingID){
         String[] _id = {String.valueOf(existingID)};
-        int affectedRows = db.update(TableBookmark.TABLE_NAME, cv, "id=?", _id);
+        int affectedRows = db.update(TABLE_NAME, cv, "id=?", _id);
         if( affectedRows > 0 ){
             return true;
         }
@@ -81,7 +81,7 @@ public class TableBookmark extends SQLiteOpenHelper{
         String[] param = {_id};
 
         // delete bookmark
-        int affectedRows = db.delete(TableBookmark.TABLE_NAME, "post_id=?", param);
+        int affectedRows = db.delete(TABLE_NAME, "post_id=?", param);
         if( affectedRows > 0 ){
             // and delete job
             TableJob tableJob = new TableJob(context);
