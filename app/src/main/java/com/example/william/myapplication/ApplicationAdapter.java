@@ -1,8 +1,10 @@
 package com.example.william.myapplication;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 
 public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
     private Context context;
+    private Activity activity;
     public ArrayList<String[]> applications;
     public String accessToken;
     private TableApplication tableApplication;
@@ -85,7 +88,7 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
         }
 
         String[] theApplication = getItem(position);
-        final int postId = Integer.valueOf(theApplication[1]);
+        final int postId = Integer.valueOf(theApplication[2]);
 
         LinearLayout container = (LinearLayout)v.findViewById(R.id.applicationDetails);
         TextView positionTitle = (TextView)v.findViewById(R.id.positionTitle);
@@ -121,7 +124,7 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
                 Intent intent = new Intent();
                 intent.putExtra("post_id", postId);
                 intent.setClass(context, JobDetails.class);
-                context.startActivity(intent);
+                activity.startActivity(intent);
             }
         });
 
@@ -141,5 +144,9 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
         });
 
         return v;
+    }
+
+    public void setActivity(Activity activity){
+        this.activity = activity;
     }
 }
