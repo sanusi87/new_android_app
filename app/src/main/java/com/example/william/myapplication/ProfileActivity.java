@@ -78,6 +78,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     private int DOWNLOAD_LANGUAGE = 7; //http://api.jenjobs.com/jobseeker/language
     private int DOWNLOAD_BOOKMARK = 8; //http://api.jenjobs.com/jobseeker/bookmark
     private int DOWNLOAD_SUBSCRIPTION = 9; //http://api.jenjobs.com/jobseeker/subscription
+    private int DOWNLOAD_INVITATION = 10;
 
     /*
     * job search
@@ -194,6 +195,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 String[] subscriptionUrl = {Jenjobs.SUBSCRIPTION_URL};
                 new DownloadDataTask(DOWNLOAD_SUBSCRIPTION).execute(subscriptionUrl);
+
+                String[] invitationUrl = {Jenjobs.INVITATION_URL};
+                new DownloadDataTask(DOWNLOAD_INVITATION).execute(invitationUrl);
 
                 extras.clear();
             }
@@ -1958,7 +1962,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 }else if( downloadSection == DOWNLOAD_SKILL ){
 
-                    //TableSkill tableSkill = new TableSkill(getApplicationContext());
                     JSONArray success = null;
 
                     try {
@@ -2043,6 +2046,108 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         Log.e("subExcp", e.getMessage());
                     }
 
+                }else if( downloadSection == DOWNLOAD_INVITATION ){
+                    TableInvitation tableInvitation = new TableInvitation(getApplicationContext());
+                    final TableJob tableJob = new TableJob(getApplicationContext());
+
+                    JSONArray success;
+                    try {
+                        success = new JSONArray(nsuccess);
+                        if( success.length() > 0 ) {
+                            for (int i = 0; i < success.length(); i++) {
+                                JSONObject s = success.getJSONObject(i);
+                                ContentValues cv = new ContentValues();
+
+                                /*
+                                -- response --
+                                [
+                                    {
+                                        "id": 107054,
+                                        "company": "CEICdata.com (M) Sdn Bhd ",
+                                        "company_id": 36211,
+                                        "type": "R",
+                                        "opened": 0,
+                                        "status": "C",
+                                        "date_created": "2014-10-24 22:43:21",
+                                        "date_updated": null,
+                                        "post": null
+                                        ---
+                                        "post": {
+                                            "post_id": 316042,
+                                            "post_title": "Internet Marketing Executive | 互联网市场执行人员",
+                                            "date_closed": "2015-03-23 11:57:03",
+                                            "closed": true
+                                        }
+                                    }
+                                ]
+
+                                -- table --
+                                id INTEGER
+                                emp_profile_id INTEGER
+                                emp_profile_name TEXT
+                                status INTEGER
+                                date_added NUMERIC
+                                date_updated NUMERIC
+                                post_id INTEGER
+                                post_title TEXT
+                                post_closed_on NUMERIC
+                                */
+
+                                cv.put("id", s.optInt("id"));
+                                cv.put("emp_profile_name", s.optString("company"));
+                                cv.put("emp_profile_id", s.optInt("company_id"));
+                                cv.put("status", s.optString("status"));
+                                cv.put("date_added", s.optString("date_created"));
+                                String dateUpdated = s.optString("date_updated");
+                                if( dateUpdated != null && !dateUpdated.equals("") && !dateUpdated.equals("null") ){
+                                    cv.put("date_updated", dateUpdated);
+                                }
+
+                                // this is for type "J" = Job Application Invitation
+                                String post = s.getString("post");
+                                if( post != null && !post.equals("null") ){
+                                    JSONObject _post = new JSONObject(post);
+
+                                    final int postId = _post.getInt("post_id");
+                                    boolean isJobClosed = _post.getBoolean("closed");
+
+                                    // for each job application invitation
+                                    // if the job is still active
+                                    if( !isJobClosed ){
+                                        // download the job details
+                                        GetRequest getRequest = new GetRequest();
+                                        getRequest.setResultListener(new GetRequest.ResultListener() {
+                                            @Override
+                                            public void processResult(JSONObject success) {
+                                                if( success != null && success.toString().length() > 0 ){
+                                                    // and save to phone database
+                                                    ContentValues cv2 = new ContentValues();
+
+                                                    cv2.put("id", postId);
+                                                    cv2.put("title", success.optString("title"));
+                                                    cv2.put("company", success.optString("company"));
+                                                    cv2.put("job_data", success.toString());
+                                                    cv2.put("date_closed", success.optString("date_closed"));
+
+                                                    tableJob.addJob(cv2);
+                                                }
+                                            }
+                                        });
+                                        String[] param = {Jenjobs.JOB_DETAILS+"/"+postId};
+                                        getRequest.execute(param);
+                                    }
+
+                                    cv.put("post_id", postId);
+                                    cv.put("post_title", _post.getInt("post_title"));
+                                    cv.put("post_closed_on", _post.getString("date_closed"));
+                                }
+
+                                tableInvitation.saveInvitation(cv, 0);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.e("subExcp", e.getMessage());
+                    }
                 }
             }else{
                 Log.e("success", "null");
