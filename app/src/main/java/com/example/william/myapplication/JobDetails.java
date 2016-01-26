@@ -33,7 +33,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -205,7 +204,7 @@ public class JobDetails extends ActionBarActivity {
         applyButton.setClickable(false);
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View _v) {
                 Profile profile = tableProfile.getProfile();
 
                 ArrayList<String> errors = new ArrayList<>();
@@ -292,6 +291,7 @@ public class JobDetails extends ActionBarActivity {
                     // TODO - disabled button
                     applyButton.setEnabled(false);
                     applyButton.setClickable(false);
+                    applyButton.setText(getString(R.string.application_sent));
 
                     // save the job
                     Cursor jobs = tableJob.getJob(jobPostingId);
@@ -592,7 +592,7 @@ public class JobDetails extends ActionBarActivity {
             Log.e("onPostEx", "" + response);
             if( response != null ){
                 if( REQUEST_TYPE == POST_APPLICATION ){
-                    Toast.makeText(getApplicationContext(), "Application submitted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.application_sent), Toast.LENGTH_SHORT).show();
                 }else if( REQUEST_TYPE == POST_BOOKMARK ){
 
                 }else{
