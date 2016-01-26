@@ -9,20 +9,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class TableInvitation extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "invitation";
 
-    public static int STATUS_ALLOWED = 1;
-    public static int STATUS_REJECTED = 2;
-    public static int STATUS_APPLIED = 1;
-    public static int STATUS_NOT_INTERESTED = 2;
+    public static String STATUS_APPROVED = "A";
+    public static String STATUS_REJECTED = "R";
+    public static String STATUS_APPLIED = "A"; // applied is assumed as approved
+    public static String STATUS_NOT_INTERESTED = "R"; // not interested is assumed as rejected
 
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME+"' (id INTEGER, " +
-            "emp_profile_id INTEGER, " +
-            "emp_profile_name TEXT, " +
-            "status TEXT, " + //1=
-            "post_id INTEGER, " +
-            "post_title TEXT, " +
-            "post_closed_on NUMERIC, " +
-            "date_added NUMERIC, " +
-            "date_updated NUMERIC);";
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME+"' (id INTEGER, " + //0
+            "emp_profile_id INTEGER, " + //1
+            "emp_profile_name TEXT, " + //2
+            "status TEXT, " + //3
+            "post_id INTEGER, " + //4
+            "post_title TEXT, " + //5
+            "post_closed_on NUMERIC, " + //6
+            "date_added NUMERIC, " + //7
+            "date_updated NUMERIC);"; //8
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
