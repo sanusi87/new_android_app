@@ -96,6 +96,8 @@
                 android:text="@string/register_text"
                 android:id="@+id/register_button"
                 android:layout_weight="1"
+                android:textColor="@android:color/black"
+                android:shadowColor="@android:color/transparent"
                 android:textSize="12sp" />
 
             <Button
@@ -107,6 +109,8 @@
                 android:text="@string/forgot_text"
                 android:id="@+id/forgot_button"
                 android:layout_weight="1"
+                android:textColor="@android:color/black"
+                android:shadowColor="@android:color/transparent"
                 android:textSize="12sp" />
 
             <Button
@@ -118,6 +122,8 @@
                 android:text="@string/job_search"
                 android:id="@+id/job_search"
                 android:layout_weight="1"
+                android:textColor="@android:color/black"
+                android:shadowColor="@android:color/transparent"
                 android:textSize="12sp" />
 
         </LinearLayout>
