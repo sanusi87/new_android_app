@@ -15,11 +15,12 @@ public class TableInvitation extends SQLiteOpenHelper {
     public static int STATUS_NOT_INTERESTED = 2;
 
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME+"' (id INTEGER, " +
-            "post_id INTEGER, " +
-            "post_title TEXT, " +
             "emp_profile_id INTEGER, " +
             "emp_profile_name TEXT, " +
-            "status INTEGER, " + //1=
+            "status TEXT, " + //1=
+            "post_id INTEGER, " +
+            "post_title TEXT, " +
+            "post_closed_on NUMERIC, " +
             "date_added NUMERIC, " +
             "date_updated NUMERIC);";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
@@ -50,16 +51,25 @@ public class TableInvitation extends SQLiteOpenHelper {
         return db.rawQuery(strSQL, args);
     }
 
-    public void saveInvitation( ContentValues cv2, int existingID ){
-        String strSQL = "SELECT * FROM "+TABLE_NAME+" WHERE id=?";
-        String[] param = {String.valueOf(existingID)};
-        Cursor c = db.rawQuery(strSQL, param);
-
-        if( c.getCount() > 0 ){
-            db.update(TABLE_NAME, cv2, "id=?", param);
+    public boolean saveInvitation( ContentValues cv2, int existingID ){
+        boolean status = false;
+        if( existingID == 0 ){
+            Long insertID = db.insert(TABLE_NAME, null, cv2);
+            status = insertID.intValue() > 0;
         }else{
-            db.insert(TABLE_NAME, null, cv2);
+            String strSQL = "SELECT * FROM "+TABLE_NAME+" WHERE id=?";
+            String[] param = {String.valueOf(existingID)};
+            Cursor c = db.rawQuery(strSQL, param);
+
+            if( c.getCount() > 0 ){
+                int updatedRow = db.update(TABLE_NAME, cv2, "id=?", param);
+                status = updatedRow > 0;
+            }else{
+                Long insertID = db.insert(TABLE_NAME, null, cv2);
+                status = insertID.intValue() > 0;
+            }
         }
+        return status;
     }
 
     public boolean deleteInvitation( int existingID ){
