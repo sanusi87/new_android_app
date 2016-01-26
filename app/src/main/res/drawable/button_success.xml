@@ -4,7 +4,7 @@
         android:state_pressed="true" />
     <item android:drawable="@drawable/button_success_pressed"
         android:state_focused="true" />
-    <item android:drawable="@drawable/button_success_default" />
     <item android:drawable="@drawable/button_success_enabled"
-        android:state_enabled="true" />
+        android:state_enabled="false" />
+    <item android:drawable="@drawable/button_success_default" />
 </selector>
