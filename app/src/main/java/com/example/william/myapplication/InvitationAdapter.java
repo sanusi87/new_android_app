@@ -1,9 +1,11 @@
 package com.example.william.myapplication;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +14,15 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class InvitationAdapter extends BaseAdapter implements ListAdapter{
     private Context context;
+    private Activity activity;
     private ArrayList<String[]> listOfInvitataion;
     private TableInvitation tableInvitation;
 
@@ -31,13 +37,14 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
             while( !c.isAfterLast() ){
                 //int id = c.getInt(0);
                 String id = c.getString(0);
-                String postId = c.getString(1) == null ? "" : c.getString(1);
-                String postTitle = c.getString(2) == null ? "" : c.getString(2);
-                String empProfileId = c.getString(3);
-                String empProfileName = c.getString(4);
-                String status = c.getString(5) == null ? "0" : c.getString(5);
-                String dateAdded = c.getString(6);
-                String dateUpdated = c.getString(7);
+                String empProfileId = c.getString(1);
+                String empProfileName = c.getString(2);
+                String status = c.getString(3) == null ? "0" : c.getString(3);
+                String postId = c.getString(4) == null ? "" : c.getString(4);
+                String postTitle = c.getString(5) == null ? "" : c.getString(5);
+                String postClosedOn = c.getString(6);
+                String dateAdded = c.getString(7);
+                String dateUpdated = c.getString(8);
 
                 String[] invitation = {id,postId,postTitle,empProfileId,empProfileName,status,dateAdded,dateUpdated};
                 listOfInvitataion.add(invitation);
@@ -75,15 +82,15 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
         final String postId = invitation[1];
         String positionTitle = invitation[2];
         String companyName = invitation[4];
-        int status = Integer.valueOf(invitation[5]);
+        String status = invitation[5];
 
         TextView messageText = (TextView)v.findViewById(R.id.messageText);
         TextView company = (TextView)v.findViewById(R.id.company);
         TextView jobPost = (TextView)v.findViewById(R.id.jobPost);
-        Button allowButton = (Button)v.findViewById(R.id.allowButton);
-        Button rejectButton = (Button)v.findViewById(R.id.rejectButton);
-        Button applyButton = (Button)v.findViewById(R.id.applyButton);
-        Button notInterestedButton = (Button)v.findViewById(R.id.notInterestedButton);
+        final Button allowButton = (Button)v.findViewById(R.id.allowButton);
+        final Button rejectButton = (Button)v.findViewById(R.id.rejectButton);
+        final Button applyButton = (Button)v.findViewById(R.id.applyButton);
+        final Button notInterestedButton = (Button)v.findViewById(R.id.notInterestedButton);
 
         allowButton.setVisibility(View.GONE);
         rejectButton.setVisibility(View.GONE);
@@ -96,12 +103,12 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
             messageText.setText(String.format(context.getResources().getString(R.string.request_to_view), companyName));
             jobPost.setVisibility(View.GONE);
 
-            if( status == TableInvitation.STATUS_ALLOWED ){
+            if( status.equals(TableInvitation.STATUS_APPROVED) ){
                 allowButton.setText(R.string.allowed);
                 allowButton.setVisibility(View.VISIBLE);
                 allowButton.setEnabled(false);
                 allowButton.setClickable(false);
-            }else if( status == TableInvitation.STATUS_REJECTED ){
+            }else if( status.equals(TableInvitation.STATUS_REJECTED) ){
                 rejectButton.setText(R.string.rejected);
                 rejectButton.setVisibility(View.VISIBLE);
                 rejectButton.setEnabled(false);
@@ -117,11 +124,31 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                     ((Button)_v).setText(R.string.allowed);
                     _v.setEnabled(false);
                     _v.setClickable(false);
+                    rejectButton.setVisibility(View.GONE);
 
                     // TODO - allow resume access
                     ContentValues cv = new ContentValues();
-                    cv.put("status", TableInvitation.STATUS_ALLOWED);
+                    cv.put("status", TableInvitation.STATUS_APPROVED);
                     tableInvitation.updateInvitation(cv, invitationID);
+
+                    // send POST request
+                    PostRequest p = new PostRequest();
+                    p.setResultListener(new PostRequest.ResultListener() {
+                        @Override
+                        public void processResult(JSONObject result) {
+                            Log.e("result", result.toString());
+                        }
+                    });
+
+                    try {
+                        JSONObject obj = new JSONObject();
+                        obj.put("invitation_id", invitationID);
+                        obj.put("status", TableInvitation.STATUS_APPROVED);
+                        String[] param = {Jenjobs.INVITATION_URL, obj.toString()};
+                        p.execute(param);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -131,11 +158,31 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                     ((Button)_v).setText(R.string.rejected);
                     _v.setEnabled(false);
                     _v.setClickable(false);
+                    allowButton.setVisibility(View.GONE);
 
                     // TODO - reject resume access
                     ContentValues cv = new ContentValues();
                     cv.put("status", TableInvitation.STATUS_REJECTED);
                     tableInvitation.updateInvitation(cv, invitationID);
+
+                    // send POST request
+                    PostRequest p = new PostRequest();
+                    p.setResultListener(new PostRequest.ResultListener() {
+                        @Override
+                        public void processResult(JSONObject result) {
+                            Log.e("result", result.toString());
+                        }
+                    });
+
+                    try {
+                        JSONObject obj = new JSONObject();
+                        obj.put("invitation_id", invitationID);
+                        obj.put("status", TableInvitation.STATUS_REJECTED);
+                        String[] param = {Jenjobs.INVITATION_URL, obj.toString()};
+                        p.execute(param);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }else{
@@ -143,12 +190,12 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
             jobPost.setVisibility(View.VISIBLE);
             jobPost.setText(positionTitle);
 
-            if( status == TableInvitation.STATUS_APPLIED ){
+            if( status.equals(TableInvitation.STATUS_APPLIED) ){
                 applyButton.setText(R.string.application_sent);
                 applyButton.setVisibility(View.VISIBLE);
                 applyButton.setEnabled(false);
                 applyButton.setClickable(false);
-            }else if( status == TableInvitation.STATUS_NOT_INTERESTED ){
+            }else if( status.equals(TableInvitation.STATUS_NOT_INTERESTED) ){
                 notInterestedButton.setVisibility(View.VISIBLE);
                 notInterestedButton.setEnabled(false);
                 notInterestedButton.setClickable(false);
@@ -163,6 +210,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                     ((Button)_v).setText(R.string.application_sent);
                     _v.setEnabled(false);
                     _v.setClickable(false);
+                    notInterestedButton.setVisibility(View.GONE);
 
                     // TODO - check resume completeness, submit application
                 }
@@ -173,6 +221,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                 public void onClick(View _v) {
                     _v.setEnabled(false);
                     _v.setClickable(false);
+                    applyButton.setVisibility(View.GONE);
 
                     ContentValues cv = new ContentValues();
                     cv.put("status", TableInvitation.STATUS_NOT_INTERESTED);
@@ -188,7 +237,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                     Intent intent = new Intent();
                     intent.setClass(context, JobDetails.class);
                     intent.putExtra("post_id", Integer.valueOf(postId));
-                    context.startActivity(intent);
+                    activity.startActivity(intent);
                 }
             });
         }
@@ -202,5 +251,9 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
         });
 
         return v;
+    }
+
+    public void setActivity(Activity activity){
+        this.activity = activity;
     }
 }
