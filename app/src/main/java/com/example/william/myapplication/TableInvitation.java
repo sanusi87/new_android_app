@@ -40,12 +40,17 @@ public class TableInvitation extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
-    public Cursor getInvitation( int post_id ){
+    public Cursor getInvitation( int invitation_id, int post_id ){
         String strSQL = "SELECT * FROM "+TABLE_NAME;
         String[] args = null;
         if( post_id > 0 ){
             strSQL += " WHERE post_id=?";
             args = new String[]{String.valueOf(post_id)};
+        }else{
+            if( invitation_id > 0 ){
+                strSQL += " WHERE id=?";
+                args = new String[]{String.valueOf(invitation_id)};
+            }
         }
         strSQL += " ORDER BY id DESC";
         return db.rawQuery(strSQL, args);
