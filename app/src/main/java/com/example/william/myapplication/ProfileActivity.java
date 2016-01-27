@@ -1164,6 +1164,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             ListView lv = (ListView)rootView.findViewById(R.id.listOfInvitation);
             InvitationAdapter invitationAdapter = new InvitationAdapter(context);
             invitationAdapter.setActivity(getActivity());
+            invitationAdapter.setAccessToken(accessToken);
             lv.setAdapter(invitationAdapter);
 
             if( lv.getCount() == 0 && invitationAdapter.getCount() == 0 ){

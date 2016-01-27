@@ -23,6 +23,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
     private Context context;
     private Activity activity;
     private ArrayList<String[]> listOfInvitation;
+    private String accessToken;
 
     private TableInvitation tableInvitation;
     //private TableProfile tableProfile;
@@ -150,7 +151,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                         JSONObject obj = new JSONObject();
                         obj.put("invitation_id", invitationID);
                         obj.put("status", TableInvitation.STATUS_APPROVED);
-                        String[] param = {Jenjobs.INVITATION_URL, obj.toString()};
+                        String[] param = {Jenjobs.INVITATION_URL+"?access-token="+accessToken, obj.toString()};
                         p.execute(param);
                     } catch (JSONException e) {
                         Log.e("replyInv", e.getMessage());
@@ -184,7 +185,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                         JSONObject obj = new JSONObject();
                         obj.put("invitation_id", invitationID);
                         obj.put("status", TableInvitation.STATUS_REJECTED);
-                        String[] param = {Jenjobs.INVITATION_URL, obj.toString()};
+                        String[] param = {Jenjobs.INVITATION_URL+"?access-token="+accessToken, obj.toString()};
                         p.execute(param);
                     } catch (JSONException e) {
                         Log.e("replyInv", e.getMessage());
@@ -245,7 +246,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                         JSONObject obj = new JSONObject();
                         obj.put("invitation_id", invitationID);
                         obj.put("status", TableInvitation.STATUS_NOT_INTERESTED);
-                        String[] param = {Jenjobs.INVITATION_URL, obj.toString()};
+                        String[] param = {Jenjobs.INVITATION_URL+"?access-token="+accessToken, obj.toString()};
                         p.execute(param);
                     } catch (JSONException e) {
                         Log.e("replyInv", e.getMessage());
@@ -279,5 +280,9 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
 
     public void setActivity(Activity activity){
         this.activity = activity;
+    }
+
+    public void setAccessToken( String accessToken ){
+        this.accessToken = accessToken;
     }
 }
