@@ -97,6 +97,7 @@ public class JobDetails extends ActionBarActivity {
             invitationId = extras.getInt("invitation_id");
 
             String[] param = {Jenjobs.JOB_DETAILS+"/"+jobPostingId};
+            //Log.e("jobpost", param[0]);
             GetRequest g = new GetRequest();
             g.setResultListener(new GetRequest.ResultListener() {
                 @Override
