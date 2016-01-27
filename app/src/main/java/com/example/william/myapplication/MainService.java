@@ -42,6 +42,8 @@ public class MainService extends Service{
     String accessToken;
 
     TableApplication tableApplication;
+    TableInvitation tableInvitation;
+    TableJob tableJob;
     TableSettings tableSettings;
     HashMap applicationStatus;
 
@@ -112,8 +114,9 @@ public class MainService extends Service{
         public void run() {
             if( isOnline() ){
                 // TODO - check for network connectivity first, only then can proceed
+
+                // check active application status
                 Cursor applications = tableApplication.getActiveApplication();
-                //Log.e("active apps",""+applications.getCount());
                 if (applications.getCount() > 0) {
                     applications.moveToFirst();
 
@@ -128,8 +131,140 @@ public class MainService extends Service{
                     new CheckApplication().execute(params);
                 }
                 applications.close();
+
+                // check for job invitation and resume access request
+                GetRequest g = new GetRequest();
+                g.setResultListener(new GetRequest.ResultListener() {
+                    @Override
+                    public void processResultArray(JSONArray result) {
+                        /*
+                        [
+                            {
+                                "id": 111398,
+                                "company": "Oriental Daily Classified Postings",
+                                "company_id": 66263,
+                                "type": "J",
+                                "opened": 0,
+                                "status": "P",
+                                "date_created": "2016-01-27 11:04:05",
+                                "date_updated": "2016-01-27 11:04:05",
+                                "post": {
+                                    "post_id": 326036,
+                                    "post_title": "銷售員(Full/PartTime) 數位",
+                                    "date_closed": "2016-03-26 23:59:59",
+                                    "closed": false
+                                }
+                            }
+                        ]
+                        */
+
+                        if( result != null ){
+                            Log.e("invitation", result.toString());
+                            if( result.length() > 0 ){
+                                for( int i=0;i<result.length();i++ ){
+                                    ContentValues cv = new ContentValues();
+                                    try {
+                                        JSONObject s = result.getJSONObject(i);
+
+                                        // check for existence
+                                        Cursor c = tableInvitation.getInvitation(s.optInt("id"), 0);
+                                        if( c.getCount() == 0 ){
+                                            // if not yet exists, add new
+                                            cv.put("id", s.optInt("id"));
+                                            cv.put("emp_profile_name", s.optString("company"));
+                                            cv.put("emp_profile_id", s.optInt("company_id"));
+                                            cv.put("status", s.optString("status"));
+                                            cv.put("date_added", s.optString("date_created"));
+                                            String dateUpdated = s.optString("date_updated");
+                                            if( dateUpdated != null && !dateUpdated.equals("") && !dateUpdated.equals("null") ){
+                                                cv.put("date_updated", dateUpdated);
+                                            }
+
+                                            // this is for type "J" = Job Application Invitation
+                                            String post = s.getString("post");
+                                            if( post != null && !post.equals("null") ){
+                                                JSONObject _post = new JSONObject(post);
+
+                                                final int postId = _post.getInt("post_id");
+                                                boolean isJobClosed = _post.getBoolean("closed");
+
+                                                // for each job application invitation
+                                                // if the job is still active
+                                                if( !isJobClosed ){
+                                                    // download the job details
+                                                    GetRequest getRequest = new GetRequest();
+                                                    getRequest.setResultListener(new GetRequest.ResultListener() {
+                                                        @Override
+                                                        public void processResultArray(JSONArray result) {}
+
+                                                        @Override
+                                                        public void processResult(JSONObject success) {
+                                                            if( success != null && success.toString().length() > 0 ){
+                                                                // and save to database
+                                                                ContentValues cv2 = new ContentValues();
+                                                                cv2.put("id", postId);
+                                                                cv2.put("title", success.optString("title"));
+                                                                cv2.put("company", success.optString("company"));
+                                                                cv2.put("job_data", success.toString());
+                                                                cv2.put("date_closed", success.optString("date_closed"));
+
+                                                                tableJob.addJob(cv2);
+                                                            }
+                                                        }
+                                                    });
+                                                    String[] param = {Jenjobs.JOB_DETAILS+"/"+postId};
+                                                    getRequest.execute(param);
+                                                }
+
+                                                cv.put("post_id", postId);
+                                                cv.put("post_title", _post.getInt("post_title"));
+                                                cv.put("post_closed_on", _post.getString("date_closed"));
+                                            }
+
+                                            tableInvitation.saveInvitation(cv, 0);
+                                        }else{
+                                            c.moveToFirst();
+                                            String _status = c.getString(3);
+                                            String _post_closed_on = c.getString(6);
+                                            c.close();
+
+                                            // if the downloaded status != saved status
+                                            if( !_status.equals(s.optString("status")) ){
+                                                // update status and date
+                                                cv.put("status", s.optString("status"));
+                                                String dateUpdated = s.optString("date_updated");
+                                                if( dateUpdated != null && !dateUpdated.equals("") && !dateUpdated.equals("null") ){
+                                                    cv.put("date_updated", dateUpdated);
+                                                }
+
+                                                JSONObject _post = new JSONObject(s.optString("post"));
+                                                if( _post_closed_on != null
+                                                        && !_post_closed_on.equals("")
+                                                        && !_post_closed_on.equals("null") ){
+                                                    cv.put("post_title", _post.optString("post_title"));
+                                                    cv.put("post_closed_on", _post.optString("date_closed"));
+                                                }
+
+                                                tableInvitation.updateInvitation(cv, s.optInt("id"));
+                                            }
+                                        }
+
+                                    } catch (JSONException e) {
+                                        Log.e("jsonObjFailed", e.getMessage());
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void processResult(JSONObject result) {}
+                });
+                String _params[] = {Jenjobs.INVITATION_URL+"&access-token=" + accessToken};
+                g.execute(_params);
+                // end invitation and resume access request check
             }
-            handler.postDelayed(updateData, 30000);
+            handler.postDelayed(updateData, 30000); // TODO - change this timeout to 1 minute = 60000
         }
     };
 
@@ -138,6 +273,8 @@ public class MainService extends Service{
 
         tableSettings = new TableSettings(getApplicationContext());
         tableApplication = new TableApplication(getApplicationContext());
+        tableInvitation = new TableInvitation(getApplicationContext());
+        tableJob = new TableJob(getApplicationContext());
         applicationStatus = Jenjobs.getApplicationStatus();
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
@@ -221,22 +358,6 @@ public class MainService extends Service{
                     }
                 }
             }
-        }
-    }
-
-    // check application
-    public class CheckInvitationAndRequest extends AsyncTask<String, Void, JSONArray> {
-
-        public CheckInvitationAndRequest(){}
-
-        @Override
-        protected JSONArray doInBackground(String... params) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(JSONArray success) {
-
         }
     }
 
