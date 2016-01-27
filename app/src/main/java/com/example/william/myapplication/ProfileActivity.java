@@ -2056,6 +2056,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     JSONArray success;
                     try {
                         success = new JSONArray(nsuccess);
+                        //Log.e("success.length", ""+success.length());
                         if( success.length() > 0 ) {
                             for (int i = 0; i < success.length(); i++) {
                                 JSONObject s = success.getJSONObject(i);
@@ -2144,10 +2145,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                     }
 
                                     cv.put("post_id", postId);
-                                    cv.put("post_title", _post.getInt("post_title"));
+                                    cv.put("post_title", _post.getString("post_title"));
                                     cv.put("post_closed_on", _post.getString("date_closed"));
                                 }
-
+                                //Log.e("index", ""+i);
                                 tableInvitation.saveInvitation(cv, 0);
                             }
                         }
