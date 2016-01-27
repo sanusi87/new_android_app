@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +13,10 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class InvitationAdapter extends BaseAdapter implements ListAdapter{
@@ -236,6 +233,23 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                     tableInvitation.updateInvitation(cv, invitationID);
 
                     // TODO - anything else?
+                    PostRequest p = new PostRequest();
+                    p.setResultListener(new PostRequest.ResultListener() {
+                        @Override
+                        public void processResult(JSONObject result) {
+                            Log.e("result", result.toString());
+                        }
+                    });
+
+                    try {
+                        JSONObject obj = new JSONObject();
+                        obj.put("invitation_id", invitationID);
+                        obj.put("status", TableInvitation.STATUS_NOT_INTERESTED);
+                        String[] param = {Jenjobs.INVITATION_URL, obj.toString()};
+                        p.execute(param);
+                    } catch (JSONException e) {
+                        Log.e("replyInv", e.getMessage());
+                    }
                 }
             });
 
