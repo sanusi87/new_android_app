@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -98,6 +99,9 @@ public class JobDetails extends ActionBarActivity {
             String[] param = {Jenjobs.JOB_DETAILS+"/"+jobPostingId};
             GetRequest g = new GetRequest();
             g.setResultListener(new GetRequest.ResultListener() {
+                @Override
+                public void processResultArray(JSONArray result) {}
+
                 @Override
                 public void processResult(JSONObject success) {
                     jobDetails = success;

@@ -19,6 +19,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -185,6 +186,9 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                             // save job
                             GetRequest g = new GetRequest();
                             g.setResultListener(new GetRequest.ResultListener() {
+                                @Override
+                                public void processResultArray(JSONArray result) {}
+
                                 @Override
                                 public void processResult(JSONObject success) {
                                     //Log.e("err", ""+success);

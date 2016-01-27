@@ -45,6 +45,9 @@ public class JobSearch {
             GetRequest gr = new GetRequest();
             gr.setResultListener(new GetRequest.ResultListener() {
                 @Override
+                public void processResultArray(JSONArray result) {}
+
+                @Override
                 public void processResult(JSONObject success) {
                     View v = ((ViewGroup) loading.getParent());
                     LinearLayout ll = (LinearLayout) v.findViewById(R.id.no_item);

@@ -8,6 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -52,18 +53,20 @@ public class GetRequest extends AsyncTask<String, Void, Object> {
 
     @Override
     protected void onPostExecute(Object success) {
-        //Log.e("onPostEx", "" + success);
-        //if( success != null ){
-            //Log.e("onPostEx", ""+success);
-        //}
-
         if( OBJECT_TYPE == JenHttpRequest.JSON_OBJECT ){
             resultListener.processResult((JSONObject) success);
+        }else if( OBJECT_TYPE == JenHttpRequest.JSON_ARRAY ){
+            resultListener.processResultArray((JSONArray) success);
         }
     }
 
     public interface ResultListener {
-        void processResult(JSONObject success); // available listener method
+        // available listener method
+        // handle JSONArray response
+        void processResultArray(JSONArray result);
+
+        // handle JSONObject response
+        void processResult(JSONObject success);
     }
 
     private ResultListener resultListener;
