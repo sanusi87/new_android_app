@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -29,20 +28,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class JobDetails extends ActionBarActivity {
@@ -226,7 +214,7 @@ public class JobDetails extends ActionBarActivity {
                     JSONObject obj = new JSONObject();
                     if( invitationId > 0 ){
                         try {
-                            obj.put("invitation_id", invitationId);
+                            obj.put("emp_invitation_id", invitationId);
                         } catch (JSONException e) {
                             Log.e("err", "failed to put invitation ID to post");
                         }
