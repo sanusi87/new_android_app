@@ -2121,6 +2121,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                         GetRequest getRequest = new GetRequest();
                                         getRequest.setResultListener(new GetRequest.ResultListener() {
                                             @Override
+                                            public void processResultArray(JSONArray result) {}
+
+                                            @Override
                                             public void processResult(JSONObject success) {
                                                 if( success != null && success.toString().length() > 0 ){
                                                     // and save to phone database

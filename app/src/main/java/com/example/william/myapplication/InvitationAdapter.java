@@ -39,7 +39,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
         //tableApplication = new TableApplication(context);
         //tableJob = new TableJob(context);
 
-        Cursor c = tableInvitation.getInvitation(0);
+        Cursor c = tableInvitation.getInvitation(0,0);
         if( c.moveToFirst() ){
             while( !c.isAfterLast() ){
                 //int id = c.getInt(0);

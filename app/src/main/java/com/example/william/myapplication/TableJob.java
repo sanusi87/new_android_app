@@ -77,7 +77,7 @@ public class TableJob extends SQLiteOpenHelper{
         if( applications.getCount() > 0 ){ used += 1; }
 
         // check if used in invitation
-        Cursor invitations = tableInvitation.getInvitation(post_id);
+        Cursor invitations = tableInvitation.getInvitation(0, post_id);
         if( invitations.getCount() > 0 ){ used += 1; }
 
         // if not used, then deleted it
