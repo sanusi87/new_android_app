@@ -86,7 +86,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
 
         String[] invitation = getItem(position);
         final int invitationID = Integer.valueOf(invitation[0]);
-        final String jobPostingId = invitation[1];
+        final int jobPostingId = ( invitation[1] != null && !invitation[1].equals("") && !invitation[1].equals("null") ) ? Integer.valueOf(invitation[1]) : 0;
         String positionTitle = invitation[2];
         String companyName = invitation[4];
         String status = invitation[5];
@@ -106,7 +106,7 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
 
         // if no job posting ID,
         // then it is a resume access request
-        if( jobPostingId.equals("") ){
+        if( jobPostingId == 0 ){
             messageText.setText(String.format(context.getResources().getString(R.string.request_to_view), companyName));
             jobPost.setVisibility(View.GONE);
 
@@ -214,6 +214,8 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
             viewJobButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View _v) {
+                    //Log.e("jobPostingId", ""+jobPostingId);
+                    //Log.e("invitationID", ""+invitationID);
                     Intent intent = new Intent();
                     intent.putExtra("post_id", jobPostingId);
                     intent.putExtra("invitation_id", invitationID); //TODO - handle invitation ID in job-details
