@@ -55,9 +55,11 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
 
                 String[] invitation = {id,postId,postTitle,empProfileId,empProfileName,status,dateAdded,dateUpdated};
                 listOfInvitation.add(invitation);
+
                 c.moveToNext();
             }
         }
+        c.close();
     }
 
     @Override
