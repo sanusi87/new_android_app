@@ -159,16 +159,16 @@ public class MainService extends Service{
                         ]
                         */
 
-                        if( result != null ){
-                            if( result.length() > 0 ){
-                                for( int i=0;i<result.length();i++ ){
+                        if (result != null) {
+                            if (result.length() > 0) {
+                                for (int i = 0; i < result.length(); i++) {
                                     ContentValues cv = new ContentValues();
                                     try {
                                         JSONObject s = result.getJSONObject(i);
 
                                         // check for existence
                                         Cursor c = tableInvitation.getInvitation(s.optInt("id"), 0);
-                                        if( c.getCount() == 0 ){
+                                        if (c.getCount() == 0) {
                                             // if not yet exists, add new
                                             cv.put("id", s.optInt("id"));
                                             cv.put("emp_profile_name", s.optString("company"));
@@ -176,13 +176,13 @@ public class MainService extends Service{
                                             cv.put("status", s.optString("status"));
                                             cv.put("date_added", s.optString("date_created"));
                                             String dateUpdated = s.optString("date_updated");
-                                            if( dateUpdated != null && !dateUpdated.equals("") && !dateUpdated.equals("null") ){
+                                            if (dateUpdated != null && !dateUpdated.equals("") && !dateUpdated.equals("null")) {
                                                 cv.put("date_updated", dateUpdated);
                                             }
 
                                             // this is for type "J" = Job Application Invitation
                                             String post = s.getString("post");
-                                            if( post != null && !post.equals("null") ){
+                                            if (post != null && !post.equals("null")) {
                                                 JSONObject _post = new JSONObject(post);
 
                                                 final int postId = _post.getInt("post_id");
@@ -190,16 +190,17 @@ public class MainService extends Service{
 
                                                 // for each job application invitation
                                                 // if the job is still active
-                                                if( !isJobClosed ){
+                                                if (!isJobClosed) {
                                                     // download the job details
                                                     GetRequest getRequest = new GetRequest();
                                                     getRequest.setResultListener(new GetRequest.ResultListener() {
                                                         @Override
-                                                        public void processResultArray(JSONArray result) {}
+                                                        public void processResultArray(JSONArray result) {
+                                                        }
 
                                                         @Override
                                                         public void processResult(JSONObject success) {
-                                                            if( success != null && success.toString().length() > 0 ){
+                                                            if (success != null && success.toString().length() > 0) {
                                                                 // and save to database
                                                                 ContentValues cv2 = new ContentValues();
                                                                 cv2.put("id", postId);
@@ -212,7 +213,7 @@ public class MainService extends Service{
                                                             }
                                                         }
                                                     });
-                                                    String[] param = {Jenjobs.JOB_DETAILS+"/"+postId};
+                                                    String[] param = {Jenjobs.JOB_DETAILS + "/" + postId};
                                                     getRequest.execute(param);
                                                 }
 
@@ -222,25 +223,25 @@ public class MainService extends Service{
                                             }
 
                                             tableInvitation.saveInvitation(cv, 0);
-                                        }else{
+                                        } else {
                                             c.moveToFirst();
                                             String _status = c.getString(3);
                                             String _post_closed_on = c.getString(6);
                                             c.close();
 
                                             // if the downloaded status != saved status
-                                            if( !_status.equals(s.optString("status")) ){
+                                            if (!_status.equals(s.optString("status"))) {
                                                 // update status and date
                                                 cv.put("status", s.optString("status"));
                                                 String dateUpdated = s.optString("date_updated");
-                                                if( dateUpdated != null && !dateUpdated.equals("") && !dateUpdated.equals("null") ){
+                                                if (dateUpdated != null && !dateUpdated.equals("") && !dateUpdated.equals("null")) {
                                                     cv.put("date_updated", dateUpdated);
                                                 }
 
                                                 JSONObject _post = new JSONObject(s.optString("post"));
-                                                if( _post_closed_on != null
+                                                if (_post_closed_on != null
                                                         && !_post_closed_on.equals("")
-                                                        && !_post_closed_on.equals("null") ){
+                                                        && !_post_closed_on.equals("null")) {
                                                     cv.put("post_title", _post.optString("post_title"));
                                                     cv.put("post_closed_on", _post.optString("date_closed"));
                                                 }
@@ -258,14 +259,16 @@ public class MainService extends Service{
                     }
 
                     @Override
-                    public void processResult(JSONObject result) {}
+                    public void processResult(JSONObject result) {
+                    }
                 });
                 String _params[] = {Jenjobs.INVITATION_URL+"?access-token=" + accessToken};
-                Log.e("_params", _params[0]);
+                //Log.e("_params", _params[0]);
                 g.execute(_params);
                 // end invitation and resume access request check
             }
-            handler.postDelayed(updateData, 30000); // TODO - change this timeout to 1 minute = 60000
+            //Log.e("exec_on", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss", null));
+            handler.postDelayed(updateData, 60000); // TODO - change this timeout to 1 minute = 60000
         }
     };
 
@@ -281,7 +284,7 @@ public class MainService extends Service{
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
         if( accessToken != null ){
-            handler.postDelayed(updateData, 30000);
+            handler.postDelayed(updateData, 60000);
         }
     }
 
