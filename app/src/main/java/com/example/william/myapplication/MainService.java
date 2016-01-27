@@ -137,6 +137,7 @@ public class MainService extends Service{
                 g.setResultListener(new GetRequest.ResultListener() {
                     @Override
                     public void processResultArray(JSONArray result) {
+                        //Log.e("invitation", ""+result);
                         /*
                         [
                             {
@@ -159,7 +160,6 @@ public class MainService extends Service{
                         */
 
                         if( result != null ){
-                            Log.e("invitation", result.toString());
                             if( result.length() > 0 ){
                                 for( int i=0;i<result.length();i++ ){
                                     ContentValues cv = new ContentValues();
@@ -217,7 +217,7 @@ public class MainService extends Service{
                                                 }
 
                                                 cv.put("post_id", postId);
-                                                cv.put("post_title", _post.getInt("post_title"));
+                                                cv.put("post_title", _post.getString("post_title"));
                                                 cv.put("post_closed_on", _post.getString("date_closed"));
                                             }
 
@@ -260,7 +260,8 @@ public class MainService extends Service{
                     @Override
                     public void processResult(JSONObject result) {}
                 });
-                String _params[] = {Jenjobs.INVITATION_URL+"&access-token=" + accessToken};
+                String _params[] = {Jenjobs.INVITATION_URL+"?access-token=" + accessToken};
+                Log.e("_params", _params[0]);
                 g.execute(_params);
                 // end invitation and resume access request check
             }
