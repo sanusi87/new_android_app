@@ -140,7 +140,9 @@
         <activity
             android:name=".JobSuggestion"
             android:label="@string/job_suggestion"
-            android:parentActivityName=".ProfileActivity"/>
+            android:parentActivityName=".ProfileActivity" />
+        <activity android:name=".JobSearchProfileForm" />
+        <activity android:name=".JobSearchProfile" />
     </application>
 
 </manifest>
