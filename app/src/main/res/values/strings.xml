@@ -252,4 +252,10 @@
     <string name="login_or_register_to_apply">Please login or register to apply.</string>
     <string name="network_error">Network error!</string>
     <string name="view_job_details">View Job Details</string>
+    <string name="save_filter">Save Search</string>
+    <string name="job_search_profile_name">Job Search Profile Name</string>
+    <string name="email_alert_frequency">Email Alert Frequency</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
 </resources>
