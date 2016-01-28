@@ -431,7 +431,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 fileParam.put("type", "photo_file");
                                 fileParam.put("attachment", encodedFile);
 
-                                // TODO - add resume/profile photo into _POST
                                 String[] params = {
                                         Jenjobs.ATTACH_RESUME + "?access-token=" + accessToken,
                                         fileParam.toString()
@@ -468,8 +467,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             } catch (IOException | JSONException e) {
                                 Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
                             }
-
-                            // TODO -- update profile image
                         }
                     });
                     fileChooser.showDialog();
@@ -1200,10 +1197,23 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     intent.putExtra("searchParameters", searchParameters);
                     startActivityForResult(intent, FETCH_FILTER_PARAM);
                     return true;
-                }else if( clickedItem == R.id.about_job_ads ){
+                }else if( clickedItem == R.id.about_job_ads ) {
                     Intent intent = new Intent();
                     intent.setClass(getApplicationContext(), AboutJobSearch.class);
                     startActivity(intent);
+                    return true;
+                }else if( clickedItem == R.id.save_filter_button ){
+                    Log.e("searchParameter", ""+searchParameters.isEmpty());
+                    Log.e("searchParameter", ""+searchParameters.size());
+
+                    if( !searchParameters.isEmpty() ){
+                        Intent intent = new Intent();
+                        intent.setClass(getApplicationContext(), JobSearchProfileForm.class);
+                        intent.putExtra("searchParameter", searchParameters);
+                        startActivity(intent);
+                    }else{
+                        Toast.makeText(context, "Please update your search parameter first.", Toast.LENGTH_LONG).show();
+                    }
                     return true;
                 }else{
                     return super.onOptionsItemSelected(item);
