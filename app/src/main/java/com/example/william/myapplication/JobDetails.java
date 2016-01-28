@@ -475,7 +475,7 @@ public class JobDetails extends ActionBarActivity {
                         @Override
                         public void onClick(View v) {
                             //Uri gmmIntentUri = Uri.parse("google.streetview:cbll=46.414382,10.013988");
-                            Uri gmmIntentUri = Uri.parse("geo:"+latitude+","+longitude+"?z=16");
+                            Uri gmmIntentUri = Uri.parse("geo:"+latitude+","+longitude+"?q="+latitude+","+longitude+"("+jobDetails.optString("company")+")&z=16");
                             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                             mapIntent.setPackage("com.google.android.apps.maps");
                             if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
