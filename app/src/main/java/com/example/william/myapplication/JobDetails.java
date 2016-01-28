@@ -105,8 +105,8 @@ public class JobDetails extends ActionBarActivity {
 
                 @Override
                 public void processResult(JSONObject success) {
+                    Log.e("onPostEx", "" + success);
                     jobDetails = success;
-                    //Log.e("onPostEx", "" + success);
                     if( success != null ){
                         mViewPager.setAdapter(mSectionsPagerAdapter);
                         positionTitle.setText(success.optString("title"));
@@ -114,6 +114,8 @@ public class JobDetails extends ActionBarActivity {
                         applyButtonContainer.setVisibility(View.VISIBLE);
                         tabButton.setVisibility(View.VISIBLE);
                     }else{
+                        Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+
                         Cursor job = tableJob.getJob(jobPostingId);
                         if( job.moveToFirst() ){
                             String savedJobDetails = job.getString(3);

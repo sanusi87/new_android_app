@@ -227,7 +227,7 @@
     <string name="identityCardNumber">Identity Card Number</string>
     <string name="clear_filter">Clear Filter</string>
     <string name="more">More</string>
-    <string name="no_job_posting">\"No job postings found!\"</string>
+    <string name="no_job_posting">No job postings found!</string>
     <string name="invitation_and_request">Invitation and Request</string>
     <string name="request_to_view">%1$s would like to view your online resume.</string>
     <string name="invite_to_apply">%1$s have sent you an invitation to apply for %2$s.</string>

@@ -132,6 +132,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     static TableEducation tableEducation;
     static TableJobPreference tableJobPreference;
     static TableLanguage tableLanguage;
+    static TableJob tableJob;
 
     // if this activity was opened by notification, set the default fragment to be opened,
     // then updated it depends on the notification
@@ -217,6 +218,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         tableEducation = new TableEducation(context);
         tableJobPreference = new TableJobPreference(context);
         tableLanguage = new TableLanguage(context);
+        tableJob = new TableJob(getApplicationContext());
 
         Intent svc = new Intent(this, MainService.class);
         startService(svc);
@@ -1743,7 +1745,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         cv.put("created_at", String.valueOf(success.get("created_at")));
                         cv.put("updated_at", String.valueOf(success.get("updated_at")));
 
-                        Long newId = tblProfile.addProfile(cv);
+                        tblProfile.addProfile(cv);
                         js_profile_id = cv.getAsInteger("_id");
                         Log.e("js_profile_id", String.valueOf(js_profile_id));
 
@@ -1831,16 +1833,43 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         if( success.length() > 0 ){
                             for( int i=0;i< success.length();i++ ){
                                 JSONObject s = success.getJSONObject(i);
+                                final int postId = s.getInt("post_id");
                                 cv.put("_id", s.getInt("_id"));
-                                cv.put("post_id", s.getInt("post_id"));
+                                cv.put("post_id", postId);
                                 cv.put("status", s.getInt("status"));
                                 cv.put("date_created", s.getString("date_created"));
                                 cv.put("date_updated", s.getString("date_updated"));
                                 cv.put("title", s.getString("title"));
                                 cv.put("closed", s.getBoolean("closed") ? 1 : 0);
+                                tableApplication.addApplication(cv);
+                                //Log.e("status", "inserted ID="+insertedId.intValue());
 
-                                Long insertedId = tableApplication.addApplication(cv);
-                                Log.e("status", "inserted ID="+insertedId.intValue());
+                                // TODO - download job details and save to TableJob
+                                // download the job details
+                                GetRequest getRequest = new GetRequest();
+                                getRequest.setResultListener(new GetRequest.ResultListener() {
+                                    @Override
+                                    public void processResultArray(JSONArray result) {
+                                    }
+
+                                    @Override
+                                    public void processResult(JSONObject success) {
+                                        if (success != null && success.toString().length() > 0) {
+                                            // and save to phone database
+                                            ContentValues cv2 = new ContentValues();
+
+                                            cv2.put("id", postId);
+                                            cv2.put("title", success.optString("title"));
+                                            cv2.put("company", success.optString("company"));
+                                            cv2.put("job_data", success.toString());
+                                            cv2.put("date_closed", success.optString("date_closed"));
+
+                                            tableJob.addJob(cv2);
+                                        }
+                                    }
+                                });
+                                String[] param = {Jenjobs.JOB_DETAILS+"/"+postId};
+                                getRequest.execute(param);
                             }
                         }
                     } catch (JSONException e) {
@@ -1851,7 +1880,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                     //TableWorkExperience tableWorkExperience = new TableWorkExperience(getApplicationContext());
                     ContentValues cv = new ContentValues();
-                    JSONArray success = null;
+                    JSONArray success;
 
                     try {
                         success = new JSONArray(nsuccess);
@@ -1900,7 +1929,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                     //TableEducation tableEducation = new TableEducation(getApplicationContext());
                     ContentValues cv = new ContentValues();
-                    JSONArray success = null;
+                    JSONArray success;
 
                     try {
                         success = new JSONArray(nsuccess);
@@ -1939,7 +1968,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     TableJobPreferenceLocation tableJobPreferenceLocation = new TableJobPreferenceLocation(getApplicationContext());
 
                     ContentValues cv = new ContentValues();
-                    JSONObject success = null;
+                    JSONObject success;
                     try {
                         success = new JSONObject(nsuccess);
 
@@ -1975,7 +2004,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 }else if( downloadSection == DOWNLOAD_SKILL ){
 
-                    JSONArray success = null;
+                    JSONArray success;
 
                     try {
                         success = new JSONArray(nsuccess);
@@ -1996,7 +2025,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }else if( downloadSection == DOWNLOAD_LANGUAGE ){
 
                     TableLanguage tableLanguage = new TableLanguage(getApplicationContext());
-                    JSONArray success = null;
+                    JSONArray success;
 
                     try {
                         success = new JSONArray(nsuccess);
@@ -2018,7 +2047,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }else if( downloadSection == DOWNLOAD_BOOKMARK ){
 
                     TableBookmark tableBookmark = new TableBookmark(getApplicationContext());
-                    JSONArray success = null;
+                    JSONArray success;
 
                     try {
                         success = new JSONArray(nsuccess);
@@ -2027,12 +2056,39 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 JSONObject s = success.getJSONObject(i);
                                 ContentValues cv = new ContentValues();
 
-                                cv.put("post_id", s.optInt("post_id"));
+                                final int postId = s.optInt("post_id");
+                                cv.put("post_id", postId);
                                 cv.put("title", s.optString("title"));
                                 cv.put("date_added", s.optString("on"));
                                 cv.put("date_closed", s.optString("date_closed"));
-
                                 tableBookmark.addBookmark(cv);
+
+                                // TODO - download job details and save to TableJob
+                                // download the job details
+                                GetRequest getRequest = new GetRequest();
+                                getRequest.setResultListener(new GetRequest.ResultListener() {
+                                    @Override
+                                    public void processResultArray(JSONArray result) {
+                                    }
+
+                                    @Override
+                                    public void processResult(JSONObject success) {
+                                        if (success != null && success.toString().length() > 0) {
+                                            // and save to phone database
+                                            ContentValues cv2 = new ContentValues();
+
+                                            cv2.put("id", postId);
+                                            cv2.put("title", success.optString("title"));
+                                            cv2.put("company", success.optString("company"));
+                                            cv2.put("job_data", success.toString());
+                                            cv2.put("date_closed", success.optString("date_closed"));
+
+                                            tableJob.addJob(cv2);
+                                        }
+                                    }
+                                });
+                                String[] param = {Jenjobs.JOB_DETAILS+"/"+postId};
+                                getRequest.execute(param);
                             }
                         }
                     } catch (JSONException e) {
@@ -2042,7 +2098,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }else if( downloadSection == DOWNLOAD_SUBSCRIPTION ){
 
                     TableSubscription tableSubscription = new TableSubscription(getApplicationContext());
-                    JSONArray success = null;
+                    JSONArray success;
 
                     try {
                         success = new JSONArray(nsuccess);
@@ -2061,7 +2117,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 }else if( downloadSection == DOWNLOAD_INVITATION ){
                     TableInvitation tableInvitation = new TableInvitation(getApplicationContext());
-                    final TableJob tableJob = new TableJob(getApplicationContext());
 
                     JSONArray success;
                     try {
@@ -2158,7 +2213,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                     cv.put("post_title", _post.getString("post_title"));
                                     cv.put("post_closed_on", _post.getString("date_closed"));
                                 }
-                                //Log.e("index", ""+i);
                                 tableInvitation.saveInvitation(cv, 0);
                             }
                         }
