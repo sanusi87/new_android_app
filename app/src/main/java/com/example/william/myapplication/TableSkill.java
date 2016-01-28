@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
-
 public class TableSkill extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "skill";
 
@@ -40,27 +38,20 @@ public class TableSkill extends SQLiteOpenHelper{
     }
 
     public Long addSkill(ContentValues cv2){
-        Long newID = db.insert(TableSkill.TABLE_NAME, null, cv2);
-        return newID;
+        return db.insert(TableSkill.TABLE_NAME, null, cv2);
     }
 
     public boolean updateSkill(ContentValues cv2, int existingID){
         String[] _id = {String.valueOf(existingID)};
         int affectedRows = db.update(TableSkill.TABLE_NAME, cv2, "id=?", _id);
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        return affectedRows > 0;
     }
 
     public boolean deleteSkill(int id){
         String _id = String.valueOf(id);
         String[] param = {_id};
         int affectedRows = db.delete(TableSkill.TABLE_NAME, "id=?", param);
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        return affectedRows > 0;
     }
 
     public String[] findSkillById(int skillId) {
@@ -77,6 +68,7 @@ public class TableSkill extends SQLiteOpenHelper{
 
             c.moveToNext();
         }
+        c.close();
 
         return s;
     }
