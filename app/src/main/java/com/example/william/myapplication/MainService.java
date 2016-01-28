@@ -1,5 +1,6 @@
 package com.example.william.myapplication;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -30,6 +31,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.HashMap;
 
 
@@ -46,6 +48,8 @@ public class MainService extends Service{
     TableJob tableJob;
     TableSettings tableSettings;
     HashMap applicationStatus;
+
+    AlarmManager alarm;
 
     public class LocalBinder extends Binder {
         MainService getService() {
@@ -112,9 +116,17 @@ public class MainService extends Service{
     Runnable updateData = new Runnable(){
         @Override
         public void run() {
-            if( isOnline() ){
-                // TODO - check for network connectivity first, only then can proceed
+            sharedPref = getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+            accessToken = sharedPref.getString("access_token", null);
 
+            /*
+            * TODO
+            * - check for network connectivity first
+            * - is the user currently login ?
+            * - yes -> can proceed
+            * - no -> shut up
+            * */
+            if( isOnline() && accessToken != null ){
                 // check active application status
                 Cursor applications = tableApplication.getActiveApplication();
                 if (applications.getCount() > 0) {
@@ -127,7 +139,8 @@ public class MainService extends Service{
                         applications.moveToNext();
                     }
 
-                    String[] params = {Jenjobs.APPLICATION_STATUS_URL + "?id=" + arr.toString() + "&access-token=" + accessToken};
+                    String[] params = {Jenjobs.APPLICATION_STATUS_URL + "?id=" + arr.toString()
+                            + "&access-token=" + accessToken};
                     new CheckApplication().execute(params);
                 }
                 applications.close();
@@ -267,13 +280,15 @@ public class MainService extends Service{
                 g.execute(_params);
                 // end invitation and resume access request check
             }
-            //Log.e("exec_on", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss", null));
-            handler.postDelayed(updateData, 60000); // TODO - change this timeout to 1 minute = 60000
+            handler.postDelayed(updateData, 60000);
         }
     };
 
     private void handleCommand(Intent intent){
-        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE); // notification service
+        alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE); // alarm manager service
+        Intent _intent = new Intent(getApplicationContext(), DailyJobMatcher.class);
+        PendingIntent alarmIntent = PendingIntent.getService(getApplicationContext(), 0, _intent, 0);
 
         tableSettings = new TableSettings(getApplicationContext());
         tableApplication = new TableApplication(getApplicationContext());
@@ -281,11 +296,24 @@ public class MainService extends Service{
         tableJob = new TableJob(getApplicationContext());
         applicationStatus = Jenjobs.getApplicationStatus();
 
-        sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        accessToken = sharedPref.getString("access_token", null);
-        if( accessToken != null ){
-            handler.postDelayed(updateData, 60000);
-        }
+        /*
+        * run checking for every 1 minute
+        * */
+        handler.postDelayed(updateData, 60000);
+
+        /*
+        * TODO - check for jobmatcher every 9 A.M. default
+        * - check for active jobMatcher profile table
+        * - allow user to update the alert time of each profile
+        * */
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 9); // at 9 A.M.
+        calendar.set(Calendar.MINUTE, 30); // 30 minute
+        alarm.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
+
+        //calendar.set(Calendar.MINUTE, 1); // 1 minute
+        //alarm.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 1000 * 60 * 1, alarmIntent);
     }
 
     // check application
