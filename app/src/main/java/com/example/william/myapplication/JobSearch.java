@@ -131,49 +131,79 @@ public class JobSearch {
 
     public void setJobLevel( String[] jobLevel ){
         if( jobLevel.length > 0 ){
-            for (String aJobLevel : jobLevel) {
-                filters.add("job_level_id[]=" + aJobLevel);
+            try {
+                filters.add("job_level_id=" + new JSONArray(jobLevel).toString());
+            } catch (JSONException e) {
+                Log.e("error", e.getMessage());
             }
+//            for (String aJobLevel : jobLevel) {
+//                filters.add("job_level_id[]=" + aJobLevel);
+//            }
         }
     }
 
     public void setJobSpec( String[] jobSpec ){
         if( jobSpec.length > 0 ){
-            for (String aJobSpec : jobSpec) {
-                filters.add("job_spec_id[]=" + aJobSpec);
+            try {
+                filters.add("job_spec_id=" + new JSONArray(jobSpec).toString());
+            } catch (JSONException e) {
+                Log.e("error", e.getMessage());
             }
+//            for (String aJobSpec : jobSpec) {
+//                filters.add("job_spec_id[]=" + aJobSpec);
+//            }
         }
     }
 
     public void setJobRole( String[] jobRole ){
         if( jobRole.length > 0 ){
-            for (String aJobRole : jobRole) {
-                filters.add("job_role_id[]=" + aJobRole);
+            try {
+                filters.add("job_role_id=" + new JSONArray(jobRole).toString());
+            } catch (JSONException e) {
+                Log.e("error", e.getMessage());
             }
+//            for (String aJobRole : jobRole) {
+//                filters.add("job_role_id[]=" + aJobRole);
+//            }
         }
     }
 
     public void setCountry( String[] country ){
         if( country.length > 0 ){
-            for (String aCountry : country) {
-                filters.add("country_id[]=" + aCountry);
+            try {
+                filters.add("country_id=" + new JSONArray(country).toString());
+            } catch (JSONException e) {
+                Log.e("error", e.getMessage());
             }
+//            for (String aCountry : country) {
+//                filters.add("country_id[]=" + aCountry);
+//            }
         }
     }
 
     public void setState( String[] state ){
         if( state.length > 0 ){
-            for (String aState : state) {
-                filters.add("state_id[]=" + aState);
+            try {
+                filters.add("state_id=" + new JSONArray(state).toString());
+            } catch (JSONException e) {
+                Log.e("error", e.getMessage());
             }
+            //for (String aState : state) {
+            //    filters.add("state_id[]=" + aState);
+            //}
         }
     }
 
     public void setJobType( String[] types ){
         if( types.length > 0 ){
-            for (String type : types) {
-                filters.add("job_type_id[]=" + type);
+            try {
+                filters.add("job_type_id=" + new JSONArray(types).toString());
+            } catch (JSONException e) {
+                Log.e("error", e.getMessage());
             }
+            //for (String type : types) {
+            //    filters.add("job_type_id[]=" + type);
+            //}
         }
     }
 
