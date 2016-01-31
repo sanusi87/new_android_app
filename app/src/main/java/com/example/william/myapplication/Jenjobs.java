@@ -32,6 +32,7 @@ public class Jenjobs {
     public static final String REGISTRATION_URL = "http://api.jenjobs.com/register/jobseeker";
     public static final String FORGOT_PASSWORD_URL = "http://api.jenjobs.com/forgot-password/jobseeker";
     public static final String INVITATION_URL = "http://api.jenjobs.com/employer/invitation";
+    public static final String SEARCH_PROFILE = "http://api.jenjobs.com/jobseeker/invitation";
 
     public static HashMap getJobType(){
         HashMap<Integer, String> a = new HashMap<>();
