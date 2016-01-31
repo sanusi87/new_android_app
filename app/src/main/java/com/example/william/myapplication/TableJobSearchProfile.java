@@ -13,6 +13,7 @@ public class TableJobSearchProfile extends SQLiteOpenHelper {
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "profile_name TEXT, " +
             "parameters TEXT, " +
+            "notification_frequency TEXT, "+
             "date_created NUMERIC," +
             "date_updated NUMERIC);";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
@@ -47,8 +48,10 @@ public class TableJobSearchProfile extends SQLiteOpenHelper {
 
         int id = cv.getAsInteger("id");
         if( id > 0 ){
+            cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss", null));
             db.update(TABLE_NAME, cv, "id=?", new String[]{String.valueOf(id)});
         }else{
+            cv.put("date_created", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss", null));
             Long insertedId = db.insert(TABLE_NAME, null, cv);
             id = insertedId.intValue();
         }

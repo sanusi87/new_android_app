@@ -12,7 +12,7 @@ public class JobSearchProfile extends ActionBarActivity {
         setContentView(R.layout.activity_job_search_profile);
 
         ListView lv = (ListView) findViewById(R.id.listOfSearchProfile);
-        final JobSearchProfileAdapter jobSearchProfileAdapter = new JobSearchProfileAdapter(getApplicationContext());
+        JobSearchProfileAdapter jobSearchProfileAdapter = new JobSearchProfileAdapter(getApplicationContext());
         lv.setAdapter(jobSearchProfileAdapter);
     }
 }
