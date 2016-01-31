@@ -199,6 +199,12 @@
         <item name="M">Month</item>
     </string-array>
 
+    <string-array name="notification_frequency">
+        <item name="D">Daily</item>
+        <item name="W">Weekly</item>
+        <item name="U">Unsubscribe</item>
+    </string-array>
+
     <string name="title_activity_job_details2">Job Details</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="already_applied">Already Applied</string>
@@ -258,4 +264,8 @@
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
+    <string name="select_notification_frequency">Select Notification Frequency</string>
+    <string name="profile_name_required">Profile name is required</string>
+    <string name="empty_search_parameter">Search parameters are empty!</string>
+    <string name="empty_response">Response received is empty!</string>
 </resources>
