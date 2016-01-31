@@ -26,6 +26,7 @@
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -38,8 +39,8 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".SampleBootReceiver"
+        <receiver
+            android:name=".SampleBootReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -147,6 +148,7 @@
             android:parentActivityName=".ProfileActivity" />
         <activity android:name=".JobSearchProfileForm" />
         <activity android:name=".JobSearchProfile" />
+        <activity android:name=".NotificationFrequency"></activity>
     </application>
 
 </manifest>
