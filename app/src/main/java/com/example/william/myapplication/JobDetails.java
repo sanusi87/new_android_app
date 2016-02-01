@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -465,8 +466,17 @@ public class JobDetails extends ActionBarActivity {
                 ((TextView)v.findViewById(R.id.companyWebsite)).setText(companyDetails.optString("website"));
                 ((TextView)v.findViewById(R.id.companyFacebookPage)).setText(companyDetails.optString("facebook_page"));
 
-                ImageView workLocationImage = (ImageView)v.findViewById(R.id.workLocationImage);
-                new ImageLoad(companyDetails.getString("map_image"), workLocationImage).execute();
+                final ImageView workLocationImage = (ImageView)v.findViewById(R.id.workLocationImage);
+                ImageLoad img = new ImageLoad(companyDetails.getString("map_image"), workLocationImage);
+                img.setResultListener(new ImageLoad.ResultListener() {
+                    @Override
+                    public void processResult(Bitmap result) {
+                        if( result == null ){
+                            workLocationImage.setVisibility(View.GONE);
+                        }
+                    }
+                });
+                img.execute();
 
                 // this is work location
                 final String latitude = jobDetails.optString("latitude");
