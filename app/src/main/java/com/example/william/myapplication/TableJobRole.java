@@ -50,16 +50,16 @@ public class TableJobRole extends SQLiteOpenHelper{
         return null;
     }
 
-    public ArrayList<JobRole> findByJobSpec(String jobSpecId, ArrayList<String> jobRoleId){
+    public ArrayList<JobRole> findByJobSpec(String jobSpecId, ArrayList<Integer> jobRoleId){
         ArrayList<JobRole> myJobRole = new ArrayList<>();
         if( jobRoleId != null && jobRoleId.size() > 0 ){
             ArrayList<String> params = new ArrayList<>();
             params.add(jobSpecId);
 
             ArrayList<String> placeHolder = new ArrayList<>();
-            for( String roleId : jobRoleId ){
+            for( Integer roleId : jobRoleId ){
                 placeHolder.add("?");
-                params.add(roleId);
+                params.add(String.valueOf(roleId));
             }
 
             String strSQL = "SELECT * FROM (SELECT * FROM "+TABLE_NAME+" WHERE job_spec_id=?) A WHERE id IN("+ TextUtils.join(",", placeHolder)+")";
