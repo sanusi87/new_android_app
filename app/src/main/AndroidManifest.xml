@@ -148,7 +148,9 @@
             android:parentActivityName=".ProfileActivity" />
         <activity android:name=".JobSearchProfileForm" />
         <activity android:name=".JobSearchProfile" />
-        <activity android:name=".NotificationFrequency"></activity>
+        <activity
+            android:name=".SelectNotificationFrequency"
+            android:theme="@android:style/Theme.Dialog" />
     </application>
 
 </manifest>
