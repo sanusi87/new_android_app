@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ImageView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -39,11 +42,18 @@ public class ImageLoad extends AsyncTask<Void, Void, Bitmap> {
         super.onPostExecute(result);
         if( result != null ){
             imageView.setImageBitmap(result);
-        }else{
-            if( imageView.getId() == R.id.workLocationImage ){
-                imageView.setVisibility(View.GONE);
-            }
+            resultListener.processResult(result);
         }
+    }
+
+    public interface ResultListener {
+        void processResult(Bitmap result);
+    }
+
+    private ResultListener resultListener;
+    public ImageLoad setResultListener(ResultListener resultListener){
+        this.resultListener = resultListener;
+        return this;
     }
 
 }
