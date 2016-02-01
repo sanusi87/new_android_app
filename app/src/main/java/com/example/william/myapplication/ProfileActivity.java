@@ -6,6 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,7 +26,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -45,10 +49,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -91,18 +95,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     public static final int ADD_WORK_EXP = 10;
     //public static final int UPDATE_WORK_EXP = 11;
     public static final int ADD_EDU = 12;
-    public static final int UPDATE_EDU = 13;
+    //public static final int UPDATE_EDU = 13;
     public static final int UPDATE_RESUME_VISIBILITY = 14;
     public static final int UPDATE_JOB_SEEKING = 15;
     public static final int UPDATE_JOB_PREFERENCE = 16;
     public static final int ADD_SKILL = 17;
-    public static final int UPDATE_SKILL = 18;
+    //public static final int UPDATE_SKILL = 18;
     public static final int ADD_LANGUAGE = 19;
-    public static final int UPDATE_LANGUAGE = 20;
+    //public static final int UPDATE_LANGUAGE = 20;
     public static final int UPDATE_ATTACHED_RESUME = 21;
     public static final int UPDATE_ADDITIONAL_INFO = 22;
     public static final int UPDATE_PROFILE = 23;
-    public static final int SELECT_RESUME_FILE = 24;
+    //public static final int SELECT_RESUME_FILE = 24;
 
     private static TextView resumeVisibility;
     private static TextView jobSeeking;
@@ -153,9 +157,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
-
         jsProfileId = sharedPref.getInt("js_profile_id", 0);
-        //String emailAddress = sharedPref.getString("email", null);
 
         // redirect to login if no access token found
         if (accessToken == null) {
@@ -168,7 +170,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (extras.getBoolean("downloadData")) {
-                Log.e("start", "downloading data:" + extras.getBoolean("downloadData"));
+                //Log.e("start", "downloading data:" + extras.getBoolean("downloadData"));
 
                 String[] profileUrl = {Jenjobs.PROFILE_URL};
                 new DownloadDataTask(DOWNLOAD_PROFILE).execute(profileUrl);
@@ -199,6 +201,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 String[] invitationUrl = {Jenjobs.INVITATION_URL};
                 new DownloadDataTask(DOWNLOAD_INVITATION).execute(invitationUrl);
+
+                // TODO - download job search profiles and save
 
                 extras.clear();
             }
@@ -284,8 +288,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
      * A placeholder fragment containing a simple view.
      */
     private static int sectionNumber;
-    private static JobSearch jobSearch;
-    private Bundle searchParameters = new Bundle();
+    //private static JobSearch jobSearch;
+    //private Bundle searchParameters = new Bundle();
     private static LinearLayout profileLayout = null;
 
     public static class PlaceholderFragment extends Fragment {
@@ -365,8 +369,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
         private void setupProfileFragment(View rootView) {
             profileLayout = (LinearLayout) rootView.findViewById(R.id.profileLayout);
-            TableProfile tProfile = new TableProfile(getActivity());
-            Profile theProfile = tProfile.getProfile();
+            final TableProfile tProfile = new TableProfile(getActivity());
+            final Profile theProfile = tProfile.getProfile();
             TextView name = (TextView) profileLayout.findViewById(R.id.fullName);
             TextView email = (TextView) profileLayout.findViewById(R.id.email);
             TextView mobile_no = (TextView) profileLayout.findViewById(R.id.mobile_no);
@@ -402,79 +406,99 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
 
             final ImageView profileImage = (ImageView) rootView.findViewById(R.id.profile_image);
-            if( theProfile. photo_file != null ){
-                new ImageLoad(theProfile.photo_file, profileImage).execute();
+            if( theProfile.photo_file != null ){
+                final String fileName = theProfile.photo_file.substring(theProfile.photo_file.lastIndexOf("/")+1, theProfile.photo_file.length());
+
+                File file = new File(context.getFilesDir(), fileName);
+                if( file.exists() ){
+                    profileImage.setImageDrawable(Drawable.createFromPath(file.getPath()));
+                }else{
+                    ImageLoad img = new ImageLoad(theProfile.photo_file, profileImage);
+                    img.setResultListener(new ImageLoad.ResultListener() {
+                        @Override
+                        public void processResult(Bitmap result) {
+                            if( result != null ){
+                                try {
+                                    FileOutputStream outputStream = context.openFileOutput(fileName, MODE_PRIVATE);
+                                    result.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                                    outputStream.flush();
+                                    outputStream.close();
+                                } catch (IOException e) {
+                                    Log.e("fileErr", e.getMessage());
+                                }
+                            }
+                        }
+                    });
+                    img.execute();
+                }
             }
 
             profileImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String[] allowedExtension = {"jpg", "png", "gif", "jpeg", "bmp"};
+                    if( Jenjobs.isOnline(context) ){
+                        String[] allowedExtension = {"jpg", "png", "gif", "jpeg", "bmp"};
 
-                    FileChooser fileChooser = new FileChooser(getActivity());
-                    fileChooser.setAdapter(new ImageAdapter());
-                    fileChooser.setExtension(allowedExtension);
-                    fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
-                        @Override
-                        public void fileSelected(final File file) {
-                            // TODO -- update profile image, post and save to folder
-                            try {
-                                byte[] buffer = new byte[8192];
-                                int bytesRead;
+                        FileChooser fileChooser = new FileChooser(getActivity());
+                        fileChooser.setAdapter(new ImageAdapter());
+                        fileChooser.setExtension(allowedExtension);
+                        fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
+                            @Override
+                            public void fileSelected(final File file) {
+                                try {
+                                    byte[] buffer = new byte[8192];
+                                    int bytesRead;
 
-                                InputStream inputStream = new FileInputStream(file);
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    final InputStream inputStream = new FileInputStream(file);
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                                    baos.write(buffer, 0, bytesRead);
-                                }
-                                byte[] byteArray = baos.toByteArray();
-                                String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-                                JSONObject fileParam = new JSONObject();
-                                fileParam.put("name", file.getName());
-                                fileParam.put("type", "photo_file");
-                                fileParam.put("attachment", encodedFile);
-
-                                String[] params = {
-                                        Jenjobs.ATTACH_RESUME + "?access-token=" + accessToken,
-                                        fileParam.toString()
-                                };
-
-                                //attachedResume.setText("");
-                                //progressBar.setVisibility(View.VISIBLE);
-
-                                PostRequest postRequest = new PostRequest(context);
-                                postRequest.setResultListener(new PostRequest.ResultListener() {
-                                    @Override
-                                    public void processResult(JSONObject result) {
-                                        if( result != null ){
-                                            // if successul
-                                            if( result.optInt( "status_code" ) == 1 ){
-                                                //attachedResume.setText(result.optString("resume") );
-                                                TableProfile tableProfile = new TableProfile(context);
-                                                ContentValues cv = new ContentValues();
-                                                cv.put("photo_file", result.optString("photo_url"));
-                                                cv.put("photo_uri", file.getPath());
-                                                tableProfile.updateProfile(cv, jsProfileId);
-
-                                                new ImageLoad(result.optString("photo_url"), profileImage).execute();
-                                            }
-                                            Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
-                                            //progressBar.setVisibility(View.GONE);
-                                        }
+                                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                        baos.write(buffer, 0, bytesRead);
                                     }
-                                });
-                                postRequest.execute(params);
+                                    byte[] byteArray = baos.toByteArray();
+                                    String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-                            } catch (FileNotFoundException e) {
-                                Toast.makeText(context, "File not found!", Toast.LENGTH_LONG).show();
-                            } catch (IOException | JSONException e) {
-                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                                    JSONObject fileParam = new JSONObject();
+                                    fileParam.put("name", file.getName());
+                                    fileParam.put("type", "photo_file");
+                                    fileParam.put("attachment", encodedFile);
+
+                                    String[] params = {
+                                            Jenjobs.ATTACH_RESUME + "?access-token=" + accessToken,
+                                            fileParam.toString()
+                                    };
+
+                                    PostRequest postRequest = new PostRequest(context);
+                                    postRequest.setResultListener(new PostRequest.ResultListener() {
+                                        @Override
+                                        public void processResult(JSONObject result) {
+                                            if (result != null) {
+                                                // if successul
+                                                if (result.optInt("status_code") == 1) {
+                                                    ContentValues cv = new ContentValues();
+                                                    cv.put("photo_file", result.optString("photo_url"));
+                                                    cv.put("photo_uri", file.getPath());
+                                                    tProfile.updateProfile(cv, jsProfileId);
+
+                                                    Drawable d = Drawable.createFromStream(inputStream, file.getName());
+                                                    profileImage.setImageDrawable(d);
+                                                }
+                                                Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                    postRequest.execute(params);
+                                } catch (FileNotFoundException e) {
+                                    Toast.makeText(context, "File not found!", Toast.LENGTH_LONG).show();
+                                } catch (IOException | JSONException e) {
+                                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
-                    fileChooser.showDialog();
+                        });
+                        fileChooser.showDialog();
+                    }else{
+                        Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
@@ -723,7 +747,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     String dateResign = cw.getString(13);
 
                     String durationRange = Jenjobs.date(dateStart, null, "yyyy-MM-dd")+" - ";
-                    String durationCount = "";
+                    String durationCount;
                     if( dateResign.length() == 0 || dateResign.equals("null") ){
                         durationRange += "Present";
                         durationCount = Jenjobs.calculateDuration( dateStart, Jenjobs.date(null, null, "yyyy-MM-dd") );
@@ -1447,10 +1471,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         deleteButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View _v) {
-                                listOfWorkExp.removeView(v);
-                                String[] param = {Jenjobs.WORK_EXPERIENCE_URL + "/" + actualId + "?access-token=" + accessToken};
-                                new DeleteRequest().execute(param);
-                                tableWorkExperience.deleteWorkExperience(id);
+                                if( Jenjobs.isOnline(context) ){
+                                    listOfWorkExp.removeView(v);
+                                    String[] param = {Jenjobs.WORK_EXPERIENCE_URL + "/" + actualId + "?access-token=" + accessToken};
+                                    new DeleteRequest().execute(param);
+                                    tableWorkExperience.deleteWorkExperience(id);
+                                }else{
+                                    Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                                }
                             }
                         });
                     }
@@ -1464,7 +1492,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 final int id = extra.getInt("id");
                 // TODO: the index might changed one we have added or removed a child
                 int prevEdu = extra.getInt("currentViewPosition");
-                //Log.e("returnedPos", ""+prevEdu);
                 final View v;
                 if( prevEdu >= 0 ){
                     v = listOfEducation.getChildAt(prevEdu);
@@ -1483,7 +1510,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                     ((TextView)v.findViewById(R.id.educationLevel)).setText( eduLevel );
                     ((TextView)v.findViewById(R.id.school)).setText(school);
-                    ((TextView)v.findViewById(R.id.graduationYear)).setText( graduationYear );
+                    ((TextView)v.findViewById(R.id.graduationYear)).setText(graduationYear);
 
                     if( prevEdu < 0 ){
                         // TODO: bind events to new element
@@ -1504,15 +1531,19 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         deleteButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View _v) {
-                                // TODO: delete view
-                                listOfWorkExp.removeView(v);
+                                if( Jenjobs.isOnline(context) ){
+                                    // TODO: delete view
+                                    listOfWorkExp.removeView(v);
 
-                                // TODO: delete from server
-                                String[] param = {Jenjobs.EDUCATION_URL + "/" + actualId + "?access-token=" + accessToken};
-                                new DeleteRequest().execute(param);
+                                    // TODO: delete from server
+                                    String[] param = {Jenjobs.EDUCATION_URL + "/" + actualId + "?access-token=" + accessToken};
+                                    new DeleteRequest().execute(param);
 
-                                // TODO: delete record
-                                tableEducation.deleteEducation(id);
+                                    // TODO: delete record
+                                    tableEducation.deleteEducation(id);
+                                }else{
+                                    Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                                }
                             }
                         });
                     }
@@ -1522,9 +1553,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
         }else if( requestCode == UPDATE_RESUME_VISIBILITY ){
             if (resultCode == RESULT_OK) {
-                Log.e("filterdata", extra.getString("selectedvisibility"));
-                Log.e("filterdata", extra.toString());
-
                 resumeVisibility.setText(extra.getString("selectedvisibility"));
             }
         }else if( requestCode == UPDATE_JOB_SEEKING ){
@@ -1541,7 +1569,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             if (resultCode == RESULT_OK) {
                 String skillName = extra.getString("skill_name");
                 final int skillId = extra.getInt("skill_id");
-                Log.e("skill_id", ""+skillId);
 
                 if( skill.findViewById(R.id.emptyText) != null ){
                     skill.removeView(skill.findViewById(R.id.emptyText));
@@ -1553,17 +1580,19 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 v.findViewById(R.id.deleteSkillButton).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View _v) {
-                        //TableSkill tableSkill = new TableSkill(getApplicationContext());
-                        String[] _skill = tableSkill.findSkillById(skillId);
+                        if (Jenjobs.isOnline(context)) {
+                            String[] _skill = tableSkill.findSkillById(skillId);
+                            skill.removeView(v);
 
-                        skill.removeView(v);
+                            // delete from server
+                            String[] param = {Jenjobs.SKILL_URL + "/" + _skill[1] + "?access-token=" + accessToken};
+                            new DeleteRequest().execute(param);
 
-                        // delete from server
-                        String[] param = {Jenjobs.SKILL_URL + "/" + _skill[1] + "?access-token=" + accessToken};
-                        new DeleteRequest().execute(param);
-
-                        // delete from local
-                        tableSkill.deleteSkill(skillId);
+                            // delete from local
+                            tableSkill.deleteSkill(skillId);
+                        } else {
+                            Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
                 ((TextView)v.findViewById(R.id.skillText)).setText(skillName);
@@ -1607,12 +1636,16 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     v.findViewById(R.id.deleteLanguageButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
-                            language.removeView(v);
-                            // delete from server
-                            String[] param = {Jenjobs.LANGUAGE_URL + "/" + _lang.id + "?access-token=" + accessToken};
-                            new DeleteRequest().execute(param);
-                            // delete from local
-                            tableLanguage.deleteLanguage(_lang.id);
+                            if( Jenjobs.isOnline(context) ){
+                                language.removeView(v);
+                                // delete from server
+                                String[] param = {Jenjobs.LANGUAGE_URL + "/" + _lang.id + "?access-token=" + accessToken};
+                                new DeleteRequest().execute(param);
+                                // delete from local
+                                tableLanguage.deleteLanguage(_lang.id);
+                            }else{
+                                Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
 
@@ -1621,14 +1654,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ((TextView)v.findViewById(R.id.writtenLanguageLevel)).setText((String) _languageLevel.get(_lang.written));
                 }
             }
-        }else if( requestCode == UPDATE_ATTACHED_RESUME ){
-            if (resultCode == RESULT_OK) {
-                Log.e("filterdata", extra.getString("result"));
-                Log.e("filterdata", extra.toString());
-            }
         }else if( requestCode == UPDATE_ADDITIONAL_INFO ){
             if (resultCode == RESULT_OK) {
-                Log.e("filterdata", extra.getString("info"));
                 additionalInfo.setText(extra.getString("info"));
             }
         }else if( requestCode == UPDATE_PROFILE ){
@@ -1679,8 +1706,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             downloadSection = sectionToDownload;
         }
 
-        //private String accessToken;
-
         @Override
         protected String doInBackground(String... params) {
             String _response = null;
@@ -1714,10 +1739,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         @Override
         protected void onPostExecute(final String nsuccess) {
             if( nsuccess != null ){
-                Log.e("success", nsuccess);
-
                 if( downloadSection == DOWNLOAD_PROFILE ){
-
                     JSONObject success;
                     int js_profile_id;
 
@@ -1835,13 +1857,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     }
 
                 }else if( downloadSection == DOWNLOAD_APPLICATION ){
-                    Log.e("status", "application downloaded");
                     TableApplication tableApplication = new TableApplication(getApplicationContext());
                     ContentValues cv = new ContentValues();
 
                     try {
                         JSONArray success = new JSONArray(nsuccess);
-                        Log.e("status", "application count="+success.length());
                         if( success.length() > 0 ){
                             for( int i=0;i< success.length();i++ ){
                                 JSONObject s = success.getJSONObject(i);
@@ -1854,7 +1874,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 cv.put("title", s.getString("title"));
                                 cv.put("closed", s.getBoolean("closed") ? 1 : 0);
                                 tableApplication.addApplication(cv);
-                                //Log.e("status", "inserted ID="+insertedId.intValue());
 
                                 // TODO - download job details and save to TableJob
                                 // download the job details
@@ -1889,8 +1908,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     }
 
                 }else if( downloadSection == DOWNLOAD_WORK_EXPERIENCE ){
-
-                    //TableWorkExperience tableWorkExperience = new TableWorkExperience(getApplicationContext());
                     ContentValues cv = new ContentValues();
                     JSONArray success;
 
@@ -1938,14 +1955,11 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     }
 
                 }else if( downloadSection == DOWNLOAD_EDUCATION ){
-
-                    //TableEducation tableEducation = new TableEducation(getApplicationContext());
                     ContentValues cv = new ContentValues();
                     JSONArray success;
 
                     try {
                         success = new JSONArray(nsuccess);
-
                         if( success.length() > 0 ){
                             for( int i=0;i< success.length();i++ ){
                                 JSONObject s = success.getJSONObject(i);
@@ -1975,7 +1989,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
 
                 }else if( downloadSection == DOWNLOAD_JOB_PREFERENCE ){
-
                     TableJobPreference tableJobPreference = new TableJobPreference(getApplicationContext());
                     TableJobPreferenceLocation tableJobPreferenceLocation = new TableJobPreferenceLocation(getApplicationContext());
 
@@ -2015,9 +2028,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     }
 
                 }else if( downloadSection == DOWNLOAD_SKILL ){
-
                     JSONArray success;
-
                     try {
                         success = new JSONArray(nsuccess);
                         if( success.length() > 0 ) {
@@ -2035,10 +2046,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     }
 
                 }else if( downloadSection == DOWNLOAD_LANGUAGE ){
-
                     TableLanguage tableLanguage = new TableLanguage(getApplicationContext());
                     JSONArray success;
-
                     try {
                         success = new JSONArray(nsuccess);
                         if( success.length() > 0 ) {
@@ -2057,10 +2066,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     }
 
                 }else if( downloadSection == DOWNLOAD_BOOKMARK ){
-
                     TableBookmark tableBookmark = new TableBookmark(getApplicationContext());
                     JSONArray success;
-
                     try {
                         success = new JSONArray(nsuccess);
                         if( success.length() > 0 ) {
@@ -2075,8 +2082,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 cv.put("date_closed", s.optString("date_closed"));
                                 tableBookmark.addBookmark(cv);
 
-                                // TODO - download job details and save to TableJob
-                                // download the job details
+                                // download job details and save to TableJob
                                 GetRequest getRequest = new GetRequest();
                                 getRequest.setResultListener(new GetRequest.ResultListener() {
                                     @Override
@@ -2133,46 +2139,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     JSONArray success;
                     try {
                         success = new JSONArray(nsuccess);
-                        //Log.e("success.length", ""+success.length());
                         if( success.length() > 0 ) {
                             for (int i = 0; i < success.length(); i++) {
                                 JSONObject s = success.getJSONObject(i);
                                 ContentValues cv = new ContentValues();
-
-                                /*
-                                -- response --
-                                [
-                                    {
-                                        "id": 107054,
-                                        "company": "CEICdata.com (M) Sdn Bhd ",
-                                        "company_id": 36211,
-                                        "type": "R",
-                                        "opened": 0,
-                                        "status": "C",
-                                        "date_created": "2014-10-24 22:43:21",
-                                        "date_updated": null,
-                                        "post": null
-                                        ---
-                                        "post": {
-                                            "post_id": 316042,
-                                            "post_title": "Internet Marketing Executive | 互联网市场执行人员",
-                                            "date_closed": "2015-03-23 11:57:03",
-                                            "closed": true
-                                        }
-                                    }
-                                ]
-
-                                -- table --
-                                id INTEGER
-                                emp_profile_id INTEGER
-                                emp_profile_name TEXT
-                                status INTEGER
-                                date_added NUMERIC
-                                date_updated NUMERIC
-                                post_id INTEGER
-                                post_title TEXT
-                                post_closed_on NUMERIC
-                                */
 
                                 cv.put("id", s.optInt("id"));
                                 cv.put("emp_profile_name", s.optString("company"));
