@@ -36,6 +36,7 @@ public class JobSearchProfileForm extends ActionBarActivity {
     int id = 0;
     //String profileName;
     String frequency = "Daily";
+    TextView selectedFrequency;
 
     private int SELECT_NOTIFICATION_FREQUENCY = 1;
 
@@ -52,6 +53,7 @@ public class JobSearchProfileForm extends ActionBarActivity {
         TextView keywordInput = (TextView)findViewById(R.id.profile_name);
 
         final CheckBox notificationAlert = (CheckBox)findViewById(R.id.notification_checkbox);
+        notificationAlert.setChecked(true);
         findViewById(R.id.notification_alert).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +69,8 @@ public class JobSearchProfileForm extends ActionBarActivity {
                 startActivityForResult(intent, SELECT_NOTIFICATION_FREQUENCY);
             }
         });
+        selectedFrequency = (TextView)findViewById(R.id.selectedFrequency);
+        selectedFrequency.setText(frequency);
 
         Bundle extra = getIntent().getExtras();
         if( extra != null ){
@@ -81,12 +85,12 @@ public class JobSearchProfileForm extends ActionBarActivity {
                         String keyword = searchParameter.getString("keyword");
                         String salary_min = searchParameter.getString("salary_min");
                         String salary_max = searchParameter.getString("salary_max");
-                        ArrayList<String> job_spec = searchParameter.getStringArrayList("job_spec");
-                        ArrayList<String> job_role = searchParameter.getStringArrayList("job_role");
-                        ArrayList<String> job_type = searchParameter.getStringArrayList("job_type");
-                        ArrayList<String> position_level = searchParameter.getStringArrayList("position_level");
-                        ArrayList<String> country = searchParameter.getStringArrayList("country");
-                        ArrayList<String> state = searchParameter.getStringArrayList("state");
+                        ArrayList<Integer> job_spec = searchParameter.getIntegerArrayList("job_spec");
+                        ArrayList<Integer> job_role = searchParameter.getIntegerArrayList("job_role");
+                        ArrayList<Integer> job_type = searchParameter.getIntegerArrayList("job_type");
+                        ArrayList<Integer> position_level = searchParameter.getIntegerArrayList("position_level");
+                        ArrayList<Integer> country = searchParameter.getIntegerArrayList("country");
+                        ArrayList<Integer> state = searchParameter.getIntegerArrayList("state");
                         Boolean directEmployer = searchParameter.getBoolean("direct_employer");
                         Boolean recruitmentAgency = searchParameter.getBoolean("recruitment_agency");
 
@@ -96,11 +100,34 @@ public class JobSearchProfileForm extends ActionBarActivity {
                         if( salary_max != null ){ _searchParameter.put("salary_max", salary_max); }
 
                         if( job_spec != null && job_spec.size() > 0 ){
-                            _searchParameter.put("job_spec_id", (new JSONArray(job_spec)).toString()); // job_spec_id=[1,2,3...]
+                            TableJobRole tableJobRole = new TableJobRole(context);
+                            //_searchParameter.put("job_spec_id", (new JSONArray(job_spec)).toString()); // job_spec_id=[1,2,3...]
+
+                            JSONArray objArr = new JSONArray();
+                            for( Integer _job_spec : job_spec ){
+                                JSONObject obj = new JSONObject();
+                                obj.put("id", _job_spec);
+
+                                JSONArray jobRoleArr = new JSONArray();
+                                if( job_role != null && job_role.size() > 0){
+                                    ArrayList<JobRole> _job_roles = tableJobRole.findByJobSpec(String.valueOf(_job_spec), job_role);
+                                    if( _job_roles.size() > 0 ){
+                                        for( JobRole _job_role : _job_roles ){
+                                            jobRoleArr.put(_job_role.id);
+                                        }
+                                    }
+                                }
+                                obj.put("job_role_id", jobRoleArr);
+
+                                objArr.put(obj);
+                            }
+                            _searchParameter.put("job_spec_id", objArr.toString());
                         }
-                        if( job_role != null && job_role.size() > 0 ){
-                            _searchParameter.put("job_role_id", (new JSONArray(job_role)).toString()); // job_role_id=[1,2,3...]
-                        }
+
+                        //if( job_role != null && job_role.size() > 0 ){
+                        //    _searchParameter.put("job_role_id", (new JSONArray(job_role)).toString()); // job_role_id=[1,2,3...]
+                        //}
+
                         if( job_type != null && job_type.size() > 0 ){
                             _searchParameter.put("job_type_id", (new JSONArray(job_type)).toString()); // job_type_id=[1,2,3...]
                         }
@@ -108,10 +135,10 @@ public class JobSearchProfileForm extends ActionBarActivity {
                             _searchParameter.put("job_level_id", (new JSONArray(position_level)).toString()); // job_level_id=[1,2,3...]
                         }
                         if( country != null && country.size() > 0 ){
-                            _searchParameter.put("job_level_id", (new JSONArray(country)).toString()); // country_id=[1,2,3...]
+                            _searchParameter.put("country_id", (new JSONArray(country)).toString()); // country_id=[1,2,3...]
                         }
                         if( state != null && state.size() > 0 ){
-                            _searchParameter.put("job_level_id", (new JSONArray(state)).toString()); // state_id=[1,2,3...]
+                            _searchParameter.put("state_id", (new JSONArray(state)).toString()); // state_id=[1,2,3...]
                         }
 
                         _searchParameter.put("direct_employer", directEmployer);
@@ -147,23 +174,40 @@ public class JobSearchProfileForm extends ActionBarActivity {
                     cv.put("id", id);
                     cv.put("profile_name", profileName);
                     cv.put("parameters", _searchParameter.toString());
-                    cv.put("notification_frequency", frequency.substring(0,1));
+                    cv.put("notification_frequency", frequency.substring(0, 1));
                     id = tableJobSearchProfile.saveSearchProfile(cv);
 
-                    // TODO - post to server
-                    PostRequest p = new PostRequest();
-                    p.setResultListener(new PostRequest.ResultListener() {
-                        @Override
-                        public void processResult(JSONObject success) {
-                            if( success != null ){
-                                Log.e("success", success.toString());
-                            }else{
-                                Toast.makeText(context, R.string.empty_response, Toast.LENGTH_LONG).show();
+                    JSONObject postedData = _searchParameter; // copy content to other variable
+                    try {
+                        postedData.put("name", profileName);
+                        postedData.put("frequency", cv.getAsString("notification_frequency"));
+
+                        // TODO - post to server
+                        PostRequest p = new PostRequest();
+                        p.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject success) {
+                                if( success != null ){
+                                    Log.e("success", success.toString());
+
+                                    if( success.optString("status_text") != null ){
+                                        Toast.makeText(context, success.optString("status_text"), Toast.LENGTH_LONG).show();
+                                        finish();
+                                    }else{
+                                        Toast.makeText(context, R.string.unknown_error, Toast.LENGTH_LONG).show();
+                                    }
+                                }else{
+                                    Toast.makeText(context, R.string.empty_response, Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
-                    String[] param = {Jenjobs.SEARCH_PROFILE+"/"+accessToken}; // TODO - update URL
-                    p.execute(param);
+                        });
+                        //Log.e("url", Jenjobs.SEARCH_PROFILE + "?access-token=" + accessToken);
+                        //Log.e("param", postedData.toString());
+                        String[] param = {Jenjobs.SEARCH_PROFILE+"?access-token="+accessToken, postedData.toString()}; // TODO - update URL
+                        p.execute(param);
+                    } catch (JSONException e) {
+                        Log.e("err", e.getMessage());
+                    }
                 }else{
                     Toast.makeText(context, R.string.empty_search_parameter, Toast.LENGTH_LONG).show();
                 }
@@ -179,6 +223,7 @@ public class JobSearchProfileForm extends ActionBarActivity {
             if (resultCode == RESULT_OK) {
                 Bundle extra = data.getExtras();
                 frequency = extra.getString("frequency");
+                selectedFrequency.setText(frequency);
             }
         }
     }
