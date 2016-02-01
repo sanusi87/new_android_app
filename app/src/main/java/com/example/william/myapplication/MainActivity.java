@@ -176,9 +176,7 @@ public class MainActivity extends Activity {
             } catch (UnsupportedEncodingException e) {
                 Log.e("UnsupportedEncoding", e.getMessage());
             } catch (IOException e) {
-                //Log.e("IOException", e.getMessage());
-                Toast.makeText(getApplicationContext(), "Network error!", Toast.LENGTH_LONG).show();
-                toggleButtonState(true);
+                Log.e("IOException", e.getMessage());
             }
 
             return (JSONObject) _response;
@@ -187,6 +185,7 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(final JSONObject success) {
             mAuthTask = null;
+            toggleButtonState(true);
 
             if (success != null) {
                 if( success.optString("access_token") != null ){
@@ -211,6 +210,8 @@ public class MainActivity extends Activity {
 
                     toggleButtonState(true);
                 }
+            }else{
+                Toast.makeText(getApplicationContext(), "Network error!", Toast.LENGTH_LONG).show();
             }
         }
 
