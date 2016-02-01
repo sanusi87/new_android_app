@@ -89,6 +89,7 @@ public class JobSearch {
                 }
             });
             String[] args = {getSearchUrl()};
+            //Log.e("search", args[0]);
             gr.execute(args);
         }else{
             adapter.notifyDataSetChanged();
@@ -129,7 +130,7 @@ public class JobSearch {
         return this.page;
     }
 
-    public void setJobLevel( String[] jobLevel ){
+    public void setJobLevel( Integer[] jobLevel ){
         if( jobLevel.length > 0 ){
             try {
                 filters.add("job_level_id=" + new JSONArray(jobLevel).toString());
@@ -142,7 +143,7 @@ public class JobSearch {
         }
     }
 
-    public void setJobSpec( String[] jobSpec ){
+    public void setJobSpec( Integer[] jobSpec ){
         if( jobSpec.length > 0 ){
             try {
                 filters.add("job_spec_id=" + new JSONArray(jobSpec).toString());
@@ -155,7 +156,7 @@ public class JobSearch {
         }
     }
 
-    public void setJobRole( String[] jobRole ){
+    public void setJobRole( Integer[] jobRole ){
         if( jobRole.length > 0 ){
             try {
                 filters.add("job_role_id=" + new JSONArray(jobRole).toString());
@@ -168,7 +169,7 @@ public class JobSearch {
         }
     }
 
-    public void setCountry( String[] country ){
+    public void setCountry( Integer[] country ){
         if( country.length > 0 ){
             try {
                 filters.add("country_id=" + new JSONArray(country).toString());
@@ -181,7 +182,7 @@ public class JobSearch {
         }
     }
 
-    public void setState( String[] state ){
+    public void setState( Integer[] state ){
         if( state.length > 0 ){
             try {
                 filters.add("state_id=" + new JSONArray(state).toString());
@@ -194,7 +195,7 @@ public class JobSearch {
         }
     }
 
-    public void setJobType( String[] types ){
+    public void setJobType( Integer[] types ){
         if( types.length > 0 ){
             try {
                 filters.add("job_type_id=" + new JSONArray(types).toString());
