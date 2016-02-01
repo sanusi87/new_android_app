@@ -60,7 +60,8 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".JobSearchFilter"
-            android:label="@string/job_search_filter" />
+            android:label="@string/job_search_filter"
+            android:parentActivityName=".JobSearchActivity" />
         <activity android:name=".SelectState" />
         <activity android:name=".SelectCountry" />
         <activity
@@ -146,8 +147,12 @@
             android:name=".JobSuggestion"
             android:label="@string/job_suggestion"
             android:parentActivityName=".ProfileActivity" />
-        <activity android:name=".JobSearchProfileForm" />
-        <activity android:name=".JobSearchProfile" />
+        <activity
+            android:name=".JobSearchProfileForm"
+            android:parentActivityName=".JobSearchActivity" />
+        <activity
+            android:name=".JobSearchProfile"
+            android:parentActivityName=".JobSearchActivity" />
         <activity
             android:name=".SelectNotificationFrequency"
             android:theme="@android:style/Theme.Dialog" />
