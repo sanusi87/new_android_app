@@ -89,7 +89,7 @@ public class JobSearch {
                 }
             });
             String[] args = {getSearchUrl()};
-            //Log.e("search", args[0]);
+            Log.e("search", args[0]);
             gr.execute(args);
         }else{
             adapter.notifyDataSetChanged();
@@ -107,7 +107,7 @@ public class JobSearch {
         }
     }
 
-    public void setKeywordFilter( String kFilter ){
+    public void setKeywordFilter( int kFilter ){
         filters.add( "search_by="+kFilter );
     }
 
