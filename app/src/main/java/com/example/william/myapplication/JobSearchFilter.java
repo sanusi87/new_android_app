@@ -71,6 +71,11 @@ public class JobSearchFilter extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_search_filter);
+        setTitle(R.string.job_search_filter);
+
+        if( getSupportActionBar() != null ){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         TableJobSpec tableJobSpec = new TableJobSpec(this);
         TableJobRole tableJobRole = new TableJobRole(this);
