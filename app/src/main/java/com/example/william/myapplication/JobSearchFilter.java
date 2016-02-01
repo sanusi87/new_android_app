@@ -121,14 +121,14 @@ public class JobSearchFilter extends ActionBarActivity {
                 salaryMinInput.setText(searchParameters.getString("salary_min"));
                 salaryMaxInput.setText(searchParameters.getString("salary_max"));
 
-                ArrayList<String> _selectedJobSpec = searchParameters.getStringArrayList("job_spec");
-                ArrayList<String> _selectedJobRole = searchParameters.getStringArrayList("job_role");
+                ArrayList<Integer> _selectedJobSpec = searchParameters.getIntegerArrayList("job_spec");
+                ArrayList<Integer> _selectedJobRole = searchParameters.getIntegerArrayList("job_role");
                 //Log.e("_selectedJobRole", ""+_selectedJobRole);
                 ArrayList<String> selectedJobSpecLabels = new ArrayList<>();
                 if( _selectedJobSpec != null && _selectedJobSpec.size() > 0 ){
                     for( int i=0;i<_selectedJobSpec.size();i++ ){
-                        String _js = _selectedJobSpec.get(i); // job_spec_id
-                        JobSpec __js = tableJobSpec.findById(Integer.valueOf(_js)); // job_spec
+                        Integer _js = _selectedJobSpec.get(i); // job_spec_id
+                        JobSpec __js = tableJobSpec.findById(_js); // job_spec
                         selectedJobSpecValues.add(__js);
                         selectedJobSpecLabels.add(__js.name);
 
@@ -147,15 +147,13 @@ public class JobSearchFilter extends ActionBarActivity {
                 recalculateHeight();
 
                 //---
-                ArrayList<String> _selectedJobType = searchParameters.getStringArrayList("job_type");
+                ArrayList<Integer> _selectedJobType = searchParameters.getIntegerArrayList("job_type");
                 if( _selectedJobType != null && _selectedJobType.size() > 0 ){
                     HashMap listOfJobTypes = Jenjobs.getJobType();
                     ArrayList<String> selectedLabels = new ArrayList<>();
-                    for(String jobTypeId : _selectedJobType){
-                        String jobTypeName = (String)listOfJobTypes.get(Integer.valueOf(jobTypeId));
-                        Log.e("jobTypeId", ""+jobTypeId);
-                        Log.e("jobTypeId", ""+jobTypeName);
-                        selectedJobTypeValues.add(new JobType(Integer.valueOf(jobTypeId), jobTypeName));
+                    for(Integer jobTypeId : _selectedJobType){
+                        String jobTypeName = (String)listOfJobTypes.get(jobTypeId);
+                        selectedJobTypeValues.add(new JobType(jobTypeId, jobTypeName));
                         selectedLabels.add(jobTypeName);
                     }
                     selectedJobType.setText(TextUtils.join(",",selectedLabels));
@@ -163,15 +161,15 @@ public class JobSearchFilter extends ActionBarActivity {
                 //---
 
                 //---
-                ArrayList<String> _selectedState = searchParameters.getStringArrayList("state");
+                ArrayList<Integer> _selectedState = searchParameters.getIntegerArrayList("state");
                 if( _selectedState != null && _selectedState.size() > 0 ){
                     HashMap listOfStates = Jenjobs.getState();
                     ArrayList<String> selectedLabels = new ArrayList<>();
-                    for(String stateId : _selectedState){
-                        String stateName = (String) listOfStates.get(Integer.valueOf(stateId));
+                    for(Integer stateId : _selectedState){
+                        String stateName = (String) listOfStates.get(stateId);
                         Log.e("stateId", ""+stateId);
                         Log.e("stateId", ""+stateName);
-                        selectedMalaysiaStateValues.add(new State(Integer.valueOf(stateId), stateName));
+                        selectedMalaysiaStateValues.add(new State(stateId, stateName));
                         selectedLabels.add(stateName);
                     }
                     selectedMalaysiaState.setText(TextUtils.join(",",selectedLabels));
@@ -179,15 +177,15 @@ public class JobSearchFilter extends ActionBarActivity {
                 //---
 
                 //---
-                ArrayList<String> _selectedCountry = searchParameters.getStringArrayList("country");
+                ArrayList<Integer> _selectedCountry = searchParameters.getIntegerArrayList("country");
                 if( _selectedCountry != null && _selectedCountry.size() > 0 ){
                     HashMap listOfCountries = Jenjobs.getCountry();
                     ArrayList<String> selectedLabels = new ArrayList<>();
-                    for(String countryId : _selectedCountry){
-                        String countryName = (String) listOfCountries.get(Integer.valueOf(countryId));
+                    for(Integer countryId : _selectedCountry){
+                        String countryName = (String) listOfCountries.get(countryId);
                         Log.e("countryId", ""+countryId);
                         Log.e("countryId", ""+countryName);
-                        selectedOtherCountryValues.add(new Country(Integer.valueOf(countryId), countryName));
+                        selectedOtherCountryValues.add(new Country(countryId, countryName));
                         selectedLabels.add(countryName);
                     }
                     selectedOtherCountry.setText(TextUtils.join(",",selectedLabels));
@@ -195,15 +193,15 @@ public class JobSearchFilter extends ActionBarActivity {
                 //---
 
                 //---
-                ArrayList<String> _selectedPositionLevel = searchParameters.getStringArrayList("position_level");
+                ArrayList<Integer> _selectedPositionLevel = searchParameters.getIntegerArrayList("position_level");
                 if( _selectedPositionLevel != null && _selectedPositionLevel.size() > 0 ){
                     HashMap listOfPositionLevels = Jenjobs.getPositionLevel();
                     ArrayList<String> selectedLabels = new ArrayList<>();
-                    for( String positionLevelId : _selectedPositionLevel ){
-                        String positionLevelName = (String) listOfPositionLevels.get(Integer.valueOf(positionLevelId));
+                    for( Integer positionLevelId : _selectedPositionLevel ){
+                        String positionLevelName = (String) listOfPositionLevels.get(positionLevelId);
                         Log.e("positionLevelId", ""+positionLevelId);
                         Log.e("positionLevelId", ""+positionLevelName);
-                        selectedPositionLevelValues.add(new PositionLevel(Integer.valueOf(positionLevelId), positionLevelName));
+                        selectedPositionLevelValues.add(new PositionLevel(positionLevelId, positionLevelName));
                         selectedLabels.add(positionLevelName);
                     }
                     selectedPositionLevel.setText(TextUtils.join(",",selectedLabels));
