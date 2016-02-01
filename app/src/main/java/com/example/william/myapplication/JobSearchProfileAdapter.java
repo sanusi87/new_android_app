@@ -28,12 +28,14 @@ public class JobSearchProfileAdapter extends BaseAdapter implements ListAdapter{
         Cursor c = tableJobSearchProfile.getSearchProfile(0);
         if( c.moveToFirst() ){
             while( !c.isAfterLast() ){
-                String[] item = new String[5];
+                String[] item = new String[7];
                 item[0] = String.valueOf(c.getInt(0)); // id
-                item[1] = c.getString(1); // profile_name
-                item[2] = c.getString(2); // parameters
-                item[3] = c.getString(3); // date_created
-                item[4] = c.getString(4); // date_updated
+                item[1] = c.getString(1); // _id
+                item[2] = c.getString(2); // profile_name
+                item[3] = c.getString(3); // parameters
+                item[4] = c.getString(4); // notification frequency
+                item[5] = c.getString(5); // date_created
+                item[6] = c.getString(6); // date_updated
 
                 _profile.add(item);
                 c.moveToNext();
@@ -69,15 +71,16 @@ public class JobSearchProfileAdapter extends BaseAdapter implements ListAdapter{
 
         final String[] searchProfile = getItem(position);
         final int searchProfileId = Integer.valueOf(searchProfile[0]);
-        ((TextView)v.findViewById(R.id.profileName)).setText(searchProfile[1]);
-        ((TextView)v.findViewById(R.id.dateCreated)).setText(Jenjobs.date(searchProfile[3], null,"yyyy-MM-dd hh:mm:ss"));
+        ((TextView)v.findViewById(R.id.profileName)).setText(searchProfile[2]);
+        ((TextView)v.findViewById(R.id.dateCreated)).setText(Jenjobs.date(searchProfile[5], null,"yyyy-MM-dd hh:mm:ss"));
 
         v.findViewById(R.id.profileContainer).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, JobSearchProfileForm.class);
-                intent.putExtra("search_profile", searchProfile);
-                context.startActivity(intent);
+                Intent intent = new Intent(context, JobSearchActivity.class);
+                intent.putExtra("search_profile", searchProfile[3]);
+                activity.startActivity(intent);
+                activity.finish();
             }
         });
 

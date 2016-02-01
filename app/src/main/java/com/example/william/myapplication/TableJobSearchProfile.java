@@ -11,6 +11,7 @@ public class TableJobSearchProfile extends SQLiteOpenHelper {
 
     public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+            "_id NUMERIC, " + // ID from JenJOBS database
             "profile_name TEXT, " +
             "parameters TEXT, " +
             "notification_frequency TEXT, "+
@@ -47,6 +48,7 @@ public class TableJobSearchProfile extends SQLiteOpenHelper {
         }
 
         int id = cv.getAsInteger("id");
+        cv.remove("id");
         if( id > 0 ){
             cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss", null));
             db.update(TABLE_NAME, cv, "id=?", new String[]{String.valueOf(id)});
