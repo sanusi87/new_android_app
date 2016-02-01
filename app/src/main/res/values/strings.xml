@@ -268,4 +268,7 @@
     <string name="profile_name_required">Profile name is required</string>
     <string name="empty_search_parameter">Search parameters are empty!</string>
     <string name="empty_response">Response received is empty!</string>
+    <string name="unknown_error">Unknown error!</string>
+    <string name="job_search_profiles">Job Search Profiles</string>
+    <string name="no_job_search_profile">No job search profiles found!</string>
 </resources>
