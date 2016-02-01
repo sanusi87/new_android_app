@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -19,6 +22,8 @@ public class JobSearchProfileAdapter extends BaseAdapter implements ListAdapter{
     private Context context;
     private Activity activity;
     private TableJobSearchProfile tableJobSearchProfile;
+
+    private String accessToken;
 
     public JobSearchProfileAdapter( Context context ){
         this.context = context;
@@ -93,8 +98,17 @@ public class JobSearchProfileAdapter extends BaseAdapter implements ListAdapter{
                     public void statusSelected(boolean status) {
                         if( status ){
                             tableJobSearchProfile.deleteSearchProfile(searchProfileId);
-                            PostRequest p = new PostRequest();
-                            String[] param = {};
+                            _profile.remove(position);
+                            notifyDataSetChanged();
+
+                            DeleteRequest p = new DeleteRequest();
+                            p.setResultListener(new DeleteRequest.ResultListener() {
+                                @Override
+                                public void processResult(JSONObject success) {
+                                    Log.e("result", ""+success);
+                                }
+                            });
+                            String[] param = {Jenjobs.SEARCH_PROFILE+"/"+searchProfileId+"?access-token="+accessToken};
                             p.execute(param);
                         }
                     }
@@ -108,5 +122,9 @@ public class JobSearchProfileAdapter extends BaseAdapter implements ListAdapter{
 
     public void setActivity(Activity _activity){
         this.activity = _activity;
+    }
+
+    public void setAccessToken(String accessToken){
+        this.accessToken = accessToken;
     }
 }
