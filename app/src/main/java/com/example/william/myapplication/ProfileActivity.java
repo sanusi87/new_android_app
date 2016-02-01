@@ -83,7 +83,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     /*
     * job search
     * */
-    public static final int FETCH_FILTER_PARAM = 1;
+    //public static final int FETCH_FILTER_PARAM = 1;
 
     /*
     * online resume
@@ -231,6 +231,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             Intent intent = new Intent(this, JobSuggestion.class);
             startActivity(intent);
             //finish(); // -- do not set this if you wanted to return
+        }else if( selectedItem == JOB_FRAGMENT ){
+            Intent intent = new Intent(this, JobSearchActivity.class);
+            startActivity(intent);
         }else{
             // update the main content by replacing fragments
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -243,9 +246,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             case PROFILE_FRAGMENT:
                 mTitle = getString(R.string.my_profile);
                 break;
-            case JOB_FRAGMENT:
-                mTitle = getString(R.string.job_search);
-                break;
+//            case JOB_FRAGMENT:
+//                mTitle = getString(R.string.job_search);
+//                break;
             case APPLICATION_FRAGMENT:
                 mTitle = getString(R.string.application);
                 break;
@@ -307,10 +310,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     rootView = inflater.inflate(R.layout.profile_layout, container, false);
                     setupProfileFragment(rootView);
                     break;
-                case JOB_FRAGMENT:
-                    rootView = inflater.inflate(R.layout.job_layout, container, false);
-                    setupJobFragment(rootView);
-                    break;
+//                case JOB_FRAGMENT:
+//                    rootView = inflater.inflate(R.layout.job_layout, container, false);
+//                    setupJobFragment(rootView);
+//                    break;
                 case APPLICATION_FRAGMENT:
                     rootView = inflater.inflate(R.layout.application_layout, container, false);
                     setupApplicationFragment(rootView);
@@ -399,7 +402,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
 
             final ImageView profileImage = (ImageView) rootView.findViewById(R.id.profile_image);
-            if( theProfile.photo_file != null ){
+            if( theProfile. photo_file != null ){
                 new ImageLoad(theProfile.photo_file, profileImage).execute();
             }
 
@@ -476,6 +479,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             });
         }
 
+        /*
         private void setupJobFragment(View rootView) {
             ProgressBar loading = (ProgressBar) rootView.findViewById(R.id.progressBar4);
             ListView lv = (ListView) rootView.findViewById(R.id.job_list_view);
@@ -511,6 +515,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }
             });
         }
+        */
 
         private void setupApplicationFragment(View rootView) {
             ListView lv = (ListView)rootView.findViewById(R.id.listOfApplication);
@@ -1191,35 +1196,40 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }else{
                     return super.onOptionsItemSelected(item);
                 }
-            case JOB_FRAGMENT:
-                if( clickedItem == R.id.filter_job_button ){
-                    Intent intent = new Intent();
-                    intent.setClass(getApplicationContext(), JobSearchFilter.class);
-                    // send back the intent
-                    intent.putExtra("searchParameters", searchParameters);
-                    startActivityForResult(intent, FETCH_FILTER_PARAM);
-                    return true;
-                }else if( clickedItem == R.id.about_job_ads ) {
-                    Intent intent = new Intent();
-                    intent.setClass(getApplicationContext(), AboutJobSearch.class);
-                    startActivity(intent);
-                    return true;
-                }else if( clickedItem == R.id.save_filter_button ){
-                    Log.e("searchParameter", ""+searchParameters.isEmpty());
-                    Log.e("searchParameter", ""+searchParameters.size());
-
-                    if( !searchParameters.isEmpty() ){
-                        Intent intent = new Intent();
-                        intent.setClass(getApplicationContext(), JobSearchProfileForm.class);
-                        intent.putExtra("searchParameter", searchParameters);
-                        startActivity(intent);
-                    }else{
-                        Toast.makeText(context, "Please update your search parameter first.", Toast.LENGTH_LONG).show();
-                    }
-                    return true;
-                }else{
-                    return super.onOptionsItemSelected(item);
-                }
+//            case JOB_FRAGMENT:
+//                if( clickedItem == R.id.filter_job_button ){
+//                    Intent intent = new Intent();
+//                    intent.setClass(getApplicationContext(), JobSearchFilter.class);
+//                    // send back the intent
+//                    intent.putExtra("searchParameters", searchParameters);
+//                    startActivityForResult(intent, FETCH_FILTER_PARAM);
+//                    return true;
+//                }else if( clickedItem == R.id.about_job_ads ) {
+//                    Intent intent = new Intent();
+//                    intent.setClass(getApplicationContext(), AboutJobSearch.class);
+//                    startActivity(intent);
+//                    return true;
+//                }else if( clickedItem == R.id.save_filter_button ){
+//                    Log.e("searchParameter", ""+searchParameters.isEmpty());
+//                    Log.e("searchParameter", ""+searchParameters.size());
+//
+//                    if( !searchParameters.isEmpty() ){
+//                        Intent intent = new Intent();
+//                        intent.setClass(getApplicationContext(), JobSearchProfileForm.class);
+//                        intent.putExtra("searchParameter", searchParameters);
+//                        startActivity(intent);
+//                    }else{
+//                        Toast.makeText(context, "Please update your search parameter first.", Toast.LENGTH_LONG).show();
+//                    }
+//                    return true;
+//                }else if( clickedItem == R.id.job_search_profile_list ){
+//                    Intent intent = new Intent();
+//                    intent.setClass(getApplicationContext(), JobSearchProfile.class);
+//                    startActivity(intent);
+//                    return true;
+//                }else{
+//                    return super.onOptionsItemSelected(item);
+//                }
             case APPLICATION_FRAGMENT:
             case SETTINGS_FRAGMENT:
             case ONLINE_RESUME_FRAGMENT:
@@ -1241,9 +1251,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             case PROFILE_FRAGMENT:
                 inflater.inflate(R.menu.profile, menu);
                 break;
-            case JOB_FRAGMENT:
-                inflater.inflate(R.menu.job_fragment_menu, menu);
-                break;
+//            case JOB_FRAGMENT:
+//                inflater.inflate(R.menu.job_fragment_menu, menu);
+//                break;
             case APPLICATION_FRAGMENT:
             case INVITATION_AND_REQUEST:
             case JOB_SUGGESTION:
@@ -1265,6 +1275,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             extra = data.getExtras();
         }
 
+        /*
         // Check which request we're responding to
         if (requestCode == FETCH_FILTER_PARAM) {
             // Make sure the request was successful
@@ -1300,69 +1311,69 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 ArrayList jobSpecs = (ArrayList) extra.get("job_spec");
                 if( jobSpecs != null && jobSpecs.size() > 0 ){
-                    ArrayList<String> _jobSpec = new ArrayList<>();
+                    ArrayList<Integer> _jobSpec = new ArrayList<>();
                     for(Object jobSpec : jobSpecs){
                         JobSpec __jobSpec = (JobSpec)jobSpec;
-                        _jobSpec.add(String.valueOf(__jobSpec.id));
+                        _jobSpec.add(__jobSpec.id);
                     }
-                    jobSearch.setJobSpec(_jobSpec.toArray(new String[_jobSpec.size()]));
-                    searchParameters.putStringArrayList("job_spec", _jobSpec);
+                    jobSearch.setJobSpec(_jobSpec.toArray(new Integer[_jobSpec.size()]));
+                    searchParameters.putIntegerArrayList("job_spec", _jobSpec);
                 }
 
                 ArrayList jobRoles = (ArrayList) extra.get("job_role");
                 if( jobRoles != null && jobRoles.size() > 0 ){
-                    ArrayList<String> _jobRole = new ArrayList<>();
+                    ArrayList<Integer> _jobRole = new ArrayList<>();
                     for(Object jobRole : jobRoles){
                         JobRole __jobRole = (JobRole)jobRole;
-                        _jobRole.add(String.valueOf(__jobRole.id));
+                        _jobRole.add(__jobRole.id);
                     }
-                    jobSearch.setJobRole(_jobRole.toArray(new String[_jobRole.size()]));
-                    searchParameters.putStringArrayList("job_role", _jobRole);
+                    jobSearch.setJobRole(_jobRole.toArray(new Integer[_jobRole.size()]));
+                    searchParameters.putIntegerArrayList("job_role", _jobRole);
                 }
 
                 ArrayList jobTypes = (ArrayList) extra.get("job_type");
                 if( jobTypes != null && jobTypes.size() > 0 ){
-                    ArrayList<String> _jobType = new ArrayList<>();
+                    ArrayList<Integer> _jobType = new ArrayList<>();
                     for(Object jobType : jobTypes){
                         JobType __jobType = (JobType)jobType;
-                        _jobType.add(String.valueOf(__jobType.id));
+                        _jobType.add(__jobType.id);
                     }
-                    jobSearch.setJobType(_jobType.toArray(new String[_jobType.size()]));
-                    searchParameters.putStringArrayList("job_type", _jobType);
+                    jobSearch.setJobType(_jobType.toArray(new Integer[_jobType.size()]));
+                    searchParameters.putIntegerArrayList("job_type", _jobType);
                 }
 
                 ArrayList states = (ArrayList) extra.get("state");
                 if( states != null && states.size() > 0 ){
-                    ArrayList<String> _state = new ArrayList<>();
+                    ArrayList<Integer> _state = new ArrayList<>();
                     for(Object state : states){
                         State __state = (State)state;
-                        _state.add(String.valueOf(__state.id));
+                        _state.add(__state.id);
                     }
-                    jobSearch.setState(_state.toArray(new String[_state.size()]));
-                    searchParameters.putStringArrayList("state", _state);
+                    jobSearch.setState(_state.toArray(new Integer[_state.size()]));
+                    searchParameters.putIntegerArrayList("state", _state);
                 }
 
                 ArrayList countries = (ArrayList) extra.get("country");
                 if( countries != null && countries.size() > 0 ){
-                    ArrayList<String> _country = new ArrayList<>();
+                    ArrayList<Integer> _country = new ArrayList<>();
                     for(Object country : countries){
                         Country __country = (Country)country;
-                        _country.add(String.valueOf(__country.id));
+                        _country.add(__country.id);
                     }
-                    jobSearch.setCountry(_country.toArray(new String[_country.size()]));
-                    searchParameters.putStringArrayList("country", _country);
+                    jobSearch.setCountry(_country.toArray(new Integer[_country.size()]));
+                    searchParameters.putIntegerArrayList("country", _country);
                 }
 
                 ArrayList positionLevels = (ArrayList) extra.get("position_level");
                 //Log.e("positionLevels", ""+positionLevels);
                 if( positionLevels != null && positionLevels.size() > 0 ){
-                    ArrayList<String> _positionLevel = new ArrayList<>();
+                    ArrayList<Integer> _positionLevel = new ArrayList<>();
                     for(Object positionLevel : positionLevels){
                         PositionLevel __positionLevel = (PositionLevel)positionLevel;
-                        _positionLevel.add(String.valueOf(__positionLevel.id));
+                        _positionLevel.add(__positionLevel.id);
                     }
-                    jobSearch.setJobLevel(_positionLevel.toArray(new String[_positionLevel.size()]));
-                    searchParameters.putStringArrayList("position_level", _positionLevel);
+                    jobSearch.setJobLevel(_positionLevel.toArray(new Integer[_positionLevel.size()]));
+                    searchParameters.putIntegerArrayList("position_level", _positionLevel);
                 }else{
                     if( positionLevels != null ){
                         Log.e("positionLevels", ""+positionLevels.size());
@@ -1381,7 +1392,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 // TODO--
                 jobSearch.search(true);
             }
-        }else if( requestCode == ADD_WORK_EXP ){
+        }else */
+        if( requestCode == ADD_WORK_EXP ){
             if (resultCode == RESULT_OK) {
                 final int id = extra.getInt("id");
                 int prevWork = extra.getInt("selectedWork");
@@ -1406,7 +1418,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ((TextView)v.findViewById(R.id.companyName)).setText( companyName );
 
                     String durationRange = Jenjobs.date(dateStart, "MMM yyyy", "yyyy-MM-dd")+" - ";
-                    String durationCount = "";
+                    String durationCount;
                     if( dateResign.length() == 0 ){
                         durationRange += "Present";
                         durationCount = Jenjobs.calculateDuration( dateStart, Jenjobs.date(null, null, "yyyy-MM-dd") );
@@ -1466,7 +1478,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 if( c.moveToFirst() ){
                     final int actualId = c.getInt(1);
                     String school = c.getString(2);
-                    String graduationYear = c.getString(9).substring(0,4);
+                    String graduationYear = c.getString(9).substring(0, 4);
                     String eduLevel = (String) eduLv.get(c.getInt(4));
 
                     ((TextView)v.findViewById(R.id.educationLevel)).setText( eduLevel );
