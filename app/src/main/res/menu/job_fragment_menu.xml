@@ -16,6 +16,11 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/job_search_profile_list"
+        android:title="@string/job_search_profiles"
+        app:showAsAction="collapseActionView" />
+
+    <item
         android:id="@+id/about_job_ads"
         android:title="@string/about"
         app:showAsAction="collapseActionView" />
