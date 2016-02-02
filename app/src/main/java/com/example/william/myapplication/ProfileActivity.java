@@ -11,8 +11,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -53,6 +56,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -103,10 +108,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     //public static final int UPDATE_SKILL = 18;
     public static final int ADD_LANGUAGE = 19;
     //public static final int UPDATE_LANGUAGE = 20;
-    public static final int UPDATE_ATTACHED_RESUME = 21;
+    //public static final int UPDATE_ATTACHED_RESUME = 21;
     public static final int UPDATE_ADDITIONAL_INFO = 22;
     public static final int UPDATE_PROFILE = 23;
-    //public static final int SELECT_RESUME_FILE = 24;
+    public static final int TAKE_A_PHOTO = 24;
 
     private static TextView resumeVisibility;
     private static TextView jobSeeking;
@@ -127,6 +132,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     static String accessToken = null;
 
     private static Context context;
+    static ImageView profileImage;
+    static String mCurrentPhotoPath;
 
     /*
     * list of used tables
@@ -405,7 +412,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 dob.setText( Jenjobs.date(_dob, null, "yyyy-MM-dd") );
             }
 
-            final ImageView profileImage = (ImageView) rootView.findViewById(R.id.profile_image);
+            profileImage = (ImageView) rootView.findViewById(R.id.profile_image);
             if( theProfile.photo_file != null ){
                 final String fileName = theProfile.photo_file.substring(theProfile.photo_file.lastIndexOf("/")+1, theProfile.photo_file.length());
 
@@ -433,7 +440,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }
             }
 
-            profileImage.setOnClickListener(new View.OnClickListener() {
+            rootView.findViewById(R.id.upload_a_photo).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if( Jenjobs.isOnline(context) ){
@@ -501,6 +508,46 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     }
                 }
             });
+
+            rootView.findViewById(R.id.take_a_photo).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
+                        // Create the File where the photo should go
+                        File photoFile = null;
+                        try {
+                            photoFile = createImageFile();
+                        } catch (IOException ex) {
+                            Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+                        // Continue only if the File was successfully created
+                        if (photoFile != null) {
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                            getActivity().startActivityForResult(takePictureIntent, TAKE_A_PHOTO);
+                        }
+                    }else{
+                        Toast.makeText(getActivity(), R.string.camera_unavailable, Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+
+        private File createImageFile() throws IOException {
+            // Create an image file name
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String imageFileName = "JPEG_" + timeStamp + "_";
+            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            File image = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+            );
+
+            // Save a file: path for use with ACTION_VIEW intents
+            mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+            return image;
         }
 
         /*
@@ -1175,7 +1222,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
         private void setupBookmarkFragment(View rootView){
             LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.no_item);
-            ((TextView)ll.findViewById(R.id.noticeText)).setText("No bookmark found!");
+            ((TextView)ll.findViewById(R.id.noticeText)).setText(R.string.no_bookmark);
 
             ListView lv = (ListView)rootView.findViewById(R.id.listOfBookmark);
             BookmarkAdapter bookmarkAdapter = new BookmarkAdapter(context, accessToken);
@@ -1293,11 +1340,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
-
-        Bundle extra = null;
-        if (resultCode == RESULT_OK) {
-            extra = data.getExtras();
-        }
 
         /*
         // Check which request we're responding to
@@ -1417,66 +1459,68 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 jobSearch.search(true);
             }
         }else */
-        if( requestCode == ADD_WORK_EXP ){
-            if (resultCode == RESULT_OK) {
+
+        if (resultCode == RESULT_OK) {
+            Bundle extra = data.getExtras();
+            if (requestCode == ADD_WORK_EXP) {
                 final int id = extra.getInt("id");
                 int prevWork = extra.getInt("selectedWork");
 
                 final View v;
-                if( prevWork >= 0 ){
+                if (prevWork >= 0) {
                     v = listOfWorkExp.getChildAt(prevWork);
-                }else{
+                } else {
                     v = getLayoutInflater().inflate(R.layout.each_work_experience, null);
                     listOfWorkExp.addView(v);
                 }
 
                 Cursor c = tableWorkExperience.getWorkExperienceById(id);
-                if( c.moveToFirst() ){
+                if (c.moveToFirst()) {
                     final int actualId = c.getInt(1);
                     final String positionTitle = c.getString(2);
                     String companyName = c.getString(3);
                     String dateStart = c.getString(12);
                     String dateResign = c.getString(13);
 
-                    ((TextView)v.findViewById(R.id.positionTitle)).setText(positionTitle);
-                    ((TextView)v.findViewById(R.id.companyName)).setText( companyName );
+                    ((TextView) v.findViewById(R.id.positionTitle)).setText(positionTitle);
+                    ((TextView) v.findViewById(R.id.companyName)).setText(companyName);
 
-                    String durationRange = Jenjobs.date(dateStart, "MMM yyyy", "yyyy-MM-dd")+" - ";
+                    String durationRange = Jenjobs.date(dateStart, "MMM yyyy", "yyyy-MM-dd") + " - ";
                     String durationCount;
-                    if( dateResign.length() == 0 ){
+                    if (dateResign.length() == 0) {
                         durationRange += "Present";
-                        durationCount = Jenjobs.calculateDuration( dateStart, Jenjobs.date(null, null, "yyyy-MM-dd") );
-                    }else{
+                        durationCount = Jenjobs.calculateDuration(dateStart, Jenjobs.date(null, null, "yyyy-MM-dd"));
+                    } else {
                         durationRange += Jenjobs.date(dateResign, "MMM yyyy", "yyyy-MM-dd");
-                        durationCount = Jenjobs.calculateDuration(dateStart, dateResign );
+                        durationCount = Jenjobs.calculateDuration(dateStart, dateResign);
                     }
-                    ((TextView)v.findViewById(R.id.startedOn)).setText( durationRange );
-                    ((TextView)v.findViewById(R.id.workDuration)).setText( durationCount );
+                    ((TextView) v.findViewById(R.id.startedOn)).setText(durationRange);
+                    ((TextView) v.findViewById(R.id.workDuration)).setText(durationCount);
 
-                    if( prevWork < 0 ){
-                        final int selectedWork = listOfWorkExp.getChildCount()-1;
-                        LinearLayout updateWorkExp = (LinearLayout)v.findViewById(R.id.updateWorkExperience);
+                    if (prevWork < 0) {
+                        final int selectedWork = listOfWorkExp.getChildCount() - 1;
+                        LinearLayout updateWorkExp = (LinearLayout) v.findViewById(R.id.updateWorkExperience);
                         updateWorkExp.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View _v) {
                                 Intent intent = new Intent();
-                                intent.setClass(context,  UpdateWorkExperience.class);
+                                intent.setClass(context, UpdateWorkExperience.class);
                                 intent.putExtra("id", id);
                                 intent.putExtra("selectedWork", selectedWork);
                                 startActivityForResult(intent, ADD_WORK_EXP);
                             }
                         });
 
-                        Button deleteButton = (Button)v.findViewById(R.id.deleteButton);
+                        Button deleteButton = (Button) v.findViewById(R.id.deleteButton);
                         deleteButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View _v) {
-                                if( Jenjobs.isOnline(context) ){
+                                if (Jenjobs.isOnline(context)) {
                                     listOfWorkExp.removeView(v);
                                     String[] param = {Jenjobs.WORK_EXPERIENCE_URL + "/" + actualId + "?access-token=" + accessToken};
                                     new DeleteRequest().execute(param);
                                     tableWorkExperience.deleteWorkExperience(id);
-                                }else{
+                                } else {
                                     Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -1486,52 +1530,50 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     c.close();
                 }
                 workExpQuestion.setVisibility(View.GONE);
-            }
-        }else if( requestCode == ADD_EDU ){
-            if (resultCode == RESULT_OK) {
+            } else if (requestCode == ADD_EDU) {
                 final int id = extra.getInt("id");
                 // TODO: the index might changed one we have added or removed a child
                 int prevEdu = extra.getInt("currentViewPosition");
                 final View v;
-                if( prevEdu >= 0 ){
+                if (prevEdu >= 0) {
                     v = listOfEducation.getChildAt(prevEdu);
-                }else{
+                } else {
                     v = getLayoutInflater().inflate(R.layout.each_education, null);
                     listOfEducation.addView(v);
                 }
 
                 Cursor c = tableEducation.getEducationById(id);
                 HashMap eduLv = Jenjobs.getEducationLevel();
-                if( c.moveToFirst() ){
+                if (c.moveToFirst()) {
                     final int actualId = c.getInt(1);
                     String school = c.getString(2);
                     String graduationYear = c.getString(9).substring(0, 4);
                     String eduLevel = (String) eduLv.get(c.getInt(4));
 
-                    ((TextView)v.findViewById(R.id.educationLevel)).setText( eduLevel );
-                    ((TextView)v.findViewById(R.id.school)).setText(school);
-                    ((TextView)v.findViewById(R.id.graduationYear)).setText(graduationYear);
+                    ((TextView) v.findViewById(R.id.educationLevel)).setText(eduLevel);
+                    ((TextView) v.findViewById(R.id.school)).setText(school);
+                    ((TextView) v.findViewById(R.id.graduationYear)).setText(graduationYear);
 
-                    if( prevEdu < 0 ){
+                    if (prevEdu < 0) {
                         // TODO: bind events to new element
-                        final int selectedEdu = listOfEducation.getChildCount()-1;
-                        LinearLayout updateWorkExp = (LinearLayout)v.findViewById(R.id.updateEducation);
+                        final int selectedEdu = listOfEducation.getChildCount() - 1;
+                        LinearLayout updateWorkExp = (LinearLayout) v.findViewById(R.id.updateEducation);
                         updateWorkExp.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View _v) {
                                 Intent intent = new Intent();
-                                intent.setClass(context,  UpdateEducation.class);
+                                intent.setClass(context, UpdateEducation.class);
                                 intent.putExtra("id", id);
                                 intent.putExtra("selectedEdu", selectedEdu);
                                 startActivityForResult(intent, ADD_EDU);
                             }
                         });
 
-                        Button deleteButton = (Button)v.findViewById(R.id.deleteButton);
+                        Button deleteButton = (Button) v.findViewById(R.id.deleteButton);
                         deleteButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View _v) {
-                                if( Jenjobs.isOnline(context) ){
+                                if (Jenjobs.isOnline(context)) {
                                     // TODO: delete view
                                     listOfWorkExp.removeView(v);
 
@@ -1541,7 +1583,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                                     // TODO: delete record
                                     tableEducation.deleteEducation(id);
-                                }else{
+                                } else {
                                     Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -1550,27 +1592,19 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                     c.close();
                 }
-            }
-        }else if( requestCode == UPDATE_RESUME_VISIBILITY ){
-            if (resultCode == RESULT_OK) {
+            } else if (requestCode == UPDATE_RESUME_VISIBILITY) {
                 resumeVisibility.setText(extra.getString("selectedvisibility"));
-            }
-        }else if( requestCode == UPDATE_JOB_SEEKING ){
-            if (resultCode == RESULT_OK) {
+            } else if (requestCode == UPDATE_JOB_SEEKING) {
                 String summary = extra.getString("summary");
                 jobSeeking.setText(summary);
-            }
-        }else if( requestCode == UPDATE_JOB_PREFERENCE ){
-            if (resultCode == RESULT_OK) {
+            } else if (requestCode == UPDATE_JOB_PREFERENCE) {
                 String response = extra.getString("summary");
                 jobPreference.setText(response);
-            }
-        }else if( requestCode == ADD_SKILL ){
-            if (resultCode == RESULT_OK) {
+            } else if (requestCode == ADD_SKILL) {
                 String skillName = extra.getString("skill_name");
                 final int skillId = extra.getInt("skill_id");
 
-                if( skill.findViewById(R.id.emptyText) != null ){
+                if (skill.findViewById(R.id.emptyText) != null) {
                     skill.removeView(skill.findViewById(R.id.emptyText));
                 }
 
@@ -1595,20 +1629,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         }
                     }
                 });
-                ((TextView)v.findViewById(R.id.skillText)).setText(skillName);
+                ((TextView) v.findViewById(R.id.skillText)).setText(skillName);
 
-            }
-        }else if( requestCode == ADD_LANGUAGE ){
-            if (resultCode == RESULT_OK) {
-                final Language _lang = (Language)extra.get("language");
+            } else if (requestCode == ADD_LANGUAGE) {
+                final Language _lang = (Language) extra.get("language");
                 int _viewIndex = extra.getInt("_viewIndex");
 
-                if( _lang != null ){
+                if (_lang != null) {
                     HashMap _languageLevel = Jenjobs.getLanguageLevel();
                     HashMap _language = Jenjobs.getLanguage();
-                    if( _viewIndex != -1 ){
+                    if (_viewIndex != -1) {
                         View __v = language.getChildAt(_viewIndex);
-                        if( __v != null ){
+                        if (__v != null) {
                             __v.clearFocus();
                             language.removeView(__v);
                         }
@@ -1617,7 +1649,9 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     final View v = getLayoutInflater().inflate(R.layout.each_language, null);
                     language.addView(v);
 
-                    if( _lang.isNative > 0 ){ v.setBackgroundColor(getResources().getColor(R.color.white)); }
+                    if (_lang.isNative > 0) {
+                        v.setBackgroundColor(getResources().getColor(R.color.white));
+                    }
 
                     // update language
                     v.findViewById(R.id.languageContainer).setOnClickListener(new View.OnClickListener() {
@@ -1636,30 +1670,26 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     v.findViewById(R.id.deleteLanguageButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
-                            if( Jenjobs.isOnline(context) ){
+                            if (Jenjobs.isOnline(context)) {
                                 language.removeView(v);
                                 // delete from server
                                 String[] param = {Jenjobs.LANGUAGE_URL + "/" + _lang.id + "?access-token=" + accessToken};
                                 new DeleteRequest().execute(param);
                                 // delete from local
                                 tableLanguage.deleteLanguage(_lang.id);
-                            }else{
+                            } else {
                                 Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
                             }
                         }
                     });
 
-                    ((TextView)v.findViewById(R.id.languageName)).setText((String) _language.get(_lang.id));
-                    ((TextView)v.findViewById(R.id.spokenLanguageLevel)).setText((String) _languageLevel.get(_lang.spoken));
-                    ((TextView)v.findViewById(R.id.writtenLanguageLevel)).setText((String) _languageLevel.get(_lang.written));
+                    ((TextView) v.findViewById(R.id.languageName)).setText((String) _language.get(_lang.id));
+                    ((TextView) v.findViewById(R.id.spokenLanguageLevel)).setText((String) _languageLevel.get(_lang.spoken));
+                    ((TextView) v.findViewById(R.id.writtenLanguageLevel)).setText((String) _languageLevel.get(_lang.written));
                 }
-            }
-        }else if( requestCode == UPDATE_ADDITIONAL_INFO ){
-            if (resultCode == RESULT_OK) {
+            } else if (requestCode == UPDATE_ADDITIONAL_INFO) {
                 additionalInfo.setText(extra.getString("info"));
-            }
-        }else if( requestCode == UPDATE_PROFILE ){
-            if (resultCode == RESULT_OK) {
+            } else if (requestCode == UPDATE_PROFILE) {
                 // refresh profile
                 profileLayout = (LinearLayout) findViewById(R.id.profileLayout);
                 TableProfile tProfile = new TableProfile(getApplicationContext());
@@ -1672,25 +1702,56 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 TextView dob = (TextView) profileLayout.findViewById(R.id.dob);
                 TextView country = (TextView) profileLayout.findViewById(R.id.country);
 
-                name.setText( theProfile.name );
-                email.setText( theProfile.email );
-                mobile_no.setText( theProfile.mobile_no );
-                ic_no.setText( theProfile.ic );
-                gender.setText( theProfile.gender );
+                name.setText(theProfile.name);
+                email.setText(theProfile.email);
+                mobile_no.setText(theProfile.mobile_no);
+                ic_no.setText(theProfile.ic);
+                gender.setText(theProfile.gender);
 
-                if( theProfile.country_id > 0 ){
+                if (theProfile.country_id > 0) {
                     TableCountry tableCountry = new TableCountry(getApplicationContext());
-                    Country c = tableCountry.findCountryById( theProfile.country_id );
-                    if( c != null ){
-                        country.setText( c.name );
+                    Country c = tableCountry.findCountryById(theProfile.country_id);
+                    if (c != null) {
+                        country.setText(c.name);
                     }
                 }
 
                 String _dob = theProfile.dob;
-                if( _dob != null ){
-                    dob.setText( Jenjobs.date(_dob, null, "yyyy-M-d") );
+                if (_dob != null) {
+                    dob.setText(Jenjobs.date(_dob, null, "yyyy-M-d"));
                 }
                 // refresh profile
+            } else if (requestCode == TAKE_A_PHOTO) {
+                /*
+                * TODO - test camera intent
+                * if NO FILE provided to the CAMERA intent, only thumbnail is returned
+                * provide FILE to the camera intent if you want to save the file
+                * */
+                //Bitmap cameraImage = (Bitmap)extra.get("data");
+
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+
+                // Get the dimensions of the View
+                int targetW = profileImage.getWidth();
+                int targetH = profileImage.getHeight();
+
+                // Get the dimensions of the bitmap
+                bmOptions.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+
+                int photoW = bmOptions.outWidth;
+                int photoH = bmOptions.outHeight;
+
+                // Determine how much to scale down the image
+                int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+                // Decode the image file into a Bitmap sized to fill the View
+                bmOptions.inJustDecodeBounds = false;
+                bmOptions.inSampleSize = scaleFactor;
+                bmOptions.inPurgeable = true;
+
+                Bitmap cameraImage = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+                profileImage.setImageBitmap(cameraImage);
             }
         }
     }
