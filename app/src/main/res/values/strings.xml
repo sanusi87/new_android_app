@@ -272,4 +272,8 @@
     <string name="job_search_profiles">Job Search Profiles</string>
     <string name="no_job_search_profile">No job search profiles found!</string>
     <string name="offline_notification">You have no internet connection!</string>
+    <string name="upload_photo">Upload a photo</string>
+    <string name="take_a_photo">Take a photo</string>
+    <string name="no_bookmark">No bookmark found!</string>
+    <string name="camera_unavailable">Camera is unavailable!</string>
 </resources>
