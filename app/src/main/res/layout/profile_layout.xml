@@ -54,6 +54,65 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:baselineAligned="false">
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_default"
+                android:gravity="center_vertical|center_horizontal"
+                style="@style/AppThemeBaseButton"
+                android:id="@+id/take_a_photo">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/no_value"
+                    android:src="@drawable/ic_photo_camera_black_48dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/take_a_photo"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_default"
+                android:gravity="center_vertical|center_horizontal"
+                style="@style/AppThemeBaseButton"
+                android:id="@+id/upload_a_photo">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/no_value"
+                    android:src="@drawable/ic_folder_black_48dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/upload_photo"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View style="@style/AppThemeSeparator" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone">
 
@@ -73,7 +132,6 @@
                 android:layout_weight="0"
                 style="@style/AppThemeBaseTextValue" />
         </LinearLayout>
-
 
         <LinearLayout
             android:orientation="horizontal"
