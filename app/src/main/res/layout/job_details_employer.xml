@@ -13,6 +13,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:indeterminate="true"
+                android:layout_gravity="center_horizontal" />
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
@@ -21,6 +28,7 @@
                 android:src="@drawable/ic_portrait_black_48dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="5dp"
+                android:visibility="gone"
                 android:layout_marginTop="5dp" />
 
             <LinearLayout
@@ -184,6 +192,13 @@
                     android:text="@string/worklocation"
                     style="@style/AppThemeBaseLabel" />
 
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBar3"
+                    android:indeterminate="true"
+                    android:layout_gravity="center_horizontal" />
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -192,7 +207,8 @@
                     android:contentDescription="@string/worklocation"
                     android:id="@+id/workLocationImage"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

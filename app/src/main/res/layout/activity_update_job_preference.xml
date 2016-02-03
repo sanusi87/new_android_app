@@ -116,13 +116,14 @@
             style="@style/AppThemeBaseTextValue" />
     </LinearLayout>
 
-    <View style="@style/AppThemeBorderBottom" />
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2">
+        android:weightSum="2"
+        android:visibility="gone">
+
+        <View style="@style/AppThemeBorderBottom" />
 
         <Button
             style="@style/AppThemeBaseButton"
@@ -143,6 +144,7 @@
             android:stateListAnimator="@null"
             android:background="@drawable/button_default"
             android:textColor="@android:color/black"
+            android:shadowColor="@android:color/transparent"
             android:layout_weight="1" />
     </LinearLayout>
 

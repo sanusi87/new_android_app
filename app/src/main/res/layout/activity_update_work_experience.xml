@@ -366,7 +366,8 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="2">
+            android:weightSum="2"
+            android:visibility="gone">
             <Button
                 style="@style/AppThemeBaseButton"
                 android:layout_width="match_parent"
@@ -385,6 +386,7 @@
                 android:text="@string/cancel"
                 android:id="@+id/cancelButton"
                 android:textColor="@android:color/black"
+                android:shadowColor="@android:color/transparent"
                 android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>

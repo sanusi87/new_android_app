@@ -63,6 +63,7 @@
             android:text="@string/cancel"
             android:id="@+id/cancelButton"
             android:textColor="@android:color/black"
+            android:shadowColor="@android:color/transparent"
             android:layout_weight="1" />
     </LinearLayout>
 
