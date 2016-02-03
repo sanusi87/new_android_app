@@ -3,6 +3,7 @@ package com.example.william.myapplication;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -16,6 +17,7 @@ import java.net.URL;
 public class ImageLoad extends AsyncTask<Void, Void, Bitmap> {
     private String url;
     private ImageView imageView;
+    private ResultListener resultListener;
 
     public ImageLoad(String url, ImageView imageView) {
         this.url = url;
@@ -39,10 +41,12 @@ public class ImageLoad extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap result) {
-        super.onPostExecute(result);
+        //super.onPostExecute(result);
         if( result != null ){
             imageView.setImageBitmap(result);
-            resultListener.processResult(result);
+            if( resultListener != null ){
+                resultListener.processResult(result);
+            }
         }
     }
 
@@ -50,10 +54,8 @@ public class ImageLoad extends AsyncTask<Void, Void, Bitmap> {
         void processResult(Bitmap result);
     }
 
-    private ResultListener resultListener;
     public ImageLoad setResultListener(ResultListener resultListener){
         this.resultListener = resultListener;
         return this;
     }
-
 }
