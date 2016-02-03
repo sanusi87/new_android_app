@@ -148,8 +148,8 @@ public class TableProfile extends SQLiteOpenHelper{
         db.insert(TableJobPreferenceLocation.TABLE_NAME, null, cv9);
 
         // job spec and roles
-        String[] url = {Jenjobs.JOB_SPEC_URL};
-        new DownloadDataTask(1).execute(url);
+        //String[] url = {Jenjobs.JOB_SPEC_URL};
+        //new DownloadDataTask(1).execute(url);
     }
 
     @Override
@@ -254,13 +254,6 @@ public class TableProfile extends SQLiteOpenHelper{
         return affectedRows > 0;
     }
 
-    public boolean deleteProfile(int id){
-        String _id = String.valueOf(id);
-        String[] param = {_id};
-        int affectedRows = db.delete(TableProfile.TABLE_NAME, "id=?", param);
-        return affectedRows > 0;
-    }
-
     public ArrayList<String> isProfileComplete(){
         ArrayList<String> errors = new ArrayList<>();
         TableWorkExperience tableWorkExperience = new TableWorkExperience(context);
@@ -331,79 +324,6 @@ public class TableProfile extends SQLiteOpenHelper{
         }
 
         return errors;
-    }
-
-    public class DownloadDataTask extends AsyncTask<String, Void, String> {
-        private int JOB_SPEC = 1;
-        private int INDUSTRY = 2;
-
-        private int downloadItem = 1;
-        public DownloadDataTask( int downloadItem ){
-            this.downloadItem = downloadItem;
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            String _response = null;
-
-            final HttpClient httpclient = new DefaultHttpClient();
-            final HttpGet httpget = new HttpGet(params[0]);
-            httpget.addHeader("Content-Type", "application/json");
-            httpget.addHeader("Accept", "application/json");
-
-            try {
-                HttpResponse _http_response = httpclient.execute(httpget);
-                HttpEntity _entity = _http_response.getEntity();
-                InputStream is = _entity.getContent();
-
-                _response = JenHttpRequest.readInputStreamAsString(is);
-                //_response = JenHttpRequest.decodeJsonObjectString(responseString);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return _response;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if( result != null ){
-                if( this.downloadItem == JOB_SPEC ){
-
-                    try {
-                        JSONObject success = new JSONObject(result);
-                        Iterator i = success.keys();
-                        while ( i.hasNext() ){
-                            String jobSpecId = (String) i.next();
-                            JSONObject jobSpec = success.getJSONObject(jobSpecId);
-
-                            ContentValues cv = new ContentValues();
-                            cv.put("id", jobSpecId);
-                            cv.put("spec_name", jobSpec.getString("name"));
-                            db.insert(TableJobSpec.TABLE_NAME, null, cv);
-
-                            JSONObject jobRole = jobSpec.getJSONObject("roles");
-                            Iterator r = jobRole.keys();
-                            while( r.hasNext() ){
-                                String jobRoleId = (String) r.next();
-                                String jobRoleName = jobRole.getString(jobRoleId);
-
-                                ContentValues cv2 = new ContentValues();
-                                cv2.put("id", jobRoleId);
-                                cv2.put("job_spec_id", jobSpecId);
-                                cv2.put("role_name", jobRoleName);
-                                db.insert(TableJobRole.TABLE_NAME, null, cv2);
-                            }
-                        }
-
-                    } catch (JSONException e) {
-                        Log.e("dwnErr", e.getMessage());
-                    }
-                }else if( this.downloadItem == INDUSTRY ){
-
-                }
-            }
-        }
-
     }
 
 }
