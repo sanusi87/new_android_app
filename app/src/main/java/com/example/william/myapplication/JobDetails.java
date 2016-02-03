@@ -1,5 +1,6 @@
 package com.example.william.myapplication;
 
+import android.app.ActionBar;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -317,6 +318,7 @@ public class JobDetails extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -327,6 +329,7 @@ public class JobDetails extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -455,8 +458,19 @@ public class JobDetails extends ActionBarActivity {
             try {
                 JSONObject companyDetails = new JSONObject(jobDetails.getString("company_details"));
 
-                ImageView companyLogo = (ImageView)v.findViewById(R.id.companyLogo);
-                new ImageLoad(companyDetails.getString("logo_file"), companyLogo).execute();
+                final ImageView companyLogo = (ImageView)v.findViewById(R.id.companyLogo);
+                final ProgressBar progressBar = (ProgressBar)v.findViewById(R.id.progressBar);
+                ImageLoad empLogo = new ImageLoad(companyDetails.getString("logo_file"), companyLogo);
+                empLogo.setResultListener(new ImageLoad.ResultListener() {
+                    @Override
+                    public void processResult(Bitmap result) {
+                        if( result != null ){
+                            companyLogo.setVisibility(View.VISIBLE);
+                        }
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+                empLogo.execute();
 
                 ((TextView)v.findViewById(R.id.companyName)).setText( jobDetails.optString("company") );
                 ((TextView)v.findViewById(R.id.companyRegistrationNumber)).setText(companyDetails.optString("registration_no"));
@@ -467,13 +481,17 @@ public class JobDetails extends ActionBarActivity {
                 ((TextView)v.findViewById(R.id.companyFacebookPage)).setText(companyDetails.optString("facebook_page"));
 
                 final ImageView workLocationImage = (ImageView)v.findViewById(R.id.workLocationImage);
+                final ProgressBar progressBar3 = (ProgressBar)v.findViewById(R.id.progressBar3);
                 ImageLoad img = new ImageLoad(companyDetails.getString("map_image"), workLocationImage);
                 img.setResultListener(new ImageLoad.ResultListener() {
                     @Override
                     public void processResult(Bitmap result) {
+                        workLocationImage.setVisibility(View.VISIBLE);
                         if( result == null ){
-                            workLocationImage.setVisibility(View.GONE);
+                            workLocationImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                            workLocationImage.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                         }
+                        progressBar3.setVisibility(View.GONE);
                     }
                 });
                 img.execute();
