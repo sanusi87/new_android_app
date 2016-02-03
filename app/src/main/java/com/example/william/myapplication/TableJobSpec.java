@@ -1,5 +1,6 @@
 package com.example.william.myapplication;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,8 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class TableJobSpec extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "job_spec";
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableJobSpec.TABLE_NAME+"' (id INTEGER(4), spec_name TEXT);";
-    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableJobSpec.TABLE_NAME+"'";
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME+"' (id INTEGER(4), spec_name TEXT);";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
     public TableJobSpec(Context context){
@@ -28,13 +29,12 @@ public class TableJobSpec extends SQLiteOpenHelper{
     }
 
     public Cursor getAllJobSpec(){
-        Cursor c = db.rawQuery("SELECT * FROM "+TableJobSpec.TABLE_NAME, null);
-        return c;
+        return db.rawQuery("SELECT * FROM "+TABLE_NAME, null);
     }
 
     public JobSpec findById( int id ){
         String[] _id = {String.valueOf(id)};
-        Cursor c = db.rawQuery("SELECT * FROM "+TableJobSpec.TABLE_NAME+" WHERE id=?", _id);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE id=?", _id);
         if( c.moveToFirst() ){
             JobSpec s = new JobSpec(c.getInt(0), c.getString(1));
             c.close();
@@ -43,4 +43,12 @@ public class TableJobSpec extends SQLiteOpenHelper{
         return null;
     }
 
+    public void clearAll() {
+        db.execSQL("DELETE FROM "+TABLE_NAME);
+    }
+
+    public int addJobSpec( ContentValues cv ){
+        Long insertId = db.insert(TABLE_NAME, null, cv);
+        return insertId.intValue();
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.william.myapplication;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,10 +12,10 @@ import java.util.ArrayList;
 
 public class TableJobRole extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "job_role";
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableJobRole.TABLE_NAME+"' (id INTEGER(4), " +
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME+"' (id INTEGER(4), " +
             "job_spec_id INTEGER(4), " +
             "role_name TEXT);";
-    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableJobRole.TABLE_NAME+"'";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
     public TableJobRole(Context context){
@@ -35,13 +36,13 @@ public class TableJobRole extends SQLiteOpenHelper{
 
     public Cursor getAllJobRole(int jobSpecId){
         String[] _id = {String.valueOf(jobSpecId)};
-        Cursor c = db.rawQuery("SELECT * FROM "+TableJobRole.TABLE_NAME+" WHERE job_spec_id=?", _id);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE job_spec_id=?", _id);
         return c;
     }
 
     public JobRole findById( int id ){
         String[] _id = {String.valueOf(id)};
-        Cursor c = db.rawQuery("SELECT * FROM "+TableJobRole.TABLE_NAME+" WHERE id=?", _id);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE id=?", _id);
         if( c.moveToFirst() ){
             JobRole r = new JobRole(c.getInt(0), c.getInt(1), c.getString(2));
             c.close();
@@ -82,5 +83,14 @@ public class TableJobRole extends SQLiteOpenHelper{
             //Log.e("jobRoleId.size", "0");
         }
         return myJobRole;
+    }
+
+    public void clearAll() {
+        db.execSQL("DELETE FROM "+TABLE_NAME);
+    }
+
+    public int addJobRole( ContentValues cv ){
+        Long insertId = db.insert(TABLE_NAME, null, cv);
+        return insertId.intValue();
     }
 }
