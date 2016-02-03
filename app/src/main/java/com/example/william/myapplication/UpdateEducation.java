@@ -12,6 +12,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -96,11 +99,6 @@ public class UpdateEducation extends ActionBarActivity {
         selectedGraduationYear = (TextView) findViewById(R.id.selectedGraduationYear);
         enteredEducationInfo = (TextView) findViewById(R.id.enteredEducationInfo);
 
-        //final EditText school = (EditText)findViewById(R.id.school_text);
-        //final EditText major = (EditText)findViewById(R.id.edu_major_text);
-        //final EditText grade = (EditText)findViewById(R.id.grade_text);
-        //final EditText info = (EditText)findViewById(R.id.extra_info);
-
         // extras send for update, maybe only ID passed, then read form DB to get other values
         Bundle extras = getIntent().getExtras();
         if( extras != null ){
@@ -109,24 +107,10 @@ public class UpdateEducation extends ActionBarActivity {
 
             Cursor ce = tableEducation.getEducationById(currentEducationId);
             if( ce.moveToFirst() ){
-                /*
-                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT //0
-                _id INTEGER //1
-                school TEXT //2
-                major TEXT //3
-                edu_level_id INTEGER(4) //4
-                edu_field_id INTEGER(4) //5
-                country_id INTEGER(4) //6
-                grade TEXT //7
-                info TEXT //8
-                date_graduated //9
-                */
                 remoteEducationId = ce.getInt(1);
 
-                //educationLevel.setSelection( eduLevelAdapter.getItemPosition( ce.getInt(4) ) );
                 String theEducationLevel = (String) listOfEducationLevel.get( ce.getInt(4) );
                 String theEducationField = (String) listOfEducationField.get( ce.getInt(5) );
-                //Log.e( "theEducationLevel", ""+theEducationLevel );
 
                 educationLevel = new EducationLevel(ce.getInt(4), theEducationLevel );
                 educationField = new EducationField(ce.getInt(5), theEducationField );
@@ -243,101 +227,7 @@ public class UpdateEducation extends ActionBarActivity {
         saveEducation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: validate input
-                ArrayList<String> errors = new ArrayList<>();
 
-                if( selectedEducationLevel.getText().toString().equals(getResources().getString(R.string.no_value)) ){
-                    errors.add("Please select education level.");
-                }
-
-                if( enteredSchool.getText().toString().equals(getResources().getString(R.string.no_value)) ){
-                    errors.add("Please enter your educational institution.");
-                }
-
-                if( selectedEducationField.getText().toString().equals(getResources().getString(R.string.no_value)) ){
-                    errors.add("Please select field of education.");
-                }
-
-                if( selectedGraduationYear.getText().toString().equals(getResources().getString(R.string.no_value)) ){
-                    errors.add("Please select year of graduation.");
-                }
-
-                if( errors.size() == 0 ){
-                    // TODO: save to local db
-                    /*
-                    "_id INTEGER, "+
-                    "school TEXT, " +
-                    "major TEXT, " +
-                    "edu_level_id INTEGER(4), " +
-                    "edu_field_id INTEGER(4), " +
-                    "country_id INTEGER(4), " +
-                    "grade TEXT, " +
-                    "info TEXT, " +
-                    "date_graduated NUMERIC);";
-                    */
-                    ContentValues cv = new ContentValues();
-                    cv.put("edu_level_id", educationLevel.id);
-                    cv.put("school", enteredSchool.getText().toString());
-                    cv.put("major", enteredMajor.getText().toString());
-                    cv.put("edu_field_id", educationField.id);
-                    cv.put("grade", enteredGrade.getText().toString());
-                    cv.put("date_graduated", year+"-01-01");
-                    cv.put("info", enteredEducationInfo.getText().toString());
-                    cv.put("_id", remoteEducationId); // JenJOBS id
-
-                    if( currentEducationId > 0 ){
-                        cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
-                        tableEducation.updateEducation(cv, currentEducationId);
-                    }else{
-                        cv.put("date_added", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
-                        Long newEducationId = tableEducation.addEducation(cv);
-                        currentEducationId = newEducationId.intValue();
-                    }
-
-                    JSONObject obj = new JSONObject();
-                    String url = Jenjobs.EDUCATION_URL;
-                    if( remoteEducationId > 0 ){ url += "/"+ remoteEducationId; }
-                    url += "?access-token=" + accessToken;
-
-                    try {
-                        /*
-                        edu_level_id
-                        edu_field_id
-                        --country_id
-                        school
-                        major
-                        --edu_field_desc
-                        grade
-                        date_graduated
-                        info
-                        */
-                        obj.put("edu_level_id",educationLevel.id);
-                        obj.put("edu_field_id",educationField.id);
-                        obj.put("country_id",127);
-                        obj.put("school",enteredSchool.getText().toString());
-                        obj.put("major",enteredMajor.getText().toString());
-                        obj.put("edu_field_desc",""); // TODO: enter this when edu_field_id is "Others"
-                        obj.put("grade",enteredGrade.getText().toString());
-                        obj.put("date_graduated",year);
-                        obj.put("info",enteredEducationInfo.getText().toString());
-
-                        // TODO: send POST request
-                        Log.e("obj", obj.toString());
-                        String[] s = {url, obj.toString()};
-                        new PostEducation().execute(s);
-
-                    } catch (JSONException e) {
-                        Log.e("objErr", e.getMessage());
-                    }
-
-                    Intent intent = new Intent();
-                    intent.putExtra("id", currentEducationId);
-                    intent.putExtra("currentViewPosition", currentViewPosition);
-                    setResult(Activity.RESULT_OK, intent);
-                    finish();
-                }else{
-                    Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_SHORT).show();
-                }
             }
         });
 
@@ -349,6 +239,104 @@ public class UpdateEducation extends ActionBarActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.save, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int clickedItem = item.getItemId();
+        if (clickedItem == R.id.save) {
+            ArrayList<String> errors = new ArrayList<>();
+
+            if( selectedEducationLevel.getText().toString().equals(getResources().getString(R.string.no_value)) ){
+                errors.add("Please select education level.");
+            }
+
+            if( enteredSchool.getText().toString().equals(getResources().getString(R.string.no_value)) ){
+                errors.add("Please enter your educational institution.");
+            }
+
+            if( selectedEducationField.getText().toString().equals(getResources().getString(R.string.no_value)) ){
+                errors.add("Please select field of education.");
+            }
+
+            if( selectedGraduationYear.getText().toString().equals(getResources().getString(R.string.no_value)) ){
+                errors.add("Please select year of graduation.");
+            }
+
+            if( errors.size() == 0 ){
+                ContentValues cv = new ContentValues();
+                cv.put("edu_level_id", educationLevel.id);
+                cv.put("school", enteredSchool.getText().toString());
+                cv.put("major", enteredMajor.getText().toString());
+                cv.put("edu_field_id", educationField.id);
+                cv.put("grade", enteredGrade.getText().toString());
+                cv.put("date_graduated", year+"-01-01");
+                cv.put("info", enteredEducationInfo.getText().toString());
+                cv.put("_id", remoteEducationId); // JenJOBS id
+
+                if( currentEducationId > 0 ){
+                    cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
+                    tableEducation.updateEducation(cv, currentEducationId);
+                }else{
+                    cv.put("date_added", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
+                    Long newEducationId = tableEducation.addEducation(cv);
+                    currentEducationId = newEducationId.intValue();
+                }
+
+                JSONObject obj = new JSONObject();
+                String url = Jenjobs.EDUCATION_URL;
+                if( remoteEducationId > 0 ){ url += "/"+ remoteEducationId; }
+                url += "?access-token=" + accessToken;
+
+                try {
+                    obj.put("edu_level_id",educationLevel.id);
+                    obj.put("edu_field_id",educationField.id);
+                    obj.put("country_id",127);
+                    obj.put("school",enteredSchool.getText().toString());
+                    obj.put("major",enteredMajor.getText().toString());
+                    obj.put("edu_field_desc",""); // TODO: enter this when edu_field_id is "Others"
+                    obj.put("grade",enteredGrade.getText().toString());
+                    obj.put("date_graduated",year);
+                    obj.put("info", enteredEducationInfo.getText().toString());
+
+                    String[] s = {url, obj.toString()};
+                    PostRequest p = new PostRequest();
+                    p.setResultListener(new PostRequest.ResultListener() {
+                        @Override
+                        public void processResult(JSONObject result) {
+                            if( result != null ) {
+                                if (result.optInt("id") > 0) {
+                                    // update the saved ID to local table
+                                    ContentValues cv = new ContentValues();
+                                    cv.put("_id", result.optInt("id"));
+                                    tableEducation.updateEducation(cv, currentEducationId);
+                                }
+                            }
+                        }
+                    });
+                    p.execute(s);
+
+                } catch (JSONException e) {
+                    Log.e("objErr", e.getMessage());
+                }
+
+                Intent intent = new Intent();
+                intent.putExtra("id", currentEducationId);
+                intent.putExtra("currentViewPosition", currentViewPosition);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }else{
+                Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_SHORT).show();
+            }
+        }
+        return true;
     }
 
     @Override
@@ -402,54 +390,4 @@ public class UpdateEducation extends ActionBarActivity {
         }
     }
 
-    public class PostEducation extends AsyncTask<String, Void, JSONObject> {
-        private View v;
-        private int viewType;
-
-        public PostEducation(){}
-
-        @Override
-        protected JSONObject doInBackground(String... params) {
-            JSONObject _response = null;
-
-            final HttpClient httpclient = new DefaultHttpClient();
-            final HttpPost httppost = new HttpPost( params[0] );
-
-            httppost.addHeader("Content-Type", "application/json");
-            httppost.addHeader("Accept", "application/json");
-
-            try {
-                StringEntity entity = new StringEntity(params[1]);
-                entity.setContentEncoding(HTTP.UTF_8);
-                entity.setContentType("application/json");
-                httppost.setEntity(entity);
-
-                HttpResponse _http_response = httpclient.execute(httppost);
-                HttpEntity _entity = _http_response.getEntity();
-                InputStream is = _entity.getContent();
-                String responseString = JenHttpRequest.readInputStreamAsString(is);
-                _response = JenHttpRequest.decodeJsonObjectString(responseString);
-            } catch (ClientProtocolException e) {
-                Log.e("ClientProtocolException", e.getMessage());
-            } catch (UnsupportedEncodingException e) {
-                Log.e("UnsupportedEncoding", e.getMessage());
-            } catch (IOException e) {
-                Log.e("IOException", e.getMessage());
-            }
-
-            return _response;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            if( result != null ) {
-                if (result.optInt("id") > 0) {
-                    ContentValues cv = new ContentValues();
-                    cv.put("_id", result.optInt("id"));
-                    tableEducation.updateEducation(cv, currentEducationId);
-                }
-            }
-        }
-
-    }
 }

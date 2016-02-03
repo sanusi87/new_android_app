@@ -12,6 +12,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -73,7 +76,17 @@ public class UpdateWorkExperience extends ActionBarActivity {
     Industry _industry;
     PositionLevel _positionLevel;
 
-    //Profile profile;
+    EditText positionTitle;
+    EditText companyName;
+    Spinner monthStart;
+    Spinner monthEnd;
+    Spinner yearStart;
+    Spinner yearEnd;
+    int savedId = 0;
+    int selectedWork = -1;
+    EditText salary;
+    Spinner currency;
+    EditText exp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,19 +97,13 @@ public class UpdateWorkExperience extends ActionBarActivity {
         tableJobSpec = new TableJobSpec(this);
         tableJobRole = new TableJobRole(this);
         tableProfile = new TableProfile(this);
-        //tableSettings = new TableSettings(this);
-
-        int savedId = 0;
-        int selectedWork = -1;
 
         sharedPreferences = getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPreferences.getString("access_token", null);
         profileId = sharedPreferences.getInt("js_profile_id", 0);
 
-        //profile = tableProfile.getProfile();
-
-        final EditText positionTitle = (EditText)findViewById(R.id.position_title);
-        final EditText companyName = (EditText)findViewById(R.id.company_name);
+        positionTitle = (EditText)findViewById(R.id.position_title);
+        companyName = (EditText)findViewById(R.id.company_name);
 
         LinearLayout selectJobType = (LinearLayout)findViewById(R.id.selectJobType);
         selectedJobType = (TextView)findViewById(R.id.selectedJobType);
@@ -107,10 +114,10 @@ public class UpdateWorkExperience extends ActionBarActivity {
         HashMap listOfPositionLevel = Jenjobs.getPositionLevel();
 
         // currency
-        final Spinner currency = (Spinner)findViewById(R.id.currency);
+        currency = (Spinner)findViewById(R.id.currency);
         CurrencyAdapter ca = new CurrencyAdapter(this);
         currency.setAdapter(ca);
-        final EditText salary = (EditText)findViewById(R.id.salary_amount);
+        salary = (EditText)findViewById(R.id.salary_amount);
 
         LinearLayout selectJobSpec = (LinearLayout)findViewById(R.id.selectJobSpec);
         selectedJobSpec = (TextView)findViewById(R.id.selectedJobSpec);
@@ -127,10 +134,10 @@ public class UpdateWorkExperience extends ActionBarActivity {
         selectedIndustry = (TextView)findViewById(R.id.selectedIndustry);
         HashMap listOfIndustry = Jenjobs.getIndustry();
 
-        final Spinner monthStart = (Spinner)findViewById(R.id.month_start);
-        final Spinner monthEnd = (Spinner)findViewById(R.id.month_end);
-        final Spinner yearStart = (Spinner)findViewById(R.id.year_start);
-        final Spinner yearEnd = (Spinner)findViewById(R.id.year_end);
+        monthStart = (Spinner)findViewById(R.id.month_start);
+        monthEnd = (Spinner)findViewById(R.id.month_end);
+        yearStart = (Spinner)findViewById(R.id.year_start);
+        yearEnd = (Spinner)findViewById(R.id.year_end);
 
         String[] listOfMonth = Jenjobs.listOfMonth();
         String[] listOfYear = Jenjobs.listOfYear();
@@ -142,10 +149,9 @@ public class UpdateWorkExperience extends ActionBarActivity {
         yearStart.setAdapter(yearAdapter);
         yearEnd.setAdapter(yearAdapter);
 
-        final EditText exp = (EditText)findViewById(R.id.experience_text);
+        exp = (EditText)findViewById(R.id.experience_text);
 
         Bundle extra = getIntent().getExtras();
-        Log.e("extra", ""+extra);
         if( extra != null ){
             // for updating existing job
             currentId = extra.getInt("id");
@@ -271,165 +277,10 @@ public class UpdateWorkExperience extends ActionBarActivity {
         Button cancelButton = (Button)findViewById(R.id.cancelButton);
 
         //final int finalCurrentId = currentId;
-        final int finalSavedId = savedId;
-        final int finalSelectedWork = selectedWork;
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> errors = new ArrayList<>();
 
-                if( positionTitle.getText().length() == 0 ){
-                    errors.add("Please enter the position title.");
-                }
-
-                if( companyName.getText().length() == 0 ){
-                    errors.add("Please enter the company name.");
-                }
-
-                if( _jobType == null ){
-                    errors.add("Please select the employment type.");
-                }
-
-                if( _positionLevel == null ){
-                    errors.add("Please select the job level.");
-                }
-
-                if( monthStart.getSelectedItemPosition() == Spinner.INVALID_POSITION || yearStart.getSelectedItemPosition() == Spinner.INVALID_POSITION ){
-                    errors.add("Please specify the month and year you start this work.");
-                }
-
-                if( ( monthEnd.getSelectedItemPosition() != 0 && yearEnd.getSelectedItemPosition() != 0 )
-                        || ( monthEnd.getSelectedItemPosition() == 0 && yearEnd.getSelectedItemPosition() == 0 ) ){
-                    // (both selected || both not selected) -- ok
-                }else{
-                    errors.add("Please specify both resignation month and year, or left both blank.");
-                }
-
-                //if( industry.getSelectedItemPosition() == Spinner.INVALID_POSITION ){
-                if( _industry == null ){
-                    errors.add("Please select the company industry.");
-                }
-
-                if( selectedJobSpec.getText().equals(getResources().getString(R.string.no_value)) ){
-                    errors.add("Please select your work specialisation.");
-                }
-
-                if( selectedJobRole.getText().equals(getResources().getString(R.string.no_value)) ){
-                    errors.add("Please select the sub specialisation.");
-                }
-
-                if( errors.size() == 0 ){
-                    /*
-                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT //0
-                    _id INTEGER //1
-                    position TEXT //2
-                    company TEXT //3
-                    job_spec_id INTEGER(4) //4
-                    job_role_id INTEGER(4) //5
-                    job_type_id INTEGER(4) //6
-                    job_level_id INTEGER(4) //7
-                    industry_id INTEGER(4) //8
-                    experience TEXT //9
-                    salary INTEGER //10
-                    currency_id INTEGER //11
-                    started_on NUMERIC //12
-                    resigned_on NUMERIC //13
-                    update_at //14
-                    */
-
-                    // TODO: save to database
-                    ContentValues cv = new ContentValues();
-
-                    String thePositionTitle = positionTitle.getText().toString();
-                    cv.put("position", thePositionTitle);
-
-                    String theCompanyName = companyName.getText().toString();
-                    cv.put("company", theCompanyName);
-
-                    cv.put("job_spec_id", _jobSpec.id);
-                    cv.put("job_role_id", _jobRole.id);
-                    cv.put("job_type_id", _jobType.id);
-                    cv.put("job_level_id", _positionLevel.id);
-
-                    //Industry ind = (Industry)industry.getSelectedItem();
-                    cv.put("industry_id", _industry.id);
-
-                    String experience = exp.getText().toString();
-                    cv.put("experience", experience);
-
-                    cv.put("salary", salary.getText().toString());
-                    MyCurrency _currency = (MyCurrency)currency.getSelectedItem();
-                    if( _currency.id <= 0 ){ _currency.id = 6; }
-                    cv.put("currency_id", _currency.id);
-
-                    String _monthStart = monthStart.getSelectedItem().toString();
-                    String _yearStart = yearStart.getSelectedItem().toString();
-                    String startedOn = Jenjobs.date(_yearStart+" "+_monthStart+" 01", "yyyy-MM-dd", "yyyy MMMM dd");
-                    cv.put("started_on", startedOn);
-
-                    String endOn = null;
-                    if( monthEnd.getSelectedItemPosition() != 0 || yearEnd.getSelectedItemPosition() != 0 ){
-                        String _monthEnd = monthEnd.getSelectedItem().toString();
-                        String _yearEnd = yearEnd.getSelectedItem().toString();
-                        endOn = Jenjobs.date(_yearEnd+" "+_monthEnd+" 01", "yyyy-MM-dd", "yyyy MMMM dd");
-                    }
-                    cv.put("resigned_on", ""+endOn);
-                    cv.put("update_at", Jenjobs.date(null, "yyyy-MM-dd", null));
-
-                    //int localId = finalCurrentId;
-                    if( currentId > 0 ){
-                        tableWorkExperience.updateWorkExperience(cv, currentId);
-                    }else{
-                        Long _savedId = tableWorkExperience.addWorkExperience(cv);
-                        currentId = _savedId.intValue();
-
-                        TableProfile tableProfile = new TableProfile(getApplicationContext());
-                        ContentValues cv3 = new ContentValues();
-                        cv3.put("no_work_exp", 0); // set to got work exp
-                        tableProfile.updateProfile(cv3, profileId);
-                    }
-
-                    // update got work exp
-                    ContentValues _cv = new ContentValues();
-                    _cv.put("no_work_exp", 0);
-                    tableProfile.updateProfile(_cv,profileId);
-
-                    // TODO: send POST request
-                    JSONObject obj = new JSONObject();
-                    String url = Jenjobs.WORK_EXPERIENCE_URL;
-                    if( finalSavedId > 0 ){ url += "/"+ finalSavedId; }
-                    url += "?access-token=" + accessToken;
-
-                    try {
-                        obj.put("job_spec_id", _jobSpec.id);
-                        obj.put("job_role_id", _jobRole.id);
-                        obj.put("job_type_id", _jobType.id);
-                        obj.put("job_level_id", _positionLevel.id);
-                        obj.put("industry_id", _industry.id);
-                        obj.put("currency_id", _currency.id);
-                        obj.put("position", thePositionTitle);
-                        obj.put("company", theCompanyName);
-                        obj.put("experience", experience);
-                        obj.put("salary", salary.getText().toString());
-                        obj.put("started_on", startedOn);
-                        obj.put("resigned_on", ""+endOn);
-
-                    } catch (JSONException e) {
-                        Log.e("jsonExcpt", e.getMessage());
-                    }
-                    //Log.e("obj", obj.toString());
-                    String[] s = {url, obj.toString()};
-                    new PostWorkExp().execute(s);
-
-                    Intent intent = new Intent();
-                    intent.putExtra("id", currentId);
-                    Log.e("finalSelectedWork", ""+finalSelectedWork);
-                    intent.putExtra("selectedWork", finalSelectedWork);
-                    setResult(Activity.RESULT_OK, intent);
-                    finish();
-                }else{
-                    Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_SHORT).show();
-                }
             }
         });
 
@@ -440,6 +291,156 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.save, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int clickedItem = item.getItemId();
+        if (clickedItem == R.id.save) {
+            ArrayList<String> errors = new ArrayList<>();
+
+            if( positionTitle.getText().length() == 0 ){
+                errors.add("Please enter the position title.");
+            }
+
+            if( companyName.getText().length() == 0 ){
+                errors.add("Please enter the company name.");
+            }
+
+            if( _jobType == null ){
+                errors.add("Please select the employment type.");
+            }
+
+            if( _positionLevel == null ){
+                errors.add("Please select the job level.");
+            }
+
+            if( monthStart.getSelectedItemPosition() == Spinner.INVALID_POSITION || yearStart.getSelectedItemPosition() == Spinner.INVALID_POSITION ){
+                errors.add("Please specify the month and year you start this work.");
+            }
+
+            //if( ( monthEnd.getSelectedItemPosition() != 0 && yearEnd.getSelectedItemPosition() != 0 )
+                   // || ( monthEnd.getSelectedItemPosition() == 0 && yearEnd.getSelectedItemPosition() == 0 ) ){
+                // (both selected || both not selected) -- ok
+            //}else{
+            //    errors.add("Please specify both resignation month and year, or left both blank.");
+           // }
+
+            if ((monthEnd.getSelectedItemPosition() == 0 || yearEnd.getSelectedItemPosition() == 0)
+                    && (monthEnd.getSelectedItemPosition() != 0 || yearEnd.getSelectedItemPosition() != 0)) {
+                        errors.add("Please specify both resignation month and year, or left both blank.");
+            }
+
+            //if( industry.getSelectedItemPosition() == Spinner.INVALID_POSITION ){
+            if( _industry == null ){
+                errors.add("Please select the company industry.");
+            }
+
+            if( selectedJobSpec.getText().equals(getResources().getString(R.string.no_value)) ){
+                errors.add("Please select your work specialisation.");
+            }
+
+            if( selectedJobRole.getText().equals(getResources().getString(R.string.no_value)) ){
+                errors.add("Please select the sub specialisation.");
+            }
+
+            if( errors.size() == 0 ){
+                ContentValues cv = new ContentValues();
+
+                String thePositionTitle = positionTitle.getText().toString();
+                cv.put("position", thePositionTitle);
+
+                String theCompanyName = companyName.getText().toString();
+                cv.put("company", theCompanyName);
+
+                cv.put("job_spec_id", _jobSpec.id);
+                cv.put("job_role_id", _jobRole.id);
+                cv.put("job_type_id", _jobType.id);
+                cv.put("job_level_id", _positionLevel.id);
+                cv.put("industry_id", _industry.id);
+
+                String experience = exp.getText().toString();
+                cv.put("experience", experience);
+
+                cv.put("salary", salary.getText().toString());
+                MyCurrency _currency = (MyCurrency)currency.getSelectedItem();
+                if( _currency.id <= 0 ){ _currency.id = 6; }
+                cv.put("currency_id", _currency.id);
+
+                String _monthStart = monthStart.getSelectedItem().toString();
+                String _yearStart = yearStart.getSelectedItem().toString();
+                String startedOn = Jenjobs.date(_yearStart+" "+_monthStart+" 01", "yyyy-MM-dd", "yyyy MMMM dd");
+                cv.put("started_on", startedOn);
+
+                String endOn = null;
+                if( monthEnd.getSelectedItemPosition() != 0 || yearEnd.getSelectedItemPosition() != 0 ){
+                    String _monthEnd = monthEnd.getSelectedItem().toString();
+                    String _yearEnd = yearEnd.getSelectedItem().toString();
+                    endOn = Jenjobs.date(_yearEnd+" "+_monthEnd+" 01", "yyyy-MM-dd", "yyyy MMMM dd");
+                }
+                cv.put("resigned_on", ""+endOn);
+                cv.put("update_at", Jenjobs.date(null, "yyyy-MM-dd", null));
+
+                if( currentId > 0 ){
+                    tableWorkExperience.updateWorkExperience(cv, currentId);
+                }else{
+                    Long _savedId = tableWorkExperience.addWorkExperience(cv);
+                    currentId = _savedId.intValue();
+
+                    TableProfile tableProfile = new TableProfile(getApplicationContext());
+                    ContentValues cv3 = new ContentValues();
+                    cv3.put("no_work_exp", 0); // set to got work exp
+                    tableProfile.updateProfile(cv3, profileId);
+                }
+
+                // update got work exp
+                ContentValues _cv = new ContentValues();
+                _cv.put("no_work_exp", 0);
+                tableProfile.updateProfile(_cv,profileId);
+
+                JSONObject obj = new JSONObject();
+                String url = Jenjobs.WORK_EXPERIENCE_URL;
+                if( savedId > 0 ){ url += "/"+ savedId; }
+                url += "?access-token=" + accessToken;
+
+                try {
+                    obj.put("job_spec_id", _jobSpec.id);
+                    obj.put("job_role_id", _jobRole.id);
+                    obj.put("job_type_id", _jobType.id);
+                    obj.put("job_level_id", _positionLevel.id);
+                    obj.put("industry_id", _industry.id);
+                    obj.put("currency_id", _currency.id);
+                    obj.put("position", thePositionTitle);
+                    obj.put("company", theCompanyName);
+                    obj.put("experience", experience);
+                    obj.put("salary", salary.getText().toString());
+                    obj.put("started_on", startedOn);
+                    obj.put("resigned_on", ""+endOn);
+
+                } catch (JSONException e) {
+                    Log.e("jsonExcpt", e.getMessage());
+                }
+
+                String[] s = {url, obj.toString()};
+                new PostWorkExp().execute(s);
+
+                Intent intent = new Intent();
+                intent.putExtra("id", currentId);
+                intent.putExtra("selectedWork", selectedWork);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }else{
+                Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_SHORT).show();
+            }
+        }
+        return true;
     }
 
     @Override

@@ -8,8 +8,12 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -34,7 +38,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class UpdateJobPreference extends Activity {
+public class UpdateJobPreference extends ActionBarActivity {
 
     private int INSERT_SALARY = 1;
     private int SELECT_JOB_TYPE = 2;
@@ -99,7 +103,7 @@ public class UpdateJobPreference extends Activity {
 
         if( c.moveToFirst() ){
             String savedSalary = c.getString(0);
-            if( savedSalary == null && savedSalary.equals("null") ){
+            if( savedSalary == null || savedSalary.equals("null") ){
                 savedSalary = "";
             }
 
@@ -230,78 +234,7 @@ public class UpdateJobPreference extends Activity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> errors = new ArrayList<String>();
-                String[] params = new String[5];
-                ContentValues cv = new ContentValues();
-                String summary = "";
 
-                if( insertedSalary.getText().toString().length() > 0 ){
-                    cv.put("salary", insertedSalary.getText().toString());
-                    params[0] = insertedSalary.getText().toString();
-                }else{
-                    errors.add("Please enter your expected salary.");
-                }
-
-                if( savedCurrency != null ){
-                    cv.put("currency_id", savedCurrency.id);
-                    params[1] = String.valueOf(savedCurrency.id);
-
-                    summary = savedCurrency.name+" "+insertedSalary.getText().toString()+" per month";
-                }
-
-                ArrayList<Integer> savedJobTypeId = new ArrayList<>();
-                if( _jobtype.size() > 0 ){
-                    for(int i=0;i<_jobtype.size();i++){
-                        JobType __jobtype = _jobtype.get(i);
-                        savedJobTypeId.add(__jobtype.id);
-                    }
-                    cv.put("job_type_id", (new JSONArray( savedJobTypeId )).toString() );
-                    params[2] = (new JSONArray( savedJobTypeId )).toString();
-                }else{
-                    errors.add("Please select your preferred job type(s).");
-                }
-
-                ArrayList<Integer> savedStateId = new ArrayList<>();
-                if( _state.size() > 0 ){
-                    tableJobPreferenceLocation.truncate();
-                    for(int i=0;i<_state.size();i++){
-                        State __state = _state.get(i);
-                        savedStateId.add(__state.id);
-
-                        ContentValues cv2 = new ContentValues();
-                        cv2.put("country_id", 127);
-                        cv2.put("state_id", __state.id);
-                        tableJobPreferenceLocation.insertJobPreference(cv2);
-                    }
-                    params[3] = (new JSONArray( savedStateId )).toString();
-                }else{
-                    errors.add("Please select your preferred working location in Malaysia.");
-                }
-
-                if( errors.size() == 0 ){
-                    tableJobPreference.updateJobPreference(cv);
-                    ArrayList<Integer> savedCountryId = new ArrayList<>();
-                    if( _country.size() > 0 ) {
-                        for(int i=0;i<_country.size();i++){
-                            Country __country = _country.get(i);
-                            savedCountryId.add(__country.id);
-
-                            ContentValues cv2 = new ContentValues();
-                            cv2.put("country_id", __country.id);
-                            cv2.put("state_id", 0);
-                            tableJobPreferenceLocation.insertJobPreference(cv2);
-                        }
-                    }
-                    params[4] = (new JSONArray( savedCountryId )).toString();
-                    new UpdateTask().execute(params);
-
-                    Intent intent = new Intent();
-                    intent.putExtra("summary", summary);
-                    setResult(Activity.RESULT_OK, intent);
-                    finish();
-                }else{
-                    Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_SHORT).show();
-                }
             }
         });
 
@@ -316,6 +249,93 @@ public class UpdateJobPreference extends Activity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.save, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int clickedItem = item.getItemId();
+        if (clickedItem == R.id.save) {
+            ArrayList<String> errors = new ArrayList<>();
+            String[] params = new String[5];
+            ContentValues cv = new ContentValues();
+            String summary = "";
+
+            if( insertedSalary.getText().toString().length() > 0 ){
+                cv.put("salary", insertedSalary.getText().toString());
+                params[0] = insertedSalary.getText().toString();
+            }else{
+                errors.add("Please enter your expected salary.");
+            }
+
+            if( savedCurrency != null ){
+                cv.put("currency_id", savedCurrency.id);
+                params[1] = String.valueOf(savedCurrency.id);
+
+                summary = savedCurrency.name+" "+insertedSalary.getText().toString()+" per month";
+            }
+
+            ArrayList<Integer> savedJobTypeId = new ArrayList<>();
+            if( _jobtype.size() > 0 ){
+                for(int i=0;i<_jobtype.size();i++){
+                    JobType __jobtype = _jobtype.get(i);
+                    savedJobTypeId.add(__jobtype.id);
+                }
+                cv.put("job_type_id", (new JSONArray( savedJobTypeId )).toString() );
+                params[2] = (new JSONArray( savedJobTypeId )).toString();
+            }else{
+                errors.add("Please select your preferred job type(s).");
+            }
+
+            ArrayList<Integer> savedStateId = new ArrayList<>();
+            if( _state.size() > 0 ){
+                tableJobPreferenceLocation.truncate();
+                for(int i=0;i<_state.size();i++){
+                    State __state = _state.get(i);
+                    savedStateId.add(__state.id);
+
+                    ContentValues cv2 = new ContentValues();
+                    cv2.put("country_id", 127);
+                    cv2.put("state_id", __state.id);
+                    tableJobPreferenceLocation.insertJobPreference(cv2);
+                }
+                params[3] = (new JSONArray( savedStateId )).toString();
+            }else{
+                errors.add("Please select your preferred working location in Malaysia.");
+            }
+
+            if( errors.size() == 0 ){
+                tableJobPreference.updateJobPreference(cv);
+                ArrayList<Integer> savedCountryId = new ArrayList<>();
+                if( _country.size() > 0 ) {
+                    for(int i=0;i<_country.size();i++){
+                        Country __country = _country.get(i);
+                        savedCountryId.add(__country.id);
+
+                        ContentValues cv2 = new ContentValues();
+                        cv2.put("country_id", __country.id);
+                        cv2.put("state_id", 0);
+                        tableJobPreferenceLocation.insertJobPreference(cv2);
+                    }
+                }
+                params[4] = (new JSONArray( savedCountryId )).toString();
+                new UpdateTask().execute(params);
+
+                Intent intent = new Intent();
+                intent.putExtra("summary", summary);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }else{
+                Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_SHORT).show();
+            }
+        }
+        return true;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == INSERT_SALARY) {
             if (resultCode == RESULT_OK) {
@@ -325,8 +345,8 @@ public class UpdateJobPreference extends Activity {
                 MyCurrency c = (MyCurrency)extra.get("the_currency");
 
                 insertedSalary.setText(salary);
-                Log.e("salary", "" + salary);
-                Log.e("currency", ""+c.name);
+                //Log.e("salary", "" + salary);
+                //Log.e("currency", ""+c.name);
                 if( c != null ){
                     selectedCurrency.setText(c.name);
                     savedCurrency = c;
@@ -347,8 +367,6 @@ public class UpdateJobPreference extends Activity {
                         _jobtype.add(jobType);
                     }
                     selectedJobType.setText(TextUtils.join(", ", jobtype_names));
-                }else{
-
                 }
             }
         }else if( requestCode == MALAYSIA_STATE ){
@@ -387,7 +405,6 @@ public class UpdateJobPreference extends Activity {
             }
         }
     }
-
 
     public class UpdateTask extends AsyncTask<String, Void, JSONObject> {
 
