@@ -1,6 +1,7 @@
 package com.example.william.myapplication;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,20 +10,22 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ResumeVisibilityAdapter extends BaseAdapter implements ListAdapter{
     private Context context;
     public String[] visibility = {"Open","Limited","Hidden"};
-    public String[] visibilityDesc = {"Open Desc","Limited Desc","Hidden Desc"};
+    public String[] visibilityDesc = {
+            "You can apply jobs<br />Employers can search your resume<br />Employers can contact you for job opportunities",
+            "You can apply jobs<br />Employers can search your resume but cannot see your contact details<br />Employers cannot contact you without your approval",
+            "You can apply jobs<br />Employers cannot search for your resume<br />Employers cannot contact you for job opportunities"
+    };
 
     private ArrayList<String> vis = new ArrayList<>();
 
     public ResumeVisibilityAdapter(Context context) {
         this.context = context;
-
-        for( int i=0; i < visibility.length; i++ ){
-            vis.add(visibility[i]);
-        }
+        Collections.addAll(vis, visibility);
     }
 
     @Override
@@ -53,7 +56,7 @@ public class ResumeVisibilityAdapter extends BaseAdapter implements ListAdapter{
         tvName.setText(visibility);
 
         TextView tvDesc = (TextView) v.findViewById(R.id.visibility_desc);
-        tvDesc.setText(visibilityDesc[position]);
+        tvDesc.setText( Html.fromHtml( visibilityDesc[position] ) );
 
         return v;
     }
