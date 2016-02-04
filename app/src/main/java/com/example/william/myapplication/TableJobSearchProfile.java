@@ -42,9 +42,21 @@ public class TableJobSearchProfile extends SQLiteOpenHelper {
         return db.rawQuery(strSQL, args);
     }
 
-    public Cursor getSubscribedProfile(){
-        String strSQL = "SELECT * FROM "+TABLE_NAME+" WHERE _id != ? AND notification_frequency != ?";
-        String[] args = {"null","U"}; // profile got _id and its value is not null, and is not unsubscribe
+    /*
+    * subscribedDuration = [D]aily / [W]eekly
+    * */
+    public Cursor getSubscribedProfile( String subscribeDuration ){
+        String strSQL = "SELECT * FROM "+TABLE_NAME+" WHERE _id != ? AND notification_frequency";
+        String[] args = new String[2];
+        args[0] = "null";
+
+        if( subscribeDuration != null ){
+            strSQL += " = ?";
+            args[1] = subscribeDuration;
+        }else{
+            strSQL += " != ?";
+            args[1] = "U";
+        }
         return db.rawQuery(strSQL, args);
     }
 
