@@ -46,8 +46,25 @@ public class DailyJobMatcher extends Service{
         if( isOnline() && accessToken != null ){
             /*
             * check for active jobMatcher profile table
-            * */
-            stopThisService(); // when done
+            * *
+            //stopThisService(); // call when done
+
+            TableJobSearchProfile tableJobSearchProfile = new TableJobSearchProfile(getApplicationContext());
+            Cursor c = tableJobSearchProfile.getSearchProfile();
+
+            String[] s = {Jenjobs.JOB_MATCHED};
+            GetRequest g = new GetRequest();
+            g.setResultListener(new GetRequest.ResultListener() {
+                @Override
+                public void processResultArray(JSONArray result) {
+
+                }
+
+                @Override
+                public void processResult(JSONObject success) {}
+            });
+            g.execute(s);
+            */
         }else{
             stopThisService();
         }
