@@ -20,7 +20,6 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -167,11 +166,12 @@ public class JobSearchProfileForm extends ActionBarActivity {
             if( profileName.length() == 0 ){
                 Toast.makeText(context, R.string.profile_name_required, Toast.LENGTH_LONG).show();
             }else{
-                TableJobSearchProfile tableJobSearchProfile = new TableJobSearchProfile(context);
+                final TableJobSearchProfile tableJobSearchProfile = new TableJobSearchProfile(context);
                 ContentValues cv = new ContentValues();
 
                 if( _searchParameter.length() > 0 ){
                     cv.put("id", id);
+                    cv.put("_id", "null");
                     cv.put("profile_name", profileName);
                     cv.put("parameters", _searchParameter.toString());
                     cv.put("notification_frequency", frequency.substring(0, 1));
@@ -183,16 +183,24 @@ public class JobSearchProfileForm extends ActionBarActivity {
                         postedData.put("frequency", cv.getAsString("notification_frequency"));
 
                         // TODO - post to server
+                        // - get returned ID and update the row
+                        // - then check this row to make sure that it is online
                         PostRequest p = new PostRequest();
                         p.setResultListener(new PostRequest.ResultListener() {
                             @Override
                             public void processResult(JSONObject success) {
                                 if( success != null ){
                                     Log.e("success", success.toString());
-
                                     if( success.optString("status_text") != null ){
                                         Toast.makeText(context, success.optString("status_text"), Toast.LENGTH_LONG).show();
                                         finish();
+
+                                        if( success.optInt("new_id") > 0 ){
+                                            ContentValues cv = new ContentValues();
+                                            cv.put("id", id);
+                                            cv.put("_id", success.optInt("new_id"));
+                                            tableJobSearchProfile.saveSearchProfile(cv);
+                                        }
                                     }else{
                                         Toast.makeText(context, R.string.unknown_error, Toast.LENGTH_LONG).show();
                                     }
@@ -201,8 +209,6 @@ public class JobSearchProfileForm extends ActionBarActivity {
                                 }
                             }
                         });
-                        //Log.e("url", Jenjobs.SEARCH_PROFILE + "?access-token=" + accessToken);
-                        //Log.e("param", postedData.toString());
                         String[] param = {Jenjobs.SEARCH_PROFILE+"?access-token="+accessToken, postedData.toString()}; // TODO - update URL
                         p.execute(param);
                     } catch (JSONException e) {
