@@ -42,6 +42,12 @@ public class TableJobSearchProfile extends SQLiteOpenHelper {
         return db.rawQuery(strSQL, args);
     }
 
+    public Cursor getSubscribedProfile(){
+        String strSQL = "SELECT * FROM "+TABLE_NAME+" WHERE _id != ? AND notification_frequency != ?";
+        String[] args = {"null","U"}; // profile got _id and its value is not null, and is not unsubscribe
+        return db.rawQuery(strSQL, args);
+    }
+
     public int saveSearchProfile(ContentValues cv){
         if( cv.size() == 0 ){
             return 0;
