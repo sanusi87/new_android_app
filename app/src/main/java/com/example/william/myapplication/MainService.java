@@ -38,7 +38,6 @@ import java.util.HashMap;
 public class MainService extends Service{
     private NotificationManager mNM;
     private int NOTIFICATION_APPLICATION = 1;
-    private int NOTIFICATION = 1; // set default to application notification
 
     SharedPreferences sharedPref;
     String accessToken;
@@ -47,9 +46,12 @@ public class MainService extends Service{
     TableInvitation tableInvitation;
     TableJob tableJob;
     TableSettings tableSettings;
+    TableJobSearchProfile tableJobSearchProfile;
     HashMap applicationStatus;
 
+    // list of alarms
     AlarmManager alarm;
+    //public ArrayList<PendingIntent> intentArray = new ArrayList<>();
 
     public class LocalBinder extends Binder {
         MainService getService() {
@@ -92,6 +94,7 @@ public class MainService extends Service{
             .build();
 
         // Send the notification.
+        int NOTIFICATION = 1;
         mNM.notify(NOTIFICATION, notification);
     }
 
@@ -287,13 +290,12 @@ public class MainService extends Service{
     private void handleCommand(Intent intent){
         mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE); // notification service
         alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE); // alarm manager service
-        Intent _intent = new Intent(getApplicationContext(), DailyJobMatcher.class);
-        PendingIntent alarmIntent = PendingIntent.getService(getApplicationContext(), 0, _intent, 0);
 
         tableSettings = new TableSettings(getApplicationContext());
         tableApplication = new TableApplication(getApplicationContext());
         tableInvitation = new TableInvitation(getApplicationContext());
         tableJob = new TableJob(getApplicationContext());
+        tableJobSearchProfile = new TableJobSearchProfile(getApplicationContext());
         applicationStatus = Jenjobs.getApplicationStatus();
 
         /*
@@ -305,7 +307,10 @@ public class MainService extends Service{
         * TODO - check for jobmatcher every 9 A.M. default
         * - check for active jobMatcher profile table
         * - allow user to update the alert time of each profile
-        * */
+        *
+        Intent _intent = new Intent(getApplicationContext(), DailyJobMatcher.class);
+        PendingIntent alarmIntent = PendingIntent.getService(getApplicationContext(), 0, _intent, 0);
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 9); // at 9 A.M.
@@ -314,6 +319,22 @@ public class MainService extends Service{
 
         //calendar.set(Calendar.MINUTE, 1); // 1 minute
         //alarm.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 1000 * 60 * 1, alarmIntent);
+        */
+
+        /*
+        * for newly login jobseeker
+        * get saved search profile if any
+        * */
+        Cursor c = tableJobSearchProfile.getSubscribedProfile(null);
+        if( c.moveToFirst() ){
+            while( !c.isAfterLast() ){
+                int jobMatcherProfileId = c.getInt(c.getColumnIndex("_id"));
+                String notificationFrequency = c.getString(c.getColumnIndex("notification_frequency"));
+                setNewAlarm(jobMatcherProfileId, notificationFrequency);
+                c.moveToNext();
+            }
+        }
+        c.close();
     }
 
     // check application
@@ -398,4 +419,41 @@ public class MainService extends Service{
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
+
+    /*
+    * searchProfileId == Job Search Profile ID
+    * alertNotification == [D]aily / [W]eekly
+    * */
+    public void setNewAlarm( int searchProfileId, String alertNotification ){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
+        Long alarmInterval = AlarmManager.INTERVAL_DAY;
+        if( alertNotification.equals("D") ){
+            calendar.set(Calendar.HOUR_OF_DAY, 9); // at 9 A.M.
+            calendar.set(Calendar.MINUTE, 30); // 30 minute
+        }else if( alertNotification.equals("W") ){
+            alarmInterval = (long) (1000 * 60 * 60 * 24 * 7);
+            calendar.set(Calendar.HOUR_OF_DAY, 9);
+            calendar.set(Calendar.MINUTE, 30);
+        }
+
+        Intent _intent = createIntent( searchProfileId, alertNotification );
+        PendingIntent alarmIntent = PendingIntent.getService(getApplicationContext(), searchProfileId, _intent, 0);
+        alarm.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), alarmInterval, alarmIntent);
+    }
+
+    public void stopAlarm( int searchProfileId, String alertNotification ){
+        Intent _intent = createIntent( searchProfileId, alertNotification );
+        PendingIntent alarmIntent = PendingIntent.getService(getApplicationContext(), searchProfileId, _intent, 0);
+        alarm.cancel(alarmIntent);
+    }
+
+    private Intent createIntent( int searchProfileId, String alertNotification ){
+        Intent _intent = new Intent(getApplicationContext(), DailyJobMatcher.class);
+        //_intent.putExtra("alertEach", alertNotification);
+        _intent.putExtra("jobMatcherProfileId", searchProfileId);
+        return _intent;
+    }
+
 }

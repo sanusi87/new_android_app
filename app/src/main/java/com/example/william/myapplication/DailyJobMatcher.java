@@ -7,10 +7,14 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class DailyJobMatcher extends Service{
     SharedPreferences sharedPref;
@@ -34,8 +38,6 @@ public class DailyJobMatcher extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleCommand(intent);
-        // We want this service to continue running until it is explicitly
-        // stopped, so return sticky.
         return START_STICKY;
     }
 
@@ -43,28 +45,65 @@ public class DailyJobMatcher extends Service{
         sharedPref = getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
         Log.e("alarmStarted", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
-        if( isOnline() && accessToken != null ){
-            /*
-            * check for active jobMatcher profile table
-            * *
-            //stopThisService(); // call when done
 
-            TableJobSearchProfile tableJobSearchProfile = new TableJobSearchProfile(getApplicationContext());
-            Cursor c = tableJobSearchProfile.getSearchProfile();
+        Bundle extras = intent.getExtras();
+        if( extras != null ){
+            //Log.e("intent1", ""+extras.getString("alertEach"));
+            Log.e("intent2", ""+extras.getInt("jobMatcherProfileId"));
 
-            String[] s = {Jenjobs.JOB_MATCHED};
-            GetRequest g = new GetRequest();
-            g.setResultListener(new GetRequest.ResultListener() {
-                @Override
-                public void processResultArray(JSONArray result) {
+            if( isOnline() && accessToken != null ){
 
+                /*
+                * check for active jobMatcher profile table
+                *
+                //stopThisService(); // call when done
+
+                TableJobSearchProfile tableJobSearchProfile = new TableJobSearchProfile(getApplicationContext());
+                Cursor c = tableJobSearchProfile.getSubscribedProfile( extras.getString("alertEach") );
+                if( c.moveToFirst() ){
+                    while( !c.isAfterLast() ){
+                        int jobMatcherProfileId = c.getInt(c.getColumnIndex("_id"));
+                        String[] s = {Jenjobs.JOB_MATCHED+"/"+jobMatcherProfileId+"?access-token="+accessToken};
+                        Log.e("url", s[0]);
+
+
+                        GetRequest g = new GetRequest();
+                        g.setResultListener(new GetRequest.ResultListener() {
+                            @Override
+                            public void processResultArray(JSONArray result) {
+
+                            }
+
+                            @Override
+                            public void processResult(JSONObject success) {}
+                        });
+                        g.execute(s);
+
+
+                        c.moveToNext();
+                    }
                 }
+                c.close();
+                */
 
-                @Override
-                public void processResult(JSONObject success) {}
-            });
-            g.execute(s);
-            */
+                int jobMatcherProfileId = extras.getInt("jobMatcherProfileId");
+                String[] s = {Jenjobs.JOB_MATCHED+"/"+jobMatcherProfileId+"?access-token="+accessToken};
+                Log.e("url", s[0]);
+                GetRequest g = new GetRequest();
+                g.setResultListener(new GetRequest.ResultListener() {
+                    @Override
+                    public void processResultArray(JSONArray result) {
+
+                    }
+
+                    @Override
+                    public void processResult(JSONObject success) {}
+                });
+                g.execute(s);
+
+            }else{
+                stopThisService();
+            }
         }else{
             stopThisService();
         }
@@ -72,9 +111,9 @@ public class DailyJobMatcher extends Service{
 
     public void stopThisService(){
         /*
-            * stop this service after 30 seconds
-            * supposed to stop when the job finished
-            * */
+        * stop this service after 30 seconds
+        * supposed to stop when the job finished
+        * */
         Handler handler = new Handler();
         Runnable updateData = new Runnable(){
             @Override
