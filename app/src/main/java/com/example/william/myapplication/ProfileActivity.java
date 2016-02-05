@@ -9,8 +9,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -88,6 +86,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     private int DOWNLOAD_BOOKMARK = 8; //http://api.jenjobs.com/jobseeker/bookmark
     private int DOWNLOAD_SUBSCRIPTION = 9; //http://api.jenjobs.com/jobseeker/subscription
     private int DOWNLOAD_INVITATION = 10;
+    private int DOWNLOAD_JOBMATCHER_PROFILE = 11;
 
     /*
     * job search
@@ -549,44 +548,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             mCurrentPhotoPath = "file:" + image.getAbsolutePath();
             return image;
         }
-
-        /*
-        private void setupJobFragment(View rootView) {
-            ProgressBar loading = (ProgressBar) rootView.findViewById(R.id.progressBar4);
-            ListView lv = (ListView) rootView.findViewById(R.id.job_list_view);
-            final JobSearchAdapter jobSearchAdapter = new JobSearchAdapter(getActivity());
-            jobSearchAdapter.setAccessToken(accessToken);
-            jobSearch = new JobSearch(jobSearchAdapter);
-            jobSearch.setLoading( loading );
-            jobSearch.search(true);
-
-            lv.setAdapter(jobSearchAdapter);
-            lv.setOnScrollListener(new AbsListView.OnScrollListener() {
-                int previousLastPosition = 0;
-
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {}
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    final int lastPosition = firstVisibleItem + visibleItemCount;
-                    if (lastPosition == totalItemCount) {
-                        if (previousLastPosition != lastPosition) {
-                            jobSearch.setPage(jobSearch.getPage() + 1);
-                            jobSearch.search(false);
-                        }
-                        previousLastPosition = lastPosition;
-                    } else if (lastPosition < previousLastPosition - 5) {
-                        resetLastIndex();
-                    }
-                }
-
-                public void resetLastIndex() {
-                    previousLastPosition = 0;
-                }
-            });
-        }
-        */
 
         private void setupApplicationFragment(View rootView) {
             ListView lv = (ListView)rootView.findViewById(R.id.listOfApplication);
@@ -2103,6 +2064,59 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         }
                     } catch (JSONException e) {
                         Log.e("subExcp", e.getMessage());
+                    }
+                }else  if( downloadSection == DOWNLOAD_JOBMATCHER_PROFILE ){
+                    TableJobSearchProfile tableProfile = new TableJobSearchProfile(getApplicationContext());
+
+                    JSONArray success;
+                    try {
+                        success = new JSONArray(nsuccess);
+                        if (success.length() > 0) {
+                            for (int i = 0; i < success.length(); i++) {
+                                JSONObject s = success.getJSONObject(i);
+                                ContentValues cv = new ContentValues();
+                                cv.put("id", 0);
+                                cv.put("_id", (int)(s.get("id")));
+                                cv.put("profile_name", s.getString("name"));
+                                //cv.put("parameters", _searchParameter.toString());
+
+                                /*
+                                * === local db
+
+                                *
+                                * === remote db
+                                {
+                                    "id": 852926,
+                                    "name": "job matcher one",
+                                    "query_param": {
+                                        "currency_id": 6,
+                                        "frequency": "D",
+                                        "keyword": null,
+                                        "salary_min": 0,
+                                        "salary_max": 0,
+                                        "direct_employer": 0,
+                                        "ra_advertiser": 0,
+                                        "search_by": null,
+                                        "job_spec": [],
+                                        "position_level": [],
+                                        "job_type": [],
+                                        "location": []
+                                    },
+                                    "date_added": "2016-01-29 17:06:38",
+                                    "date_updated": "2016-01-29 17:06:38"
+                                }
+                                * */
+
+                                JSONObject queryParam = s.getJSONObject("query_param");
+                                String freq = queryParam.getString("frequency");
+                                freq = freq != null ? freq.substring(0,1) : "D";
+                                cv.put("notification_frequency", freq);
+
+                                tableProfile.saveSearchProfile(cv);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.e("djmerr", e.getMessage());
                     }
                 }
             }else{
