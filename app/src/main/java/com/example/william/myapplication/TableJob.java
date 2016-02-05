@@ -12,8 +12,7 @@ public class TableJob extends SQLiteOpenHelper{
             "title TEXT, " +
             "company TEXT, " +
             "job_data TEXT, " +
-            "date_closed NUMERIC, " +
-            "suggested_job INTEGER)";
+            "date_closed NUMERIC)";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableJob.TABLE_NAME+"'";
 
     public SQLiteDatabase db;
