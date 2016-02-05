@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.app.Service;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,7 +34,6 @@ public class JobSearchProfileForm extends ActionBarActivity {
     static String accessToken = null;
 
     int id = 0;
-    //String profileName;
     String frequency = "Daily";
     TextView selectedFrequency;
 
@@ -48,8 +48,6 @@ public class JobSearchProfileForm extends ActionBarActivity {
         _searchParameter = new JSONObject();
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
-
-        TextView keywordInput = (TextView)findViewById(R.id.profile_name);
 
         final CheckBox notificationAlert = (CheckBox)findViewById(R.id.notification_checkbox);
         notificationAlert.setChecked(true);
@@ -179,8 +177,9 @@ public class JobSearchProfileForm extends ActionBarActivity {
 
                     JSONObject postedData = _searchParameter; // copy content to other variable
                     try {
+                        final String notificationFreq = cv.getAsString("notification_frequency");
                         postedData.put("name", profileName);
-                        postedData.put("frequency", cv.getAsString("notification_frequency"));
+                        postedData.put("frequency", notificationFreq);
 
                         // TODO - post to server
                         // - get returned ID and update the row
@@ -193,7 +192,6 @@ public class JobSearchProfileForm extends ActionBarActivity {
                                     Log.e("success", success.toString());
                                     if( success.optString("status_text") != null ){
                                         Toast.makeText(context, success.optString("status_text"), Toast.LENGTH_LONG).show();
-                                        finish();
 
                                         if( success.optInt("new_id") > 0 ){
                                             ContentValues cv = new ContentValues();
@@ -201,6 +199,8 @@ public class JobSearchProfileForm extends ActionBarActivity {
                                             cv.put("_id", success.optInt("new_id"));
                                             tableJobSearchProfile.saveSearchProfile(cv);
                                         }
+
+                                        finish();
                                     }else{
                                         Toast.makeText(context, R.string.unknown_error, Toast.LENGTH_LONG).show();
                                     }
