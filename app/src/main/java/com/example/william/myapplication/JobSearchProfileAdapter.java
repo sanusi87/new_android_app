@@ -76,6 +76,7 @@ public class JobSearchProfileAdapter extends BaseAdapter implements ListAdapter{
 
         final String[] searchProfile = getItem(position);
         final int searchProfileId = Integer.valueOf(searchProfile[0]);
+        final String notificationFreq = searchProfile[4];
         ((TextView)v.findViewById(R.id.profileName)).setText(searchProfile[2]);
         ((TextView)v.findViewById(R.id.dateCreated)).setText(Jenjobs.date(searchProfile[5], null,"yyyy-MM-dd hh:mm:ss"));
 
