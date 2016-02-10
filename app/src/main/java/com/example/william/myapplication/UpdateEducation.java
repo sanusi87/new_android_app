@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
@@ -21,20 +20,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -70,6 +58,7 @@ public class UpdateEducation extends ActionBarActivity {
     EducationLevel educationLevel;
     EducationField educationField;
     String year;
+    boolean isOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +68,7 @@ public class UpdateEducation extends ActionBarActivity {
         tableEducation = new TableEducation(this);
         sharedPreferences = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPreferences.getString("access_token", null);
+        isOnline = Jenjobs.isOnline(getApplicationContext());
 
         HashMap listOfEducationLevel = Jenjobs.getEducationLevel();
         HashMap listOfEducationField = Jenjobs.getEducationField();
@@ -252,88 +242,91 @@ public class UpdateEducation extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int clickedItem = item.getItemId();
         if (clickedItem == R.id.save) {
-            ArrayList<String> errors = new ArrayList<>();
-
-            if( selectedEducationLevel.getText().toString().equals(getResources().getString(R.string.no_value)) ){
-                errors.add("Please select education level.");
-            }
-
-            if( enteredSchool.getText().toString().equals(getResources().getString(R.string.no_value)) ){
-                errors.add("Please enter your educational institution.");
-            }
-
-            if( selectedEducationField.getText().toString().equals(getResources().getString(R.string.no_value)) ){
-                errors.add("Please select field of education.");
-            }
-
-            if( selectedGraduationYear.getText().toString().equals(getResources().getString(R.string.no_value)) ){
-                errors.add("Please select year of graduation.");
-            }
-
-            if( errors.size() == 0 ){
-                ContentValues cv = new ContentValues();
-                cv.put("edu_level_id", educationLevel.id);
-                cv.put("school", enteredSchool.getText().toString());
-                cv.put("major", enteredMajor.getText().toString());
-                cv.put("edu_field_id", educationField.id);
-                cv.put("grade", enteredGrade.getText().toString());
-                cv.put("date_graduated", year+"-01-01");
-                cv.put("info", enteredEducationInfo.getText().toString());
-                cv.put("_id", remoteEducationId); // JenJOBS id
-
-                if( currentEducationId > 0 ){
-                    cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
-                    tableEducation.updateEducation(cv, currentEducationId);
-                }else{
-                    cv.put("date_added", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
-                    Long newEducationId = tableEducation.addEducation(cv);
-                    currentEducationId = newEducationId.intValue();
+            if( isOnline ){
+                ArrayList<String> errors = new ArrayList<>();
+                if( selectedEducationLevel.getText().toString().equals(getResources().getString(R.string.no_value)) ){
+                    errors.add("Please select education level.");
                 }
 
-                JSONObject obj = new JSONObject();
-                String url = Jenjobs.EDUCATION_URL;
-                if( remoteEducationId > 0 ){ url += "/"+ remoteEducationId; }
-                url += "?access-token=" + accessToken;
+                if( enteredSchool.getText().toString().equals(getResources().getString(R.string.no_value)) ){
+                    errors.add("Please enter your educational institution.");
+                }
 
-                try {
-                    obj.put("edu_level_id",educationLevel.id);
-                    obj.put("edu_field_id",educationField.id);
-                    obj.put("country_id",127);
-                    obj.put("school",enteredSchool.getText().toString());
-                    obj.put("major",enteredMajor.getText().toString());
-                    obj.put("edu_field_desc",""); // TODO: enter this when edu_field_id is "Others"
-                    obj.put("grade",enteredGrade.getText().toString());
-                    obj.put("date_graduated",year);
-                    obj.put("info", enteredEducationInfo.getText().toString());
+                if( selectedEducationField.getText().toString().equals(getResources().getString(R.string.no_value)) ){
+                    errors.add("Please select field of education.");
+                }
 
-                    String[] s = {url, obj.toString()};
-                    PostRequest p = new PostRequest();
-                    p.setResultListener(new PostRequest.ResultListener() {
-                        @Override
-                        public void processResult(JSONObject result) {
-                            if( result != null ) {
-                                if (result.optInt("id") > 0) {
-                                    // update the saved ID to local table
-                                    ContentValues cv = new ContentValues();
-                                    cv.put("_id", result.optInt("id"));
-                                    tableEducation.updateEducation(cv, currentEducationId);
+                if( selectedGraduationYear.getText().toString().equals(getResources().getString(R.string.no_value)) ){
+                    errors.add("Please select year of graduation.");
+                }
+
+                if( errors.size() == 0 ){
+                    ContentValues cv = new ContentValues();
+                    cv.put("edu_level_id", educationLevel.id);
+                    cv.put("school", enteredSchool.getText().toString());
+                    cv.put("major", enteredMajor.getText().toString());
+                    cv.put("edu_field_id", educationField.id);
+                    cv.put("grade", enteredGrade.getText().toString());
+                    cv.put("date_graduated", year+"-01-01");
+                    cv.put("info", enteredEducationInfo.getText().toString());
+                    cv.put("_id", remoteEducationId); // JenJOBS id
+
+                    if( currentEducationId > 0 ){
+                        cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
+                        tableEducation.updateEducation(cv, currentEducationId);
+                    }else{
+                        cv.put("date_added", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
+                        Long newEducationId = tableEducation.addEducation(cv);
+                        currentEducationId = newEducationId.intValue();
+                    }
+
+                    JSONObject obj = new JSONObject();
+                    String url = Jenjobs.EDUCATION_URL;
+                    if( remoteEducationId > 0 ){ url += "/"+ remoteEducationId; }
+                    url += "?access-token=" + accessToken;
+
+                    try {
+                        obj.put("edu_level_id",educationLevel.id);
+                        obj.put("edu_field_id",educationField.id);
+                        obj.put("country_id",127);
+                        obj.put("school",enteredSchool.getText().toString());
+                        obj.put("major",enteredMajor.getText().toString());
+                        obj.put("edu_field_desc",""); // TODO: enter this when edu_field_id is "Others"
+                        obj.put("grade",enteredGrade.getText().toString());
+                        obj.put("date_graduated",year);
+                        obj.put("info", enteredEducationInfo.getText().toString());
+
+                        String[] s = {url, obj.toString()};
+                        PostRequest p = new PostRequest();
+                        p.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject result) {
+                                if( result != null ) {
+                                    if (result.optInt("id") > 0) {
+                                        // update the saved ID to local table
+                                        ContentValues cv = new ContentValues();
+                                        cv.put("_id", result.optInt("id"));
+                                        tableEducation.updateEducation(cv, currentEducationId);
+                                    }
                                 }
                             }
-                        }
-                    });
-                    p.execute(s);
+                        });
+                        p.execute(s);
 
-                } catch (JSONException e) {
-                    Log.e("objErr", e.getMessage());
+                    } catch (JSONException e) {
+                        Log.e("objErr", e.getMessage());
+                    }
+
+                    Intent intent = new Intent();
+                    intent.putExtra("id", currentEducationId);
+                    intent.putExtra("currentViewPosition", currentViewPosition);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_LONG).show();
                 }
-
-                Intent intent = new Intent();
-                intent.putExtra("id", currentEducationId);
-                intent.putExtra("currentViewPosition", currentViewPosition);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
             }else{
-                Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
             }
         }
         return true;

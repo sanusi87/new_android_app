@@ -52,6 +52,7 @@ public class UpdateProfile extends ActionBarActivity{
 
     String accessToken;
     int profileId;
+    boolean isOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class UpdateProfile extends ActionBarActivity{
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
         profileId = sharedPref.getInt("js_profile_id", 0);
+        isOnline = Jenjobs.isOnline(getApplicationContext());
 
         // list of labels
         //final TextView labelName = (TextView)findViewById(R.id.labelName);
@@ -223,101 +225,105 @@ public class UpdateProfile extends ActionBarActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         int clickedItem = item.getItemId();
         if (clickedItem == R.id.save) {
-            ArrayList<String> errors = new ArrayList<>();
-            String theFullName = fullName.getText().toString();
-            String theDateOfBirth = selectedDoB.getText().toString();
-            String theEmailAddress = emailAddress.getText().toString();
-            String theGender = selectedGender.getText().toString();
-            String theMobileNumber = mobileNumber.getText().toString();
-            //String theIdentityCardNumber = identityCardNumber.getText().toString();
+            if( isOnline ){
+                ArrayList<String> errors = new ArrayList<>();
+                String theFullName = fullName.getText().toString();
+                String theDateOfBirth = selectedDoB.getText().toString();
+                String theEmailAddress = emailAddress.getText().toString();
+                String theGender = selectedGender.getText().toString();
+                String theMobileNumber = mobileNumber.getText().toString();
+                //String theIdentityCardNumber = identityCardNumber.getText().toString();
 
-            if( theFullName.equals("") ){
-                errors.add("Please enter your full name.");
-                //labelName.setTextColor(getResources().getColor(R.color.red));
-            }
-
-            int theCountryId = 127;
-            if( selectedNationalityValues == null ){
-                errors.add("Please set your nationanlity.");
-                //labelNationality.setTextColor(getResources().getColor(R.color.red));
-            }else{
-                theCountryId = selectedNationalityValues.id;
-            }
-
-            if( theDateOfBirth.equals(getResources().getString(R.string.no_value)) ){
-                errors.add("Please set your date of birth.");
-                //labelDob.setTextColor(getResources().getColor(R.color.red));
-            }
-
-            if( theGender.equals(getResources().getString(R.string.no_value)) ){
-                errors.add("Please set your gender.");
-                //labelGender.setTextColor(getResources().getColor(R.color.red));
-            }
-
-            if( ( selectedDialCodeValue == null || selectedDialCodeValue.equals("") ) || theMobileNumber.equals("") ){
-                errors.add("Please set your mobile number.");
-                //labelMobileNo.setTextColor(getResources().getColor(R.color.red));
-            }
-
-            if( errors.size() == 0 ){
-                TableProfile tableProfile = new TableProfile(getApplicationContext());
-                // insert
-                ContentValues cv = new ContentValues();
-                cv.put("name", theFullName);
-                cv.put("country_id", theCountryId);
-                cv.put("dob", Jenjobs.date(theDateOfBirth, "yyyy-MM-dd", "dd MMM yyyy"));
-
-                if( !theEmailAddress.equals("") ){
-                    cv.put("email", theEmailAddress);
+                if( theFullName.equals("") ){
+                    errors.add("Please enter your full name.");
+                    //labelName.setTextColor(getResources().getColor(R.color.red));
                 }
 
-                if( !theGender.equals(getResources().getString(R.string.no_value)) ){
-                    cv.put("gender", theGender);
+                int theCountryId = 127;
+                if( selectedNationalityValues == null ){
+                    errors.add("Please set your nationanlity.");
+                    //labelNationality.setTextColor(getResources().getColor(R.color.red));
+                }else{
+                    theCountryId = selectedNationalityValues.id;
                 }
 
-                if( selectedDialCodeValue != null && !selectedDialCodeValue.equals("") && !theMobileNumber.equals("") ){
-                    cv.put("dial_code", selectedDialCodeValue);
-                    cv.put("mobile_no", theMobileNumber);
+                if( theDateOfBirth.equals(getResources().getString(R.string.no_value)) ){
+                    errors.add("Please set your date of birth.");
+                    //labelDob.setTextColor(getResources().getColor(R.color.red));
                 }
 
-                tableProfile.updateProfile(cv, profileId);
+                if( theGender.equals(getResources().getString(R.string.no_value)) ){
+                    errors.add("Please set your gender.");
+                    //labelGender.setTextColor(getResources().getColor(R.color.red));
+                }
 
-                // post
-                JSONObject obj = new JSONObject();
-                try {
-                    obj.put("name", theFullName);
-                    obj.put("country_id",selectedNationalityValues.id);
-                    obj.put("dob", Jenjobs.date(theDateOfBirth, "yyyy-MM-dd", "dd MMM yyyy"));
+                if( ( selectedDialCodeValue == null || selectedDialCodeValue.equals("") ) || theMobileNumber.equals("") ){
+                    errors.add("Please set your mobile number.");
+                    //labelMobileNo.setTextColor(getResources().getColor(R.color.red));
+                }
+
+                if( errors.size() == 0 ){
+                    TableProfile tableProfile = new TableProfile(getApplicationContext());
+                    // insert
+                    ContentValues cv = new ContentValues();
+                    cv.put("name", theFullName);
+                    cv.put("country_id", theCountryId);
+                    cv.put("dob", Jenjobs.date(theDateOfBirth, "yyyy-MM-dd", "dd MMM yyyy"));
+
                     if( !theEmailAddress.equals("") ){
-                        obj.put("email", theEmailAddress);
+                        cv.put("email", theEmailAddress);
                     }
+
                     if( !theGender.equals(getResources().getString(R.string.no_value)) ){
-                        obj.put("gender", theGender);
+                        cv.put("gender", theGender);
                     }
+
                     if( selectedDialCodeValue != null && !selectedDialCodeValue.equals("") && !theMobileNumber.equals("") ){
-                        obj.put("dial_code", selectedDialCodeValue);
-                        obj.put("mobile_no", theMobileNumber);
+                        cv.put("dial_code", selectedDialCodeValue);
+                        cv.put("mobile_no", theMobileNumber);
                     }
 
-                    String[] s = {Jenjobs.PROFILE_URL+"?access-token=" + accessToken, obj.toString()};
-                    PostRequest postRequest = new PostRequest();
-                    postRequest.setResultListener(new PostRequest.ResultListener() {
-                        @Override
-                        public void processResult(JSONObject result) {
-                            Log.e("profileUpdated", ""+result);
-                        }
-                    });
-                    postRequest.execute(s);
-                } catch (JSONException e) {
-                    Log.e("jsonExc", e.getMessage());
-                }
+                    tableProfile.updateProfile(cv, profileId);
 
-                Intent intent = new Intent();
-                intent.putExtra("saved", "ok");
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+                    // post
+                    JSONObject obj = new JSONObject();
+                    try {
+                        obj.put("name", theFullName);
+                        obj.put("country_id",selectedNationalityValues.id);
+                        obj.put("dob", Jenjobs.date(theDateOfBirth, "yyyy-MM-dd", "dd MMM yyyy"));
+                        if( !theEmailAddress.equals("") ){
+                            obj.put("email", theEmailAddress);
+                        }
+                        if( !theGender.equals(getResources().getString(R.string.no_value)) ){
+                            obj.put("gender", theGender);
+                        }
+                        if( selectedDialCodeValue != null && !selectedDialCodeValue.equals("") && !theMobileNumber.equals("") ){
+                            obj.put("dial_code", selectedDialCodeValue);
+                            obj.put("mobile_no", theMobileNumber);
+                        }
+
+                        String[] s = {Jenjobs.PROFILE_URL+"?access-token=" + accessToken, obj.toString()};
+                        PostRequest postRequest = new PostRequest();
+                        postRequest.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject result) {
+                                Log.e("profileUpdated", ""+result);
+                            }
+                        });
+                        postRequest.execute(s);
+                    } catch (JSONException e) {
+                        Log.e("jsonExc", e.getMessage());
+                    }
+
+                    Intent intent = new Intent();
+                    intent.putExtra("saved", "ok");
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), TextUtils.join(" ", errors), Toast.LENGTH_LONG).show();
+                }
             }else{
-                Toast.makeText(getApplicationContext(), TextUtils.join(" ", errors), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
             }
         }
         return true;

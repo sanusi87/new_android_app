@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
@@ -21,19 +20,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -64,6 +53,8 @@ public class UpdateJobSeeking extends ActionBarActivity {
     private String selectedAvailability = "";
     private String selectedAvailabilityUnit = "";
 
+    boolean isOnline;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +63,7 @@ public class UpdateJobSeeking extends ActionBarActivity {
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         profileId = sharedPref.getInt("js_profile_id", 0);
+        isOnline = Jenjobs.isOnline(getApplicationContext());
 
         selectedMalaysiaState = (TextView)findViewById(R.id.selectedMalaysiaState);
         selectedCountry = (TextView)findViewById(R.id.selectedCountry);
@@ -225,72 +217,93 @@ public class UpdateJobSeeking extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int clickedItem = item.getItemId();
         if (clickedItem == R.id.save) {
-            ArrayList<String> errors = new ArrayList<>();
+            if( isOnline ){
+                ArrayList<String> errors = new ArrayList<>();
+                if( selectedJobSeekingStatusValues == null ){
+                    errors.add("Please select jobseeking status!");
+                }
 
-            if( selectedJobSeekingStatusValues == null ){
-                errors.add("Please select jobseeking status!");
-            }
+                if( selectedAvailability.length() == 0 && selectedAvailabilityUnit.length() == 0 ){
+                    errors.add("Please select your notice period!");
+                }
 
-            if( selectedAvailability.length() == 0 && selectedAvailabilityUnit.length() == 0 ){
-                errors.add("Please select your notice period!");
-            }
-
-            if( selectedCountryValues == null ){
-                errors.add("Please select the country!");
-            }else{
-                if( selectedCountryValues.id == 127 ){
-                    if( selectedMalaysiaStateValues == null ){
-                        errors.add("Please select the state!");
+                if( selectedCountryValues == null ){
+                    errors.add("Please select the country!");
+                }else{
+                    if( selectedCountryValues.id == 127 ){
+                        if( selectedMalaysiaStateValues == null ){
+                            errors.add("Please select the state!");
+                        }
                     }
                 }
-            }
 
-            if( errors.size() == 0 ) {
-                ArrayList<BasicNameValuePair> a = new ArrayList<>();
+                if( errors.size() == 0 ) {
+                    JSONObject obj = new JSONObject();
 
-                // TODO - save to profile, local db
-                ContentValues cv = new ContentValues();
-                cv.put("js_jobseek_status_id", selectedJobSeekingStatusValues.id);
-                cv.put("driving_license", cbLicense.isChecked() ? 1 : 0);
-                cv.put("transport", cbTransport.isChecked() ? 1 : 0);
-                cv.put("availability", selectedAvailability);
-                cv.put("availability_unit", selectedAvailabilityUnit.substring(0, 1));
-                tableProfile.updateProfile(cv, profileId);
+                    // TODO - save to profile, local db
+                    ContentValues cv = new ContentValues();
+                    cv.put("js_jobseek_status_id", selectedJobSeekingStatusValues.id);
+                    cv.put("driving_license", cbLicense.isChecked() ? 1 : 0);
+                    cv.put("transport", cbTransport.isChecked() ? 1 : 0);
+                    cv.put("availability", selectedAvailability);
+                    cv.put("availability_unit", selectedAvailabilityUnit.substring(0, 1));
+                    tableProfile.updateProfile(cv, profileId);
 
-                a.add(new BasicNameValuePair("js_jobseek_status_id", cv.getAsString("js_jobseek_status_id")));
-                a.add(new BasicNameValuePair("driving_license", cv.getAsString("driving_license")));
-                a.add(new BasicNameValuePair("transport", cv.getAsString("transport")));
-                a.add(new BasicNameValuePair("availability", cv.getAsString("availability")));
-                a.add(new BasicNameValuePair("availability_unit", cv.getAsString("availability_unit")));
+                    // TODO - save to address, add address to parameter
+                    ContentValues cv2 = new ContentValues();
+                    if(selectedMalaysiaStateValues != null){
+                        cv2.put("state_id", selectedMalaysiaStateValues.id);
+                        cv2.put("state_name", selectedMalaysiaStateValues.name);
+                    }else{
+                        cv2.put("state_id", 0);
+                        cv2.put("state_name", "");
+                    }
+                    cv2.put("country_id", selectedCountryValues.id);
+                    cv2.put("updated_at", Jenjobs.date(null, "yyyy-MM-dd", null));
+                    tableAddress.updateAddress(cv2);
 
-                // TODO - save to address, add address to parameter
-                ContentValues cv2 = new ContentValues();
+                    // update POST data
+                    try {
+                        obj.put("js_jobseek_status_id", cv.getAsString("js_jobseek_status_id"));
+                        obj.put("driving_license", cv.getAsString("driving_license"));
+                        obj.put("transport", cv.getAsString("transport"));
+                        obj.put("availability", cv.getAsString("availability"));
+                        obj.put("availability_unit", cv.getAsString("availability_unit"));
 
-                if(selectedMalaysiaStateValues != null){
-                    cv2.put("state_id", selectedMalaysiaStateValues.id);
-                    cv2.put("state_name", selectedMalaysiaStateValues.name);
+                        obj.put("state_id", cv.getAsString("state_id"));
+                        obj.put("country_id", cv.getAsString("country_id"));
+                    } catch (JSONException e) {
+                        Log.e("err", e.getMessage());
+                    }
+
+                    // TODO - change cv to ArrayList -> String, post to server
+                    String accessToken = sharedPref.getString("access_token", null);
+                    PostRequest p = new PostRequest();
+                    p.setResultListener(new PostRequest.ResultListener() {
+                        @Override
+                        public void processResult(JSONObject success) {
+                            if( success != null ){
+                                try {
+                                    success.get("status_code");
+                                } catch (JSONException e) {
+                                    Log.e("test", e.getMessage());
+                                }
+                            }
+                        }
+                    });
+
+                    String[] s = {Jenjobs.JOBSEEKING_INFO+"?access-token="+accessToken,obj.toString()};
+                    p.execute(s);
+
+                    Intent intent = new Intent();
+                    intent.putExtra("summary", selectedJobSeekingStatusValues.name);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
                 }else{
-                    cv2.put("state_id", 0);
-                    cv2.put("state_name", "");
+                    Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_LONG).show();
                 }
-
-                cv2.put("country_id", selectedCountryValues.id);
-                cv2.put("updated_at", Jenjobs.date(null, "yyyy-MM-dd", null));
-                tableAddress.updateAddress(cv2);
-
-                a.add(new BasicNameValuePair("state_id", cv2.getAsString("state_id")));
-                a.add(new BasicNameValuePair("country_id", cv2.getAsString("country_id")));
-
-                // TODO - change cv to ArrayList -> String
-                // post to server
-                new SaveDataTask().execute(a);
-
-                Intent intent = new Intent();
-                intent.putExtra("summary", selectedJobSeekingStatusValues.name);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
             }else{
-                Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
             }
         }
         return true;
@@ -343,81 +356,6 @@ public class UpdateJobSeeking extends ActionBarActivity {
                 selectedAvailabilityUnit = filters.getString("availabilityUnit");
                 String a = selectedAvailability+" "+selectedAvailabilityUnit;
                 selectedJobNotice.setText( a );
-            }
-        }
-    }
-
-    public class SaveDataTask extends AsyncTask<ArrayList, Void, Object> {
-
-        SaveDataTask(){}
-
-        @Override
-        protected Object doInBackground(ArrayList... params) {
-            Object _response = null;
-
-            String accessToken = sharedPref.getString("access_token", null);
-            String url = "http://api.jenjobs.com/jobseeker/jobseeking-info";
-            url += "?access-token="+accessToken;
-
-            final HttpClient httpclient = new DefaultHttpClient();
-            final HttpPost httppost = new HttpPost( url );
-            httppost.addHeader("Content-Type", "application/json");
-            httppost.addHeader("Accept", "application/json");
-
-            JSONObject obj = new JSONObject();
-
-            /*
-            Iterator t = cv2.keySet().iterator();
-            while( t.hasNext() ){
-                String key = String.valueOf(t.next());
-                try {
-                    obj.put(key, cv2.get(key));
-                } catch (JSONException e) {
-                    Log.e("test", e.getMessage());
-                }
-            }
-            */
-
-            for( int i=0;i<params[0].size();i++ ){
-                BasicNameValuePair b = (BasicNameValuePair) params[0].get(i);
-                try {
-                    obj.put(b.getName(), b.getValue());
-                    Log.e("jsonnn", b.getName()+"-"+b.getValue());
-                } catch (JSONException e) {
-                    Log.e("err", e.getMessage());
-                }
-            }
-
-            Log.e("json", obj.toString());
-            try {
-                StringEntity entity = new StringEntity(obj.toString());
-                entity.setContentEncoding(HTTP.UTF_8);
-                entity.setContentType("application/json");
-                httppost.setEntity(entity);
-
-                HttpResponse _http_response = httpclient.execute(httppost);
-                HttpEntity _entity = _http_response.getEntity();
-                InputStream is = _entity.getContent();
-
-                String responseString = JenHttpRequest.readInputStreamAsString(is);
-                _response = JenHttpRequest.decodeJsonObjectString(responseString);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return _response;
-        }
-
-
-        @Override
-        protected void onPostExecute(final Object success) {
-            Log.e("onPostEx", "" + success);
-            if( success != null ){
-                JSONObject _success = (JSONObject) success;
-                try {
-                    _success.get("status_code");
-                } catch (JSONException e) {
-                    Log.e("test", e.getMessage());
-                }
             }
         }
     }

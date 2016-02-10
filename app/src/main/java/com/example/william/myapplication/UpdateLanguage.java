@@ -47,6 +47,7 @@ public class UpdateLanguage extends ActionBarActivity {
     SharedPreferences sharedPref;
     String accessToken = null;
     int _viewIndex=-1;
+    boolean isOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class UpdateLanguage extends ActionBarActivity {
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
         tableLanguage = new TableLanguage(this);
+        isOnline = Jenjobs.isOnline(getApplicationContext());
 
         LinearLayout selectLanguage = (LinearLayout)findViewById(R.id.selectLanguage);
         selectSpokenLevel = (LinearLayout)findViewById(R.id.selectSpokenLevel);
@@ -182,59 +184,60 @@ public class UpdateLanguage extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int clickedItem = item.getItemId();
         if (clickedItem == R.id.save) {
-            ArrayList<String> errors = new ArrayList<>();
-            if( language == null ){
-                errors.add("Please select a language.");
-            }
-            //Log.e("lang", ""+language.id);
-            //Log.e("lang", ""+language.spoken);
-            //Log.e("lang", ""+language.written);
-            //Log.e("lang", ""+language.isNative);
-
-            if( ( language.spoken == 0 && language.written == 0 ) || ( language.spoken == 1 && language.written == 1 ) ){
-                errors.add("Please select speaking and writing efficiency.");
-            }
-
-            if( errors.size() == 0 ){
-                // TODO - save to database
-                ContentValues cv = new ContentValues();
-                cv.put("language_id", language.id);
-                cv.put("spoken_language_level_id", language.spoken);
-                cv.put("written_language_level_id", language.written);
-                cv.put("native", language.isNative);
-                tableLanguage.addLanguage(cv);
-
-                // TODO - post to server
-                String url = Jenjobs.LANGUAGE_URL+"?access-token="+accessToken;
-                JSONObject jsonString = new JSONObject();
-                try {
-                    jsonString.put("language_id", language.id);
-                    jsonString.put("spoken_language_level_id", language.spoken);
-                    jsonString.put("written_language_level_id", language.written);
-                    jsonString.put("native", language.isNative);
-                    //Log.e("langpost", jsonString.toString());
-                    String[] param = {url, jsonString.toString()};
-                    PostRequest postRequest = new PostRequest();
-                    postRequest.setResultListener(new PostRequest.ResultListener() {
-                        @Override
-                        public void processResult(JSONObject result) {
-                            Log.e("language?", ""+result);
-                        }
-                    });
-                    postRequest.execute(param);
-                } catch (JSONException e) {
-                    Log.e("jsonErr", e.getMessage());
+            if( isOnline ){
+                ArrayList<String> errors = new ArrayList<>();
+                if( language == null ){
+                    errors.add("Please select a language.");
                 }
 
-                // TODO - submit to prev activity
-                Intent intent = new Intent();
-                intent.putExtra("language", language);
-                intent.putExtra("_viewIndex", _viewIndex);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+                if( ( language.spoken == 0 && language.written == 0 ) || ( language.spoken == 1 && language.written == 1 ) ){
+                    errors.add("Please select speaking and writing efficiency.");
+                }
+
+                if( errors.size() == 0 ){
+                    // TODO - save to database
+                    ContentValues cv = new ContentValues();
+                    cv.put("language_id", language.id);
+                    cv.put("spoken_language_level_id", language.spoken);
+                    cv.put("written_language_level_id", language.written);
+                    cv.put("native", language.isNative);
+                    tableLanguage.addLanguage(cv);
+
+                    // TODO - post to server
+                    String url = Jenjobs.LANGUAGE_URL+"?access-token="+accessToken;
+                    JSONObject jsonString = new JSONObject();
+                    try {
+                        jsonString.put("language_id", language.id);
+                        jsonString.put("spoken_language_level_id", language.spoken);
+                        jsonString.put("written_language_level_id", language.written);
+                        jsonString.put("native", language.isNative);
+
+                        String[] param = {url, jsonString.toString()};
+                        PostRequest postRequest = new PostRequest();
+                        postRequest.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject result) {
+                                Log.e("language?", ""+result);
+                            }
+                        });
+                        postRequest.execute(param);
+                    } catch (JSONException e) {
+                        Log.e("jsonErr", e.getMessage());
+                    }
+
+                    // TODO - submit to prev activity
+                    Intent intent = new Intent();
+                    intent.putExtra("language", language);
+                    intent.putExtra("_viewIndex", _viewIndex);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_LONG).show();
+                }
             }else{
-                Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
             }
+
         }
         return true;
     }

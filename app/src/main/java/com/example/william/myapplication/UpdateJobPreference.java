@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
@@ -20,21 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -60,6 +48,7 @@ public class UpdateJobPreference extends ActionBarActivity {
     MyCurrency savedCurrency;
 
     SharedPreferences sharedPref;
+    boolean isOnline;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -68,6 +57,7 @@ public class UpdateJobPreference extends ActionBarActivity {
         setTitle(getText(R.string.update_job_preference));
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        isOnline = Jenjobs.isOnline(getApplicationContext());
 
         final LinearLayout insertSalary = (LinearLayout)findViewById(R.id.insertSalary);
         LinearLayout selectJobType = (LinearLayout)findViewById(R.id.selectJobType);
@@ -259,77 +249,103 @@ public class UpdateJobPreference extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int clickedItem = item.getItemId();
         if (clickedItem == R.id.save) {
-            ArrayList<String> errors = new ArrayList<>();
-            String[] params = new String[5];
-            ContentValues cv = new ContentValues();
-            String summary = "";
+            if( isOnline ){
+                ArrayList<String> errors = new ArrayList<>();
+                String[] params = new String[5];
+                ContentValues cv = new ContentValues();
+                String summary = "";
 
-            if( insertedSalary.getText().toString().length() > 0 ){
-                cv.put("salary", insertedSalary.getText().toString());
-                params[0] = insertedSalary.getText().toString();
-            }else{
-                errors.add("Please enter your expected salary.");
-            }
-
-            if( savedCurrency != null ){
-                cv.put("currency_id", savedCurrency.id);
-                params[1] = String.valueOf(savedCurrency.id);
-
-                summary = savedCurrency.name+" "+insertedSalary.getText().toString()+" per month";
-            }
-
-            ArrayList<Integer> savedJobTypeId = new ArrayList<>();
-            if( _jobtype.size() > 0 ){
-                for(int i=0;i<_jobtype.size();i++){
-                    JobType __jobtype = _jobtype.get(i);
-                    savedJobTypeId.add(__jobtype.id);
+                if( insertedSalary.getText().toString().length() > 0 ){
+                    cv.put("salary", insertedSalary.getText().toString());
+                    params[0] = insertedSalary.getText().toString();
+                }else{
+                    errors.add("Please enter your expected salary.");
                 }
-                cv.put("job_type_id", (new JSONArray( savedJobTypeId )).toString() );
-                params[2] = (new JSONArray( savedJobTypeId )).toString();
-            }else{
-                errors.add("Please select your preferred job type(s).");
-            }
 
-            ArrayList<Integer> savedStateId = new ArrayList<>();
-            if( _state.size() > 0 ){
-                tableJobPreferenceLocation.truncate();
-                for(int i=0;i<_state.size();i++){
-                    State __state = _state.get(i);
-                    savedStateId.add(__state.id);
+                if( savedCurrency != null ){
+                    cv.put("currency_id", savedCurrency.id);
+                    params[1] = String.valueOf(savedCurrency.id);
 
-                    ContentValues cv2 = new ContentValues();
-                    cv2.put("country_id", 127);
-                    cv2.put("state_id", __state.id);
-                    tableJobPreferenceLocation.insertJobPreference(cv2);
+                    summary = savedCurrency.name+" "+insertedSalary.getText().toString()+" per month";
                 }
-                params[3] = (new JSONArray( savedStateId )).toString();
-            }else{
-                errors.add("Please select your preferred working location in Malaysia.");
-            }
 
-            if( errors.size() == 0 ){
-                tableJobPreference.updateJobPreference(cv);
-                ArrayList<Integer> savedCountryId = new ArrayList<>();
-                if( _country.size() > 0 ) {
-                    for(int i=0;i<_country.size();i++){
-                        Country __country = _country.get(i);
-                        savedCountryId.add(__country.id);
+                ArrayList<Integer> savedJobTypeId = new ArrayList<>();
+                if( _jobtype.size() > 0 ){
+                    for(int i=0;i<_jobtype.size();i++){
+                        JobType __jobtype = _jobtype.get(i);
+                        savedJobTypeId.add(__jobtype.id);
+                    }
+                    cv.put("job_type_id", (new JSONArray( savedJobTypeId )).toString() );
+                    params[2] = (new JSONArray( savedJobTypeId )).toString();
+                }else{
+                    errors.add("Please select your preferred job type(s).");
+                }
+
+                ArrayList<Integer> savedStateId = new ArrayList<>();
+                if( _state.size() > 0 ){
+                    tableJobPreferenceLocation.truncate();
+                    for(int i=0;i<_state.size();i++){
+                        State __state = _state.get(i);
+                        savedStateId.add(__state.id);
 
                         ContentValues cv2 = new ContentValues();
-                        cv2.put("country_id", __country.id);
-                        cv2.put("state_id", 0);
+                        cv2.put("country_id", 127);
+                        cv2.put("state_id", __state.id);
                         tableJobPreferenceLocation.insertJobPreference(cv2);
                     }
+                    params[3] = (new JSONArray( savedStateId )).toString();
+                }else{
+                    errors.add("Please select your preferred working location in Malaysia.");
                 }
-                params[4] = (new JSONArray( savedCountryId )).toString();
-                new UpdateTask().execute(params);
 
-                Intent intent = new Intent();
-                intent.putExtra("summary", summary);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+                if( errors.size() == 0 ){
+                    tableJobPreference.updateJobPreference(cv);
+                    ArrayList<Integer> savedCountryId = new ArrayList<>();
+                    if( _country.size() > 0 ) {
+                        for(int i=0;i<_country.size();i++){
+                            Country __country = _country.get(i);
+                            savedCountryId.add(__country.id);
+
+                            ContentValues cv2 = new ContentValues();
+                            cv2.put("country_id", __country.id);
+                            cv2.put("state_id", 0);
+                            tableJobPreferenceLocation.insertJobPreference(cv2);
+                        }
+                    }
+                    params[4] = (new JSONArray( savedCountryId )).toString();
+
+                    JSONObject obj = new JSONObject();
+                    try {
+                        obj.put("salary", params[0]);
+                        obj.put("currency_id", params[1]);
+                        obj.put("job_type_id", new JSONArray(params[2]));
+                        obj.put("state_id", new JSONArray(params[3]));
+                        obj.put("country_id", new JSONArray(params[4]));
+
+                        PostRequest p = new PostRequest();
+                        p.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject success) {
+                                if( success != null ){
+                                    Log.e("success", success.toString());
+                                }
+                            }
+                        });
+                        String accessToken = sharedPref.getString("access_token", null);
+                        p.execute(Jenjobs.JOB_PREFERENCE_URL+"?access-token="+accessToken);
+                    } catch (JSONException e) {
+                        Log.e("JSONException", e.getMessage());
+                    }
+
+                    Intent intent = new Intent();
+                    intent.putExtra("summary", summary);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_LONG).show();
+                }
             }else{
-                Toast.makeText(getApplicationContext(), TextUtils.join(", ", errors), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
             }
         }
         return true;
@@ -345,8 +361,6 @@ public class UpdateJobPreference extends ActionBarActivity {
                 MyCurrency c = (MyCurrency)extra.get("the_currency");
 
                 insertedSalary.setText(salary);
-                //Log.e("salary", "" + salary);
-                //Log.e("currency", ""+c.name);
                 if( c != null ){
                     selectedCurrency.setText(c.name);
                     savedCurrency = c;
@@ -402,63 +416,6 @@ public class UpdateJobPreference extends ActionBarActivity {
                     }
                     selectedOtherCountry.setText(TextUtils.join(", ", country_name));
                 }
-            }
-        }
-    }
-
-    public class UpdateTask extends AsyncTask<String, Void, JSONObject> {
-
-        @Override
-        protected JSONObject doInBackground(String... params) {
-            Object _response = null;
-
-            String accessToken = sharedPref.getString("access_token", null);
-            String url = "http://api.jenjobs.com/jobseeker/job-preference";
-            url += "?access-token="+accessToken;
-
-            final HttpClient httpclient = new DefaultHttpClient();
-            final HttpPost httppost = new HttpPost( url );
-            httppost.addHeader("Content-Type", "application/json");
-            httppost.addHeader("Accept", "application/json");
-            HttpResponse _http_response;
-
-            JSONObject obj = new JSONObject();
-            try {
-                obj.put("salary", params[0]);
-                obj.put("currency_id", params[1]);
-                obj.put("job_type_id", new JSONArray(params[2]));
-                obj.put("state_id", new JSONArray(params[3]));
-                obj.put("country_id", new JSONArray(params[4]));
-
-                StringEntity entity = new StringEntity(obj.toString());
-                entity.setContentEncoding(HTTP.UTF_8);
-                entity.setContentType("application/json");
-                httppost.setEntity(entity);
-
-                _http_response = httpclient.execute(httppost);
-                HttpEntity _entity = _http_response.getEntity();
-                InputStream is = _entity.getContent();
-
-                String responseString = JenHttpRequest.readInputStreamAsString(is);
-                _response = JenHttpRequest.decodeJsonObjectString(responseString);
-                Log.e("response", responseString);
-            } catch (JSONException e) {
-                Log.e("JSONException", e.getMessage());
-            } catch (ClientProtocolException e) {
-                Log.e("ClientProtocolException", e.getMessage());
-            } catch (UnsupportedEncodingException e) {
-                Log.e("UnsupportedEncoding", e.getMessage());
-            } catch (IOException e) {
-                Log.e("IOException", e.getMessage());
-            }
-
-            return (JSONObject) _response;
-        }
-
-        @Override
-        protected void onPostExecute(final JSONObject success) {
-            if( success != null ){
-                Log.e("success", success.toString());
             }
         }
     }

@@ -5,31 +5,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
 public class UpdateResumeVisibility extends Activity {
 
     SharedPreferences sharedPref;
+    boolean isOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +25,7 @@ public class UpdateResumeVisibility extends Activity {
         setTitle(getText(R.string.resume_visibility));
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        isOnline = Jenjobs.isOnline(getApplicationContext());
 
         ListView listOFResumeVisibility = (ListView) findViewById(R.id.listOfResumeVisibility);
         final ResumeVisibilityAdapter rvAdapter = new ResumeVisibilityAdapter(getApplicationContext());
@@ -46,94 +34,52 @@ public class UpdateResumeVisibility extends Activity {
         listOFResumeVisibility.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if( isOnline ){
+                    /*
+                    * save visibility first before finishing activity
+                    * local
+                    * */
+                    TableProfile tableProfile = new TableProfile(getApplicationContext());
+                    ContentValues cv = new ContentValues();
+                    cv.put("access", rvAdapter.visibility[position]);
+                    tableProfile.updateProfile(cv, sharedPref.getInt("js_profile_id", 1));
 
-                /*
-                * save visibility first before finishing activity
-                * local
-                * */
-                TableProfile tableProfile = new TableProfile(getApplicationContext());
-                ContentValues cv = new ContentValues();
-                cv.put("access", rvAdapter.visibility[position]);
-                tableProfile.updateProfile(cv, sharedPref.getInt("js_profile_id", 1));
+                    /*
+                    * remote
+                    * */
+                    PostRequest p = new PostRequest();
+                    p.setResultListener(new PostRequest.ResultListener() {
+                        @Override
+                        public void processResult(JSONObject success) {
+                        /*
+                        if( success != null ){
+                            Log.e("success", success.toString());
 
-                /*
-                * remote
-                * */
-                new UpdateTask().execute(rvAdapter.visibility[position]);
+                            try {
+                                int status_code = Integer.valueOf(success.get("status_code").toString());
+                                Log.e("status_code", ""+status_code);
+                            } catch (JSONException e) {
+                                Log.e("JSONException", e.getMessage());
+                            }
+                        }
+                        */
+                        }
+                    });
+                    String accessToken = sharedPref.getString("access_token", null);
+                    String[] s = {Jenjobs.ACCESS_LEVEL+"?access-token="+accessToken,rvAdapter.visibility[position]};
+                    p.execute(s);
 
-                /*
-                * only then send the result back to the previous page
-                * */
-                Intent intent = new Intent();
-                intent.putExtra("selectedvisibility", rvAdapter.visibility[position]);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-
-            }
-        });
-    }
-
-    public class UpdateTask extends AsyncTask<String, Void, JSONObject> {
-
-        UpdateTask(){}
-
-        @Override
-        protected JSONObject doInBackground(String... params) {
-
-            Object _response = null;
-
-            String accessToken = sharedPref.getString("access_token", null);
-            String url = "http://api.jenjobs.com/jobseeker/access-level";
-            url += "?access-token="+accessToken;
-
-            final HttpClient httpclient = new DefaultHttpClient();
-            final HttpPost httppost = new HttpPost( url );
-            httppost.addHeader("Content-Type", "application/json");
-            httppost.addHeader("Accept", "application/json");
-
-            JSONObject obj = new JSONObject();
-            try {
-                obj.put("access", params[0]);
-
-                StringEntity entity = new StringEntity(obj.toString());
-                entity.setContentEncoding(HTTP.UTF_8);
-                entity.setContentType("application/json");
-                httppost.setEntity(entity);
-
-                HttpResponse _http_response = httpclient.execute(httppost);
-                HttpEntity _entity = _http_response.getEntity();
-                InputStream is = _entity.getContent();
-
-                String responseString = JenHttpRequest.readInputStreamAsString(is);
-                _response = JenHttpRequest.decodeJsonObjectString(responseString);
-
-            } catch (JSONException e) {
-                Log.e("JSONException", e.getMessage());
-            } catch (ClientProtocolException e) {
-                Log.e("ClientProtocolException", e.getMessage());
-            } catch (UnsupportedEncodingException e) {
-                Log.e("UnsupportedEncoding", e.getMessage());
-            } catch (IOException e) {
-                Log.e("IOException", e.getMessage());
-            }
-
-            return (JSONObject) _response;
-        }
-
-        @Override
-        protected void onPostExecute(final JSONObject success) {
-            /*
-            if( success != null ){
-                Log.e("success", success.toString());
-
-                try {
-                    int status_code = Integer.valueOf(success.get("status_code").toString());
-                    Log.e("status_code", ""+status_code);
-                } catch (JSONException e) {
-                    Log.e("JSONException", e.getMessage());
+                    /*
+                    * only then send the result back to the previous page
+                    * */
+                    Intent intent = new Intent();
+                    intent.putExtra("selectedvisibility", rvAdapter.visibility[position]);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
                 }
             }
-            */
-        }
+        });
     }
 }

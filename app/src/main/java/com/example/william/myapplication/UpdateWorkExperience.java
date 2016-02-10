@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
@@ -24,20 +23,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -88,10 +76,14 @@ public class UpdateWorkExperience extends ActionBarActivity {
     Spinner currency;
     EditText exp;
 
+    boolean isOnline;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_work_experience);
+
+        isOnline = Jenjobs.isOnline(getApplicationContext());
 
         tableWorkExperience = new TableWorkExperience(this);
         tableJobSpec = new TableJobSpec(this);
@@ -304,140 +296,155 @@ public class UpdateWorkExperience extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int clickedItem = item.getItemId();
         if (clickedItem == R.id.save) {
-            ArrayList<String> errors = new ArrayList<>();
+            if( isOnline ){
+                ArrayList<String> errors = new ArrayList<>();
+                if( positionTitle.getText().length() == 0 ){
+                    errors.add("Please enter the position title.");
+                }
 
-            if( positionTitle.getText().length() == 0 ){
-                errors.add("Please enter the position title.");
-            }
+                if( companyName.getText().length() == 0 ){
+                    errors.add("Please enter the company name.");
+                }
 
-            if( companyName.getText().length() == 0 ){
-                errors.add("Please enter the company name.");
-            }
+                if( _jobType == null ){
+                    errors.add("Please select the employment type.");
+                }
 
-            if( _jobType == null ){
-                errors.add("Please select the employment type.");
-            }
+                if( _positionLevel == null ){
+                    errors.add("Please select the job level.");
+                }
 
-            if( _positionLevel == null ){
-                errors.add("Please select the job level.");
-            }
+                if( monthStart.getSelectedItemPosition() == Spinner.INVALID_POSITION || yearStart.getSelectedItemPosition() == Spinner.INVALID_POSITION ){
+                    errors.add("Please specify the month and year you start this work.");
+                }
 
-            if( monthStart.getSelectedItemPosition() == Spinner.INVALID_POSITION || yearStart.getSelectedItemPosition() == Spinner.INVALID_POSITION ){
-                errors.add("Please specify the month and year you start this work.");
-            }
-
-            //if( ( monthEnd.getSelectedItemPosition() != 0 && yearEnd.getSelectedItemPosition() != 0 )
-                   // || ( monthEnd.getSelectedItemPosition() == 0 && yearEnd.getSelectedItemPosition() == 0 ) ){
+                //if( ( monthEnd.getSelectedItemPosition() != 0 && yearEnd.getSelectedItemPosition() != 0 )
+                // || ( monthEnd.getSelectedItemPosition() == 0 && yearEnd.getSelectedItemPosition() == 0 ) ){
                 // (both selected || both not selected) -- ok
-            //}else{
-            //    errors.add("Please specify both resignation month and year, or left both blank.");
-           // }
+                //}else{
+                //    errors.add("Please specify both resignation month and year, or left both blank.");
+                // }
 
-            if ((monthEnd.getSelectedItemPosition() == 0 || yearEnd.getSelectedItemPosition() == 0)
-                    && (monthEnd.getSelectedItemPosition() != 0 || yearEnd.getSelectedItemPosition() != 0)) {
-                        errors.add("Please specify both resignation month and year, or left both blank.");
-            }
-
-            //if( industry.getSelectedItemPosition() == Spinner.INVALID_POSITION ){
-            if( _industry == null ){
-                errors.add("Please select the company industry.");
-            }
-
-            if( selectedJobSpec.getText().equals(getResources().getString(R.string.no_value)) ){
-                errors.add("Please select your work specialisation.");
-            }
-
-            if( selectedJobRole.getText().equals(getResources().getString(R.string.no_value)) ){
-                errors.add("Please select the sub specialisation.");
-            }
-
-            if( errors.size() == 0 ){
-                ContentValues cv = new ContentValues();
-
-                String thePositionTitle = positionTitle.getText().toString();
-                cv.put("position", thePositionTitle);
-
-                String theCompanyName = companyName.getText().toString();
-                cv.put("company", theCompanyName);
-
-                cv.put("job_spec_id", _jobSpec.id);
-                cv.put("job_role_id", _jobRole.id);
-                cv.put("job_type_id", _jobType.id);
-                cv.put("job_level_id", _positionLevel.id);
-                cv.put("industry_id", _industry.id);
-
-                String experience = exp.getText().toString();
-                cv.put("experience", experience);
-
-                cv.put("salary", salary.getText().toString());
-                MyCurrency _currency = (MyCurrency)currency.getSelectedItem();
-                if( _currency.id <= 0 ){ _currency.id = 6; }
-                cv.put("currency_id", _currency.id);
-
-                String _monthStart = monthStart.getSelectedItem().toString();
-                String _yearStart = yearStart.getSelectedItem().toString();
-                String startedOn = Jenjobs.date(_yearStart+" "+_monthStart+" 01", "yyyy-MM-dd", "yyyy MMMM dd");
-                cv.put("started_on", startedOn);
-
-                String endOn = null;
-                if( monthEnd.getSelectedItemPosition() != 0 || yearEnd.getSelectedItemPosition() != 0 ){
-                    String _monthEnd = monthEnd.getSelectedItem().toString();
-                    String _yearEnd = yearEnd.getSelectedItem().toString();
-                    endOn = Jenjobs.date(_yearEnd+" "+_monthEnd+" 01", "yyyy-MM-dd", "yyyy MMMM dd");
+                if ((monthEnd.getSelectedItemPosition() == 0 || yearEnd.getSelectedItemPosition() == 0)
+                        && (monthEnd.getSelectedItemPosition() != 0 || yearEnd.getSelectedItemPosition() != 0)) {
+                    errors.add("Please specify both resignation month and year, or left both blank.");
                 }
-                cv.put("resigned_on", ""+endOn);
-                cv.put("update_at", Jenjobs.date(null, "yyyy-MM-dd", null));
 
-                if( currentId > 0 ){
-                    tableWorkExperience.updateWorkExperience(cv, currentId);
+                //if( industry.getSelectedItemPosition() == Spinner.INVALID_POSITION ){
+                if( _industry == null ){
+                    errors.add("Please select the company industry.");
+                }
+
+                if( selectedJobSpec.getText().equals(getResources().getString(R.string.no_value)) ){
+                    errors.add("Please select your work specialisation.");
+                }
+
+                if( selectedJobRole.getText().equals(getResources().getString(R.string.no_value)) ){
+                    errors.add("Please select the sub specialisation.");
+                }
+
+                if( errors.size() == 0 ){
+                    ContentValues cv = new ContentValues();
+
+                    String thePositionTitle = positionTitle.getText().toString();
+                    cv.put("position", thePositionTitle);
+
+                    String theCompanyName = companyName.getText().toString();
+                    cv.put("company", theCompanyName);
+
+                    cv.put("job_spec_id", _jobSpec.id);
+                    cv.put("job_role_id", _jobRole.id);
+                    cv.put("job_type_id", _jobType.id);
+                    cv.put("job_level_id", _positionLevel.id);
+                    cv.put("industry_id", _industry.id);
+
+                    String experience = exp.getText().toString();
+                    cv.put("experience", experience);
+
+                    cv.put("salary", salary.getText().toString());
+                    MyCurrency _currency = (MyCurrency)currency.getSelectedItem();
+                    if( _currency.id <= 0 ){ _currency.id = 6; }
+                    cv.put("currency_id", _currency.id);
+
+                    String _monthStart = monthStart.getSelectedItem().toString();
+                    String _yearStart = yearStart.getSelectedItem().toString();
+                    String startedOn = Jenjobs.date(_yearStart+" "+_monthStart+" 01", "yyyy-MM-dd", "yyyy MMMM dd");
+                    cv.put("started_on", startedOn);
+
+                    String endOn = null;
+                    if( monthEnd.getSelectedItemPosition() != 0 || yearEnd.getSelectedItemPosition() != 0 ){
+                        String _monthEnd = monthEnd.getSelectedItem().toString();
+                        String _yearEnd = yearEnd.getSelectedItem().toString();
+                        endOn = Jenjobs.date(_yearEnd+" "+_monthEnd+" 01", "yyyy-MM-dd", "yyyy MMMM dd");
+                    }
+                    cv.put("resigned_on", ""+endOn);
+                    cv.put("update_at", Jenjobs.date(null, "yyyy-MM-dd", null));
+
+                    if( currentId > 0 ){
+                        tableWorkExperience.updateWorkExperience(cv, currentId);
+                    }else{
+                        Long _savedId = tableWorkExperience.addWorkExperience(cv);
+                        currentId = _savedId.intValue();
+
+                        TableProfile tableProfile = new TableProfile(getApplicationContext());
+                        ContentValues cv3 = new ContentValues();
+                        cv3.put("no_work_exp", 0); // set to got work exp
+                        tableProfile.updateProfile(cv3, profileId);
+                    }
+
+                    // update got work exp
+                    ContentValues _cv = new ContentValues();
+                    _cv.put("no_work_exp", 0);
+                    tableProfile.updateProfile(_cv,profileId);
+
+                    JSONObject obj = new JSONObject();
+                    String url = Jenjobs.WORK_EXPERIENCE_URL;
+                    if( savedId > 0 ){ url += "/"+ savedId; }
+                    url += "?access-token=" + accessToken;
+
+                    try {
+                        obj.put("job_spec_id", _jobSpec.id);
+                        obj.put("job_role_id", _jobRole.id);
+                        obj.put("job_type_id", _jobType.id);
+                        obj.put("job_level_id", _positionLevel.id);
+                        obj.put("industry_id", _industry.id);
+                        obj.put("currency_id", _currency.id);
+                        obj.put("position", thePositionTitle);
+                        obj.put("company", theCompanyName);
+                        obj.put("experience", experience);
+                        obj.put("salary", salary.getText().toString());
+                        obj.put("started_on", startedOn);
+                        obj.put("resigned_on", ""+endOn);
+
+                        String[] s = {url, obj.toString()};
+                        PostRequest p = new PostRequest();
+                        p.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject result) {
+                                if (result != null) {
+                                    if (result.optInt("id") > 0) {
+                                        ContentValues cv = new ContentValues();
+                                        cv.put("_id", result.optInt("id"));
+                                        tableWorkExperience.updateWorkExperience(cv, currentId);
+                                    }
+                                }
+                            }
+                        });
+                        p.execute(s);
+                    } catch (JSONException e) {
+                        Log.e("jsonExcpt", e.getMessage());
+                    }
+
+                    Intent intent = new Intent();
+                    intent.putExtra("id", currentId);
+                    intent.putExtra("selectedWork", selectedWork);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
                 }else{
-                    Long _savedId = tableWorkExperience.addWorkExperience(cv);
-                    currentId = _savedId.intValue();
-
-                    TableProfile tableProfile = new TableProfile(getApplicationContext());
-                    ContentValues cv3 = new ContentValues();
-                    cv3.put("no_work_exp", 0); // set to got work exp
-                    tableProfile.updateProfile(cv3, profileId);
+                    Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_LONG).show();
                 }
-
-                // update got work exp
-                ContentValues _cv = new ContentValues();
-                _cv.put("no_work_exp", 0);
-                tableProfile.updateProfile(_cv,profileId);
-
-                JSONObject obj = new JSONObject();
-                String url = Jenjobs.WORK_EXPERIENCE_URL;
-                if( savedId > 0 ){ url += "/"+ savedId; }
-                url += "?access-token=" + accessToken;
-
-                try {
-                    obj.put("job_spec_id", _jobSpec.id);
-                    obj.put("job_role_id", _jobRole.id);
-                    obj.put("job_type_id", _jobType.id);
-                    obj.put("job_level_id", _positionLevel.id);
-                    obj.put("industry_id", _industry.id);
-                    obj.put("currency_id", _currency.id);
-                    obj.put("position", thePositionTitle);
-                    obj.put("company", theCompanyName);
-                    obj.put("experience", experience);
-                    obj.put("salary", salary.getText().toString());
-                    obj.put("started_on", startedOn);
-                    obj.put("resigned_on", ""+endOn);
-
-                } catch (JSONException e) {
-                    Log.e("jsonExcpt", e.getMessage());
-                }
-
-                String[] s = {url, obj.toString()};
-                new PostWorkExp().execute(s);
-
-                Intent intent = new Intent();
-                intent.putExtra("id", currentId);
-                intent.putExtra("selectedWork", selectedWork);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
             }else{
-                Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
             }
         }
         return true;
@@ -497,53 +504,4 @@ public class UpdateWorkExperience extends ActionBarActivity {
             }
         }
     }
-
-    public class PostWorkExp extends AsyncTask<String, Void, JSONObject> {
-        public PostWorkExp(){}
-
-        @Override
-        protected JSONObject doInBackground(String... params) {
-            JSONObject _response = null;
-            Log.e("postObject", params[1]);
-            final HttpClient httpclient = new DefaultHttpClient();
-            final HttpPost httppost = new HttpPost( params[0] );
-
-            httppost.addHeader("Content-Type", "application/json");
-            httppost.addHeader("Accept", "application/json");
-
-            try {
-                StringEntity entity = new StringEntity(params[1]);
-                entity.setContentEncoding(HTTP.UTF_8);
-                entity.setContentType("application/json");
-                httppost.setEntity(entity);
-
-                HttpResponse _http_response = httpclient.execute(httppost);
-                HttpEntity _entity = _http_response.getEntity();
-                InputStream is = _entity.getContent();
-                String responseString = JenHttpRequest.readInputStreamAsString(is);
-                _response = JenHttpRequest.decodeJsonObjectString(responseString);
-            } catch (ClientProtocolException e) {
-                Log.e("ClientProtocolException", e.getMessage());
-            } catch (UnsupportedEncodingException e) {
-                Log.e("UnsupportedEncoding", e.getMessage());
-            } catch (IOException e) {
-                Log.e("IOException", e.getMessage());
-            }
-
-            return _response;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            if( result != null ){
-                if( result.optInt("id") > 0 ){
-                    ContentValues cv = new ContentValues();
-                    cv.put("_id", result.optInt("id"));
-                    tableWorkExperience.updateWorkExperience(cv, currentId);
-                }
-            }
-        }
-
-    }
-
 }
