@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class UpdateName extends Activity {
 
@@ -46,11 +45,6 @@ public class UpdateName extends Activity {
                 String theText = t.getText().toString();
 
                 if( url != null && jsonString != null ){
-                    // insert
-                    //ContentValues cv = new ContentValues();
-                    //cv.put("name", theSkill);
-                    //tSkill.addSkill(cv);
-
                     String[] param = {url, jsonString};
                     new PostRequest().execute(param);
                 }
