@@ -276,4 +276,12 @@
     <string name="take_a_photo">Take a photo</string>
     <string name="no_bookmark">No bookmark found!</string>
     <string name="camera_unavailable">Camera is unavailable!</string>
+    <string name="no_matched_jobs">No matched jobs!</string>
+    <string name="no_suggested_jobs">No suggested jobs!</string>
+    <string name="unsubscribe">Unsubscribe</string>
+    <string name="title_activity_matched_jobs">MatchedJobs</string>
+    <string name="jobmatcher_on">JobMatcher on</string>
+    <string name="job_search_profile_name2">Profile Name</string>
+    <string name="matched_on">Matched On</string>
+    <string name="job_matcher">JobMatcher</string>
 </resources>

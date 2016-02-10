@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/AppThemePadding10">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/job_title"
+            android:id="@+id/job_title"
+            android:textColor="#096cc3"
+            android:textStyle="bold"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:layout_width="16dp"
+            android:layout_height="match_parent"
+            android:id="@+id/bookmarkButton"
+            android:contentDescription="@string/no_value"
+            android:src="@drawable/ic_turned_in_not_black_24dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:maxWidth="50dp"
+            android:background="@android:color/transparent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/jobDetailsContainer">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/company"
+            android:id="@+id/company_name"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/salary"
+            android:id="@+id/salary" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:id="@+id/locationIcon"
+                    android:src="@drawable/ic_room_black_24dp"
+                    android:contentDescription="@string/no_value"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:paddingLeft="-4dp"
+                    android:paddingRight="-4dp"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp"
+                    android:background="@android:color/transparent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/no_value"
+                    android:id="@+id/job_location"
+                    android:layout_toEndOf="@+id/locationIcon"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@android:color/black" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:id="@+id/jobTypeIcon"
+                    android:src="@drawable/ic_work_black_24dp"
+                    android:contentDescription="@string/no_value"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:paddingLeft="-4dp"
+                    android:paddingRight="-4dp"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp"
+                    android:background="@android:color/transparent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/no_value"
+                    android:id="@+id/job_type"
+                    android:layout_toEndOf="@+id/jobTypeIcon"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@android:color/black" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:id="@+id/expiredIcon"
+                    android:src="@drawable/ic_timer_off_black_24dp"
+                    android:contentDescription="@string/no_value"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:paddingLeft="-4dp"
+                    android:paddingRight="-4dp"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp"
+                    android:background="@android:color/transparent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/no_value"
+                    android:id="@+id/date_closed"
+                    android:layout_toEndOf="@+id/expiredIcon"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@android:color/black" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:id="@+id/expandItemContainer">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="@string/no_value"
+                android:src="@drawable/ic_expand_more_black_48dp"
+                android:tint="@color/blue" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/more"
+                android:textSize="12sp"
+                android:textColor="@color/blue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/moreItem"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/no_value"
+                android:id="@+id/job_spec"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

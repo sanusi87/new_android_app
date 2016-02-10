@@ -50,15 +50,16 @@
 
     </LinearLayout>
 
-    <View style="@style/AppThemeSeparator" />
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="3"
         style="@style/AppThemePadding10"
-        android:id="@+id/notification_alert">
+        android:id="@+id/notification_alert"
+        android:visibility="gone">
+
+        <View style="@style/AppThemeSeparator" />
 
         <LinearLayout
             android:orientation="vertical"

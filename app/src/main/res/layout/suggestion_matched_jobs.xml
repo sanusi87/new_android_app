@@ -3,10 +3,37 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="7dp"
+        android:id="@+id/selectDate">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/jobmatcher_on"
+            style="@style/AppThemeBaseLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            style="@style/AppThemeBaseTextValue"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/selectedDate" />
+
+    </LinearLayout>
+
+    <View style="@style/AppThemeSeparator" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/matchedJobs"
+        android:id="@+id/listOfJobSearchProfile"
         android:layout_weight="1" />
 
     <LinearLayout
