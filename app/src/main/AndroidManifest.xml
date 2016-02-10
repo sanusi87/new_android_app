@@ -14,7 +14,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -151,12 +153,18 @@
             android:parentActivityName=".ProfileActivity" />
         <activity
             android:name=".JobSearchProfileForm"
-            android:parentActivityName=".JobSearchActivity" />
+            android:parentActivityName=".JobSearchProfile" />
         <activity
             android:name=".JobSearchProfile"
             android:parentActivityName=".JobSearchActivity" />
         <activity
             android:name=".SelectNotificationFrequency"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".MatchedJobs"
+            android:label="@string/title_activity_matched_jobs"
+            android:parentActivityName=".JobSuggestion" />
+        <activity android:name=".SelectJobMatcherDate"
             android:theme="@android:style/Theme.Dialog" />
     </application>
 
