@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -34,10 +35,13 @@ public class JobSearchProfileForm extends ActionBarActivity {
     static String accessToken = null;
 
     int id = 0;
+    int _id = 0;
     String frequency = "Daily";
     TextView selectedFrequency;
+    TableJobSearchProfile tableJobSearchProfile;
 
     private int SELECT_NOTIFICATION_FREQUENCY = 1;
+    static boolean isOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +52,17 @@ public class JobSearchProfileForm extends ActionBarActivity {
         _searchParameter = new JSONObject();
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
+        tableJobSearchProfile = new TableJobSearchProfile(context);
+        isOnline = Jenjobs.isOnline(context);
 
-        final CheckBox notificationAlert = (CheckBox)findViewById(R.id.notification_checkbox);
-        notificationAlert.setChecked(true);
-        findViewById(R.id.notification_alert).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notificationAlert.setChecked(!notificationAlert.isChecked());
-            }
-        });
+//        final CheckBox notificationAlert = (CheckBox)findViewById(R.id.notification_checkbox);
+//        notificationAlert.setChecked(true);
+//        findViewById(R.id.notification_alert).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                notificationAlert.setChecked(!notificationAlert.isChecked());
+//            }
+//        });
 
         LinearLayout selectFrequency = (LinearLayout)findViewById(R.id.selectFrequency);
         selectFrequency.setOnClickListener(new View.OnClickListener() {
@@ -67,13 +73,50 @@ public class JobSearchProfileForm extends ActionBarActivity {
             }
         });
         selectedFrequency = (TextView)findViewById(R.id.selectedFrequency);
-        selectedFrequency.setText(frequency);
 
         Bundle extra = getIntent().getExtras();
         if( extra != null ){
             searchParameter = extra.getBundle("searchParameter");
-            if( extra.getInt("id") > 0 ){ id = extra.getInt("id"); }
 
+            // id passed from job search profiles list
+            if( extra.getInt("id") > 0 ){
+                id = extra.getInt("id");
+
+                Cursor c = tableJobSearchProfile.getSearchProfile(id);
+                c.moveToFirst();
+
+                /*
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                "_id NUMERIC, " + // ID from JenJOBS database
+                "profile_name TEXT, " +
+                "parameters TEXT, " +
+                "notification_frequency TEXT, "+
+                "date_created NUMERIC," +
+                "date_updated NUMERIC
+                */
+
+                ((EditText) findViewById(R.id.profile_name)).setText(c.getString(c.getColumnIndex("profile_name")));
+
+                String f = c.getString(c.getColumnIndex("notification_frequency"));
+                if( f.equals("D") ){
+                    frequency = getString(R.string.daily);
+                }else if( f.equals("W") ){
+                    frequency = getString(R.string.weekly);
+                }else{
+                    frequency = getString(R.string.unsubscribe);
+                }
+                _id = c.getInt(c.getColumnIndex("_id"));
+
+                try {
+                    _searchParameter = new JSONObject(c.getString(c.getColumnIndex("parameters")));
+                } catch (JSONException e) {
+                    Log.e("decodeFailed", e.getMessage());
+                }
+
+                c.close();
+            }
+
+            // bundle passed from job search
             if( searchParameter != null ) {
                 try {
                     // TODO - save to _searchParameter
@@ -146,6 +189,8 @@ public class JobSearchProfileForm extends ActionBarActivity {
                 }
             }
         }
+
+        selectedFrequency.setText(frequency);
     }
 
     @Override
@@ -159,64 +204,78 @@ public class JobSearchProfileForm extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int clickedItem = item.getItemId();
         if( clickedItem == R.id.save ){
-
-            String profileName = ((EditText)findViewById(R.id.profile_name)).getText().toString();
-            if( profileName.length() == 0 ){
-                Toast.makeText(context, R.string.profile_name_required, Toast.LENGTH_LONG).show();
-            }else{
-                final TableJobSearchProfile tableJobSearchProfile = new TableJobSearchProfile(context);
-                ContentValues cv = new ContentValues();
-
-                if( _searchParameter.length() > 0 ){
-                    cv.put("id", id);
-                    cv.put("_id", "null");
-                    cv.put("profile_name", profileName);
-                    cv.put("parameters", _searchParameter.toString());
-                    cv.put("notification_frequency", frequency.substring(0, 1));
-                    id = tableJobSearchProfile.saveSearchProfile(cv);
-
-                    JSONObject postedData = _searchParameter; // copy content to other variable
-                    try {
-                        final String notificationFreq = cv.getAsString("notification_frequency");
-                        postedData.put("name", profileName);
-                        postedData.put("frequency", notificationFreq);
-
-                        // TODO - post to server
-                        // - get returned ID and update the row
-                        // - then check this row to make sure that it is online
-                        PostRequest p = new PostRequest();
-                        p.setResultListener(new PostRequest.ResultListener() {
-                            @Override
-                            public void processResult(JSONObject success) {
-                                if( success != null ){
-                                    Log.e("success", success.toString());
-                                    if( success.optString("status_text") != null ){
-                                        Toast.makeText(context, success.optString("status_text"), Toast.LENGTH_LONG).show();
-
-                                        if( success.optInt("new_id") > 0 ){
-                                            ContentValues cv = new ContentValues();
-                                            cv.put("id", id);
-                                            cv.put("_id", success.optInt("new_id"));
-                                            tableJobSearchProfile.saveSearchProfile(cv);
-                                        }
-
-                                        finish();
-                                    }else{
-                                        Toast.makeText(context, R.string.unknown_error, Toast.LENGTH_LONG).show();
-                                    }
-                                }else{
-                                    Toast.makeText(context, R.string.empty_response, Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-                        String[] param = {Jenjobs.SEARCH_PROFILE+"?access-token="+accessToken, postedData.toString()}; // TODO - update URL
-                        p.execute(param);
-                    } catch (JSONException e) {
-                        Log.e("err", e.getMessage());
-                    }
+            if( isOnline ){
+                String profileName = ((EditText)findViewById(R.id.profile_name)).getText().toString();
+                if( profileName.length() == 0 ){
+                    Toast.makeText(context, R.string.profile_name_required, Toast.LENGTH_LONG).show();
                 }else{
-                    Toast.makeText(context, R.string.empty_search_parameter, Toast.LENGTH_LONG).show();
+                    ContentValues cv = new ContentValues();
+
+                    if( _searchParameter.length() > 0 ){
+                        cv.put("id", id);
+                        cv.put("_id", _id);
+                        cv.put("profile_name", profileName);
+                        cv.put("parameters", _searchParameter.toString());
+                        cv.put("notification_frequency", frequency.substring(0, 1));
+                        if( id > 0 ){
+                            cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
+                        }else{
+                            cv.put("date_created", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
+                        }
+                        id = tableJobSearchProfile.saveSearchProfile(cv);
+
+                        JSONObject postedData = _searchParameter; // copy content to other variable
+                        try {
+                            final String notificationFreq = cv.getAsString("notification_frequency");
+                            postedData.put("name", profileName);
+                            postedData.put("frequency", notificationFreq);
+
+                            // TODO - post to server
+                            // - get returned ID and update the row
+                            // - then check this row to make sure that it is online
+                            PostRequest p = new PostRequest();
+                            p.setResultListener(new PostRequest.ResultListener() {
+                                @Override
+                                public void processResult(JSONObject success) {
+                                    if( success != null ){
+                                        Log.e("success", success.toString());
+                                        if( success.optString("status_text") != null ){
+                                            Toast.makeText(context, success.optString("status_text"), Toast.LENGTH_LONG).show();
+
+                                            if( success.optInt("new_id") > 0 ){
+                                                _id = success.optInt("new_id");
+                                                ContentValues cv = new ContentValues();
+                                                cv.put("id", id);
+                                                cv.put("_id", _id);
+                                                tableJobSearchProfile.saveSearchProfile(cv);
+                                            }
+
+                                            finish();
+                                        }else{
+                                            Toast.makeText(context, R.string.unknown_error, Toast.LENGTH_LONG).show();
+                                        }
+                                    }else{
+                                        Toast.makeText(context, R.string.empty_response, Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                            Log.e("postUrl", Jenjobs.SEARCH_PROFILE + "?access-token=" + accessToken);
+                            Log.e("postData", postedData.toString());
+
+                            String url = Jenjobs.SEARCH_PROFILE;
+                            if( _id > 0 ){ url += "/"+_id; }
+                            url += "?access-token="+accessToken;
+                            String[] param = {url, postedData.toString()};
+                            p.execute(param);
+                        } catch (JSONException e) {
+                            Log.e("err", e.getMessage());
+                        }
+                    }else{
+                        Toast.makeText(context, R.string.empty_search_parameter, Toast.LENGTH_LONG).show();
+                    }
                 }
+            }else{
+                Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
             }
             return true;
         }

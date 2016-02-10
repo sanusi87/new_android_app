@@ -14,12 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class DeleteRequest extends AsyncTask<String, Void, JSONObject> {
-
-    //private int idToDelete = 0;
-    //public DeleteRequest( int id ){
-       //this.idToDelete = id;
-    //}
-
     public DeleteRequest(){}
 
     @Override
@@ -27,8 +21,6 @@ public class DeleteRequest extends AsyncTask<String, Void, JSONObject> {
         JSONObject _response = null;
         HttpClient httpclient = new DefaultHttpClient();
 
-        //String url = params[0];
-        //if( idToDelete > 0 ){ url += "/"+idToDelete; }
         Log.e("deleteUrl", params[0]);
         HttpDelete httpDelete = new HttpDelete( params[0] );
         httpDelete.addHeader("Content-Type", "application/json");

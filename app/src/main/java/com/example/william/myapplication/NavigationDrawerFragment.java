@@ -106,7 +106,7 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.application), //4
                         getString(R.string.invitation_and_request), //5
                         getString(R.string.bookmark), //6
-                        getString(R.string.job_suggestion), //7
+                        getString(R.string.job_matcher), //7
                         getString(R.string.action_settings), //8
                         getString(R.string.log_out) //9
                 }));

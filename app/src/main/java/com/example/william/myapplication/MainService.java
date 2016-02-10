@@ -419,14 +419,15 @@ public class MainService extends Service{
         Long alarmInterval = (long)(1000 * 60 * 3); // 3 minute
         int alarmID = DAILY_ALARM;
         if( alertNotification.equals("D") ){
-            Log.e("alarm", "daily");
+            //Log.e("alarm", "daily");
             calendar.set(Calendar.HOUR_OF_DAY, 11); // at 9 A.M.
             calendar.set(Calendar.MINUTE, 25); // 30 minute
         }else if( alertNotification.equals("W") ){
-            Log.e("alarm", "weekly");
+            //Log.e("alarm", "weekly");
             //alarmInterval = (long) (1000 * 60 * 60 * 24 * 7);
             alarmInterval = alarmInterval * 7;
             alarmID = WEEKLY_ALARM;
+            // randomize hour and minute so that not too much request at done at a same time
             calendar.set(Calendar.HOUR_OF_DAY, 11);
             calendar.set(Calendar.MINUTE, 25);
             calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);

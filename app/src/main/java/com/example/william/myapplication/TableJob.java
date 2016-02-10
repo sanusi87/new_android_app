@@ -8,15 +8,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class TableJob extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "job";
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableJob.TABLE_NAME+"' (id INTEGER, " +
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME+"' (id INTEGER, " +
             "title TEXT, " +
             "company TEXT, " +
             "job_data TEXT, " +
-            "date_closed NUMERIC)";
-    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableJob.TABLE_NAME+"'";
+            "date_closed NUMERIC," +
+            "suggested_on NUMERIC)";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
     private Context context;
+    private Cursor suggestedJob;
 
     public TableJob(Context context){
         super(context, Jenjobs.DATABASE_NAME , null, Jenjobs.DATABASE_VERSION);
@@ -36,7 +38,7 @@ public class TableJob extends SQLiteOpenHelper{
     }
 
     public Cursor getJob(int post_id){
-        String strSQL = "SELECT * FROM "+TableJob.TABLE_NAME;
+        String strSQL = "SELECT * FROM "+TABLE_NAME;
         String[] args = null;
         if( post_id > 0 ){
             strSQL += " WHERE id=?";
@@ -49,14 +51,14 @@ public class TableJob extends SQLiteOpenHelper{
         Cursor job = getJob(cv.getAsInteger("id"));
         Long insertId = (long) 0;
         if( job.getCount() == 0 ){
-            insertId = db.insert(TableJob.TABLE_NAME, null, cv);
+            insertId = db.insert(TABLE_NAME, null, cv);
         }
         job.close();
         return insertId;
     }
 
     public boolean updateJob(ContentValues cv){
-        int affectedRows = db.update(TableJob.TABLE_NAME, cv, null, null);
+        int affectedRows = db.update(TABLE_NAME, cv, null, null);
         return affectedRows > 0;
     }
 
@@ -84,11 +86,15 @@ public class TableJob extends SQLiteOpenHelper{
         if( used == 0 ){
             String _id = String.valueOf(post_id);
             String[] param = {_id};
-            int affectedRows = db.delete(TableJob.TABLE_NAME, "id=?", param);
+            int affectedRows = db.delete(TABLE_NAME, "id=?", param);
             return affectedRows > 0;
         }else{
             return false;
         }
     }
 
+    public Cursor getSuggestedJob() {
+        String strSQL = "SELECT * FROM "+TABLE_NAME+" WHERE suggested_on IS NOT NULL";
+        return db.rawQuery(strSQL, null);
+    }
 }

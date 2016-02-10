@@ -148,6 +148,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     // then updated it depends on the notification
     int defaultPage = 0;
     static int jsProfileId = 0;
+    static boolean isOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +165,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
         jsProfileId = sharedPref.getInt("js_profile_id", 0);
+        context = getApplicationContext();
+        isOnline = Jenjobs.isOnline(context);
 
         // redirect to login if no access token found
         if (accessToken == null) {
@@ -175,9 +178,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            if (extras.getBoolean("downloadData")) {
-                //Log.e("start", "downloading data:" + extras.getBoolean("downloadData"));
-
+            if (extras.getBoolean("downloadData") && isOnline) {
                 String[] profileUrl = {Jenjobs.PROFILE_URL};
                 new DownloadDataTask(DOWNLOAD_PROFILE).execute(profileUrl);
 
@@ -208,9 +209,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 String[] invitationUrl = {Jenjobs.INVITATION_URL};
                 new DownloadDataTask(DOWNLOAD_INVITATION).execute(invitationUrl);
 
-                // TODO - download job search profiles and save
+                String[] jobmatcherUrl = {Jenjobs.SEARCH_PROFILE};
+                new DownloadDataTask(DOWNLOAD_JOBMATCHER_PROFILE).execute(jobmatcherUrl);
 
                 extras.clear();
+            }else{
+                if( !isOnline ){
+                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_LONG).show();
+                }
             }
 
             defaultPage = extras.getInt("defaultPage", defaultPage);
@@ -222,7 +228,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
         }
 
-        context = getApplicationContext();
         tableSkill = new TableSkill(context);
         tableWorkExperience = new TableWorkExperience(context);
         tableEducation = new TableEducation(context);
@@ -442,7 +447,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             rootView.findViewById(R.id.upload_a_photo).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if( Jenjobs.isOnline(context) ){
+                    if( isOnline ){
                         String[] allowedExtension = {"jpg", "png", "gif", "jpeg", "bmp"};
 
                         FileChooser fileChooser = new FileChooser(getActivity());
@@ -474,7 +479,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                             fileParam.toString()
                                     };
 
-                                    PostRequest postRequest = new PostRequest(context);
+                                    PostRequest postRequest = new PostRequest();
                                     postRequest.setResultListener(new PostRequest.ResultListener() {
                                         @Override
                                         public void processResult(JSONObject result) {
@@ -512,6 +517,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 @Override
                 public void onClick(View v) {
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    // check for intent availability
                     if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
                         // Create the File where the photo should go
                         File photoFile = null;
@@ -619,28 +625,32 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             newsletter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    newsletterCb.setChecked(!newsletterCb.isChecked());
+                    if( isOnline ){
+                        newsletterCb.setChecked(!newsletterCb.isChecked());
 
-                    ContentValues cv = new ContentValues();
-                    cv.put("status", newsletterCb.isChecked() ? 1 : 0);
-                    tableSubscription.updateSubscription(cv, TableSubscription.NEWSLETTER);
+                        ContentValues cv = new ContentValues();
+                        cv.put("status", newsletterCb.isChecked() ? 1 : 0);
+                        tableSubscription.updateSubscription(cv, TableSubscription.NEWSLETTER);
 
-                    JSONObject jsonString = new JSONObject();
-                    try {
-                        jsonString.put("subscription_id", TableSubscription.NEWSLETTER);
-                        jsonString.put("status", cv.getAsInteger("status"));
+                        JSONObject jsonString = new JSONObject();
+                        try {
+                            jsonString.put("subscription_id", TableSubscription.NEWSLETTER);
+                            jsonString.put("status", cv.getAsInteger("status"));
 
-                        String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
-                        PostRequest postRequest = new PostRequest();
-                        postRequest.setResultListener(new PostRequest.ResultListener() {
-                            @Override
-                            public void processResult(JSONObject result) {
-                                Log.e("subscribed?", ""+result);
-                            }
-                        });
-                        postRequest.execute(param);
-                    } catch (JSONException e) {
-                        Log.e("error", e.getMessage());
+                            String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
+                            PostRequest postRequest = new PostRequest();
+                            postRequest.setResultListener(new PostRequest.ResultListener() {
+                                @Override
+                                public void processResult(JSONObject result) {
+                                    Log.e("subscribed?", ""+result);
+                                }
+                            });
+                            postRequest.execute(param);
+                        } catch (JSONException e) {
+                            Log.e("error", e.getMessage());
+                        }
+                    }else{
+                        Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -648,28 +658,32 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             partners.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    partnersCb.setChecked( !partnersCb.isChecked() );
+                    if( isOnline ){
+                        partnersCb.setChecked( !partnersCb.isChecked() );
 
-                    ContentValues cv = new ContentValues();
-                    cv.put("status", partnersCb.isChecked() ? 1 : 0);
-                    tableSubscription.updateSubscription(cv, TableSubscription.PROMOTION);
+                        ContentValues cv = new ContentValues();
+                        cv.put("status", partnersCb.isChecked() ? 1 : 0);
+                        tableSubscription.updateSubscription(cv, TableSubscription.PROMOTION);
 
-                    JSONObject jsonString = new JSONObject();
-                    try {
-                        jsonString.put("subscription_id", TableSubscription.PROMOTION);
-                        jsonString.put("status", cv.getAsInteger("status"));
+                        JSONObject jsonString = new JSONObject();
+                        try {
+                            jsonString.put("subscription_id", TableSubscription.PROMOTION);
+                            jsonString.put("status", cv.getAsInteger("status"));
 
-                        String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
-                        PostRequest postRequest = new PostRequest();
-                        postRequest.setResultListener(new PostRequest.ResultListener() {
-                            @Override
-                            public void processResult(JSONObject result) {
-                                Log.e("subscribed2?", ""+result);
-                            }
-                        });
-                        postRequest.execute(param);
-                    } catch (JSONException e) {
-                        Log.e("error", e.getMessage());
+                            String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
+                            PostRequest postRequest = new PostRequest();
+                            postRequest.setResultListener(new PostRequest.ResultListener() {
+                                @Override
+                                public void processResult(JSONObject result) {
+                                    Log.e("subscribed2?", ""+result);
+                                }
+                            });
+                            postRequest.execute(param);
+                        } catch (JSONException e) {
+                            Log.e("error", e.getMessage());
+                        }
+                    }else{
+                        Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -677,28 +691,32 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             sms.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    smsCb.setChecked( !smsCb.isChecked() );
+                    if( isOnline ){
+                        smsCb.setChecked( !smsCb.isChecked() );
 
-                    ContentValues cv = new ContentValues();
-                    cv.put("status", smsCb.isChecked() ? 1 : 0);
-                    tableSubscription.updateSubscription(cv, TableSubscription.SMS_JOB_ALERT);
+                        ContentValues cv = new ContentValues();
+                        cv.put("status", smsCb.isChecked() ? 1 : 0);
+                        tableSubscription.updateSubscription(cv, TableSubscription.SMS_JOB_ALERT);
 
-                    JSONObject jsonString = new JSONObject();
-                    try {
-                        jsonString.put("subscription_id", TableSubscription.SMS_JOB_ALERT);
-                        jsonString.put("status", cv.getAsInteger("status"));
+                        JSONObject jsonString = new JSONObject();
+                        try {
+                            jsonString.put("subscription_id", TableSubscription.SMS_JOB_ALERT);
+                            jsonString.put("status", cv.getAsInteger("status"));
 
-                        String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
-                        PostRequest postRequest = new PostRequest();
-                        postRequest.setResultListener(new PostRequest.ResultListener() {
-                            @Override
-                            public void processResult(JSONObject result) {
-                                Log.e("subscribed2?", ""+result);
-                            }
-                        });
-                        postRequest.execute(param);
-                    } catch (JSONException e) {
-                        Log.e("error", e.getMessage());
+                            String[] param = {Jenjobs.SUBSCRIPTION_URL+"?access-token="+accessToken, jsonString.toString()};
+                            PostRequest postRequest = new PostRequest();
+                            postRequest.setResultListener(new PostRequest.ResultListener() {
+                                @Override
+                                public void processResult(JSONObject result) {
+                                    Log.e("subscribed2?", ""+result);
+                                }
+                            });
+                            postRequest.execute(param);
+                        } catch (JSONException e) {
+                            Log.e("error", e.getMessage());
+                        }
+                    }else{
+                        Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -729,24 +747,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 listOfWorkExp.removeAllViews();
 
                 while( !cw.isAfterLast() ){
-                    /*
-                    "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //0
-                    "_id INTEGER, "+ //1
-                    "position TEXT, " + //2
-                    "company TEXT, " + //3
-                    "job_spec_id INTEGER(4), " + //4
-                    "job_role_id INTEGER(4), " + //5
-                    "job_type_id INTEGER(4), " + //6
-                    "job_level_id INTEGER(4), " + //7
-                    "industry_id INTEGER(4), " + //8
-                    "experience TEXT, " + //9
-                    "salary INTEGER, " + //10
-                    "currency_id INTEGER, " + //11
-                    "started_on NUMERIC, " + //12
-                    "resigned_on NUMERIC," + //13
-                    "update_at //14
-                    */
-
                     final int savedId = cw.getInt(0);
                     final int actualId = cw.getInt(1);
                     String positionTitle = cw.getString(2);
@@ -789,14 +789,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
-                            listOfWorkExp.removeView(v);
-                            String[] param = {Jenjobs.WORK_EXPERIENCE_URL+"/"+actualId+"?access-token="+accessToken};
-                            new DeleteRequest().execute(param);
-                            tableWorkExperience.deleteWorkExperience(savedId);
+                            if( isOnline ){
+                                listOfWorkExp.removeView(v);
+                                String[] param = {Jenjobs.WORK_EXPERIENCE_URL+"/"+actualId+"?access-token="+accessToken};
+                                new DeleteRequest().execute(param);
+                                tableWorkExperience.deleteWorkExperience(savedId);
 
-                            // get list of work exp left, if none, then show workExpQuestion
-                            if( listOfWorkExp.getChildCount() == 0 ){
-                                workExpQuestion.setVisibility(View.VISIBLE);
+                                // get list of work exp left, if none, then show workExpQuestion
+                                if( listOfWorkExp.getChildCount() == 0 ){
+                                    workExpQuestion.setVisibility(View.VISIBLE);
+                                }
+                            }else{
+                                Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -824,20 +828,22 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
             noWorkExp.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    // save
-                    ContentValues cv = new ContentValues();
-                    cv.put("no_work_exp", 1);
-                    tProfile.updateProfile(cv, theProfile._id);
+                public void onClick(View _v) {
+                    if( isOnline ){
+                        // save
+                        ContentValues cv = new ContentValues();
+                        cv.put("no_work_exp", 1);
+                        tProfile.updateProfile(cv, theProfile._id);
 
-                    // hide layout
-                    workExpQuestion.setVisibility(View.GONE);
+                        // hide layout
+                        workExpQuestion.setVisibility(View.GONE);
 
-                    // post
-                    // JSONObject _param = new JSONObject();
-                    // TODO - post no_work_exp to server
-                    String[] param = {Jenjobs.PROFILE_URL+"?access-token="+accessToken,"{}"};
-                    new PostRequest().execute(param);
+                        // post no_work_exp to server
+                        String[] param = {Jenjobs.PROFILE_URL+"?access-token="+accessToken,"{}"};
+                        new PostRequest().execute(param);
+                    }else{
+                        Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                    }
                 }
             });
 
@@ -892,10 +898,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
-                            listOfEducation.removeView(v);
-                            String[] param = {Jenjobs.EDUCATION_URL+"/"+actualId+"?access-token="+accessToken};
-                            new DeleteRequest().execute(param);
-                            tableEducation.deleteEducation(savedId);
+                            if( isOnline ){
+                                listOfEducation.removeView(v);
+                                String[] param = {Jenjobs.EDUCATION_URL+"/"+actualId+"?access-token="+accessToken};
+                                new DeleteRequest().execute(param);
+                                tableEducation.deleteEducation(savedId);
+                            }else{
+                                Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
 
@@ -991,15 +1001,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     v.findViewById(R.id.deleteSkillButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View vv) {
-                            Log.e("clicked", "delete skill " + savedId);
-                            skill.removeView(v);
+                            if( isOnline ){
+                                skill.removeView(v);
 
-                            // delete from server
-                            String[] param = {Jenjobs.SKILL_URL+"/"+actualId+"?access-token="+accessToken};
-                            new DeleteRequest().execute(param);
+                                // delete from server
+                                String[] param = {Jenjobs.SKILL_URL+"/"+actualId+"?access-token="+accessToken};
+                                new DeleteRequest().execute(param);
 
-                            // delete from local
-                            tableSkill.deleteSkill(savedId);
+                                // delete from local
+                                tableSkill.deleteSkill(savedId);
+                            }else{
+                                Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
                     ((TextView)v.findViewById(R.id.skillText)).setText(skillName);
@@ -1060,12 +1073,16 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     v.findViewById(R.id.deleteLanguageButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
-                            language.removeView(v);
-                            // delete from server
-                            String[] param = {Jenjobs.LANGUAGE_URL + "/" + lang_id + "?access-token=" + accessToken};
-                            new DeleteRequest().execute(param);
-                            // delete from local
-                            tableLanguage.deleteLanguage(lang_id);
+                            if( isOnline ){
+                                language.removeView(v);
+                                // delete from server
+                                String[] param = {Jenjobs.LANGUAGE_URL + "/" + lang_id + "?access-token=" + accessToken};
+                                new DeleteRequest().execute(param);
+                                // delete from local
+                                tableLanguage.deleteLanguage(lang_id);
+                            }else{
+                                Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
                     ((TextView)v.findViewById(R.id.languageName)).setText((String) _language.get(lang_id));
@@ -1098,71 +1115,75 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             final ProgressBar progressBar = (ProgressBar)rootView.findViewById(R.id.progressBar2);
             updateAttachedResume.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View _v) {
                     String[] allowedExtension = {"doc", "docx", "odt", "pdf", "ppt", "txt"};
-                    FileChooser fileChooser = new FileChooser(getActivity());
-                    fileChooser.setExtension(allowedExtension);
-                    fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
-                        @Override
-                        public void fileSelected(final File file) {
-                            // file.getAbsolutePath() === /storage/emulated/0/Download/CG_resume.pdf
-                            // file.getName() === CG_resume.pdf
+                    if( isOnline ){
+                        FileChooser fileChooser = new FileChooser(getActivity());
+                        fileChooser.setExtension(allowedExtension);
+                        fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
+                            @Override
+                            public void fileSelected(final File file) {
+                                // file.getAbsolutePath() === /storage/emulated/0/Download/CG_resume.pdf
+                                // file.getName() === CG_resume.pdf
 
-                            try {
-                                byte[] buffer = new byte[8192];
-                                int bytesRead;
+                                try {
+                                    byte[] buffer = new byte[8192];
+                                    int bytesRead;
 
-                                InputStream inputStream = new FileInputStream(file);
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    InputStream inputStream = new FileInputStream(file);
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                                    baos.write(buffer, 0, bytesRead);
-                                }
-                                byte[] byteArray = baos.toByteArray();
-                                String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-                                JSONObject fileParam = new JSONObject();
-                                fileParam.put("name", file.getName());
-                                fileParam.put("type", "resume_file");
-                                fileParam.put("attachment", encodedFile);
-
-                                String[] params = {
-                                        Jenjobs.ATTACH_RESUME + "?access-token=" + accessToken,
-                                        fileParam.toString()
-                                };
-
-                                attachedResume.setText("");
-                                progressBar.setVisibility(View.VISIBLE);
-
-                                PostRequest postRequest = new PostRequest(context);
-                                postRequest.setResultListener(new PostRequest.ResultListener() {
-                                    @Override
-                                    public void processResult(JSONObject result) {
-                                        if( result != null ){
-                                            // if successul
-                                            if( result.optInt( "status_code" ) == 1 ){
-                                                attachedResume.setText(result.optString("resume") );
-                                                TableProfile tableProfile = new TableProfile(context);
-                                                ContentValues cv = new ContentValues();
-                                                cv.put("resume_file", result.optString("resume_url"));
-                                                cv.put("resume_uri", file.getPath());
-                                                tableProfile.updateProfile(cv, jsProfileId);
-                                            }
-                                            Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
-                                            progressBar.setVisibility(View.GONE);
-                                        }
+                                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                        baos.write(buffer, 0, bytesRead);
                                     }
-                                });
-                                postRequest.execute(params);
+                                    byte[] byteArray = baos.toByteArray();
+                                    String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-                            } catch (FileNotFoundException e) {
-                                Toast.makeText(context, "File not found!", Toast.LENGTH_LONG).show();
-                            } catch (IOException | JSONException e) {
-                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                                    JSONObject fileParam = new JSONObject();
+                                    fileParam.put("name", file.getName());
+                                    fileParam.put("type", "resume_file");
+                                    fileParam.put("attachment", encodedFile);
+
+                                    String[] params = {
+                                            Jenjobs.ATTACH_RESUME + "?access-token=" + accessToken,
+                                            fileParam.toString()
+                                    };
+
+                                    attachedResume.setText("");
+                                    progressBar.setVisibility(View.VISIBLE);
+
+                                    PostRequest postRequest = new PostRequest();
+                                    postRequest.setResultListener(new PostRequest.ResultListener() {
+                                        @Override
+                                        public void processResult(JSONObject result) {
+                                            if( result != null ){
+                                                // if successul
+                                                if( result.optInt( "status_code" ) == 1 ){
+                                                    attachedResume.setText(result.optString("resume") );
+                                                    TableProfile tableProfile = new TableProfile(context);
+                                                    ContentValues cv = new ContentValues();
+                                                    cv.put("resume_file", result.optString("resume_url"));
+                                                    cv.put("resume_uri", file.getPath());
+                                                    tableProfile.updateProfile(cv, jsProfileId);
+                                                }
+                                                Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
+                                                progressBar.setVisibility(View.GONE);
+                                            }
+                                        }
+                                    });
+                                    postRequest.execute(params);
+
+                                } catch (FileNotFoundException e) {
+                                    Toast.makeText(context, "File not found!", Toast.LENGTH_LONG).show();
+                                } catch (IOException | JSONException e) {
+                                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
-                    fileChooser.showDialog();
+                        });
+                        fileChooser.showDialog();
+                    }else{
+                        Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                    }
                 }
             });
 
@@ -1318,7 +1339,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         deleteButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View _v) {
-                                if (Jenjobs.isOnline(context)) {
+                                if (isOnline) {
                                     listOfWorkExp.removeView(v);
                                     String[] param = {Jenjobs.WORK_EXPERIENCE_URL + "/" + actualId + "?access-token=" + accessToken};
                                     new DeleteRequest().execute(param);
@@ -1376,7 +1397,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         deleteButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View _v) {
-                                if (Jenjobs.isOnline(context)) {
+                                if (isOnline) {
                                     // TODO: delete view
                                     listOfWorkExp.removeView(v);
 
@@ -1417,7 +1438,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 v.findViewById(R.id.deleteSkillButton).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View _v) {
-                        if (Jenjobs.isOnline(context)) {
+                        if (isOnline) {
                             String[] _skill = tableSkill.findSkillById(skillId);
                             skill.removeView(v);
 
@@ -1473,7 +1494,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     v.findViewById(R.id.deleteLanguageButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
-                            if (Jenjobs.isOnline(context)) {
+                            if (isOnline) {
                                 language.removeView(v);
                                 // delete from server
                                 String[] param = {Jenjobs.LANGUAGE_URL + "/" + _lang.id + "?access-token=" + accessToken};
@@ -2074,43 +2095,16 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         if (success.length() > 0) {
                             for (int i = 0; i < success.length(); i++) {
                                 JSONObject s = success.getJSONObject(i);
+                                JSONObject queryParam = s.getJSONObject("query_param");
                                 ContentValues cv = new ContentValues();
+
                                 cv.put("id", 0);
                                 cv.put("_id", (int)(s.get("id")));
                                 cv.put("profile_name", s.getString("name"));
-                                //cv.put("parameters", _searchParameter.toString());
-
-                                /*
-                                * === local db
-
-                                *
-                                * === remote db
-                                {
-                                    "id": 852926,
-                                    "name": "job matcher one",
-                                    "query_param": {
-                                        "currency_id": 6,
-                                        "frequency": "D",
-                                        "keyword": null,
-                                        "salary_min": 0,
-                                        "salary_max": 0,
-                                        "direct_employer": 0,
-                                        "ra_advertiser": 0,
-                                        "search_by": null,
-                                        "job_spec": [],
-                                        "position_level": [],
-                                        "job_type": [],
-                                        "location": []
-                                    },
-                                    "date_added": "2016-01-29 17:06:38",
-                                    "date_updated": "2016-01-29 17:06:38"
-                                }
-                                * */
-
-                                JSONObject queryParam = s.getJSONObject("query_param");
-                                String freq = queryParam.getString("frequency");
-                                freq = freq != null ? freq.substring(0,1) : "D";
-                                cv.put("notification_frequency", freq);
+                                cv.put("parameters", queryParam.toString());
+                                cv.put("notification_frequency", s.getString("frequency"));
+                                cv.put("date_created", s.getString("date_added"));
+                                cv.put("date_updated", s.getString("date_updated"));
 
                                 tableProfile.saveSearchProfile(cv);
                             }

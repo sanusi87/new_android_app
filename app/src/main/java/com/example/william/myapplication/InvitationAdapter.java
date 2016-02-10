@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -130,33 +131,37 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
             allowButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View _v) {
-                    ((Button)_v).setText(R.string.allowed);
-                    _v.setEnabled(false);
-                    _v.setClickable(false);
-                    rejectButton.setVisibility(View.GONE);
+                    if( Jenjobs.isOnline(context) ){
+                        ((Button)_v).setText(R.string.allowed);
+                        _v.setEnabled(false);
+                        _v.setClickable(false);
+                        rejectButton.setVisibility(View.GONE);
 
-                    // TODO - allow resume access
-                    ContentValues cv = new ContentValues();
-                    cv.put("status", TableInvitation.STATUS_APPROVED);
-                    tableInvitation.updateInvitation(cv, invitationID);
+                        // TODO - allow resume access
+                        ContentValues cv = new ContentValues();
+                        cv.put("status", TableInvitation.STATUS_APPROVED);
+                        tableInvitation.updateInvitation(cv, invitationID);
 
-                    // send POST request
-                    PostRequest p = new PostRequest();
-                    p.setResultListener(new PostRequest.ResultListener() {
-                        @Override
-                        public void processResult(JSONObject result) {
-                            Log.e("result", result.toString());
+                        // send POST request
+                        PostRequest p = new PostRequest();
+                        p.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject result) {
+                                Log.e("result", result.toString());
+                            }
+                        });
+
+                        try {
+                            JSONObject obj = new JSONObject();
+                            obj.put("invitation_id", invitationID);
+                            obj.put("status", TableInvitation.STATUS_APPROVED);
+                            String[] param = {Jenjobs.INVITATION_URL+"?access-token="+accessToken, obj.toString()};
+                            p.execute(param);
+                        } catch (JSONException e) {
+                            Log.e("replyInv", e.getMessage());
                         }
-                    });
-
-                    try {
-                        JSONObject obj = new JSONObject();
-                        obj.put("invitation_id", invitationID);
-                        obj.put("status", TableInvitation.STATUS_APPROVED);
-                        String[] param = {Jenjobs.INVITATION_URL+"?access-token="+accessToken, obj.toString()};
-                        p.execute(param);
-                    } catch (JSONException e) {
-                        Log.e("replyInv", e.getMessage());
+                    }else{
+                        Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -164,33 +169,37 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
             rejectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View _v) {
-                    ((Button)_v).setText(R.string.rejected);
-                    _v.setEnabled(false);
-                    _v.setClickable(false);
-                    allowButton.setVisibility(View.GONE);
+                    if( Jenjobs.isOnline(context) ){
+                        ((Button)_v).setText(R.string.rejected);
+                        _v.setEnabled(false);
+                        _v.setClickable(false);
+                        allowButton.setVisibility(View.GONE);
 
-                    // TODO - reject resume access
-                    ContentValues cv = new ContentValues();
-                    cv.put("status", TableInvitation.STATUS_REJECTED);
-                    tableInvitation.updateInvitation(cv, invitationID);
+                        // TODO - reject resume access
+                        ContentValues cv = new ContentValues();
+                        cv.put("status", TableInvitation.STATUS_REJECTED);
+                        tableInvitation.updateInvitation(cv, invitationID);
 
-                    // send POST request
-                    PostRequest p = new PostRequest();
-                    p.setResultListener(new PostRequest.ResultListener() {
-                        @Override
-                        public void processResult(JSONObject result) {
-                            Log.e("result", result.toString());
+                        // send POST request
+                        PostRequest p = new PostRequest();
+                        p.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject result) {
+                                Log.e("result", result.toString());
+                            }
+                        });
+
+                        try {
+                            JSONObject obj = new JSONObject();
+                            obj.put("invitation_id", invitationID);
+                            obj.put("status", TableInvitation.STATUS_REJECTED);
+                            String[] param = {Jenjobs.INVITATION_URL+"?access-token="+accessToken, obj.toString()};
+                            p.execute(param);
+                        } catch (JSONException e) {
+                            Log.e("replyInv", e.getMessage());
                         }
-                    });
-
-                    try {
-                        JSONObject obj = new JSONObject();
-                        obj.put("invitation_id", invitationID);
-                        obj.put("status", TableInvitation.STATUS_REJECTED);
-                        String[] param = {Jenjobs.INVITATION_URL+"?access-token="+accessToken, obj.toString()};
-                        p.execute(param);
-                    } catch (JSONException e) {
-                        Log.e("replyInv", e.getMessage());
+                    }else{
+                        Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -257,18 +266,6 @@ public class InvitationAdapter extends BaseAdapter implements ListAdapter{
                     }
                 }
             });
-
-            /*
-            jobPost.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View _v) {
-                    Intent intent = new Intent();
-                    intent.setClass(context, JobDetails.class);
-                    intent.putExtra("post_id", Integer.valueOf(jobPostingId));
-                    activity.startActivity(intent);
-                }
-            });
-            */
         }
 
         company.setText(companyName);

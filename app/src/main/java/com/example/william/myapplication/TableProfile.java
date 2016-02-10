@@ -5,21 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class TableProfile extends SQLiteOpenHelper{
 

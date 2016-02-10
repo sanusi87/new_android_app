@@ -156,7 +156,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             bookmarkButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if( accessToken == null ){
+                    if( accessToken == null || !Jenjobs.isOnline(context) ){
                         Toast.makeText(context, "Please login or register to use this feature", Toast.LENGTH_SHORT).show();
                     }else{
                         if(bookmarkButton.getDrawable() == bookmarked){

@@ -39,6 +39,18 @@ public class TableJobSearchProfile extends SQLiteOpenHelper {
             strSQL += " WHERE id=?";
             args = new String[]{String.valueOf(id)};
         }
+        strSQL += " ORDER BY profile_name COLLATE NOCASE";
+        return db.rawQuery(strSQL, args);
+    }
+
+    public Cursor getSearchProfileByJobMatcherId( int id ){
+        String strSQL = "SELECT * FROM "+TABLE_NAME;
+        String[] args = null;
+        if( id > 0 ){
+            strSQL += " WHERE _id=?";
+            args = new String[]{String.valueOf(id)};
+        }
+        strSQL += " ORDER BY profile_name COLLATE NOCASE";
         return db.rawQuery(strSQL, args);
     }
 

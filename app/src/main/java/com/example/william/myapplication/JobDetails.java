@@ -45,26 +45,17 @@ public class JobDetails extends ActionBarActivity {
     ProgressBar loading;
     Button applyButton;
     LinearLayout noItem;
-
     SharedPreferences sharedPref;
     String accessToken;
-
     TableProfile tableProfile;
-    //TableJobPreference tableJobPreference;
-    //TableJobPreferenceLocation tableJobPreferenceLocation;
     TableApplication tableApplication;
     TableJob tableJob;
-    //TableWorkExperience tableWorkExperience;
-    //TableEducation tableEducation;
-    //TableSkill tableSkill;
-    //TableLanguage tableLanguage;
-    //TableBookmark tableBookmark;
-
     LinearLayout tabButton;
     ViewPager mViewPager;
     SectionsPagerAdapter mSectionsPagerAdapter;
 
     static Context context;
+    static boolean isOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,22 +63,15 @@ public class JobDetails extends ActionBarActivity {
         setContentView(R.layout.activity_job_details);
 
         context = this;
-
         jobDetails = null;
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
+        isOnline = Jenjobs.isOnline(getApplicationContext());
 
         // -----
         tableProfile = new TableProfile(this);
-        //tableJobPreference = new TableJobPreference(this);
-        //tableJobPreferenceLocation = new TableJobPreferenceLocation(this);
         tableApplication = new TableApplication(this);
         tableJob = new TableJob(this);
-        //tableWorkExperience = new TableWorkExperience(this);
-        //tableEducation = new TableEducation(this);
-        //tableSkill = new TableSkill(this);
-        //tableLanguage = new TableLanguage(this);
-        //tableBookmark = new TableBookmark(this);
         // -----
 
         final LinearLayout applyButtonContainer = (LinearLayout)findViewById(R.id.applyButtonContainer);
@@ -99,7 +83,6 @@ public class JobDetails extends ActionBarActivity {
             invitationId = extras.getInt("invitation_id");
 
             String[] param = {Jenjobs.JOB_DETAILS+"/"+jobPostingId};
-            //Log.e("jobpost", param[0]);
             GetRequest g = new GetRequest();
             g.setResultListener(new GetRequest.ResultListener() {
                 @Override
@@ -146,7 +129,6 @@ public class JobDetails extends ActionBarActivity {
         }
 
         // ------------- custom tab button
-
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
         tabButton = (LinearLayout)findViewById(R.id.tabButton);
@@ -174,28 +156,6 @@ public class JobDetails extends ActionBarActivity {
                 mViewPager.setCurrentItem(2, true);
             }
         });
-
-        /*
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.e("pos", "" + position);
-                if( position == 0 ){
-                    overviewButton.
-                }else if( position == 1 ){
-
-                }else if( position == 2 ){
-
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {}
-        });
-        */
         // ------------- custom tab button
 
         positionTitle = (TextView)findViewById(R.id.positionTitle);
@@ -205,79 +165,76 @@ public class JobDetails extends ActionBarActivity {
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View _v) {
-                //Profile profile = tableProfile.getProfile();
-                ArrayList<String> errors = tableProfile.isProfileComplete();
+                if( isOnline ){
+                    ArrayList<String> errors = tableProfile.isProfileComplete();
+                    if( errors.size() == 0 ){
+                        // TODO - save to local db (applicationTable)
+                        ContentValues cv = new ContentValues();
+                        cv.put("post_id", jobPostingId);
+                        cv.put("status", TableApplication.STATUS_UNPROCESSED);
+                        cv.put("date_created", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
+                        cv.put("title", jobDetails.optString("title"));
+                        cv.put("closed", 0);
+                        tableApplication.addApplication(cv);
 
-                if( errors.size() == 0 ){
-                    // TODO - save to local db (applicationTable)
-                    ContentValues cv = new ContentValues();
-                    cv.put("post_id", jobPostingId);
-                    cv.put("status", TableApplication.STATUS_UNPROCESSED);
-                    cv.put("date_created", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
-                    cv.put("title", jobDetails.optString("title"));
-                    cv.put("closed", 0);
-                    tableApplication.addApplication(cv);
-
-                    // attach invitation together with apply POST
-                    // TODO - handle invitation in apply POST request
-                    JSONObject obj = new JSONObject();
-                    if( invitationId > 0 ){
-                        try {
-                            obj.put("emp_invitation_id", invitationId);
-                        } catch (JSONException e) {
-                            Log.e("err", "failed to put invitation ID to post");
-                        }
-                    }
-
-                    // TODO - post to server
-                    String[] params = {
-                            Jenjobs.APPLICATION_URL+"/"+jobPostingId+"?access-token="+accessToken,
-                            obj.toString()
-                    };
-                    //new SubmitApplication().execute(params);
-                    PostRequest postRequest = new PostRequest();
-                    postRequest.setResultListener(new PostRequest.ResultListener() {
-                        @Override
-                        public void processResult(JSONObject success) {
-                            if( success != null ){
-                                Toast.makeText(getApplicationContext(), success.optString("status_text"), Toast.LENGTH_SHORT).show();
-
-                                // if success, update invitation
-                                if( invitationId > 0 && success.optInt("status_code") == 1 ){
-                                    TableInvitation tableInvitation = new TableInvitation(context);
-                                    ContentValues cv = new ContentValues();
-                                    cv.put("status", TableInvitation.STATUS_APPLIED);
-                                    cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
-                                    tableInvitation.updateInvitation(cv, invitationId);
-                                }
-                            }else{
-                                Toast.makeText(getApplicationContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                        // attach invitation together with apply POST
+                        // TODO - handle invitation in apply POST request
+                        JSONObject obj = new JSONObject();
+                        if( invitationId > 0 ){
+                            try {
+                                obj.put("emp_invitation_id", invitationId);
+                            } catch (JSONException e) {
+                                Log.e("err", "failed to put invitation ID to post");
                             }
                         }
-                    });
-                    postRequest.execute(params);
 
-                    // TODO - disabled button
-                    applyButton.setEnabled(false);
-                    applyButton.setClickable(false);
-                    applyButton.setText(getString(R.string.application_sent));
+                        // post to server
+                        String[] params = { Jenjobs.APPLICATION_URL+"/"+jobPostingId+"?access-token="+accessToken,obj.toString() };
 
-                    // save the job
-                    Cursor jobs = tableJob.getJob(jobPostingId);
-                    if( jobs.getCount() == 0 ){
-                        ContentValues cv2 = new ContentValues();
-                        cv2.put("id", jobPostingId);
-                        cv2.put("title", jobDetails.optString("title"));
-                        cv2.put("company", jobDetails.optString("company"));
-                        cv2.put("date_closed", jobDetails.optString("date_closed"));
-                        cv2.put("job_data", jobDetails.toString());
-                        tableJob.addJob(cv2);
+                        PostRequest postRequest = new PostRequest();
+                        postRequest.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject success) {
+                                if( success != null ){
+                                    Toast.makeText(getApplicationContext(), success.optString("status_text"), Toast.LENGTH_SHORT).show();
+
+                                    // if success, update invitation
+                                    if( invitationId > 0 && success.optInt("status_code") == 1 ){
+                                        TableInvitation tableInvitation = new TableInvitation(context);
+                                        ContentValues cv = new ContentValues();
+                                        cv.put("status", TableInvitation.STATUS_APPLIED);
+                                        cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
+                                        tableInvitation.updateInvitation(cv, invitationId);
+                                    }
+                                }else{
+                                    Toast.makeText(getApplicationContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        postRequest.execute(params);
+
+                        // disabled button
+                        applyButton.setEnabled(false);
+                        applyButton.setClickable(false);
+                        applyButton.setText(getString(R.string.application_sent));
+
+                        // save the job
+                        Cursor jobs = tableJob.getJob(jobPostingId);
+                        if( jobs.getCount() == 0 ){
+                            ContentValues cv2 = new ContentValues();
+                            cv2.put("id", jobPostingId);
+                            cv2.put("title", jobDetails.optString("title"));
+                            cv2.put("company", jobDetails.optString("company"));
+                            cv2.put("date_closed", jobDetails.optString("date_closed"));
+                            cv2.put("job_data", jobDetails.toString());
+                            tableJob.addJob(cv2);
+                        }
+                        jobs.close();
+                    }else{
+                        Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_LONG).show();
                     }
-                    jobs.close();
-
-                    //finish();
                 }else{
-                    Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.offline_notification, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -304,12 +261,6 @@ public class JobDetails extends ActionBarActivity {
                 applyButton.setClickable(true);
             }
         }
-
-        //Cursor jobBookmark = tableBookmark.getBookmark(jobPostingId);
-        //if( jobBookmark.moveToFirst() ){
-            // if bookmark found
-        //}
-        //jobBookmark.close();
 
         // handle login button
         Button loginButton = (Button)findViewById(R.id.login_button);
@@ -350,7 +301,7 @@ public class JobDetails extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.bookmark:
-                bookmarkThisJob();
+                // TODO - bookmarkThisJob();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -516,74 +467,9 @@ public class JobDetails extends ActionBarActivity {
                         }
                     });
                 }
-
             } catch (JSONException e) {
                 Log.e("compErr", e.getMessage());
             }
         }
     }
-    /*
-    * function used to set textviews
-    * */
-
-    private void bookmarkThisJob() {}
-
-    /*
-    * post application
-    * post bookmark
-    * *
-    public class SubmitApplication extends AsyncTask<String, Void, JSONObject> {
-        int REQUEST_TYPE = 0;
-        int POST_APPLICATION = 1;
-        int POST_BOOKMARK = 2;
-
-        @Override
-        protected JSONObject doInBackground(String... params) {
-            JSONObject _response = null;
-
-            final HttpClient httpclient = new DefaultHttpClient();
-            final HttpPost httppost = new HttpPost( params[0] ); // 0=url
-
-            httppost.addHeader("Content-Type", "application/json");
-            httppost.addHeader("Accept", "application/json");
-
-            REQUEST_TYPE = Integer.valueOf(params[2]);
-
-            try {
-                StringEntity entity = new StringEntity( params[1] ); // 1=JSON string of post data
-                entity.setContentEncoding(HTTP.UTF_8);
-                entity.setContentType("application/json");
-                httppost.setEntity(entity);
-
-                HttpResponse _http_response = httpclient.execute(httppost);
-                HttpEntity _entity = _http_response.getEntity();
-                InputStream is = _entity.getContent();
-                String responseString = JenHttpRequest.readInputStreamAsString(is);
-                Log.e("respp", responseString);
-                _response = JenHttpRequest.decodeJsonObjectString(responseString);
-            } catch (ClientProtocolException e) {
-                Log.e("ClientProtocolException", e.getMessage());
-            } catch (UnsupportedEncodingException e) {
-                Log.e("UnsupportedEncoding", e.getMessage());
-            } catch (IOException e) {
-                Log.e("IOException", e.getMessage());
-            }
-
-            return _response;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject response) {
-            Log.e("onPostEx", "" + response);
-            if( response != null ){
-                if( REQUEST_TYPE == POST_APPLICATION ){
-                    Toast.makeText(getApplicationContext(), getString(R.string.application_sent), Toast.LENGTH_SHORT).show();
-                }else if( REQUEST_TYPE == POST_BOOKMARK ){
-
-                }else{}
-            }
-        }
-    }
-    */
-
 }

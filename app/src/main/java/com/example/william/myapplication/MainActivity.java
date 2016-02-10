@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,21 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 
 public class MainActivity extends Activity {
@@ -42,16 +30,18 @@ public class MainActivity extends Activity {
     Button registerButton;
     Button forgotButton;
     Button jobSearch;
-    private UserLoginTask mAuthTask = null;
 
     private TableJobSpec tableJobSpec;
     private TableJobRole tableJobRole;
+
+    boolean isOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        isOnline = Jenjobs.isOnline(getApplicationContext());
         setup();
     }
 
@@ -60,7 +50,6 @@ public class MainActivity extends Activity {
         new TableProfile(this);
 
         sharedPref = this.getSharedPreferences(JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        TableProfile tableProfile = new TableProfile(this);
         tableJobSpec = new TableJobSpec(this);
         tableJobRole = new TableJobRole(this);
 
@@ -76,13 +65,62 @@ public class MainActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailView.getText().toString();
+                final String email = emailView.getText().toString();
                 String password = passwordView.getText().toString();
 
-                mAuthTask = new UserLoginTask(email, password);
-                mAuthTask.execute((Void) null);
+                if( isOnline ){
+                    JSONObject obj = new JSONObject();
+                    try {
+                        obj.put("username", email);
+                        obj.put("password", password);
+                        obj.put("grant_type", "password");
+                        obj.put("client_id", "testclient");
+                        obj.put("client_secret", "testpass");
 
-                toggleButtonState(false);
+                        PostRequest p = new PostRequest();
+                        p.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject success) {
+                                toggleButtonState(true);
+
+                                if (success != null) {
+                                    if( success.optString("access_token") != null ){
+                                        SharedPreferences.Editor spEdit = sharedPref.edit();
+                                        spEdit.putString("access_token", success.optString("access_token"));
+                                        spEdit.putString("email", email);
+                                        spEdit.apply();
+
+                                        Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG).show();
+
+                                        Intent intent2 = new Intent();
+                                        intent2.putExtra("downloadData", true);
+                                        intent2.setClass(getApplicationContext(), ProfileActivity.class);
+                                        startActivity(intent2);
+                                        finish();
+                                    }else{
+                                        if( success.optString("error") != null ){
+                                            Toast.makeText(getApplicationContext(), success.optString("error"), Toast.LENGTH_LONG).show();
+                                        }else{
+                                            Toast.makeText(getApplicationContext(), R.string.unknown_error, Toast.LENGTH_LONG).show();
+                                        }
+
+                                        toggleButtonState(true);
+                                    }
+                                }else{
+                                    Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                        String[] s = {Jenjobs.AUTH_URL,obj.toString()};
+                        p.execute(s);
+                    } catch (JSONException e) {
+                        Log.e("JSONException", e.getMessage());
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    toggleButtonState(false);
+                }else{
+                    Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -188,97 +226,5 @@ public class MainActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-
-    }
-
-    public class UserLoginTask extends AsyncTask<Void, Void, JSONObject> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            Object _response = null;
-
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost( Jenjobs.AUTH_URL );
-            httppost.addHeader("Content-Type", "application/json");
-            httppost.addHeader("Accept", "application/json");
-
-            JSONObject obj = new JSONObject();
-            try {
-                obj.put("username", mEmail);
-                obj.put("password", mPassword);
-                obj.put("grant_type", "password");
-                obj.put("client_id", "testclient");
-                obj.put("client_secret", "testpass");
-
-                StringEntity entity = new StringEntity(obj.toString());
-                entity.setContentEncoding(HTTP.UTF_8);
-                entity.setContentType("application/json");
-                httppost.setEntity(entity);
-
-                HttpResponse _http_response = httpclient.execute(httppost);
-                HttpEntity _entity = _http_response.getEntity();
-                InputStream is = _entity.getContent();
-
-                String responseString = JenHttpRequest.readInputStreamAsString(is);
-                _response = JenHttpRequest.decodeJsonObjectString(responseString);
-
-            } catch (JSONException e) {
-                Log.e("JSONException", e.getMessage());
-            } catch (ClientProtocolException e) {
-                Log.e("ClientProtocolException", e.getMessage());
-            } catch (UnsupportedEncodingException e) {
-                Log.e("UnsupportedEncoding", e.getMessage());
-            } catch (IOException e) {
-                Log.e("IOException", e.getMessage());
-            }
-
-            return (JSONObject) _response;
-        }
-
-        @Override
-        protected void onPostExecute(final JSONObject success) {
-            mAuthTask = null;
-            toggleButtonState(true);
-
-            if (success != null) {
-                if( success.optString("access_token") != null ){
-                    SharedPreferences.Editor spEdit = sharedPref.edit();
-                    spEdit.putString("access_token", success.optString("access_token"));
-                    spEdit.putString("email", mEmail);
-                    spEdit.apply();
-
-                    Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG).show();
-
-                    Intent intent2 = new Intent();
-                    intent2.putExtra("downloadData", true);
-                    intent2.setClass(getApplicationContext(), ProfileActivity.class);
-                    startActivity(intent2);
-                    finish();
-                }else{
-                    if( success.optString("error") != null ){
-                        Toast.makeText(getApplicationContext(), success.optString("error"), Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(getApplicationContext(), "Unknown error!", Toast.LENGTH_LONG).show();
-                    }
-
-                    toggleButtonState(true);
-                }
-            }else{
-                Toast.makeText(getApplicationContext(), "Network error!", Toast.LENGTH_LONG).show();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-        }
     }
 }

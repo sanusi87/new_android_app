@@ -62,9 +62,9 @@ public class Confirmation {
 
     // set content text
     public void setConfirmationText(String[] values){
-        String _confirmationText = activity.getText(R.string.confirm).toString();
-        String _yesText = activity.getText(R.string.yes).toString();
-        String _noText = activity.getText(R.string.no).toString();
+        String _confirmationText = activity.getText(R.string.confirm).toString(); // 0
+        String _yesText = activity.getText(R.string.yes).toString(); // 1
+        String _noText = activity.getText(R.string.no).toString(); // 2
 
         if( values != null ){
             if( values[0] != null ){

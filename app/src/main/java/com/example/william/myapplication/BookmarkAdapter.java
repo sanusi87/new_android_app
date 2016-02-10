@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -109,25 +110,29 @@ public class BookmarkAdapter extends BaseAdapter implements ListAdapter {
                     @Override
                     public void statusSelected(boolean status) {
                         if( status ){
-                            // delete bookmark
-                            tableBookmark.deleteBookmark(postId);
+                            if( Jenjobs.isOnline(context) ){
+                                // delete bookmark
+                                tableBookmark.deleteBookmark(postId);
 
-                            // delete job
-                            tableJob.deleteJob(postId);
+                                // delete job
+                                tableJob.deleteJob(postId);
 
-                            // post to server
-                            String[] param = {Jenjobs.BOOKMARK_URL + "/" + postId + "?access-token=" + accessToken, "{}"};
-                            new DeleteRequest().execute(param);
+                                // post to server
+                                String[] param = {Jenjobs.BOOKMARK_URL + "/" + postId + "?access-token=" + accessToken, "{}"};
+                                new DeleteRequest().execute(param);
 
-                            // remove view
-                            //((ViewGroup) finalV.getParent()).removeView(finalV);
-                            bookmarks.remove(position);
-                            notifyDataSetChanged();
+                                // remove view
+                                //((ViewGroup) finalV.getParent()).removeView(finalV);
+                                bookmarks.remove(position);
+                                notifyDataSetChanged();
 
-                            if( bookmarks.size() == 0 ){
-                                if( noItemView != null ){
-                                    noItemView.setVisibility(View.VISIBLE);
+                                if( bookmarks.size() == 0 ){
+                                    if( noItemView != null ){
+                                        noItemView.setVisibility(View.VISIBLE);
+                                    }
                                 }
+                            }else{
+                                Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
                             }
                         }
                     }

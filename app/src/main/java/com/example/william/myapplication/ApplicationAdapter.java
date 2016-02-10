@@ -132,14 +132,29 @@ public class ApplicationAdapter extends BaseAdapter implements ListAdapter{
         withdrawButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View _v) {
-                String[] params = {Jenjobs.APPLICATION_URL+"/"+postId+"?access-token="+accessToken};
-                new DeleteRequest().execute(params);
+                Confirmation confirmation = new Confirmation(activity);
+                confirmation.setConfirmationText(null); // use default text
+                confirmation.setStatusListener(new Confirmation.ConfirmationListener() {
+                    @Override
+                    public void statusSelected(boolean status) {
+                        if( status ){
+                            if( Jenjobs.isOnline(context) ){
+                                String[] params = {Jenjobs.APPLICATION_URL+"/"+postId+"?access-token="+accessToken};
+                                new DeleteRequest().execute(params);
 
-                boolean isDeleted = tableApplication.deleteApplication(postId);
-                if( isDeleted ){
-                    Toast.makeText(context, "Application withdrawn.", Toast.LENGTH_LONG).show();
-                    finalV.setVisibility(View.GONE);
-                }
+                                boolean isDeleted = tableApplication.deleteApplication(postId);
+                                if( isDeleted ){
+                                    Toast.makeText(context, "Application withdrawn.", Toast.LENGTH_LONG).show();
+                                    finalV.setVisibility(View.GONE);
+                                }
+                            }else{
+                                Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                }).showDialog();
+
+
             }
         });
 

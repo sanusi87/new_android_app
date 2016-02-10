@@ -62,20 +62,20 @@ public class DailyJobMatcher extends Service{
     private void handleCommand(final Intent intent) {
         sharedPref = getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
-        Log.e("alarmStarted", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
+        //Log.e("alarmStarted", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
 
         mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE); // notification service
 
         Bundle extras = intent.getExtras();
         if( extras != null ){
             myAlarmType = extras.getString("alertType");
-            Log.e("alarmType", ""+myAlarmType);
+            //Log.e("alarmType", ""+myAlarmType);
 
-            for (Object key : extras.keySet()) {
-                Log.e("key", "" + key);
-                String what = "" + extras.get((String) key);
-                Log.e("what", "" + what);
-            }
+//            for (Object key : extras.keySet()) {
+//                Log.e("key", "" + key);
+//                String what = "" + extras.get((String) key);
+//                Log.e("what", "" + what);
+//            }
 
             if( isOnline() && accessToken != null && myAlarmType != null ){
                 /*
@@ -95,59 +95,71 @@ public class DailyJobMatcher extends Service{
                     final ArrayList<String> notifyText = new ArrayList<>();
                     final TableJobSearchMatched tableJob = new TableJobSearchMatched(getApplicationContext());
 
+                    // loop subscribed job matcher profile
                     while( !c.isAfterLast() ){
-                        int jobMatcherProfileId = c.getInt(c.getColumnIndex("_id"));
+                        final int jobMatcherProfileId = c.getInt(c.getColumnIndex("_id"));
                         final String jobMatcherProfileName = c.getString(c.getColumnIndex("profile_name"));
                         String[] s = {Jenjobs.JOB_MATCHED+"/"+jobMatcherProfileId+"?access-token="+accessToken};
-
-                        GetRequest g = new GetRequest();
                         final int finalItemCount = itemCount;
-                        g.setResultListener(new GetRequest.ResultListener() {
-                            @Override
-                            public void processResultArray(JSONArray result) {
-                                if (result != null && result.length() > 0) {
 
-                                    for(int j=0;j<result.length();j++){
-                                        try {
-                                            JSONObject job = result.getJSONObject(j);
-                                            ContentValues cv2 = new ContentValues();
+                        if( !tableJob.alreadyDownloaded(jobMatcherProfileId) ){
+                            GetRequest g = new GetRequest();
+                            g.setResultListener(new GetRequest.ResultListener() {
+                                @Override
+                                public void processResultArray(JSONArray result) {
+                                    if (result != null && result.length() > 0) {
+                                        for(int j=0;j<result.length();j++){
+                                            try {
+                                                JSONObject job = result.getJSONObject(j);
+                                                ContentValues cv2 = new ContentValues();
 
-                                            cv2.put("id", Integer.valueOf(job.getString("post_id")));
-                                            cv2.put("title", job.optString("title"));
-                                            cv2.put("company", job.optString("company_name"));
-                                            cv2.put("job_data", job.toString());
-                                            cv2.put("date_closed", job.optString("date_closed"));
+                                                cv2.put("id", Integer.valueOf(job.getString("post_id")));
+                                                cv2.put("jm_profile_id", jobMatcherProfileId);
+                                                cv2.put("title", job.optString("title"));
+                                                cv2.put("company", job.optString("company_name"));
+                                                cv2.put("job_data", job.toString());
+                                                cv2.put("date_closed", job.optString("date_closed"));
+                                                cv2.put("date_added", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
 
-                                            tableJob.addJob(cv2);
-                                        } catch (JSONException e) {
-                                            Log.e("err", e.getMessage());
+                                                tableJob.addJob(cv2);
+                                            } catch (JSONException e) {
+                                                Log.e("err", e.getMessage());
+                                            }
                                         }
+
+                                        String _notifyText;
+                                        if (result.length() == 1) {
+                                            _notifyText = result.length() + " job opportunity for " + jobMatcherProfileName;
+                                        } else {
+                                            _notifyText = result.length() + " job opportunities for " + jobMatcherProfileName;
+                                        }
+                                        notifyText.add(_notifyText);
                                     }
 
-                                    String _notifyText;
-                                    if (result.length() == 1) {
-                                        _notifyText = result.length() + " job opportunity for " + jobMatcherProfileName;
-                                    } else {
-                                        _notifyText = result.length() + " job opportunities for " + jobMatcherProfileName;
+                                    if( finalItemCount == totalProfile-1 ){
+                                        //Log.e("contentText", TextUtils.join(", ", notifyText));
+                                        if( notifyText.size() > 0 ){
+                                            _intent.putExtra("contentText", TextUtils.join(", ", notifyText));
+                                            showNotification(_intent);
+                                        }
+                                        stopSelf();
                                     }
-                                    notifyText.add(_notifyText);
                                 }
 
-                                if( finalItemCount == totalProfile-1 ){
-                                    Log.e("contentText", TextUtils.join(", ", notifyText));
-                                    _intent.putExtra("contentText", TextUtils.join(", ", notifyText));
-                                    showNotification(_intent);
-                                    stopSelf();
-                                }
+                                @Override
+                                public void processResult(JSONObject success) {}
+                            });
+                            g.execute(s);
+                        }else{
+                            if( finalItemCount == totalProfile-1 ){
+                                stopSelf();
                             }
-
-                            @Override
-                            public void processResult(JSONObject success) {}
-                        });
-                        g.execute(s);
+                        }
                         itemCount++;
                         c.moveToNext();
                     }
+                }else{
+                    stopSelf();
                 }
                 c.close();
             }else{

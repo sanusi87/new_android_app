@@ -1,14 +1,7 @@
 package com.example.william.myapplication;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,54 +18,17 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 /*
-*
 * new PostInput().execute(new String[]{url,json});
-*
 * */
 
 public class PostRequest extends AsyncTask<String, Void, JSONObject> {
-
-    public static int UPLOAD_RESUME_ATTACHMENT = 1;
-
-    private Context context;
-    //private TextView textView;
-    //private ProgressBar progressBar;
-    //private int REQUEST_TYPE = 0;
-
-    SharedPreferences sharedPref;
-    String accessToken;
-    int js_profile_id;
-
     public PostRequest(){}
-
-    public PostRequest(Context context){
-        this.context = context;
-        sharedPref = context.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        accessToken = sharedPref.getString("access_token", null);
-        js_profile_id = sharedPref.getInt("js_profile_id", 0);
-    }
-
-    /*
-    public void setViewToUpdate(TextView tv){
-        textView = tv;
-    }
-
-    public void setProgressBar(ProgressBar pg){
-        progressBar = pg;
-    }
-
-    public void setRequestType(int requestType){
-        REQUEST_TYPE = requestType;
-    }
-    */
 
     @Override
     protected JSONObject doInBackground(String... params) {
         JSONObject _response = null;
-
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost( params[0] );
-
         httppost.addHeader("Content-Type", "application/json");
         httppost.addHeader("Accept", "application/json");
 
@@ -102,28 +58,6 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
     @Override
     protected void onPostExecute(JSONObject result) {
         resultListener.processResult(result);
-        /*
-        if( result != null ){
-            if( REQUEST_TYPE == UPLOAD_RESUME_ATTACHMENT ){
-                // if successul
-                if( result.optInt( "status_code" ) == 1 ){
-                    if( textView != null ){
-                        textView.setText(result.optString("resume") );
-                    }
-
-                    TableProfile tableProfile = new TableProfile(context);
-                    ContentValues cv = new ContentValues();
-                    cv.put("resume_file", result.optString("resume_url"));
-                    tableProfile.updateProfile(cv, js_profile_id);
-                }
-                Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        if( progressBar != null ){
-            progressBar.setVisibility(View.GONE);
-        }
-        */
     }
 
     public interface ResultListener {
@@ -135,5 +69,4 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
         this.resultListener = resultListener;
         return this;
     }
-
 }
