@@ -5,4 +5,8 @@
         android:id="@+id/job_search_profile_list"
         android:title="@string/job_search_profiles"
         app:showAsAction="collapseActionView" />
+    <item
+        android:id="@+id/about_job_matcher"
+        android:title="@string/about_job_matcher"
+        app:showAsAction="collapseActionView" />
 </menu>
