@@ -22,6 +22,7 @@ public class Confirmation {
     public Confirmation(Activity activity) {
         this.activity = activity;
         dialog = new Dialog(activity);
+        dialog.setTitle(R.string.confirmation);
 
         View v = activity.getLayoutInflater().inflate(R.layout.confirmation, null);
         confirmationText = (TextView)v.findViewById(R.id.confirmationText);
