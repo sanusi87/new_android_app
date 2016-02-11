@@ -527,14 +527,19 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         File photoFile = null;
                         try {
                             photoFile = createImageFile();
-                        } catch (IOException ex) {
-                            Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                            //Log.e("filecreated", "true");
+                        } catch (IOException e) {
+                            //Log.e("filecreated", e.getMessage());
+                            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
                         }
 
                         // Continue only if the File was successfully created
                         if (photoFile != null) {
                             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                             getActivity().startActivityForResult(takePictureIntent, TAKE_A_PHOTO);
+                            //Log.e("intentstart", "true");
+                        }else{
+                            //Log.e("intentstart", "false");
                         }
                     }else{
                         Toast.makeText(getActivity(), R.string.camera_unavailable, Toast.LENGTH_LONG).show();
@@ -555,7 +560,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             );
 
             // Save a file: path for use with ACTION_VIEW intents
-            mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+            mCurrentPhotoPath = image.getAbsolutePath();
             return image;
         }
 
@@ -1323,8 +1328,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            Bundle extra = data.getExtras();
             if (requestCode == ADD_WORK_EXP) {
+                Bundle extra = data.getExtras();
                 final int id = extra.getInt("id");
                 int prevWork = extra.getInt("selectedWork");
 
@@ -1393,6 +1398,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 }
                 workExpQuestion.setVisibility(View.GONE);
             } else if (requestCode == ADD_EDU) {
+                Bundle extra = data.getExtras();
                 final int id = extra.getInt("id");
                 // TODO: the index might changed one we have added or removed a child
                 int prevEdu = extra.getInt("currentViewPosition");
@@ -1455,14 +1461,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     c.close();
                 }
             } else if (requestCode == UPDATE_RESUME_VISIBILITY) {
+                Bundle extra = data.getExtras();
                 resumeVisibility.setText(extra.getString("selectedvisibility"));
             } else if (requestCode == UPDATE_JOB_SEEKING) {
+                Bundle extra = data.getExtras();
                 String summary = extra.getString("summary");
                 jobSeeking.setText(summary);
             } else if (requestCode == UPDATE_JOB_PREFERENCE) {
+                Bundle extra = data.getExtras();
                 String response = extra.getString("summary");
                 jobPreference.setText(response);
             } else if (requestCode == ADD_SKILL) {
+                Bundle extra = data.getExtras();
                 String skillName = extra.getString("skill_name");
                 final int skillId = extra.getInt("skill_id");
 
@@ -1494,6 +1504,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 ((TextView) v.findViewById(R.id.skillText)).setText(skillName);
 
             } else if (requestCode == ADD_LANGUAGE) {
+                Bundle extra = data.getExtras();
                 final Language _lang = (Language) extra.get("language");
                 int _viewIndex = extra.getInt("_viewIndex");
 
@@ -1550,8 +1561,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ((TextView) v.findViewById(R.id.writtenLanguageLevel)).setText((String) _languageLevel.get(_lang.written));
                 }
             } else if (requestCode == UPDATE_ADDITIONAL_INFO) {
+                Bundle extra = data.getExtras();
                 additionalInfo.setText(extra.getString("info"));
             } else if (requestCode == UPDATE_PROFILE) {
+                //Bundle extra = data.getExtras();
                 // refresh profile
                 profileLayout = (LinearLayout) findViewById(R.id.profileLayout);
                 Profile theProfile = tableProfile.getProfile();
@@ -1638,6 +1651,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                         String[] params = {Jenjobs.ATTACH_RESUME + "?access-token=" + accessToken,fileParam.toString()};
 
+                        Toast.makeText(context, "uploading photo...", Toast.LENGTH_SHORT).show();
                         PostRequest postRequest = new PostRequest();
                         postRequest.setResultListener(new PostRequest.ResultListener() {
                             @Override
@@ -1654,14 +1668,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                         //profileImage.setImageDrawable(d);
                                     }
                                     Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Toast.makeText(context, R.string.empty_response, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
                         postRequest.execute(params);
                     } catch (IOException | JSONException e) {
                         Log.e("exception", e.getMessage());
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-
+                }else{
+                    Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_SHORT).show();
                 }
                 // end upload
             }
