@@ -79,8 +79,10 @@ public class JobSuggestion extends ActionBarActivity{
                 if( position == 0 ){
                     mTitle = "Matched Jobs";
                     menu.getItem(0).setVisible(true);
+                    menu.getItem(1).setVisible(true);
                 }else if( position == 1 ){
                     menu.getItem(0).setVisible(false);
+                    menu.getItem(1).setVisible(false);
                     mTitle = "Suggested Jobs";
                 }
                 restoreActionBar();
@@ -124,6 +126,10 @@ public class JobSuggestion extends ActionBarActivity{
         int clickedItem = item.getItemId();
         if( clickedItem == R.id.job_search_profile_list ){
             Intent intent = new Intent(getApplicationContext(), JobSearchProfile.class);
+            startActivity(intent);
+            return true;
+        }else if( clickedItem == R.id.about_job_matcher ){
+            Intent intent = new Intent(getApplicationContext(), AboutJobMatcher.class);
             startActivity(intent);
             return true;
         }
