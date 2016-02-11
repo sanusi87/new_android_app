@@ -104,7 +104,7 @@ public class TableJobSearchMatched extends SQLiteOpenHelper {
     /*
     * delete closed jobs
     * */
-    public int deleteRowWeekly(){
+    public int deleteClosedJob(){
         return db.delete(TABLE_NAME, "date_closed < date('now')", null);
     }
 }

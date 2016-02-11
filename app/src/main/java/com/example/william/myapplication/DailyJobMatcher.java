@@ -80,7 +80,7 @@ public class DailyJobMatcher extends Service{
                 /*
                 * delete closed jobs
                 * */
-                tableJob.deleteRowWeekly();
+                tableJob.deleteClosedJob();
 
                 /*
                 * check for active jobMatcher profile table
