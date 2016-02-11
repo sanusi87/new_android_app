@@ -8,12 +8,10 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.app.Service;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,6 +45,7 @@ public class JobSearchProfileForm extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_search_profile_form);
+        setTitle(R.string.create_search_profile);
 
         context = getApplicationContext();
         _searchParameter = new JSONObject();
@@ -81,7 +80,7 @@ public class JobSearchProfileForm extends ActionBarActivity {
             // id passed from job search profiles list
             if( extra.getInt("id") > 0 ){
                 id = extra.getInt("id");
-
+                setTitle(R.string.update_search_profile);
                 Cursor c = tableJobSearchProfile.getSearchProfile(id);
                 c.moveToFirst();
 
@@ -259,8 +258,6 @@ public class JobSearchProfileForm extends ActionBarActivity {
                                     }
                                 }
                             });
-                            Log.e("postUrl", Jenjobs.SEARCH_PROFILE + "?access-token=" + accessToken);
-                            Log.e("postData", postedData.toString());
 
                             String url = Jenjobs.SEARCH_PROFILE;
                             if( _id > 0 ){ url += "/"+_id; }
