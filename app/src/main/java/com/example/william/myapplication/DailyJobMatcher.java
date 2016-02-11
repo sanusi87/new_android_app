@@ -14,7 +14,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -25,7 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class DailyJobMatcher extends Service{
     SharedPreferences sharedPref;
@@ -62,9 +60,9 @@ public class DailyJobMatcher extends Service{
     private void handleCommand(final Intent intent) {
         sharedPref = getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
-        //Log.e("alarmStarted", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
 
         mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE); // notification service
+        final TableJobSearchMatched tableJob = new TableJobSearchMatched(getApplicationContext());
 
         Bundle extras = intent.getExtras();
         if( extras != null ){
@@ -78,6 +76,12 @@ public class DailyJobMatcher extends Service{
 //            }
 
             if( isOnline() && accessToken != null && myAlarmType != null ){
+                //Log.e("alarmStarted", myAlarmType" - "+Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
+                /*
+                * delete closed jobs
+                * */
+                tableJob.deleteRowWeekly();
+
                 /*
                 * check for active jobMatcher profile table
                 */
@@ -85,15 +89,13 @@ public class DailyJobMatcher extends Service{
                 final Cursor c = tableJobSearchProfile.getSubscribedProfile( myAlarmType );
                 if( c.moveToFirst() ){
                     final int totalProfile = c.getCount();
+                    final ArrayList<String> notifyText = new ArrayList<>();
                     int itemCount = 0;
 
                     final Intent _intent = new Intent();
                     _intent.putExtra("statusText", "JenJOBS JobMatcher");
                     _intent.putExtra("notificationId", DAILY_NOTIFICATION);
                     _intent.setClass(getApplicationContext(), JobSuggestion.class);
-
-                    final ArrayList<String> notifyText = new ArrayList<>();
-                    final TableJobSearchMatched tableJob = new TableJobSearchMatched(getApplicationContext());
 
                     // loop subscribed job matcher profile
                     while( !c.isAfterLast() ){
