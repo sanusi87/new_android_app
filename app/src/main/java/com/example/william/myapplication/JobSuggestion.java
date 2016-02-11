@@ -44,14 +44,11 @@ public class JobSuggestion extends ActionBarActivity{
         setContentView(R.layout.activity_job_suggestion);
         setTitle(mTitle);
 
-        //actionBar = this.getSupportActionBar();
-
         context = getApplicationContext();
         activity = this;
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
-        //tabButton = (LinearLayout)findViewById(R.id.tabButton);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         Button jobMatcherButton = (Button)findViewById(R.id.jobMatcherButton);
@@ -202,6 +199,7 @@ public class JobSuggestion extends ActionBarActivity{
 
             ListView suggestedJobs = (ListView)v.findViewById(R.id.suggestedJobs);
             SuggestedJobsAdapter suggestedJobsAdapter = new SuggestedJobsAdapter(context);
+            suggestedJobsAdapter.setActivity(activity);
             suggestedJobs.setAdapter(suggestedJobsAdapter);
 
             if( suggestedJobs.getCount() == 0 ){
