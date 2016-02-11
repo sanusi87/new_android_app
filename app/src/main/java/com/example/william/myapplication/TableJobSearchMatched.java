@@ -5,9 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class TableJobSearchMatched extends SQLiteOpenHelper {
@@ -22,12 +20,10 @@ public class TableJobSearchMatched extends SQLiteOpenHelper {
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
-    private Context context;
 
     public TableJobSearchMatched(Context context){
         super(context, Jenjobs.DATABASE_NAME , null, Jenjobs.DATABASE_VERSION);
         db = this.getReadableDatabase();
-        this.context = context;
     }
 
     @Override
@@ -101,6 +97,14 @@ public class TableJobSearchMatched extends SQLiteOpenHelper {
                 c.moveToNext();
             }
         }
+        c.close();
         return s.toArray(new String[s.size()]);
+    }
+
+    /*
+    * delete closed jobs
+    * */
+    public int deleteRowWeekly(){
+        return db.delete(TABLE_NAME, "date_closed < date('now')", null);
     }
 }
