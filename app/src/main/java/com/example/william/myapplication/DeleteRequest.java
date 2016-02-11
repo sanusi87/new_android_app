@@ -21,7 +21,7 @@ public class DeleteRequest extends AsyncTask<String, Void, JSONObject> {
         JSONObject _response = null;
         HttpClient httpclient = new DefaultHttpClient();
 
-        Log.e("deleteUrl", params[0]);
+        //Log.e("deleteUrl", params[0]);
         HttpDelete httpDelete = new HttpDelete( params[0] );
         httpDelete.addHeader("Content-Type", "application/json");
         httpDelete.addHeader("Accept", "application/json");
@@ -43,7 +43,7 @@ public class DeleteRequest extends AsyncTask<String, Void, JSONObject> {
     @Override
     protected void onPostExecute(JSONObject result) {
         if( result != null ){
-            Log.e("deleted?", result.toString());
+            //Log.e("deleted?", result.toString());
         }
         if( resultListener != null ){
             resultListener.processResult(result);
