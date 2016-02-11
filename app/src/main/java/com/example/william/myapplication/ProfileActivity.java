@@ -57,6 +57,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -143,6 +144,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     static TableJobPreference tableJobPreference;
     static TableLanguage tableLanguage;
     static TableJob tableJob;
+    static TableProfile tableProfile;
 
     // if this activity was opened by notification, set the default fragment to be opened,
     // then updated it depends on the notification
@@ -228,6 +230,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             }
         }
 
+        tableProfile = new TableProfile(context);
         tableSkill = new TableSkill(context);
         tableWorkExperience = new TableWorkExperience(context);
         tableEducation = new TableEducation(context);
@@ -358,7 +361,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     SharedPreferences pref = getActivity().getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
                     pref.edit().clear().apply();
 
-                    (new TableProfile(getActivity())).truncate();
+                    tableProfile.truncate();
 
                     getActivity().startActivity(_intent);
                     getActivity().finish();
@@ -380,8 +383,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
         private void setupProfileFragment(View rootView) {
             profileLayout = (LinearLayout) rootView.findViewById(R.id.profileLayout);
-            final TableProfile tProfile = new TableProfile(getActivity());
-            final Profile theProfile = tProfile.getProfile();
+            final Profile theProfile = tableProfile.getProfile();
             TextView name = (TextView) profileLayout.findViewById(R.id.fullName);
             TextView email = (TextView) profileLayout.findViewById(R.id.email);
             TextView mobile_no = (TextView) profileLayout.findViewById(R.id.mobile_no);
@@ -489,7 +491,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                                     ContentValues cv = new ContentValues();
                                                     cv.put("photo_file", result.optString("photo_url"));
                                                     cv.put("photo_uri", file.getPath());
-                                                    tProfile.updateProfile(cv, jsProfileId);
+                                                    tableProfile.updateProfile(cv, jsProfileId);
 
                                                     Drawable d = Drawable.createFromStream(inputStream, file.getName());
                                                     profileImage.setImageDrawable(d);
@@ -541,7 +543,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
         private File createImageFile() throws IOException {
             // Create an image file name
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
             String imageFileName = "JPEG_" + timeStamp + "_";
             File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
             File image = File.createTempFile(
@@ -723,8 +725,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         }
 
         private void setupOnlineResumeFragment(View rootView) {
-            final TableProfile tProfile = new TableProfile(getActivity());
-            final Profile theProfile = tProfile.getProfile();
+            final Profile theProfile = tableProfile.getProfile();
 
             /*
             * add work exp
@@ -833,7 +834,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         // save
                         ContentValues cv = new ContentValues();
                         cv.put("no_work_exp", 1);
-                        tProfile.updateProfile(cv, theProfile._id);
+                        tableProfile.updateProfile(cv, theProfile._id);
 
                         // hide layout
                         workExpQuestion.setVisibility(View.GONE);
@@ -1160,7 +1161,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                                 // if successul
                                                 if( result.optInt( "status_code" ) == 1 ){
                                                     attachedResume.setText(result.optString("resume") );
-                                                    TableProfile tableProfile = new TableProfile(context);
+
                                                     ContentValues cv = new ContentValues();
                                                     cv.put("resume_file", result.optString("resume_url"));
                                                     cv.put("resume_uri", file.getPath());
@@ -1516,8 +1517,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             } else if (requestCode == UPDATE_PROFILE) {
                 // refresh profile
                 profileLayout = (LinearLayout) findViewById(R.id.profileLayout);
-                TableProfile tProfile = new TableProfile(getApplicationContext());
-                Profile theProfile = tProfile.getProfile();
+                Profile theProfile = tableProfile.getProfile();
                 TextView name = (TextView) profileLayout.findViewById(R.id.fullName);
                 TextView email = (TextView) profileLayout.findViewById(R.id.email);
                 TextView mobile_no = (TextView) profileLayout.findViewById(R.id.mobile_no);
@@ -1576,6 +1576,57 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 Bitmap cameraImage = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
                 profileImage.setImageBitmap(cameraImage);
+
+                // start upload camera image
+                if( isOnline ){
+                    byte[] buffer = new byte[8192];
+                    int bytesRead;
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    final File file = new File(mCurrentPhotoPath);
+
+                    try {
+                        final InputStream inputStream = new FileInputStream(file);
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            baos.write(buffer, 0, bytesRead);
+                        }
+
+                        byte[] byteArray = baos.toByteArray();
+                        String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+                        JSONObject fileParam = new JSONObject();
+                        fileParam.put("name", file.getName());
+                        fileParam.put("type", "photo_file");
+                        fileParam.put("attachment", encodedFile);
+
+                        String[] params = {Jenjobs.ATTACH_RESUME + "?access-token=" + accessToken,fileParam.toString()};
+
+                        PostRequest postRequest = new PostRequest();
+                        postRequest.setResultListener(new PostRequest.ResultListener() {
+                            @Override
+                            public void processResult(JSONObject result) {
+                                if (result != null) {
+                                    // if successul, update profile photo url
+                                    if (result.optInt("status_code") == 1) {
+                                        ContentValues cv = new ContentValues();
+                                        cv.put("photo_file", result.optString("photo_url"));
+                                        cv.put("photo_uri", file.getPath());
+                                        tableProfile.updateProfile(cv, jsProfileId);
+
+                                        //Drawable d = Drawable.createFromStream(inputStream, file.getName());
+                                        //profileImage.setImageDrawable(d);
+                                    }
+                                    Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        postRequest.execute(params);
+                    } catch (IOException | JSONException e) {
+                        Log.e("exception", e.getMessage());
+                    }
+
+                }
+                // end upload
             }
         }
     }
@@ -1628,7 +1679,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     JSONObject success;
                     int js_profile_id;
 
-                    TableProfile tblProfile = new TableProfile(getApplicationContext());
                     TableAddress tblAddress = new TableAddress(getApplicationContext());
                     ContentValues cv = new ContentValues();
 
@@ -1664,7 +1714,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         cv.put("created_at", String.valueOf(success.get("created_at")));
                         cv.put("updated_at", String.valueOf(success.get("updated_at")));
 
-                        tblProfile.addProfile(cv);
+                        tableProfile.addProfile(cv);
                         js_profile_id = cv.getAsInteger("_id");
                         Log.e("js_profile_id", String.valueOf(js_profile_id));
 
@@ -1760,7 +1810,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 cv.put("closed", s.getBoolean("closed") ? 1 : 0);
                                 tableApplication.addApplication(cv);
 
-                                // TODO - download job details and save to TableJob
+                                // download job details and save to TableJob
                                 // download the job details
                                 GetRequest getRequest = new GetRequest();
                                 getRequest.setResultListener(new GetRequest.ResultListener() {
