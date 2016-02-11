@@ -45,7 +45,9 @@ public class DeleteRequest extends AsyncTask<String, Void, JSONObject> {
         if( result != null ){
             Log.e("deleted?", result.toString());
         }
-        resultListener.processResult(result);
+        if( resultListener != null ){
+            resultListener.processResult(result);
+        }
     }
 
     public interface ResultListener {
