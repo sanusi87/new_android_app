@@ -419,6 +419,7 @@ public class MainService extends Service{
         Random r = new Random();
         int m = r.nextInt(58)+1; // randomize minute, minimum 1
         int h = r.nextInt(12); // randomize hour
+        if( h < 8 ){ h = 8; }
         Log.e("alarm on", ""+h+":"+m);
 
         Long alarmInterval = AlarmManager.INTERVAL_DAY;
