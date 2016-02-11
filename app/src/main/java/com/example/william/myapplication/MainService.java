@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Random;
 
 
 public class MainService extends Service{
@@ -415,21 +416,24 @@ public class MainService extends Service{
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
-        //Long alarmInterval = AlarmManager.INTERVAL_DAY;
-        Long alarmInterval = (long)(1000 * 60 * 3); // 3 minute
+        Random r = new Random();
+        int m = r.nextInt(58)+1; // randomize minute, minimum 1
+        int h = r.nextInt(12); // randomize hour
+        Log.e("alarm on", ""+h+":"+m);
+
+        Long alarmInterval = AlarmManager.INTERVAL_DAY;
+        //Long alarmInterval = (long)(1000 * 60 * 3); // 3 minute
         int alarmID = DAILY_ALARM;
         if( alertNotification.equals("D") ){
             //Log.e("alarm", "daily");
-            calendar.set(Calendar.HOUR_OF_DAY, 11); // at 9 A.M.
-            calendar.set(Calendar.MINUTE, 25); // 30 minute
+            calendar.set(Calendar.HOUR_OF_DAY, h);
+            calendar.set(Calendar.MINUTE, m);
         }else if( alertNotification.equals("W") ){
             //Log.e("alarm", "weekly");
-            //alarmInterval = (long) (1000 * 60 * 60 * 24 * 7);
             alarmInterval = alarmInterval * 7;
             alarmID = WEEKLY_ALARM;
-            // randomize hour and minute so that not too much request at done at a same time
-            calendar.set(Calendar.HOUR_OF_DAY, 11);
-            calendar.set(Calendar.MINUTE, 25);
+            calendar.set(Calendar.HOUR_OF_DAY, h);
+            calendar.set(Calendar.MINUTE, m);
             calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
         }
 
