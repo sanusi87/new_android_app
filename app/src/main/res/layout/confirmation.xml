@@ -12,7 +12,8 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
         android:id="@+id/confirmationText"
-        style="@style/AppThemeBaseLabel" />
+        style="@style/AppThemeBaseLabel"
+        android:layout_marginBottom="10dp" />
 
     <LinearLayout
         android:orientation="horizontal"
