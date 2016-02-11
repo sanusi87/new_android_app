@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class MainActivity extends Activity {
@@ -69,55 +71,72 @@ public class MainActivity extends Activity {
                 String password = passwordView.getText().toString();
 
                 if( isOnline ){
-                    JSONObject obj = new JSONObject();
-                    try {
-                        obj.put("username", email);
-                        obj.put("password", password);
-                        obj.put("grant_type", "password");
-                        obj.put("client_id", "testclient");
-                        obj.put("client_secret", "testpass");
-
-                        PostRequest p = new PostRequest();
-                        p.setResultListener(new PostRequest.ResultListener() {
-                            @Override
-                            public void processResult(JSONObject success) {
-                                toggleButtonState(true);
-
-                                if (success != null) {
-                                    if( success.optString("access_token") != null ){
-                                        SharedPreferences.Editor spEdit = sharedPref.edit();
-                                        spEdit.putString("access_token", success.optString("access_token"));
-                                        spEdit.putString("email", email);
-                                        spEdit.apply();
-
-                                        Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG).show();
-
-                                        Intent intent2 = new Intent();
-                                        intent2.putExtra("downloadData", true);
-                                        intent2.setClass(getApplicationContext(), ProfileActivity.class);
-                                        startActivity(intent2);
-                                        finish();
-                                    }else{
-                                        if( success.optString("error") != null ){
-                                            Toast.makeText(getApplicationContext(), success.optString("error"), Toast.LENGTH_LONG).show();
-                                        }else{
-                                            Toast.makeText(getApplicationContext(), R.string.unknown_error, Toast.LENGTH_LONG).show();
-                                        }
-
-                                        toggleButtonState(true);
-                                    }
-                                }else{
-                                    Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-                        String[] s = {Jenjobs.AUTH_URL,obj.toString()};
-                        p.execute(s);
-                    } catch (JSONException e) {
-                        Log.e("JSONException", e.getMessage());
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    ArrayList<String> errors = new ArrayList<>();
+                    if( email.length() == 0 ){
+                        errors.add("Username is required!");
                     }
-                    toggleButtonState(false);
+
+                    if( password.length() == 0 ){
+                        errors.add("Password is required!");
+                    }
+
+                    if( errors.size() == 0 ){
+                        JSONObject obj = new JSONObject();
+                        try {
+                            obj.put("username", email);
+                            obj.put("password", password);
+                            obj.put("grant_type", "password");
+                            obj.put("client_id", "testclient");
+                            obj.put("client_secret", "testpass");
+
+                            PostRequest p = new PostRequest();
+                            p.setResultListener(new PostRequest.ResultListener() {
+                                @Override
+                                public void processResult(JSONObject success) {
+                                    toggleButtonState(true);
+
+                                    if (success != null) {
+                                        try {
+                                            if( success.getString("access_token") != null ){
+                                                SharedPreferences.Editor spEdit = sharedPref.edit();
+                                                spEdit.putString("access_token", success.getString("access_token"));
+                                                spEdit.putString("email", email);
+                                                spEdit.apply();
+
+                                                Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_LONG).show();
+
+                                                Intent intent2 = new Intent();
+                                                intent2.putExtra("downloadData", true);
+                                                intent2.setClass(getApplicationContext(), ProfileActivity.class);
+                                                startActivity(intent2);
+                                                finish();
+                                            }else{
+                                                if( success.getString("error") != null ){
+                                                    Toast.makeText(getApplicationContext(), success.getString("error"), Toast.LENGTH_LONG).show();
+                                                }else{
+                                                    Toast.makeText(getApplicationContext(), R.string.unknown_error, Toast.LENGTH_LONG).show();
+                                                }
+
+                                                toggleButtonState(true);
+                                            }
+                                        } catch (JSONException e) {
+                                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    }else{
+                                        Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                            String[] s = {Jenjobs.AUTH_URL,obj.toString()};
+                            p.execute(s);
+                        } catch (JSONException e) {
+                            Log.e("JSONException", e.getMessage());
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        toggleButtonState(false);
+                    }else{
+                        Toast.makeText(getApplicationContext(), TextUtils.join(".", errors), Toast.LENGTH_LONG).show();
+                    }
                 }else{
                     Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
                 }
