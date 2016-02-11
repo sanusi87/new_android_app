@@ -57,7 +57,9 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
 
     @Override
     protected void onPostExecute(JSONObject result) {
-        resultListener.processResult(result);
+        if( resultListener != null ){
+            resultListener.processResult(result);
+        }
     }
 
     public interface ResultListener {
