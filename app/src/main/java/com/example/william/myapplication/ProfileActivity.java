@@ -132,6 +132,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
     static String accessToken = null;
 
     private static Context context;
+    private static Activity activity;
     static ImageView profileImage;
     static String mCurrentPhotoPath;
 
@@ -169,6 +170,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         jsProfileId = sharedPref.getInt("js_profile_id", 0);
         context = getApplicationContext();
         isOnline = Jenjobs.isOnline(context);
+        activity = this;
 
         // redirect to login if no access token found
         if (accessToken == null) {
@@ -790,22 +792,30 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
-                            if( isOnline ){
-                                listOfWorkExp.removeView(v);
-                                String[] param = {Jenjobs.WORK_EXPERIENCE_URL+"/"+actualId+"?access-token="+accessToken};
-                                new DeleteRequest().execute(param);
-                                tableWorkExperience.deleteWorkExperience(savedId);
+                            Confirmation confirmation = new Confirmation(activity);
+                            confirmation.setConfirmationText(null);
+                            confirmation.setStatusListener(new Confirmation.ConfirmationListener() {
+                                @Override
+                                public void statusSelected(boolean status) {
+                                    if( status ){
+                                        if( isOnline ){
+                                            listOfWorkExp.removeView(v);
+                                            String[] param = {Jenjobs.WORK_EXPERIENCE_URL+"/"+actualId+"?access-token="+accessToken};
+                                            new DeleteRequest().execute(param);
+                                            tableWorkExperience.deleteWorkExperience(savedId);
 
-                                // get list of work exp left, if none, then show workExpQuestion
-                                if( listOfWorkExp.getChildCount() == 0 ){
-                                    workExpQuestion.setVisibility(View.VISIBLE);
+                                            // get list of work exp left, if none, then show workExpQuestion
+                                            if( listOfWorkExp.getChildCount() == 0 ){
+                                                workExpQuestion.setVisibility(View.VISIBLE);
+                                            }
+                                        }else{
+                                            Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                                        }
+                                    }
                                 }
-                            }else{
-                                Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
-                            }
+                            }).showDialog();
                         }
                     });
-
                     cw.moveToNext();
                 }
             }else{
@@ -899,14 +909,23 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
-                            if( isOnline ){
-                                listOfEducation.removeView(v);
-                                String[] param = {Jenjobs.EDUCATION_URL+"/"+actualId+"?access-token="+accessToken};
-                                new DeleteRequest().execute(param);
-                                tableEducation.deleteEducation(savedId);
-                            }else{
-                                Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
-                            }
+                            Confirmation confirmation = new Confirmation(activity);
+                            confirmation.setConfirmationText(null);
+                            confirmation.setStatusListener(new Confirmation.ConfirmationListener() {
+                                @Override
+                                public void statusSelected(boolean status) {
+                                    if( status ){
+                                        if( isOnline ){
+                                            listOfEducation.removeView(v);
+                                            String[] param = {Jenjobs.EDUCATION_URL+"/"+actualId+"?access-token="+accessToken};
+                                            new DeleteRequest().execute(param);
+                                            tableEducation.deleteEducation(savedId);
+                                        }else{
+                                            Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                }
+                            }).showDialog();
                         }
                     });
 
@@ -1002,18 +1021,27 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     v.findViewById(R.id.deleteSkillButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View vv) {
-                            if( isOnline ){
-                                skill.removeView(v);
+                            Confirmation confirmation = new Confirmation(activity);
+                            confirmation.setConfirmationText(null);
+                            confirmation.setStatusListener(new Confirmation.ConfirmationListener() {
+                                @Override
+                                public void statusSelected(boolean status) {
+                                    if( status ){
+                                        if( isOnline ){
+                                            skill.removeView(v);
 
-                                // delete from server
-                                String[] param = {Jenjobs.SKILL_URL+"/"+actualId+"?access-token="+accessToken};
-                                new DeleteRequest().execute(param);
+                                            // delete from server
+                                            String[] param = {Jenjobs.SKILL_URL+"/"+actualId+"?access-token="+accessToken};
+                                            new DeleteRequest().execute(param);
 
-                                // delete from local
-                                tableSkill.deleteSkill(savedId);
-                            }else{
-                                Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
-                            }
+                                            // delete from local
+                                            tableSkill.deleteSkill(savedId);
+                                        }else{
+                                            Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                }
+                            }).showDialog();
                         }
                     });
                     ((TextView)v.findViewById(R.id.skillText)).setText(skillName);
@@ -1074,16 +1102,25 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     v.findViewById(R.id.deleteLanguageButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View _v) {
-                            if( isOnline ){
-                                language.removeView(v);
-                                // delete from server
-                                String[] param = {Jenjobs.LANGUAGE_URL + "/" + lang_id + "?access-token=" + accessToken};
-                                new DeleteRequest().execute(param);
-                                // delete from local
-                                tableLanguage.deleteLanguage(lang_id);
-                            }else{
-                                Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
-                            }
+                            Confirmation confirmation = new Confirmation(activity);
+                            confirmation.setConfirmationText(null);
+                            confirmation.setStatusListener(new Confirmation.ConfirmationListener() {
+                                @Override
+                                public void statusSelected(boolean status) {
+                                    if( status ){
+                                        if( isOnline ){
+                                            language.removeView(v);
+                                            // delete from server
+                                            String[] param = {Jenjobs.LANGUAGE_URL + "/" + lang_id + "?access-token=" + accessToken};
+                                            new DeleteRequest().execute(param);
+                                            // delete from local
+                                            tableLanguage.deleteLanguage(lang_id);
+                                        }else{
+                                            Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                }
+                            }).showDialog();
                         }
                     });
                     ((TextView)v.findViewById(R.id.languageName)).setText((String) _language.get(lang_id));
