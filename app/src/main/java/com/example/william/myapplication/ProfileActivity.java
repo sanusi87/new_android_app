@@ -460,53 +460,59 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
                             @Override
                             public void fileSelected(final File file) {
-                                try {
-                                    byte[] buffer = new byte[8192];
-                                    int bytesRead;
+                                //Log.e("file", ""+file);
+                                if( file != null && file.length() > 0 ){
+                                    //Log.e("file size", ""+file.length());
+                                    try {
+                                        byte[] buffer = new byte[8192];
+                                        int bytesRead;
 
-                                    final InputStream inputStream = new FileInputStream(file);
-                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                        InputStream inputStream = new FileInputStream(file);
+                                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                                        baos.write(buffer, 0, bytesRead);
-                                    }
-                                    byte[] byteArray = baos.toByteArray();
-                                    String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-                                    JSONObject fileParam = new JSONObject();
-                                    fileParam.put("name", file.getName());
-                                    fileParam.put("type", "photo_file");
-                                    fileParam.put("attachment", encodedFile);
-
-                                    String[] params = {
-                                            Jenjobs.ATTACH_RESUME + "?access-token=" + accessToken,
-                                            fileParam.toString()
-                                    };
-
-                                    PostRequest postRequest = new PostRequest();
-                                    postRequest.setResultListener(new PostRequest.ResultListener() {
-                                        @Override
-                                        public void processResult(JSONObject result) {
-                                            if (result != null) {
-                                                // if successul
-                                                if (result.optInt("status_code") == 1) {
-                                                    ContentValues cv = new ContentValues();
-                                                    cv.put("photo_file", result.optString("photo_url"));
-                                                    cv.put("photo_uri", file.getPath());
-                                                    tableProfile.updateProfile(cv, jsProfileId);
-
-                                                    Drawable d = Drawable.createFromStream(inputStream, file.getName());
-                                                    profileImage.setImageDrawable(d);
-                                                }
-                                                Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
-                                            }
+                                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                            baos.write(buffer, 0, bytesRead);
                                         }
-                                    });
-                                    postRequest.execute(params);
-                                } catch (FileNotFoundException e) {
-                                    Toast.makeText(context, "File not found!", Toast.LENGTH_LONG).show();
-                                } catch (IOException | JSONException e) {
-                                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                                        byte[] byteArray = baos.toByteArray();
+                                        String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+                                        JSONObject fileParam = new JSONObject();
+                                        fileParam.put("name", file.getName());
+                                        fileParam.put("type", "photo_file");
+                                        fileParam.put("attachment", encodedFile);
+
+                                        String[] params = { Jenjobs.ATTACH_RESUME + "?access-token=" + accessToken, fileParam.toString() };
+                                        Toast.makeText(context, "uploading photo...", Toast.LENGTH_SHORT).show();
+
+                                        PostRequest postRequest = new PostRequest();
+                                        postRequest.setResultListener(new PostRequest.ResultListener() {
+                                            @Override
+                                            public void processResult(JSONObject result) {
+                                                if (result != null) {
+                                                    // if successful
+                                                    if (result.optInt("status_code") == 1) {
+                                                        ContentValues cv = new ContentValues();
+                                                        cv.put("photo_file", result.optString("photo_url"));
+                                                        cv.put("photo_uri", file.getPath());
+                                                        tableProfile.updateProfile(cv, jsProfileId);
+
+                                                        //Drawable d = Drawable.createFromStream(inputStream, file.getName());
+                                                        profileImage.setImageDrawable(Drawable.createFromPath(file.getPath()));
+                                                    }
+                                                    Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
+                                                }else{
+                                                    Toast.makeText(context, R.string.empty_response, Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                        postRequest.execute(params);
+                                    } catch (FileNotFoundException e) {
+                                        Toast.makeText(context, "File not found!", Toast.LENGTH_LONG).show();
+                                    } catch (IOException | JSONException e) {
+                                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                }else{
+                                    Toast.makeText(context, "File is null!", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -527,9 +533,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         File photoFile = null;
                         try {
                             photoFile = createImageFile();
-                            //Log.e("filecreated", "true");
                         } catch (IOException e) {
-                            //Log.e("filecreated", e.getMessage());
                             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
                         }
 
@@ -537,9 +541,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         if (photoFile != null) {
                             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                             getActivity().startActivityForResult(takePictureIntent, TAKE_A_PHOTO);
-                            //Log.e("intentstart", "true");
-                        }else{
-                            //Log.e("intentstart", "false");
                         }
                     }else{
                         Toast.makeText(getActivity(), R.string.camera_unavailable, Toast.LENGTH_LONG).show();
@@ -1423,7 +1424,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     ((TextView) v.findViewById(R.id.graduationYear)).setText(graduationYear);
 
                     if (prevEdu < 0) {
-                        // TODO: bind events to new element
+                        // bind events to new element
                         final int selectedEdu = listOfEducation.getChildCount() - 1;
                         LinearLayout updateWorkExp = (LinearLayout) v.findViewById(R.id.updateEducation);
                         updateWorkExp.setOnClickListener(new View.OnClickListener() {
@@ -1442,14 +1443,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             @Override
                             public void onClick(View _v) {
                                 if (isOnline) {
-                                    // TODO: delete view
+                                    // delete view
                                     listOfWorkExp.removeView(v);
 
-                                    // TODO: delete from server
+                                    // delete from server
                                     String[] param = {Jenjobs.EDUCATION_URL + "/" + actualId + "?access-token=" + accessToken};
                                     new DeleteRequest().execute(param);
 
-                                    // TODO: delete record
+                                    // delete record
                                     tableEducation.deleteEducation(id);
                                 } else {
                                     Toast.makeText(context, R.string.offline_notification, Toast.LENGTH_LONG).show();
@@ -1622,7 +1623,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 // Decode the image file into a Bitmap sized to fill the View
                 bmOptions.inJustDecodeBounds = false;
                 bmOptions.inSampleSize = scaleFactor;
-                bmOptions.inPurgeable = true;
+                //bmOptions.inPurgeable = true;
 
                 Bitmap cameraImage = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
                 profileImage.setImageBitmap(cameraImage);
@@ -1657,7 +1658,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             @Override
                             public void processResult(JSONObject result) {
                                 if (result != null) {
-                                    // if successul, update profile photo url
+                                    // if successful, update profile photo url
                                     if (result.optInt("status_code") == 1) {
                                         ContentValues cv = new ContentValues();
                                         cv.put("photo_file", result.optString("photo_url"));
@@ -1811,7 +1812,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 dob.setText( Jenjobs.date(_dob, null, "yyyy-MM-dd") );
                             }
 
-                            ImageView profileImage = (ImageView) profileLayout.findViewById(R.id.profile_image);
+                            //ImageView profileImage = (ImageView) profileLayout.findViewById(R.id.profile_image);
                             if( String.valueOf(success.get("photo_file")) != null ){
                                 new ImageLoad(String.valueOf(success.get("photo_file")), profileImage).execute();
                             }
