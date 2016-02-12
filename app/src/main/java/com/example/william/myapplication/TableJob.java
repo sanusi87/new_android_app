@@ -18,7 +18,6 @@ public class TableJob extends SQLiteOpenHelper{
 
     public SQLiteDatabase db;
     private Context context;
-    private Cursor suggestedJob;
 
     public TableJob(Context context){
         super(context, Jenjobs.DATABASE_NAME , null, Jenjobs.DATABASE_VERSION);
@@ -55,11 +54,6 @@ public class TableJob extends SQLiteOpenHelper{
         }
         job.close();
         return insertId;
-    }
-
-    public boolean updateJob(ContentValues cv){
-        int affectedRows = db.update(TABLE_NAME, cv, null, null);
-        return affectedRows > 0;
     }
 
     public boolean deleteJob( int post_id ){

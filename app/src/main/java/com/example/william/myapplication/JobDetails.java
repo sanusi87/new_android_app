@@ -83,6 +83,7 @@ public class JobDetails extends ActionBarActivity {
             invitationId = extras.getInt("invitation_id");
 
             String[] param = {Jenjobs.JOB_DETAILS+"/"+jobPostingId};
+            //Log.e("url", ""+param[0]);
             GetRequest g = new GetRequest();
             g.setResultListener(new GetRequest.ResultListener() {
                 @Override
@@ -90,14 +91,17 @@ public class JobDetails extends ActionBarActivity {
 
                 @Override
                 public void processResult(JSONObject success) {
-                    Log.e("onPostEx", "" + success);
+                    //Log.e("onPostEx", "" + success);
                     jobDetails = success;
                     if( success != null ){
-                        mViewPager.setAdapter(mSectionsPagerAdapter);
-                        positionTitle.setText(success.optString("title"));
-
-                        applyButtonContainer.setVisibility(View.VISIBLE);
-                        tabButton.setVisibility(View.VISIBLE);
+                        try {
+                            mViewPager.setAdapter(mSectionsPagerAdapter);
+                            positionTitle.setText(success.getString("title"));
+                            applyButtonContainer.setVisibility(View.VISIBLE);
+                            tabButton.setVisibility(View.VISIBLE);
+                        } catch (JSONException e) {
+                            Toast.makeText(context, "Job posting not found!", Toast.LENGTH_SHORT).show();
+                        }
                     }else{
                         Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 
