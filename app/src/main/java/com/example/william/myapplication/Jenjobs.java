@@ -662,13 +662,6 @@ public class Jenjobs {
         return a;
     }
 
-    public static HashMap getDialCode(){
-        HashMap<String, String> a = new HashMap<>();
-        a.put("(+60)","Malaysia");
-        a.put("(+44)","UK");
-        return a;
-    }
-
     public static HashMap getApplicationStatus(){
         HashMap<Integer, String> a = new HashMap<>();
         a.put(0, "Unprocessed");
@@ -727,8 +720,8 @@ public class Jenjobs {
 
             //int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
 
-            int diffMonth = 0;
-            int diffYear = 0;
+            int diffMonth;
+            int diffYear;
 
             int yearStart = startCalendar.get(Calendar.YEAR);
             int yearEnd = endCalendar.get(Calendar.YEAR);
