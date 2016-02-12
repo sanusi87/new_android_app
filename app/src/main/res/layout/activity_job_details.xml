@@ -88,7 +88,7 @@
             style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:background="@drawable/button_success"
+            android:background="@drawable/button_orange"
             android:stateListAnimator="@null"
             android:text="@string/apply"
             android:id="@+id/applyButton" />
