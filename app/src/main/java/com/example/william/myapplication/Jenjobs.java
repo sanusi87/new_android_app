@@ -15,7 +15,7 @@ import java.util.Locale;
 
 public class Jenjobs {
     public static final String DATABASE_NAME = "jenjobs";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public static final String AUTH_URL = "http://api.jenjobs.com/oauth2/token";
     public static final String PROFILE_URL = "http://api.jenjobs.com/jobseeker/profile";
