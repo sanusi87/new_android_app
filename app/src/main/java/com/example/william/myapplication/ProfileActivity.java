@@ -304,8 +304,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
      * A placeholder fragment containing a simple view.
      */
     private static int sectionNumber;
-    //private static JobSearch jobSearch;
-    //private Bundle searchParameters = new Bundle();
     private static LinearLayout profileLayout = null;
 
     public static class PlaceholderFragment extends Fragment {
@@ -330,10 +328,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     rootView = inflater.inflate(R.layout.profile_layout, container, false);
                     setupProfileFragment(rootView);
                     break;
-//                case JOB_FRAGMENT:
-//                    rootView = inflater.inflate(R.layout.job_layout, container, false);
-//                    setupJobFragment(rootView);
-//                    break;
                 case APPLICATION_FRAGMENT:
                     rootView = inflater.inflate(R.layout.application_layout, container, false);
                     setupApplicationFragment(rootView);
@@ -773,7 +767,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         durationCount = Jenjobs.calculateDuration(dateStart, dateResign );
                     }
 
-                    final View v = getActivity().getLayoutInflater().inflate(R.layout.each_work_experience, null);
+                    final View v = getActivity().getLayoutInflater().inflate(R.layout.each_work_experience, listOfWorkExp, false);
                     listOfWorkExp.addView(v);
 
                     ((TextView)v.findViewById(R.id.positionTitle)).setText( positionTitle );
@@ -891,7 +885,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     String graduationYear = Jenjobs.date(ce.getString(9), "yyyy", "yyyy-MM-dd");
                     String eduLevel = (String) eduLv.get(ce.getInt(4));
 
-                    final View v = getActivity().getLayoutInflater().inflate(R.layout.each_education, null);
+                    final View v = getActivity().getLayoutInflater().inflate(R.layout.each_education, listOfEducation, false);
                     listOfEducation.addView(v);
 
                     ((TextView)v.findViewById(R.id.educationLevel)).setText( eduLevel );
@@ -1021,7 +1015,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     final int actualId = c.getInt(1); //_id
                     String skillName = c.getString(2); //name
 
-                    final View v = getActivity().getLayoutInflater().inflate(R.layout.each_skill, null);
+                    final View v = getActivity().getLayoutInflater().inflate(R.layout.each_skill, skill, false);
                     skill.addView(v);
 
                     v.findViewById(R.id.deleteSkillButton).setOnClickListener(new View.OnClickListener() {
@@ -1086,7 +1080,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     int lang_written = cl.getInt(3);
                     int lang_native = cl.getInt(4);
 
-                    final View v = getActivity().getLayoutInflater().inflate(R.layout.each_language, null);
+                    final View v = getActivity().getLayoutInflater().inflate(R.layout.each_language, language, false);
                     language.addView(v);
 
                     if( lang_native > 0 ){ v.setBackgroundColor(getResources().getColor(R.color.white)); }
@@ -1338,7 +1332,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 if (prevWork >= 0) {
                     v = listOfWorkExp.getChildAt(prevWork);
                 } else {
-                    v = getLayoutInflater().inflate(R.layout.each_work_experience, null);
+                    v = getLayoutInflater().inflate(R.layout.each_work_experience, listOfWorkExp, false);
                     listOfWorkExp.addView(v);
                 }
 
@@ -1407,7 +1401,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 if (prevEdu >= 0) {
                     v = listOfEducation.getChildAt(prevEdu);
                 } else {
-                    v = getLayoutInflater().inflate(R.layout.each_education, null);
+                    v = getLayoutInflater().inflate(R.layout.each_education, listOfEducation, false);
                     listOfEducation.addView(v);
                 }
 
@@ -1481,7 +1475,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     skill.removeView(skill.findViewById(R.id.emptyText));
                 }
 
-                final View v = getLayoutInflater().inflate(R.layout.each_skill, null);
+                final View v = getLayoutInflater().inflate(R.layout.each_skill, skill, false);
                 skill.addView(v);
 
                 v.findViewById(R.id.deleteSkillButton).setOnClickListener(new View.OnClickListener() {
@@ -1520,7 +1514,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         }
                     }
 
-                    final View v = getLayoutInflater().inflate(R.layout.each_language, null);
+                    final View v = getLayoutInflater().inflate(R.layout.each_language, language, false);
                     language.addView(v);
 
                     if (_lang.isNative > 0) {
