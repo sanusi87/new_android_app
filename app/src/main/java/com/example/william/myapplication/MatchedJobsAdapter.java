@@ -35,10 +35,13 @@ public class MatchedJobsAdapter extends BaseAdapter implements ListAdapter{
     private TableBookmark tableBookmark;
     private TableJob tableJob;
 
-    public MatchedJobsAdapter(Context context) {}
+    String matchedOn;
+    int profileId;
 
-    public MatchedJobsAdapter(Context context, int jobmatcherProfileId) {
+    public MatchedJobsAdapter(Context context, int jobmatcherProfileId, String matchedOn) {
         this.context = context;
+        this.matchedOn = matchedOn;
+        this.profileId = jobmatcherProfileId;
         jobs = new ArrayList<>();
         expandedItem = new ArrayList<>();
         bookmark = context.getResources().getDrawable(R.drawable.ic_turned_in_not_black_24dp);
@@ -46,10 +49,16 @@ public class MatchedJobsAdapter extends BaseAdapter implements ListAdapter{
         tableBookmark = new TableBookmark(context);
         tableJob = new TableJob(context);
 
-        jobmatcherProfileId = jobmatcherProfileId > 0 ? jobmatcherProfileId : 0;
+        this.profileId = this.profileId > 0 ? this.profileId : 0;
+
+        loadItem(false);
+    }
+
+    public void loadItem(boolean refresh) {
+        if( refresh ){ jobs.clear(); }
 
         TableJobSearchMatched tableJobSearchMatched = new TableJobSearchMatched(context);
-        Cursor c = tableJobSearchMatched.getJob(jobmatcherProfileId);
+        Cursor c = tableJobSearchMatched.getJob(this.profileId, this.matchedOn);
         if( c.moveToFirst() ){
             while( !c.isAfterLast() ){
                 /*
@@ -296,4 +305,9 @@ public class MatchedJobsAdapter extends BaseAdapter implements ListAdapter{
         }
         return v;
     }
+
+    public void setMatchedOn(String matchedOn){ this.matchedOn = matchedOn; }
+
+    public void setProfileId(int profileId){ this.profileId = profileId; }
+
 }
