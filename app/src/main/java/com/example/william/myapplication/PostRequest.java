@@ -42,7 +42,7 @@ public class PostRequest extends AsyncTask<String, Void, JSONObject> {
             HttpEntity _entity = _http_response.getEntity();
             InputStream is = _entity.getContent();
             String responseString = JenHttpRequest.readInputStreamAsString(is);
-            Log.e("respp", responseString);
+            //Log.e("respp", responseString);
             _response = JenHttpRequest.decodeJsonObjectString(responseString);
         } catch (ClientProtocolException e) {
             Log.e("ClientProtocolException", e.getMessage());
