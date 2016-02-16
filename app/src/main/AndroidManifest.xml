@@ -167,7 +167,12 @@
         <activity
             android:name=".SelectJobMatcherDate"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".AboutJobMatcher"></activity>
+        <activity
+            android:name=".SelectJobMatcherProfile"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".AboutJobMatcher"
+            android:parentActivityName=".JobSuggestion" />
     </application>
 
 </manifest>
