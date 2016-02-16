@@ -150,7 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:stateListAnimator="@null"
-                    android:background="@drawable/button_success"
+                    android:background="@drawable/button_orange"
                     android:id="@+id/add_work_exp"
                     android:gravity="center|center_horizontal"
                     android:text="@string/add_work_exp" />
@@ -191,7 +191,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:stateListAnimator="@null"
-                    android:background="@drawable/button_success"
+                    android:background="@drawable/button_orange"
                     android:id="@+id/add_education"
                     android:gravity="center|center_horizontal"
                     android:text="@string/add_education" />
@@ -231,7 +231,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:stateListAnimator="@null"
-                    android:background="@drawable/button_success"
+                    android:background="@drawable/button_orange"
                     android:id="@+id/add_skill"
                     android:gravity="center|center_horizontal"
                     android:text="@string/add_skill" />
@@ -270,7 +270,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:stateListAnimator="@null"
-                    android:background="@drawable/button_success"
+                    android:background="@drawable/button_orange"
                     android:id="@+id/add_language"
                     android:gravity="center|center_horizontal"
                     android:text="@string/add_language" />
