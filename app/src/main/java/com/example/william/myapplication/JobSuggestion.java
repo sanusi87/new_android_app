@@ -217,6 +217,7 @@ public class JobSuggestion extends ActionBarActivity{
                 // update selected date which has been previously assigned to adapter
                 matchedOn = extra.getString("date_added");
                 adapter.setMatchedOn(matchedOn);
+                // adapter.loadItem(true);
                 adapter.notifyDataSetChanged();
                 tMatchedOn.setText(matchedOn);
             }
