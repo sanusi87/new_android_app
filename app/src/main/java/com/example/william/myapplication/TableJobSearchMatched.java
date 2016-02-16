@@ -41,9 +41,9 @@ public class TableJobSearchMatched extends SQLiteOpenHelper {
         return db.insert(TABLE_NAME, null, cv);
     }
 
-    public Cursor getJob( int jm_profile_id ){
-        String strSQL = "SELECT * FROM "+TABLE_NAME+" WHERE jm_profile_id=?";
-        String[] args = {String.valueOf(jm_profile_id)};
+    public Cursor getJob( int jm_profile_id, String dateAdded ){
+        String strSQL = "SELECT * FROM "+TABLE_NAME+" WHERE jm_profile_id=? AND date(date_added)=?";
+        String[] args = {String.valueOf(jm_profile_id),dateAdded};
         return db.rawQuery(strSQL, args);
     }
 
@@ -87,6 +87,7 @@ public class TableJobSearchMatched extends SQLiteOpenHelper {
     * get a list of dates from job matcher
     * */
     public String[] getDateAdded(){
+        String today = Jenjobs.date(null, "yyyy-MM-dd", null);
         String strSQL = "SELECT distinct date(date_added) FROM job_matched";
         Cursor c = db.rawQuery(strSQL, null);
         ArrayList<String> s = new ArrayList<>();
@@ -97,6 +98,11 @@ public class TableJobSearchMatched extends SQLiteOpenHelper {
                 c.moveToNext();
             }
         }
+
+        if( !s.contains( today ) ){
+            s.add( today );
+        }
+
         c.close();
         return s.toArray(new String[s.size()]);
     }
