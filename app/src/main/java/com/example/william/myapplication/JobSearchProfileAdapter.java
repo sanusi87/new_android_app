@@ -144,7 +144,11 @@ public class JobSearchProfileAdapter extends BaseAdapter implements ListAdapter{
 
             v.findViewById(R.id.deleteButton).setVisibility(View.GONE);
 
-            int ttlMatchedJobs = tableJobSearchMatched.countJobs(jm_profile_id, Jenjobs.date(null, "yyyy-MM-dd", null));
+            if( matchedOn == null ){
+                matchedOn = Jenjobs.date(null, "yyyy-MM-dd", null);
+            }
+            int ttlMatchedJobs = tableJobSearchMatched.countJobs(jm_profile_id, matchedOn);
+
             Button noOfJobsButton = (Button)v.findViewById(R.id.noOfJobsButton);
             noOfJobsButton.setVisibility(View.VISIBLE);
             if( ttlMatchedJobs == 0 ){
