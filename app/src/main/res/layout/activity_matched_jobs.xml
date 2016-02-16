@@ -15,7 +15,8 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/profileNameContainer">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -36,7 +37,8 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/matchedOnContainer">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -54,10 +56,42 @@
         </LinearLayout>
     </LinearLayout>
 
-    <View style="@style/AppThemeSeparator" />
+    <View style="@style/AppThemeSeparator"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp" />
+
+    <LinearLayout
+        style="@style/AppThemePadding10"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:id="@+id/noItemContainer"
+        android:visibility="gone"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/noItemIcon"
+            android:contentDescription="@string/no_value"
+            android:src="@drawable/ic_info_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/noItemText"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/listOfMatchedJobs" />
+
 </LinearLayout>
