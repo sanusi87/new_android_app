@@ -58,7 +58,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Objects;
 
 public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -229,6 +228,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 if( defaultPage == APPLICATION_FRAGMENT ){
                     fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(APPLICATION_FRAGMENT)).commit();
+                }else if( defaultPage == JOB_SUGGESTION ){
+                    fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(JOB_SUGGESTION)).commit();
+                }else if( defaultPage == INVITATION_AND_REQUEST ){
+                    fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(INVITATION_AND_REQUEST)).commit();
                 }
             }
         }
