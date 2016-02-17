@@ -284,15 +284,80 @@ public class MainService extends Service{
                     public void processResult(JSONObject result) {
                     }
                 });
-                String _params[] = {Jenjobs.INVITATION_URL+"?access-token=" + accessToken};
-                //Log.e("_params", _params[0]);
+                String[] _params = {Jenjobs.INVITATION_URL+"?access-token=" + accessToken};
                 g.execute(_params);
                 // end invitation and resume access request check
+
+                // start downloading job suggestion
+                GetRequest gr = new GetRequest();
+                String[] __params = {Jenjobs.JOB_SUGGESTION_DOWNLOAD+"?access-token="+accessToken};
+                gr.setResultListener(new GetRequest.ResultListener() {
+                    @Override
+                    public void processResultArray(JSONArray result) {
+                        if( result != null && result.length() > 0 ){
+                            for(int i=0;i<result.length();i++){
+                                try {
+                                    JSONObject suggestion = result.getJSONObject(i);
+                                    final int postId = Integer.valueOf(suggestion.getString("post_id"));
+                                    final String suggestedOn = suggestion.getString("suggested_on");
+
+                                    // download JOB DETAILS
+                                    GetRequest getRequest = new GetRequest();
+                                    getRequest.setResultListener(new GetRequest.ResultListener() {
+                                        @Override
+                                        public void processResultArray(JSONArray result) {}
+
+                                        @Override
+                                        public void processResult(JSONObject success) {
+                                            if (success != null && success.toString().length() > 0) {
+                                                // and save to database
+                                                ContentValues cv2 = new ContentValues();
+                                                cv2.put("id", postId);
+                                                cv2.put("title", success.optString("title"));
+                                                cv2.put("company", success.optString("company"));
+                                                cv2.put("job_data", success.toString());
+                                                cv2.put("date_closed", success.optString("date_closed"));
+
+                                                // set this to determine that this is a job suggestion
+                                                cv2.put("suggested_on", suggestedOn);
+
+                                                tableJob.addJob(cv2);
+                                            }
+                                        }
+                                    });
+                                    String[] param = {Jenjobs.JOB_DETAILS + "/" + postId};
+                                    getRequest.execute(param);
+                                    // download JOB DETAILS
+
+                                    // mark this suggestion as downloaded
+                                    PostRequest p = new PostRequest();
+                                    p.setResultListener(new PostRequest.ResultListener() {
+                                        @Override
+                                        public void processResult(JSONObject success) {
+                                            Log.e("marked", ""+success);
+                                        }
+                                    });
+                                    String[] ___param = {Jenjobs.JOB_SUGGESTION_MARK+"/"+postId+"?access-token="+accessToken, "{}"};
+                                    p.execute(___param);
+                                    // mark this suggestion as downloaded
+
+                                } catch (JSONException e) {
+                                    Log.e("suggestion", e.getMessage());
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void processResult(JSONObject success) {}
+                });
+                gr.execute(__params);
+                // end downloading job suggestion
             }
             /*
-            * run checking for after 1 minute
+            * run checking every 1 hour
             * */
-            handler.postDelayed(updateData, 60000);
+            handler.postDelayed(updateData, 60000 * 60);
         }
     };
 
@@ -312,12 +377,12 @@ public class MainService extends Service{
         applicationStatus = Jenjobs.getApplicationStatus();
 
         /*
-        * run checking for after 1 minute
+        * run checking after 1 hour
         * */
-        handler.postDelayed(updateData, 60000);
+        handler.postDelayed(updateData, 60000 * 60);
 
         /*
-        * TODO - check for jobmatcher every 9 A.M. default
+        * check for jobmatcher every day
         * - check for active jobMatcher profile table
         * - allow user to update the alert time of each profile
         */
