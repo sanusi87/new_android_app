@@ -3,7 +3,6 @@ package com.example.william.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -34,7 +33,7 @@ public class SelectJobSeekingStatus extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 JobSeekingStatus values = (JobSeekingStatus) ja.getItem(position);
-                Log.e("jobseekingstatus", ""+values.name);
+                //Log.e("jobseekingstatus", ""+values.name);
                 Intent intent = new Intent();
                 intent.putExtra("jobseekingstatus", values);
                 setResult(Activity.RESULT_OK, intent);

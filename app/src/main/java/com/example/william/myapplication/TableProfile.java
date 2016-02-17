@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -199,8 +198,8 @@ public class TableProfile extends SQLiteOpenHelper{
             String name = c.getString(4);
             String email = c.getString(2);
 
-            Log.e("name", name);
-            Log.e("email", email);
+            //Log.e("name", name);
+            //Log.e("email", email);
 
             profile.email = email;
             profile.username = c.getString(3);
