@@ -40,9 +40,8 @@ public class ImageLoad extends AsyncTask<Void, Void, Bitmap> {
         if( result != null ){
             if( resultListener != null ){
                 resultListener.processResult(result);
-            }else{
-                imageView.setImageBitmap(result);
             }
+            imageView.setImageBitmap(result);
         }
     }
 

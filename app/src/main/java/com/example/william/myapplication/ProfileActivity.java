@@ -427,21 +427,16 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         @Override
                         public void processResult(final Bitmap result) {
                             if( result != null ){
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            FileOutputStream outputStream = context.openFileOutput(fileName, MODE_PRIVATE);
-                                            result.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                                            outputStream.flush();
-                                            outputStream.close();
+                                try {
+                                    FileOutputStream outputStream = context.openFileOutput(fileName, MODE_PRIVATE);
+                                    result.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                                    outputStream.flush();
+                                    outputStream.close();
 
-                                            profileImage.setImageBitmap(result);
-                                        } catch (IOException e) {
-                                            Log.e("fileErr", e.getMessage());
-                                        }
-                                    }
-                                }).start();
+                                    profileImage.setImageBitmap(result);
+                                } catch (IOException e) {
+                                    Log.e("fileErr", e.getMessage());
+                                }
                             }
                         }
                     });

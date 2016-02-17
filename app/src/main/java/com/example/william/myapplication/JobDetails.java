@@ -420,7 +420,6 @@ public class JobDetails extends ActionBarActivity {
                     @Override
                     public void processResult(Bitmap result) {
                         if( result != null ){
-                            companyLogo.setImageBitmap(result);
                             companyLogo.setVisibility(View.VISIBLE);
                         }
                         progressBar.setVisibility(View.GONE);
@@ -445,8 +444,6 @@ public class JobDetails extends ActionBarActivity {
                         if( result == null ){
                             workLocationImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                             workLocationImage.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                        }else{
-                            workLocationImage.setImageBitmap(result);
                         }
                         workLocationImage.setVisibility(View.VISIBLE);
                         progressBar3.setVisibility(View.GONE);
