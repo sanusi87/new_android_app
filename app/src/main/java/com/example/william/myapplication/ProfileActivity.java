@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -58,7 +59,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Objects;
 
 public class ProfileActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -247,7 +247,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        int selectedItem = position+1;
+        final int selectedItem = position+1;
         if( selectedItem == JOB_SUGGESTION ){
             Intent intent = new Intent(this, JobSuggestion.class);
             startActivity(intent);
@@ -257,8 +257,13 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             startActivity(intent);
         }else{
             // update the main content by replacing fragments
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(selectedItem)).commit();
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(selectedItem)).commit();
+                }
+            }, 0);
         }
     }
 
