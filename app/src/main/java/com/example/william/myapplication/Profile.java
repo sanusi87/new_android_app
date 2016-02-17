@@ -28,6 +28,7 @@ public class Profile {
     public String additional_info;
     public String created_at;
     public String updated_at;
+    public String photo_uri;
 
     // empty constructor
     public Profile(){
