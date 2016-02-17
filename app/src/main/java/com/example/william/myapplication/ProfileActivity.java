@@ -229,6 +229,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 if( defaultPage == APPLICATION_FRAGMENT ){
                     fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(APPLICATION_FRAGMENT)).commit();
+                }else if( defaultPage == JOB_SUGGESTION ){
+                    fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(JOB_SUGGESTION)).commit();
+                }else if( defaultPage == INVITATION_AND_REQUEST ){
+                    fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(INVITATION_AND_REQUEST)).commit();
                 }
             }
         }
@@ -565,7 +569,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                     final Bitmap compressedPhoto = BitmapFactory.decodeFile(file.getPath(), bmOptions);
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    compressedPhoto.compress(Bitmap.CompressFormat.PNG, 0, baos);
+                    compressedPhoto.compress(Bitmap.CompressFormat.JPEG, 80, baos);
 
                     byte[] byteArray = baos.toByteArray();
                     String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
@@ -1699,7 +1703,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         //    baos.write(buffer, 0, bytesRead);
                         //}
 
-                        cameraImage.compress(Bitmap.CompressFormat.PNG, 0, baos);
+                        cameraImage.compress(Bitmap.CompressFormat.JPEG, 80, baos);
 
                         byte[] byteArray = baos.toByteArray();
                         String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);

@@ -275,7 +275,21 @@ public class MainService extends Service{
                                     } catch (JSONException e) {
                                         Log.e("jsonObjFailed", e.getMessage());
                                     }
+                                } // end for
+
+                                Intent intent = new Intent();
+                                intent.putExtra("statusText", "Notification");
+                                intent.putExtra("defaultPage", ProfileActivity.INVITATION_AND_REQUEST);
+                                intent.setClass(getApplicationContext(), ProfileActivity.class);
+
+                                if( result.length() > 1 ){
+                                    intent.putExtra("contentText", "Employers have sent you some requests. Click to have a look.");
+                                }else{
+                                    intent.putExtra("contentText", "An employer had sent you a request. Click to have a look.");
                                 }
+
+                                showNotification(intent);
+
                             }
                         }
                     }
@@ -344,7 +358,20 @@ public class MainService extends Service{
                                 } catch (JSONException e) {
                                     Log.e("suggestion", e.getMessage());
                                 }
+                            } // end for
+
+                            Intent intent = new Intent();
+                            intent.putExtra("statusText", "Notification");
+                            intent.putExtra("defaultPage", ProfileActivity.JOB_SUGGESTION);
+                            intent.setClass(getApplicationContext(), ProfileActivity.class);
+
+                            if( result.length() > 1 ){
+                                intent.putExtra("contentText", "We have suggested a few jobs for you. Click to have a look.");
+                            }else{
+                                intent.putExtra("contentText", "We have suggested a job for you. Click to have a look.");
                             }
+
+                            showNotification(intent);
                         }
                     }
 
