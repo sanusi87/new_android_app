@@ -458,9 +458,12 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 // done loading photo URL, check for photo URI, if equals, then the file has already been uploaded
                 // if not, then upload the file, and update view
                 if( theProfile.photo_uri != null ){
-                    // if not equal, then upload
-                    if(!Objects.equals(theProfile.photo_uri, theProfile.photo_file)){
+                    String urlFn = theProfile.photo_file.substring(theProfile.photo_file.lastIndexOf("/")+1, theProfile.photo_file.length());
+                    String uriFn = theProfile.photo_uri.substring(theProfile.photo_uri.lastIndexOf("/")+1, theProfile.photo_uri.length());
+
+                    if(!urlFn.equals(uriFn)){
                         File _file = new File(theProfile.photo_uri);
+                        Log.e("onPhotoFileNotEqual", ""+file);
                         uploadPhoto(_file);
                     }
                 }
@@ -469,6 +472,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 // and tableProfile needs to be updated
                 if( theProfile.photo_uri != null ){
                     File file = new File(theProfile.photo_uri);
+                    Log.e("onPhotoFileNull", ""+file);
                     uploadPhoto(file);
                 }
             }
@@ -486,6 +490,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
                             @Override
                             public void fileSelected(final File file) {
+                                Log.e("onUpload", ""+file);
                                 uploadPhoto(file);
                             }
                         });
@@ -1705,12 +1710,19 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 if (result != null) {
                                     // if successful, update profile photo url
                                     if (result.optInt("status_code") == 1) {
-                                        ContentValues cv = new ContentValues();
-                                        cv.put("photo_file", result.optString("photo_url"));
-                                        tableProfile.updateProfile(cv, jsProfileId);
+                                        try {
+                                            String _fUrl = result.getString("photo_url");
+                                            ContentValues cv = new ContentValues();
+                                            cv.put("photo_file", _fUrl);
+                                            tableProfile.updateProfile(cv, jsProfileId);
 
-                                        //Drawable d = Drawable.createFromStream(inputStream, file.getName());
-                                        //profileImage.setImageDrawable(d);
+                                            String _fn = _fUrl.substring(_fUrl.lastIndexOf("/")+1, _fUrl.length());
+                                            File _f = new File(context.getFilesDir(), _fn);
+                                            cv.put("photo_uri", _f.getPath());
+                                            tableProfile.updateProfile(cv, jsProfileId);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                     Toast.makeText(context, result.optString("status_text"), Toast.LENGTH_SHORT).show();
                                 }else{
