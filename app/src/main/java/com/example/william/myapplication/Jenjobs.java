@@ -39,6 +39,8 @@ public class Jenjobs {
     public static final String INVITATION_URL = "http://api.jenjobs.com/employer/invitation";
     public static final String SEARCH_PROFILE = "http://api.jenjobs.com/jobmatcher/profile";
     public static final String JOB_MATCHED = "http://api.jenjobs.com/jobmatcher/post-matched";
+    public static final String JOB_SUGGESTION_DOWNLOAD = "http://api.jenjobs.com/job-suggestion/suggested";
+    public static final String JOB_SUGGESTION_MARK = "http://api.jenjobs.com/job-suggestion/mark-downloaded";
 
     public static HashMap getJobType(){
         HashMap<Integer, String> a = new HashMap<>();
