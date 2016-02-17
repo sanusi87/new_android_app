@@ -3,12 +3,7 @@ package com.example.william.myapplication;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -43,9 +38,10 @@ public class ImageLoad extends AsyncTask<Void, Void, Bitmap> {
     protected void onPostExecute(Bitmap result) {
         //super.onPostExecute(result);
         if( result != null ){
-            imageView.setImageBitmap(result);
             if( resultListener != null ){
                 resultListener.processResult(result);
+            }else{
+                imageView.setImageBitmap(result);
             }
         }
     }
