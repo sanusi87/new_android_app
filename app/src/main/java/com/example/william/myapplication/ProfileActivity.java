@@ -546,15 +546,22 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         private void uploadPhoto(final File file){
             if( file != null && file.length() > 0 ){
                 try {
-                    byte[] buffer = new byte[8192];
-                    int bytesRead;
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    bmOptions.inJustDecodeBounds = true; // get bounds only(Width, Height)
+                    BitmapFactory.decodeFile(file.getPath(), bmOptions); // return the bounds
 
-                    InputStream inputStream = new FileInputStream(file);
+                    int targetW = profileImage.getWidth();
+                    int targetH = profileImage.getHeight();
+                    int photoW = bmOptions.outWidth;
+                    int photoH = bmOptions.outHeight;
+
+                    bmOptions.inSampleSize = Math.min(photoW/targetW, photoH/targetH); // scale factor
+                    bmOptions.inJustDecodeBounds = false;
+                    final Bitmap compressedPhoto = BitmapFactory.decodeFile(file.getPath(), bmOptions);
+
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    compressedPhoto.compress(Bitmap.CompressFormat.PNG, 0, baos);
 
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        baos.write(buffer, 0, bytesRead);
-                    }
                     byte[] byteArray = baos.toByteArray();
                     String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
@@ -581,7 +588,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                     try {
                                         String _fUrl = result.getString("photo_url");
                                         cv.put("photo_file", _fUrl);
-                                        profileImage.setImageDrawable(Drawable.createFromPath(file.getPath()));
+                                        profileImage.setImageBitmap(compressedPhoto);
 
                                         // save newly downloaded image file to local
                                         String _fn = _fUrl.substring(_fUrl.lastIndexOf("/")+1, _fUrl.length());
@@ -599,9 +606,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         }
                     });
                     postRequest.execute(params);
-                } catch (FileNotFoundException e) {
-                    Toast.makeText(context, "File not found!", Toast.LENGTH_LONG).show();
-                } catch (IOException | JSONException e) {
+                } catch (JSONException e) {
                     Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }else{
@@ -1646,7 +1651,6 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                 * if NO FILE provided to the CAMERA intent, only thumbnail is returned
                 * provide FILE to the camera intent if you want to save the file
                 * */
-                //Bitmap cameraImage = (Bitmap)extra.get("data");
 
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 
@@ -1660,9 +1664,14 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 int photoW = bmOptions.outWidth;
                 int photoH = bmOptions.outHeight;
+                //Log.e("outWidth", ""+photoW); // 640 - output
+                //Log.e("outHeight", ""+photoH); // 480 - output
+                //Log.e("targetWidth", ""+targetW); // 1370
+                //Log.e("targetHeight", ""+targetH); // 525
 
                 // Determine how much to scale down the image
                 int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+                //Log.e("scaleFactor", ""+scaleFactor);
 
                 // Decode the image file into a Bitmap sized to fill the View
                 bmOptions.inJustDecodeBounds = false;
@@ -1674,17 +1683,18 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                 // start upload camera image
                 if( isOnline ){
-                    byte[] buffer = new byte[8192];
-                    int bytesRead;
+                    //byte[] buffer = new byte[8192];
+                    //int bytesRead;
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     final File file = new File(mCurrentPhotoPath);
-
                     try {
-                        final InputStream inputStream = new FileInputStream(file);
-                        while ((bytesRead = inputStream.read(buffer)) != -1) {
-                            baos.write(buffer, 0, bytesRead);
-                        }
+                        //final InputStream inputStream = new FileInputStream(file);
+                        //while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        //    baos.write(buffer, 0, bytesRead);
+                        //}
+
+                        cameraImage.compress(Bitmap.CompressFormat.PNG, 0, baos);
 
                         byte[] byteArray = baos.toByteArray();
                         String encodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
@@ -1731,7 +1741,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                             }
                         });
                         postRequest.execute(params);
-                    } catch (IOException | JSONException e) {
+                    } catch (JSONException e) {
                         Log.e("exception", e.getMessage());
                         Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
