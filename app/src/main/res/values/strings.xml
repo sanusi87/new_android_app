@@ -288,4 +288,5 @@
     <string name="update_search_profile">Update Job Search Profile</string>
     <string name="create_search_profile">Create Job Search Profile</string>
     <string name="about_job_matcher">About JobMatcher</string>
+    <string name="title_activity_job_search_main">Job Search</string>
 </resources>
