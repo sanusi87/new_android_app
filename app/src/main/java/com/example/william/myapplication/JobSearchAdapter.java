@@ -148,10 +148,10 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             }
             bookmarkList.close();
 
-            if( accessToken == null ){
-                bookmarkButton.setEnabled(false);
-                bookmarkButton.setClickable(false);
-            }
+            //if( accessToken == null ){
+                //bookmarkButton.setEnabled(false);
+                //bookmarkButton.setClickable(false);
+            //}
 
             bookmarkButton.setOnClickListener(new View.OnClickListener() {
                 @Override

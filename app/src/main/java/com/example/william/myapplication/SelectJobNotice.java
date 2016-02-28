@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,10 +27,6 @@ public class SelectJobNotice  extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 String selectedItem = lv.getSelectedItem().toString();
-                Log.e("availability", "" + selectedItem);
-
-                Log.e("availability", "" + selectedItem);
-
                 Intent intent = new Intent();
                 intent.putExtra("availability", selectedItem);
                 setResult(Activity.RESULT_OK, intent);

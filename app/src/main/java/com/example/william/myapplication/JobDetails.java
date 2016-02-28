@@ -441,11 +441,11 @@ public class JobDetails extends ActionBarActivity {
                 img.setResultListener(new ImageLoad.ResultListener() {
                     @Override
                     public void processResult(Bitmap result) {
-                        workLocationImage.setVisibility(View.VISIBLE);
                         if( result == null ){
                             workLocationImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                             workLocationImage.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                         }
+                        workLocationImage.setVisibility(View.VISIBLE);
                         progressBar3.setVisibility(View.GONE);
                     }
                 });
