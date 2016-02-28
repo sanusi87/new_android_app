@@ -164,7 +164,7 @@ public class MainActivity extends Activity {
         jobSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), JobSearchActivity.class);
+                Intent intent = new Intent(getApplicationContext(), JobSearchMain.class);
                 startActivity(intent);
             }
         });

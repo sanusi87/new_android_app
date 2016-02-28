@@ -1,85 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     style="@style/AppThemePadding10"
-    tools:context=".MainActivity">
+    tools:context="com.example.william.myapplication.MainActivity"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        android:contentDescription="@string/jenjobs_logo"
+        android:src="@drawable/jenjobs_logo"
+        android:layout_gravity="center_horizontal"
+        android:cropToPadding="false"
+        android:scaleType="fitCenter" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/username_input"
+            android:inputType="textEmailAddress"
+            android:hint="@string/username"
+            style="@style/AppThemeBaseTextInput"
+            android:padding="15dp"
+            android:autoText="false"
+            android:ems="10"
+            android:focusable="true"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/password_input"
+            android:inputType="textPassword"
+            android:hint="@string/password"
+            android:padding="15dp"
+            android:ems="10"
+            style="@style/AppThemeBaseTextInput" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/jenjobs_logo"
-            android:src="@drawable/jenjobs_logo" />
-
-        <LinearLayout
-            android:orientation="vertical"
+        <Button
+            style="@style/AppThemeBaseButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            style="@style/AppThemePadding10">
+            android:layout_height="35dp"
+            android:stateListAnimator="@null"
+            android:background="@drawable/button_orange"
+            android:text="@string/login_text"
+            android:id="@+id/login_button" />
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
+    </LinearLayout>
 
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:ems="10"
-                    android:id="@+id/username_input"
-                    android:layout_weight="1"
-                    android:autoText="false"
-                    android:hint="@string/username"
-                    style="@style/AppThemeBaseTextInput"
-                    android:focusable="true" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:ems="10"
-                    android:id="@+id/password_input"
-                    android:layout_weight="1"
-                    android:hint="@string/password"
-                    style="@style/AppThemeBaseTextInput" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                style="@style/AppThemeBaseButton"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:stateListAnimator="@null"
-                android:background="@drawable/button_orange"
-                android:text="@string/login_text"
-                android:id="@+id/login_button" />
-
-        </LinearLayout>
-
-        <View style="@style/AppThemeSeparator"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -130,4 +119,4 @@
 
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

@@ -17,14 +17,14 @@ public class SelectKeywordFilter extends Activity {
         setContentView(R.layout.activity_select_keyword_filter);
         setTitle(getText(R.string.keyword_filter));
 
-        final KeywordFilterAdapter kwa = new KeywordFilterAdapter(getApplicationContext());
+        final KeywordFilterAdapter kfa = new KeywordFilterAdapter(getApplicationContext());
         ListView lv = (ListView)findViewById(R.id.listOfKeywordFilter);
-        lv.setAdapter(kwa);
+        lv.setAdapter(kfa);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-                intent.putExtra("keyword_filter", (KeywordFilter)kwa.getItem(position));
+                intent.putExtra("keyword_filter", (KeywordFilter)kfa.getItem(position));
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
