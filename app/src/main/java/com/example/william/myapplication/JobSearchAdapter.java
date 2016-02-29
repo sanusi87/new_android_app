@@ -99,6 +99,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             final String company = p.optString("company_name");
             int showSalary = p.optInt("salary_display");
             final String _dateClosed = Jenjobs.date(dateClosed, "dd MMM yyyy", "yyyy-MM-dd hh:mm:ss");
+            final String redirect = p.optString("redirect");
 
             TextView jobTitle = (TextView) v.findViewById(R.id.job_title);
             jobTitle.setText(postTitle);
@@ -106,8 +107,14 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             (v.findViewById(R.id.jobDetailsContainer)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View _v) {
-                    Intent intent = new Intent(context, JobDetails.class);
-                    intent.putExtra("post_id", postId);
+                    Intent intent = new Intent();
+                    if( redirect != null ){
+                        intent.setClass(context, RedirectActivity.class);
+                        intent.putExtra("redirect", redirect);
+                    }else{
+                        intent.setClass(context, JobDetails.class);
+                        intent.putExtra("post_id", postId);
+                    }
                     context.startActivity(intent);
                 }
             });
@@ -115,8 +122,14 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
             (v.findViewById(R.id.job_title)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View _v) {
-                    Intent intent = new Intent(context, JobDetails.class);
-                    intent.putExtra("post_id", postId);
+                    Intent intent = new Intent();
+                    if( redirect != null ){
+                        intent.setClass(context, RedirectActivity.class);
+                        intent.putExtra("redirect", redirect);
+                    }else{
+                        intent.setClass(context, JobDetails.class);
+                        intent.putExtra("post_id", postId);
+                    }
                     context.startActivity(intent);
                 }
             });
