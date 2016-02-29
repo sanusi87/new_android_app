@@ -17,21 +17,26 @@
         android:layout_gravity="center_horizontal" />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
+        <TextView
+            style="@style/AppThemeBaseLabelSub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/keyword" />
+
         <EditText
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/keyword"
             android:inputType="text"
             android:hint="@string/keyword"
             style="@style/AppThemeBaseTextInput"
             android:padding="15dp"
-            android:layout_weight="1"
             android:autoText="false"
             android:ems="10"
             android:focusable="true" />
