@@ -289,4 +289,6 @@
     <string name="create_search_profile">Create Job Search Profile</string>
     <string name="about_job_matcher">About JobMatcher</string>
     <string name="no_url_provided">Failed to load website, no URL provided!</string>
+    <string name="title_activity_job_search_main">Job Search</string>
+    <string name="search_in">Search in</string>
 </resources>

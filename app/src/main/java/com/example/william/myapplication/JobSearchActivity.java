@@ -54,7 +54,6 @@ public class JobSearchActivity extends ActionBarActivity {
         Bundle extra = getIntent().getExtras();
         if( extra != null ){
             String searchProfileParameters = extra.getString("search_profile");
-            Log.e("extra", ""+searchProfileParameters);
             if( searchProfileParameters != null ){
                 try {
                     JSONObject searchProfile = new JSONObject(searchProfileParameters);
@@ -167,6 +166,18 @@ public class JobSearchActivity extends ActionBarActivity {
                 } catch (JSONException e) {
                     Log.e("err", e.getMessage()+e.getLocalizedMessage());
                 }
+            }
+
+            KeywordFilter kf = (KeywordFilter) extra.get("keyword_filter");
+            if( kf != null ){
+                jobSearch.setKeywordFilter(kf.id);
+                searchParameters.putSerializable("keyword_filter", kf);
+            }
+
+            String keyword = extra.getString("keyword");
+            if( keyword != null && keyword.length() > 0 ){
+                jobSearch.setKeyword(keyword);
+                searchParameters.putString("keyword", keyword);
             }
         }
 
