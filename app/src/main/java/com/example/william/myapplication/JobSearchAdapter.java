@@ -108,13 +108,13 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                 @Override
                 public void onClick(View _v) {
                     Intent intent = new Intent();
-                    if( redirect != null ){
-                        intent.setClass(context, RedirectActivity.class);
-                        intent.putExtra("redirect", redirect);
-                    }else{
+//                    if( redirect != null ){
+//                        intent.setClass(context, RedirectActivity.class);
+//                        intent.putExtra("redirect", redirect);
+//                    }else{
                         intent.setClass(context, JobDetails.class);
                         intent.putExtra("post_id", postId);
-                    }
+//                    }
                     context.startActivity(intent);
                 }
             });
@@ -123,13 +123,13 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                 @Override
                 public void onClick(View _v) {
                     Intent intent = new Intent();
-                    if( redirect != null ){
-                        intent.setClass(context, RedirectActivity.class);
-                        intent.putExtra("redirect", redirect);
-                    }else{
+//                    if( redirect != null ){
+//                        intent.setClass(context, RedirectActivity.class);
+//                        intent.putExtra("redirect", redirect);
+//                    }else{
                         intent.setClass(context, JobDetails.class);
                         intent.putExtra("post_id", postId);
-                    }
+//                    }
                     context.startActivity(intent);
                 }
             });

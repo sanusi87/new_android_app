@@ -83,7 +83,6 @@ public class JobDetails extends ActionBarActivity {
             invitationId = extras.getInt("invitation_id");
 
             String[] param = {Jenjobs.JOB_DETAILS+"/"+jobPostingId};
-            //Log.e("url", ""+param[0]);
             GetRequest g = new GetRequest();
             g.setResultListener(new GetRequest.ResultListener() {
                 @Override
@@ -99,6 +98,10 @@ public class JobDetails extends ActionBarActivity {
                             positionTitle.setText(success.getString("title"));
                             applyButtonContainer.setVisibility(View.VISIBLE);
                             tabButton.setVisibility(View.VISIBLE);
+
+                            if( jobDetails.optString("redirect") != null ){
+                                applyButton.setText(R.string.apply_on_partner_site);
+                            }
                         } catch (JSONException e) {
                             Toast.makeText(context, "Job posting not found!", Toast.LENGTH_SHORT).show();
                         }
@@ -115,6 +118,10 @@ public class JobDetails extends ActionBarActivity {
 
                                 applyButtonContainer.setVisibility(View.VISIBLE);
                                 tabButton.setVisibility(View.VISIBLE);
+
+                                if( jobDetails.optString("redirect") != null ){
+                                    applyButton.setText(R.string.apply_on_partner_site);
+                                }
                             } catch (JSONException e) {
                                 Log.e("err", e.getMessage());
                             }
@@ -170,72 +177,80 @@ public class JobDetails extends ActionBarActivity {
             @Override
             public void onClick(View _v) {
                 if( isOnline ){
-                    ArrayList<String> errors = tableProfile.isProfileComplete();
-                    if( errors.size() == 0 ){
-                        // TODO - save to local db (applicationTable)
-                        ContentValues cv = new ContentValues();
-                        cv.put("post_id", jobPostingId);
-                        cv.put("status", TableApplication.STATUS_UNPROCESSED);
-                        cv.put("date_created", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
-                        cv.put("title", jobDetails.optString("title"));
-                        cv.put("closed", 0);
-                        tableApplication.addApplication(cv);
 
-                        // attach invitation together with apply POST
-                        // TODO - handle invitation in apply POST request
-                        JSONObject obj = new JSONObject();
-                        if( invitationId > 0 ){
-                            try {
-                                obj.put("emp_invitation_id", invitationId);
-                            } catch (JSONException e) {
-                                Log.e("err", "failed to put invitation ID to post");
-                            }
-                        }
+                    if( jobDetails.optString("redirect") != null ){
+                        Intent intent = new Intent();
+                        intent.setClass(context, RedirectActivity.class);
+                        intent.putExtra("redirect", jobDetails.optString("redirect"));
+                        context.startActivity(intent);
+                    }else{
+                        ArrayList<String> errors = tableProfile.isProfileComplete();
+                        if( errors.size() == 0 ){
+                            // TODO - save to local db (applicationTable)
+                            ContentValues cv = new ContentValues();
+                            cv.put("post_id", jobPostingId);
+                            cv.put("status", TableApplication.STATUS_UNPROCESSED);
+                            cv.put("date_created", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
+                            cv.put("title", jobDetails.optString("title"));
+                            cv.put("closed", 0);
+                            tableApplication.addApplication(cv);
 
-                        // post to server
-                        String[] params = { Jenjobs.APPLICATION_URL+"/"+jobPostingId+"?access-token="+accessToken,obj.toString() };
-
-                        PostRequest postRequest = new PostRequest();
-                        postRequest.setResultListener(new PostRequest.ResultListener() {
-                            @Override
-                            public void processResult(JSONObject success) {
-                                if( success != null ){
-                                    Toast.makeText(getApplicationContext(), success.optString("status_text"), Toast.LENGTH_SHORT).show();
-
-                                    // if success, update invitation
-                                    if( invitationId > 0 && success.optInt("status_code") == 1 ){
-                                        TableInvitation tableInvitation = new TableInvitation(context);
-                                        ContentValues cv = new ContentValues();
-                                        cv.put("status", TableInvitation.STATUS_APPLIED);
-                                        cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
-                                        tableInvitation.updateInvitation(cv, invitationId);
-                                    }
-                                }else{
-                                    Toast.makeText(getApplicationContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                            // attach invitation together with apply POST
+                            // TODO - handle invitation in apply POST request
+                            JSONObject obj = new JSONObject();
+                            if( invitationId > 0 ){
+                                try {
+                                    obj.put("emp_invitation_id", invitationId);
+                                } catch (JSONException e) {
+                                    Log.e("err", "failed to put invitation ID to post");
                                 }
                             }
-                        });
-                        postRequest.execute(params);
 
-                        // disabled button
-                        applyButton.setEnabled(false);
-                        applyButton.setClickable(false);
-                        applyButton.setText(getString(R.string.application_sent));
+                            // post to server
+                            String[] params = { Jenjobs.APPLICATION_URL+"/"+jobPostingId+"?access-token="+accessToken,obj.toString() };
 
-                        // save the job
-                        Cursor jobs = tableJob.getJob(jobPostingId);
-                        if( jobs.getCount() == 0 ){
-                            ContentValues cv2 = new ContentValues();
-                            cv2.put("id", jobPostingId);
-                            cv2.put("title", jobDetails.optString("title"));
-                            cv2.put("company", jobDetails.optString("company"));
-                            cv2.put("date_closed", jobDetails.optString("date_closed"));
-                            cv2.put("job_data", jobDetails.toString());
-                            tableJob.addJob(cv2);
+                            PostRequest postRequest = new PostRequest();
+                            postRequest.setResultListener(new PostRequest.ResultListener() {
+                                @Override
+                                public void processResult(JSONObject success) {
+                                    if( success != null ){
+                                        Toast.makeText(getApplicationContext(), success.optString("status_text"), Toast.LENGTH_SHORT).show();
+
+                                        // if success, update invitation
+                                        if( invitationId > 0 && success.optInt("status_code") == 1 ){
+                                            TableInvitation tableInvitation = new TableInvitation(context);
+                                            ContentValues cv = new ContentValues();
+                                            cv.put("status", TableInvitation.STATUS_APPLIED);
+                                            cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
+                                            tableInvitation.updateInvitation(cv, invitationId);
+                                        }
+                                    }else{
+                                        Toast.makeText(getApplicationContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                            postRequest.execute(params);
+
+                            // disabled button
+                            applyButton.setEnabled(false);
+                            applyButton.setClickable(false);
+                            applyButton.setText(getString(R.string.application_sent));
+
+                            // save the job
+                            Cursor jobs = tableJob.getJob(jobPostingId);
+                            if( jobs.getCount() == 0 ){
+                                ContentValues cv2 = new ContentValues();
+                                cv2.put("id", jobPostingId);
+                                cv2.put("title", jobDetails.optString("title"));
+                                cv2.put("company", jobDetails.optString("company"));
+                                cv2.put("date_closed", jobDetails.optString("date_closed"));
+                                cv2.put("job_data", jobDetails.toString());
+                                tableJob.addJob(cv2);
+                            }
+                            jobs.close();
+                        }else{
+                            Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_LONG).show();
                         }
-                        jobs.close();
-                    }else{
-                        Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_LONG).show();
                     }
                 }else{
                     Toast.makeText(getApplicationContext(), R.string.offline_notification, Toast.LENGTH_LONG).show();
