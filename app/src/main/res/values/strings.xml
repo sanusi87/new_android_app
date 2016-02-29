@@ -292,4 +292,5 @@
     <string name="title_activity_job_search_main">Job Search</string>
     <string name="search_in">Search in</string>
     <string name="jenjobs_partner">Jenjobs\' Partner</string>
+    <string name="apply_on_partner_site">Apply on partner\'s site</string>
 </resources>
