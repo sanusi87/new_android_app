@@ -178,7 +178,7 @@
             android:parentActivityName=".JobSuggestion" />
         <activity
             android:name=".RedirectActivity"
-            android:parentActivityName=".JobSearchActivity" />
+            android:parentActivityName=".JobDetails" />
     </application>
 
 </manifest>
