@@ -12,6 +12,7 @@ public class RedirectActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_redirect);
+        setTitle(R.string.jenjobs_partner);
 
         Bundle extras = getIntent().getExtras();
         if( extras != null ){
