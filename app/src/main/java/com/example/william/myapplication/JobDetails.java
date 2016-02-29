@@ -54,6 +54,8 @@ public class JobDetails extends ActionBarActivity {
     ViewPager mViewPager;
     SectionsPagerAdapter mSectionsPagerAdapter;
 
+    LinearLayout ll;
+
     static Context context;
     static boolean isOnline;
 
@@ -101,6 +103,11 @@ public class JobDetails extends ActionBarActivity {
 
                             if( jobDetails.optString("redirect") != null ){
                                 applyButton.setText(R.string.apply_on_partner_site);
+                            }else{
+                                if( accessToken == null ){
+                                    ll.setVisibility(View.VISIBLE);
+                                    applyButton.setVisibility(View.GONE);
+                                }
                             }
                         } catch (JSONException e) {
                             Toast.makeText(context, "Job posting not found!", Toast.LENGTH_SHORT).show();
@@ -121,6 +128,11 @@ public class JobDetails extends ActionBarActivity {
 
                                 if( jobDetails.optString("redirect") != null ){
                                     applyButton.setText(R.string.apply_on_partner_site);
+                                }else{
+                                    if( accessToken == null ){
+                                        ll.setVisibility(View.VISIBLE);
+                                        applyButton.setVisibility(View.GONE);
+                                    }
                                 }
                             } catch (JSONException e) {
                                 Log.e("err", e.getMessage());
@@ -176,16 +188,16 @@ public class JobDetails extends ActionBarActivity {
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View _v) {
-                if( isOnline ){
+                if (isOnline) {
 
-                    if( jobDetails.optString("redirect") != null ){
+                    if (jobDetails.optString("redirect") != null) {
                         Intent intent = new Intent();
                         intent.setClass(context, RedirectActivity.class);
                         intent.putExtra("redirect", jobDetails.optString("redirect"));
                         context.startActivity(intent);
-                    }else{
+                    } else {
                         ArrayList<String> errors = tableProfile.isProfileComplete();
-                        if( errors.size() == 0 ){
+                        if (errors.size() == 0) {
                             // TODO - save to local db (applicationTable)
                             ContentValues cv = new ContentValues();
                             cv.put("post_id", jobPostingId);
@@ -198,7 +210,7 @@ public class JobDetails extends ActionBarActivity {
                             // attach invitation together with apply POST
                             // TODO - handle invitation in apply POST request
                             JSONObject obj = new JSONObject();
-                            if( invitationId > 0 ){
+                            if (invitationId > 0) {
                                 try {
                                     obj.put("emp_invitation_id", invitationId);
                                 } catch (JSONException e) {
@@ -207,24 +219,24 @@ public class JobDetails extends ActionBarActivity {
                             }
 
                             // post to server
-                            String[] params = { Jenjobs.APPLICATION_URL+"/"+jobPostingId+"?access-token="+accessToken,obj.toString() };
+                            String[] params = {Jenjobs.APPLICATION_URL + "/" + jobPostingId + "?access-token=" + accessToken, obj.toString()};
 
                             PostRequest postRequest = new PostRequest();
                             postRequest.setResultListener(new PostRequest.ResultListener() {
                                 @Override
                                 public void processResult(JSONObject success) {
-                                    if( success != null ){
+                                    if (success != null) {
                                         Toast.makeText(getApplicationContext(), success.optString("status_text"), Toast.LENGTH_SHORT).show();
 
                                         // if success, update invitation
-                                        if( invitationId > 0 && success.optInt("status_code") == 1 ){
+                                        if (invitationId > 0 && success.optInt("status_code") == 1) {
                                             TableInvitation tableInvitation = new TableInvitation(context);
                                             ContentValues cv = new ContentValues();
                                             cv.put("status", TableInvitation.STATUS_APPLIED);
-                                            cv.put("date_updated", Jenjobs.date(null,"yyyy-MM-dd hh:mm:ss",null));
+                                            cv.put("date_updated", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
                                             tableInvitation.updateInvitation(cv, invitationId);
                                         }
-                                    }else{
+                                    } else {
                                         Toast.makeText(getApplicationContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -238,7 +250,7 @@ public class JobDetails extends ActionBarActivity {
 
                             // save the job
                             Cursor jobs = tableJob.getJob(jobPostingId);
-                            if( jobs.getCount() == 0 ){
+                            if (jobs.getCount() == 0) {
                                 ContentValues cv2 = new ContentValues();
                                 cv2.put("id", jobPostingId);
                                 cv2.put("title", jobDetails.optString("title"));
@@ -248,26 +260,26 @@ public class JobDetails extends ActionBarActivity {
                                 tableJob.addJob(cv2);
                             }
                             jobs.close();
-                        }else{
+                        } else {
                             Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_LONG).show();
                         }
                     }
-                }else{
+                } else {
                     Toast.makeText(getApplicationContext(), R.string.offline_notification, Toast.LENGTH_LONG).show();
                 }
             }
         });
 
         loading = (ProgressBar)findViewById(R.id.progressBar);
-        LinearLayout ll = (LinearLayout)findViewById(R.id.loginLayout);
+        ll = (LinearLayout)findViewById(R.id.loginLayout);
         TextView notice = (TextView)ll.findViewById(R.id.noticeText);
         notice.setText(R.string.login_or_register_to_apply);
 
         // hide apply, show login+register
-        if( accessToken == null ){
-            ll.setVisibility(View.VISIBLE);
-            applyButton.setVisibility(View.GONE);
-        }
+//        if( accessToken == null ){
+//            ll.setVisibility(View.VISIBLE);
+//            applyButton.setVisibility(View.GONE);
+//        }
 
         // check for application
         if( jobPostingId > 0 ){
