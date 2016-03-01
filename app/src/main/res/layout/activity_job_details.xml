@@ -97,7 +97,10 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:textColor="@android:color/black"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textAlignment="center" />
+
+        <View style="@style/AppThemeSeparator" />
     </LinearLayout>
 
     <LinearLayout
