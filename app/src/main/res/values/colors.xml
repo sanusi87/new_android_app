@@ -10,4 +10,5 @@
 
     <color name="black_overlay">#66000000</color>
     <color name="job_description_bg_color">#EEEEEE</color>
+    <color name="muted_text">#888888</color>
 </resources>
