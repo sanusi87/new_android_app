@@ -67,8 +67,7 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".JobSearchFilter"
-            android:label="@string/job_search_filter"
-            android:parentActivityName=".JobSearchActivity" />
+            android:label="@string/job_search_filter" />
         <activity android:name=".SelectState" />
         <activity android:name=".SelectCountry" />
         <activity
