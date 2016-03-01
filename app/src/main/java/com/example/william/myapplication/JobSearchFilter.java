@@ -351,6 +351,7 @@ public class JobSearchFilter extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.job_search_filter, menu);
         return true;
@@ -453,6 +454,8 @@ public class JobSearchFilter extends ActionBarActivity {
             selectedOtherCountry.setText(noValue);
             selectedPositionLevel.setText(noValue);
 
+        }else if( clickedItem == android.R.id.home ){
+            finish();
         }
         return true;
     }
