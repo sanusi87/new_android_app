@@ -60,6 +60,10 @@ public class UpdateProfile extends ActionBarActivity{
         setContentView(R.layout.profile_update_layout);
         setTitle(getText(R.string.my_profile));
 
+        if( getSupportActionBar() != null ){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
         profileId = sharedPref.getInt("js_profile_id", 0);
@@ -216,6 +220,7 @@ public class UpdateProfile extends ActionBarActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.save, menu);
         return true;
@@ -325,6 +330,8 @@ public class UpdateProfile extends ActionBarActivity{
             }else{
                 Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
             }
+        }else if( clickedItem == android.R.id.home ){
+            finish();
         }
         return true;
     }
