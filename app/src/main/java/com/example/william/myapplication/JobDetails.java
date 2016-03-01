@@ -194,7 +194,6 @@ public class JobDetails extends ActionBarActivity {
             @Override
             public void onClick(View _v) {
                 if (isOnline) {
-                    Log.e("redirect", ">>"+jobDetails.optString("redirect"));
                     if (jobDetails.optString("redirect") != null && !jobDetails.optString("redirect").equals("null") && jobDetails.optString("redirect").length() > 0) {
                         Intent _intent = new Intent();
                         _intent.setClass(getApplicationContext(), RedirectActivity.class);
