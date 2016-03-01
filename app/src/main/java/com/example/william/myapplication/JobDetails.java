@@ -543,37 +543,49 @@ public class JobDetails extends ActionBarActivity {
 
                 ((TextView)v.findViewById(R.id.companyName)).setText( jobDetails.optString("company") );
 
-                if( companyDetails.optString("registration_no") != null && companyDetails.getString("registration_no").length() > 0 ){
+                if( companyDetails.optString("registration_no") != null
+                        && !companyDetails.optString("registration_no").equals("null")
+                        && companyDetails.getString("registration_no").length() > 0 ){
                     ((TextView)v.findViewById(R.id.companyRegistrationNumber)).setText(companyDetails.optString("registration_no"));
                 }else{
                     ((ViewGroup)v.findViewById(R.id.companyRegistrationNumber).getParent()).setVisibility(View.GONE);
                 }
 
-                if( companyDetails.optString("industry") != null && companyDetails.getString("industry").length() > 0 ){
+                if( companyDetails.optString("industry") != null
+                        && !companyDetails.optString("industry").equals("null")
+                        && companyDetails.getString("industry").length() > 0 ){
                     ((TextView)v.findViewById(R.id.companyIndustry)).setText(companyDetails.optString("industry"));
                 }else{
                     ((ViewGroup)v.findViewById(R.id.companyIndustry).getParent()).setVisibility(View.GONE);
                 }
 
-                if( companyDetails.optString("work_hour") != null && companyDetails.getString("work_hour").length() > 0 ){
+                if( companyDetails.optString("work_hour") != null
+                        && !companyDetails.optString("work_hour").equals("null")
+                        && companyDetails.getString("work_hour").length() > 0 ){
                     ((TextView)v.findViewById(R.id.companyWorkingHours)).setText(companyDetails.optString("work_hour"));
                 }else{
                     ((ViewGroup)v.findViewById(R.id.companyWorkingHours).getParent()).setVisibility(View.GONE);
                 }
 
-                if( companyDetails.optString("benefits") != null && companyDetails.getString("benefits").length() > 0 ){
+                if( companyDetails.optString("benefits") != null
+                        && !companyDetails.optString("benefits").equals("null")
+                        && companyDetails.getString("benefits").length() > 0 ){
                     ((TextView)v.findViewById(R.id.companyBenefits)).setText(companyDetails.optString("benefits"));
                 }else{
                     ((ViewGroup)v.findViewById(R.id.companyBenefits).getParent()).setVisibility(View.GONE);
                 }
 
-                if( companyDetails.optString("website") != null && companyDetails.getString("website").length() > 0 ){
+                if( companyDetails.optString("website") != null
+                        && !companyDetails.optString("website").equals("null")
+                        && companyDetails.getString("website").length() > 0 ){
                     ((TextView)v.findViewById(R.id.companyWebsite)).setText(companyDetails.optString("website"));
                 }else{
                     ((ViewGroup)v.findViewById(R.id.companyWebsite).getParent()).setVisibility(View.GONE);
                 }
 
-                if( companyDetails.optString("facebook_page") != null && companyDetails.getString("facebook_page").length() > 0 ){
+                if( companyDetails.optString("facebook_page") != null 
+                        && !companyDetails.optString("facebook_page").equals("null")
+                        && companyDetails.getString("facebook_page").length() > 0 ){
                     ((TextView)v.findViewById(R.id.companyFacebookPage)).setText(companyDetails.optString("facebook_page"));
                 }else{
                     ((ViewGroup)v.findViewById(R.id.companyFacebookPage).getParent()).setVisibility(View.GONE);
