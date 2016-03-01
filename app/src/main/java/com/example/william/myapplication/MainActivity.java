@@ -33,9 +33,6 @@ public class MainActivity extends Activity {
     Button forgotButton;
     Button jobSearch;
 
-    private TableJobSpec tableJobSpec;
-    private TableJobRole tableJobRole;
-
     boolean isOnline;
 
     @Override
@@ -52,8 +49,6 @@ public class MainActivity extends Activity {
         new TableProfile(this);
 
         sharedPref = this.getSharedPreferences(JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        tableJobSpec = new TableJobSpec(this);
-        tableJobRole = new TableJobRole(this);
 
         emailView = (EditText) findViewById(R.id.username_input);
         passwordView = (EditText) findViewById(R.id.password_input);
@@ -168,66 +163,6 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
-
-        // check table content
-        Cursor c = tableJobSpec.getAllJobSpec();
-        if( c.getCount() == 0 ){
-            tableJobSpec.clearAll();
-            tableJobRole.clearAll();
-
-            GetRequest g = new GetRequest();
-            g.setResultListener(new GetRequest.ResultListener() {
-                @Override
-                public void processResultArray(JSONArray result) {}
-
-                @Override
-                public void processResult(JSONObject success) {
-                    if (success != null) {
-                        Iterator i = success.keys();
-                        while (i.hasNext()) {
-                            String jobSpecId = (String) i.next();
-                            JSONObject jobSpec;
-                            try {
-                                jobSpec = success.getJSONObject(jobSpecId);
-                                ContentValues cv = new ContentValues();
-                                cv.put("id", jobSpecId);
-                                cv.put("spec_name", jobSpec.getString("name"));
-                                tableJobSpec.addJobSpec(cv);
-
-                                JSONObject jobRole = jobSpec.getJSONObject("roles");
-                                Iterator r = jobRole.keys();
-                                while (r.hasNext()) {
-                                    String jobRoleId = (String) r.next();
-                                    String jobRoleName = jobRole.getString(jobRoleId);
-
-                                    ContentValues cv2 = new ContentValues();
-                                    cv2.put("id", jobRoleId);
-                                    cv2.put("job_spec_id", jobSpecId);
-                                    cv2.put("role_name", jobRoleName);
-                                    tableJobRole.addJobRole(cv2);
-                                }
-                            } catch (JSONException e) {
-                                Toast.makeText(getApplicationContext(), R.string.unknown_error, Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), R.string.empty_response, Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-            String[] jobSpecUrl = {Jenjobs.JOB_SPEC_URL};
-            g.execute(jobSpecUrl);
-        }
-        c.close();
-
-        // check for sharedPreference data
-        String accessToken = sharedPref.getString("access_token", null);
-        if( accessToken != null ){
-            Intent intent = new Intent();
-            intent.setClass(getApplicationContext(), ProfileActivity.class);
-            startActivity(intent);
-            finish();
-        }
     }
 
     public void toggleButtonState( boolean state ){
