@@ -51,19 +51,24 @@ public class JobSuggestion extends ActionBarActivity{
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        Button jobMatcherButton = (Button)findViewById(R.id.jobMatcherButton);
+        final Button jobMatcherButton = (Button)findViewById(R.id.jobMatcherButton);
+        final Button jobSuggestedButton = (Button)findViewById(R.id.jobSuggestedButton);
+        jobMatcherButton.setEnabled(false);
         jobMatcherButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mViewPager.setCurrentItem(0, true);
+                jobMatcherButton.setEnabled(false);
+                jobSuggestedButton.setEnabled(true);
             }
         });
 
-        Button jobSuggestedButton = (Button)findViewById(R.id.jobSuggestedButton);
         jobSuggestedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mViewPager.setCurrentItem(1, true);
+                jobMatcherButton.setEnabled(true);
+                jobSuggestedButton.setEnabled(false);
             }
         });
 
@@ -112,6 +117,7 @@ public class JobSuggestion extends ActionBarActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         this.menu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.job_suggestion, menu);
