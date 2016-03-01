@@ -44,9 +44,10 @@
                     android:padding="5dp"
                     android:gravity="center_horizontal"
                     android:id="@+id/companyName" />
-            </LinearLayout>
 
-            <View style="@style/AppThemeSeparator" />
+                <View style="@style/AppThemeSeparator" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -66,9 +67,9 @@
                     android:id="@+id/companyRegistrationNumber"
                     style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
-            </LinearLayout>
 
-            <View style="@style/AppThemeSeparator" />
+                <View style="@style/AppThemeSeparator" />
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -88,9 +89,9 @@
                     android:id="@+id/companyIndustry"
                     style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
-            </LinearLayout>
 
-            <View style="@style/AppThemeSeparator" />
+                <View style="@style/AppThemeSeparator" />
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -110,9 +111,9 @@
                     android:id="@+id/companyWorkingHours"
                     style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
-            </LinearLayout>
 
-            <View style="@style/AppThemeSeparator" />
+                <View style="@style/AppThemeSeparator" />
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -132,9 +133,9 @@
                     android:id="@+id/companyBenefits"
                     style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
-            </LinearLayout>
 
-            <View style="@style/AppThemeSeparator" />
+                <View style="@style/AppThemeSeparator" />
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -154,9 +155,9 @@
                     android:id="@+id/companyWebsite"
                     style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
-            </LinearLayout>
 
-            <View style="@style/AppThemeSeparator" />
+                <View style="@style/AppThemeSeparator" />
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -176,9 +177,9 @@
                     android:id="@+id/companyFacebookPage"
                     style="@style/AppThemeBaseLabelSub"
                     android:layout_marginLeft="8dp" />
-            </LinearLayout>
 
-            <View style="@style/AppThemeSeparator" />
+                <View style="@style/AppThemeSeparator" />
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"

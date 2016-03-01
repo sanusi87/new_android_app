@@ -25,9 +25,9 @@
                 android:id="@+id/location"
                 style="@style/AppThemeBaseLabelSub"
                 android:layout_marginLeft="8dp" />
-        </LinearLayout>
 
-        <View style="@style/AppThemeSeparator" />
+            <View style="@style/AppThemeSeparator" />
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -47,9 +47,9 @@
                 android:id="@+id/jobType"
                 style="@style/AppThemeBaseLabelSub"
                 android:layout_marginLeft="8dp" />
-        </LinearLayout>
 
-        <View style="@style/AppThemeSeparator" />
+            <View style="@style/AppThemeSeparator" />
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -69,9 +69,9 @@
                 android:id="@+id/jobLevel"
                 style="@style/AppThemeBaseLabelSub"
                 android:layout_marginLeft="8dp" />
-        </LinearLayout>
 
-        <View style="@style/AppThemeSeparator" />
+            <View style="@style/AppThemeSeparator" />
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -91,9 +91,9 @@
                 android:id="@+id/jobSpecialisation"
                 style="@style/AppThemeBaseLabelSub"
                 android:layout_marginLeft="8dp" />
-        </LinearLayout>
 
-        <View style="@style/AppThemeSeparator" />
+            <View style="@style/AppThemeSeparator" />
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -113,9 +113,9 @@
                 android:id="@+id/qualification"
                 style="@style/AppThemeBaseLabelSub"
                 android:layout_marginLeft="8dp" />
-        </LinearLayout>
 
-        <View style="@style/AppThemeSeparator" />
+            <View style="@style/AppThemeSeparator" />
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -135,9 +135,9 @@
                 android:id="@+id/skill"
                 style="@style/AppThemeBaseLabelSub"
                 android:layout_marginLeft="8dp" />
-        </LinearLayout>
 
-        <View style="@style/AppThemeSeparator" />
+            <View style="@style/AppThemeSeparator" />
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -157,9 +157,9 @@
                 android:id="@+id/language"
                 style="@style/AppThemeBaseLabelSub"
                 android:layout_marginLeft="8dp" />
-        </LinearLayout>
 
-        <View style="@style/AppThemeSeparator" />
+            <View style="@style/AppThemeSeparator" />
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"

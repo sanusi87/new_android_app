@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -55,6 +56,7 @@ public class JobDetails extends ActionBarActivity {
     SectionsPagerAdapter mSectionsPagerAdapter;
 
     LinearLayout ll;
+    LinearLayout applyButtonContainer;
 
     static Context context;
     static boolean isOnline;
@@ -64,7 +66,11 @@ public class JobDetails extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_details);
 
-        context = this;
+        if( getSupportActionBar() != null ){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        context = getApplicationContext();
         jobDetails = null;
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
@@ -76,10 +82,11 @@ public class JobDetails extends ActionBarActivity {
         tableJob = new TableJob(this);
         // -----
 
-        final LinearLayout applyButtonContainer = (LinearLayout)findViewById(R.id.applyButtonContainer);
+        applyButtonContainer = (LinearLayout)findViewById(R.id.applyButtonContainer);
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
+
         if( extras != null ){
             jobPostingId = extras.getInt("post_id");
             invitationId = extras.getInt("invitation_id");
@@ -92,63 +99,31 @@ public class JobDetails extends ActionBarActivity {
 
                 @Override
                 public void processResult(JSONObject success) {
-                    //Log.e("onPostEx", "" + success);
-                    jobDetails = success;
-                    if( success != null ){
-                        try {
-                            mViewPager.setAdapter(mSectionsPagerAdapter);
-                            positionTitle.setText(success.getString("title"));
-                            applyButtonContainer.setVisibility(View.VISIBLE);
-                            tabButton.setVisibility(View.VISIBLE);
-
-                            if( jobDetails.optString("redirect") != null ){
-                                applyButton.setText(R.string.apply_on_partner_site);
-                            }else{
-                                if( accessToken == null ){
-                                    ll.setVisibility(View.VISIBLE);
-                                    applyButton.setVisibility(View.GONE);
-                                }
-                            }
-                        } catch (JSONException e) {
-                            Toast.makeText(context, "Job posting not found!", Toast.LENGTH_SHORT).show();
-                        }
-                    }else{
-                        Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
-
-                        Cursor job = tableJob.getJob(jobPostingId);
-                        if( job.moveToFirst() ){
-                            String savedJobDetails = job.getString(3);
-                            try {
-                                jobDetails = new JSONObject(savedJobDetails);
-                                mViewPager.setAdapter(mSectionsPagerAdapter);
-                                positionTitle.setText(jobDetails.getString("title"));
-
-                                applyButtonContainer.setVisibility(View.VISIBLE);
-                                tabButton.setVisibility(View.VISIBLE);
-
-                                if( jobDetails.optString("redirect") != null ){
-                                    applyButton.setText(R.string.apply_on_partner_site);
-                                }else{
-                                    if( accessToken == null ){
-                                        ll.setVisibility(View.VISIBLE);
-                                        applyButton.setVisibility(View.GONE);
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                Log.e("err", e.getMessage());
-                            }
-                        }else{
-                            // if network error
-                            noItem.setVisibility(View.VISIBLE);
-                        }
-                        job.close();
-                    }
-                    loading.setVisibility(View.GONE);
+                    loadJobDetails(success);
                 }
             });
             g.execute(param);
         }else{
-            Toast.makeText(getApplicationContext(), "Job posting ID not found!", Toast.LENGTH_SHORT).show();
+            jobPostingId = sharedPref.getInt("temp_post_id", 0);
+            invitationId = sharedPref.getInt("temp_invitation_id", 0);
+
+            if( jobPostingId > 0 ){
+                String[] param = {Jenjobs.JOB_DETAILS+"/"+jobPostingId};
+                GetRequest g = new GetRequest();
+                g.setResultListener(new GetRequest.ResultListener() {
+                    @Override
+                    public void processResultArray(JSONArray result) {}
+
+                    @Override
+                    public void processResult(JSONObject success) {
+                        loadJobDetails(success);
+                    }
+                });
+                g.execute(param);
+            }else{
+                Toast.makeText(getApplicationContext(), "Job posting ID not found!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
 
         // ------------- custom tab button
@@ -156,13 +131,37 @@ public class JobDetails extends ActionBarActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         tabButton = (LinearLayout)findViewById(R.id.tabButton);
         final Button overviewButton = (Button)findViewById(R.id.overviewButton);
-        Button descriptionButton = (Button)findViewById(R.id.descriptionButton);
-        Button companyButton = (Button)findViewById(R.id.companyButton);
+        final Button descriptionButton = (Button)findViewById(R.id.descriptionButton);
+        final Button companyButton = (Button)findViewById(R.id.companyButton);
 
+        // ----
+//        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                Log.e("selectedPage", ""+position);
+//                for(int i=0;i< mSectionsPagerAdapter.getCount();i++){
+//                    if( position == i ){
+//                        Log.e("got", ""+mSectionsPagerAdapter.getItem(position));
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {}
+//        });
+        // ----
+
+        overviewButton.setEnabled(false);
         overviewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mViewPager.setCurrentItem(0, true);
+                descriptionButton.setEnabled(true);
+                companyButton.setEnabled(true);
+                overviewButton.setEnabled(false);
             }
         });
 
@@ -170,6 +169,9 @@ public class JobDetails extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 mViewPager.setCurrentItem(1, true);
+                descriptionButton.setEnabled(false);
+                companyButton.setEnabled(true);
+                overviewButton.setEnabled(true);
             }
         });
 
@@ -177,6 +179,9 @@ public class JobDetails extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 mViewPager.setCurrentItem(2, true);
+                descriptionButton.setEnabled(true);
+                companyButton.setEnabled(false);
+                overviewButton.setEnabled(true);
             }
         });
         // ------------- custom tab button
@@ -189,12 +194,18 @@ public class JobDetails extends ActionBarActivity {
             @Override
             public void onClick(View _v) {
                 if (isOnline) {
+                    Log.e("redirect", ">>"+jobDetails.optString("redirect"));
+                    if (jobDetails.optString("redirect") != null && !jobDetails.optString("redirect").equals("null") && jobDetails.optString("redirect").length() > 0) {
+                        Intent _intent = new Intent();
+                        _intent.setClass(getApplicationContext(), RedirectActivity.class);
+                        _intent.putExtra("redirect", jobDetails.optString("redirect"));
 
-                    if (jobDetails.optString("redirect") != null) {
-                        Intent intent = new Intent();
-                        intent.setClass(context, RedirectActivity.class);
-                        intent.putExtra("redirect", jobDetails.optString("redirect"));
-                        context.startActivity(intent);
+                        //SharedPreferences.Editor spe = sharedPref.edit();
+                        //spe.putInt("temp_post_id", jobPostingId);
+                        //spe.putInt("temp_invitation_id", invitationId);
+                        //spe.apply();
+
+                        startActivity(_intent);
                     } else {
                         ArrayList<String> errors = tableProfile.isProfileComplete();
                         if (errors.size() == 0) {
@@ -320,8 +331,63 @@ public class JobDetails extends ActionBarActivity {
         ((ImageView)findViewById(R.id.noticeIcon2)).setImageDrawable(getResources().getDrawable(R.drawable.ic_warning_black_24dp));
     }
 
+    private void loadJobDetails(JSONObject success){
+        jobDetails = success;
+        if( success != null ){
+            try {
+                mViewPager.setAdapter(mSectionsPagerAdapter);
+                positionTitle.setText(success.getString("title"));
+                applyButtonContainer.setVisibility(View.VISIBLE);
+                tabButton.setVisibility(View.VISIBLE);
+
+                if( jobDetails.optString("redirect") != null && !jobDetails.optString("redirect").equals("null") && jobDetails.optString("redirect").length() > 0 ){
+                    applyButton.setText(R.string.apply_on_partner_site);
+                }else{
+                    if( accessToken == null ){
+                        ll.setVisibility(View.VISIBLE);
+                        applyButton.setVisibility(View.GONE);
+                    }
+                }
+            } catch (JSONException e) {
+                Toast.makeText(context, "Job posting not found!", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+
+            Cursor job = tableJob.getJob(jobPostingId);
+            if( job.moveToFirst() ){
+                String savedJobDetails = job.getString(3);
+                try {
+                    jobDetails = new JSONObject(savedJobDetails);
+                    mViewPager.setAdapter(mSectionsPagerAdapter);
+                    positionTitle.setText(jobDetails.getString("title"));
+
+                    applyButtonContainer.setVisibility(View.VISIBLE);
+                    tabButton.setVisibility(View.VISIBLE);
+
+                    if( jobDetails.optString("redirect") != null ){
+                        applyButton.setText(R.string.apply_on_partner_site);
+                    }else{
+                        if( accessToken == null ){
+                            ll.setVisibility(View.VISIBLE);
+                            applyButton.setVisibility(View.GONE);
+                        }
+                    }
+                } catch (JSONException e) {
+                    Log.e("err", e.getMessage());
+                }
+            }else{
+                // if network error
+                noItem.setVisibility(View.VISIBLE);
+            }
+            job.close();
+        }
+        loading.setVisibility(View.GONE);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.job_details, menu);
         // TODO - change this to show(true)/hide(false) menu
@@ -333,6 +399,9 @@ public class JobDetails extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.bookmark:
                 // TODO - bookmarkThisJob();
+                return true;
+            case android.R.id.home:
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -423,15 +492,29 @@ public class JobDetails extends ActionBarActivity {
             ((TextView)v.findViewById(R.id.jobLevel)).setText(jobDetails.optString("level"));
             ((TextView)v.findViewById(R.id.jobSpecialisation)).setText( Html.fromHtml(jobDetails.optString("specialisation")) );
             ((TextView)v.findViewById(R.id.qualification)).setText(jobDetails.optString("education"));
-            ((TextView)v.findViewById(R.id.skill)).setText(jobDetails.optString("skills"));
-            ((TextView)v.findViewById(R.id.language)).setText(jobDetails.optString("languages"));
-            ((TextView)v.findViewById(R.id.closedOn)).setText( Jenjobs.date(jobDetails.optString("date_closed"), "dd MMM yyyy", "yyyy-MM-dd hh:mm:ss") );
+
+            if( jobDetails.optString("skills") != null && !jobDetails.optString("skills").equals("null") && jobDetails.optString("skills").length() > 0 ){
+                ((TextView)v.findViewById(R.id.skill)).setText(jobDetails.optString("skills"));
+            }else{
+                ((ViewGroup)v.findViewById(R.id.skill).getParent()).setVisibility(View.GONE);
+            }
+
+            if( jobDetails.optString("languages") != null && !jobDetails.optString("languages").equals("null") && jobDetails.optString("languages").length() > 0 ){
+                ((TextView)v.findViewById(R.id.language)).setText(jobDetails.optString("languages"));
+            }else{
+                ((ViewGroup)v.findViewById(R.id.language).getParent()).setVisibility(View.GONE);
+            }
+
+            ((TextView)v.findViewById(R.id.closedOn)).setText(Jenjobs.date(jobDetails.optString("date_closed"), "dd MMM yyyy", "yyyy-MM-dd hh:mm:ss") );
         }
     }
 
     public static void setupDescription(View v) {
         if( jobDetails != null ){
-            ((TextView)v.findViewById(R.id.description)).setText(Html.fromHtml(jobDetails.optString("description")));
+            WebView wv = (WebView)v.findViewById(R.id.description);
+            wv.loadData(jobDetails.optString("description"),"text/html; charset=utf-8", "UTF-8");
+            wv.setBackgroundColor(context.getResources().getColor(R.color.job_description_bg_color));
+            wv.setDrawingCacheBackgroundColor(context.getResources().getColor(R.color.job_description_bg_color));
         }
     }
 
@@ -439,44 +522,86 @@ public class JobDetails extends ActionBarActivity {
         if( jobDetails != null ){
             try {
                 JSONObject companyDetails = new JSONObject(jobDetails.getString("company_details"));
-
                 final ImageView companyLogo = (ImageView)v.findViewById(R.id.companyLogo);
                 final ProgressBar progressBar = (ProgressBar)v.findViewById(R.id.progressBar);
-                ImageLoad empLogo = new ImageLoad(companyDetails.getString("logo_file"), companyLogo);
-                empLogo.setResultListener(new ImageLoad.ResultListener() {
-                    @Override
-                    public void processResult(Bitmap result) {
-                        if( result != null ){
-                            companyLogo.setVisibility(View.VISIBLE);
+
+                if( companyDetails.getString("logo_file") != null && companyDetails.getString("logo_file").length() > 0 ){
+                    ImageLoad empLogo = new ImageLoad(companyDetails.getString("logo_file"), companyLogo);
+                    empLogo.setResultListener(new ImageLoad.ResultListener() {
+                        @Override
+                        public void processResult(Bitmap result) {
+                            if (result != null) {
+                                companyLogo.setVisibility(View.VISIBLE);
+                            }
+                            progressBar.setVisibility(View.GONE);
                         }
-                        progressBar.setVisibility(View.GONE);
-                    }
-                });
-                empLogo.execute();
+                    });
+                    empLogo.execute();
+                }else{
+                    companyLogo.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                }
 
                 ((TextView)v.findViewById(R.id.companyName)).setText( jobDetails.optString("company") );
-                ((TextView)v.findViewById(R.id.companyRegistrationNumber)).setText(companyDetails.optString("registration_no"));
-                ((TextView)v.findViewById(R.id.companyIndustry)).setText(companyDetails.optString("industry"));
-                ((TextView)v.findViewById(R.id.companyWorkingHours)).setText(companyDetails.optString("work_hour"));
-                ((TextView)v.findViewById(R.id.companyBenefits)).setText(companyDetails.optString("benefits"));
-                ((TextView)v.findViewById(R.id.companyWebsite)).setText(companyDetails.optString("website"));
-                ((TextView)v.findViewById(R.id.companyFacebookPage)).setText(companyDetails.optString("facebook_page"));
+
+                if( companyDetails.optString("registration_no") != null && companyDetails.getString("registration_no").length() > 0 ){
+                    ((TextView)v.findViewById(R.id.companyRegistrationNumber)).setText(companyDetails.optString("registration_no"));
+                }else{
+                    ((ViewGroup)v.findViewById(R.id.companyRegistrationNumber).getParent()).setVisibility(View.GONE);
+                }
+
+                if( companyDetails.optString("industry") != null && companyDetails.getString("industry").length() > 0 ){
+                    ((TextView)v.findViewById(R.id.companyIndustry)).setText(companyDetails.optString("industry"));
+                }else{
+                    ((ViewGroup)v.findViewById(R.id.companyIndustry).getParent()).setVisibility(View.GONE);
+                }
+
+                if( companyDetails.optString("work_hour") != null && companyDetails.getString("work_hour").length() > 0 ){
+                    ((TextView)v.findViewById(R.id.companyWorkingHours)).setText(companyDetails.optString("work_hour"));
+                }else{
+                    ((ViewGroup)v.findViewById(R.id.companyWorkingHours).getParent()).setVisibility(View.GONE);
+                }
+
+                if( companyDetails.optString("benefits") != null && companyDetails.getString("benefits").length() > 0 ){
+                    ((TextView)v.findViewById(R.id.companyBenefits)).setText(companyDetails.optString("benefits"));
+                }else{
+                    ((ViewGroup)v.findViewById(R.id.companyBenefits).getParent()).setVisibility(View.GONE);
+                }
+
+                if( companyDetails.optString("website") != null && companyDetails.getString("website").length() > 0 ){
+                    ((TextView)v.findViewById(R.id.companyWebsite)).setText(companyDetails.optString("website"));
+                }else{
+                    ((ViewGroup)v.findViewById(R.id.companyWebsite).getParent()).setVisibility(View.GONE);
+                }
+
+                if( companyDetails.optString("facebook_page") != null && companyDetails.getString("facebook_page").length() > 0 ){
+                    ((TextView)v.findViewById(R.id.companyFacebookPage)).setText(companyDetails.optString("facebook_page"));
+                }else{
+                    ((ViewGroup)v.findViewById(R.id.companyFacebookPage).getParent()).setVisibility(View.GONE);
+                }
 
                 final ImageView workLocationImage = (ImageView)v.findViewById(R.id.workLocationImage);
                 final ProgressBar progressBar3 = (ProgressBar)v.findViewById(R.id.progressBar3);
-                ImageLoad img = new ImageLoad(companyDetails.getString("map_image"), workLocationImage);
-                img.setResultListener(new ImageLoad.ResultListener() {
-                    @Override
-                    public void processResult(Bitmap result) {
-                        if( result == null ){
-                            workLocationImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                            workLocationImage.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                if( companyDetails.getString("map_image") != null && companyDetails.getString("map_image").length() > 0 ){
+                    ImageLoad img = new ImageLoad(companyDetails.getString("map_image"), workLocationImage);
+                    img.setResultListener(new ImageLoad.ResultListener() {
+                        @Override
+                        public void processResult(Bitmap result) {
+                            if( result == null ){
+                                workLocationImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                                workLocationImage.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            }
+                            workLocationImage.setVisibility(View.VISIBLE);
+                            progressBar3.setVisibility(View.GONE);
                         }
-                        workLocationImage.setVisibility(View.VISIBLE);
-                        progressBar3.setVisibility(View.GONE);
-                    }
-                });
-                img.execute();
+                    });
+                    img.execute();
+                }else{
+                    workLocationImage.setVisibility(View.GONE);
+                    progressBar3.setVisibility(View.GONE);
+                    ((ViewGroup)workLocationImage.getParent()).setVisibility(View.GONE);
+                }
 
                 // this is work location
                 final String latitude = jobDetails.optString("latitude");
