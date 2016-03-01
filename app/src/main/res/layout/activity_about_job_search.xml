@@ -8,8 +8,8 @@
     style="@style/AppThemePadding10">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
         android:id="@+id/imageView"
         android:contentDescription="@string/no_value"
         android:src="@drawable/jenjobs_logo"
