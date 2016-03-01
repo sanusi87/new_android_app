@@ -55,7 +55,8 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -73,16 +74,18 @@
                     android:paddingRight="-4dp"
                     android:paddingTop="1dp"
                     android:paddingBottom="1dp"
-                    android:background="@android:color/transparent" />
+                    android:background="@android:color/transparent"
+                    android:layout_centerVertical="true" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/no_value"
+                    android:text="@string/location"
                     android:id="@+id/job_location"
                     android:layout_toEndOf="@+id/locationIcon"
                     android:layout_marginStart="5dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -105,11 +108,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/no_value"
+                    android:text="@string/job_type"
                     android:id="@+id/job_type"
                     android:layout_toEndOf="@+id/jobTypeIcon"
                     android:layout_marginStart="5dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -132,11 +136,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/no_value"
+                    android:text="@string/date_closed"
                     android:id="@+id/date_closed"
                     android:layout_toEndOf="@+id/expiredIcon"
                     android:layout_marginStart="5dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -178,22 +183,18 @@
                 android:id="@+id/job_description"
                 android:textColor="@color/dark_gray"
                 android:background="@drawable/border_left"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
                 android:textSize="12sp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:paddingRight="10dp"
-                android:paddingLeft="10dp" />
-
-            <View style="@style/AppThemeSeparator" />
+                android:paddingLeft="10dp"
+                android:layout_margin="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/no_value"
+                android:text="@string/spec"
                 android:id="@+id/job_spec"
                 android:textSize="12sp" />
         </LinearLayout>
