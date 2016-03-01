@@ -130,6 +130,7 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
 
             String salary;
             TextView vSalary = (TextView) v.findViewById(R.id.salary);
+            vSalary.setTextColor(context.getResources().getColor(R.color.muted_text));
             if( showSalary == 0 ){
                 salary = "Salary undisclosed";
             }else{

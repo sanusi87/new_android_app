@@ -50,7 +50,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/salary"
-            android:id="@+id/salary" />
+            android:id="@+id/salary"
+            android:textColor="@color/muted_text" />
 
         <LinearLayout
             android:orientation="vertical"
