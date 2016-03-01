@@ -9,4 +9,5 @@
     <color name="blue">#0088FF</color>
 
     <color name="black_overlay">#66000000</color>
+    <color name="job_description_bg_color">#EEEEEE</color>
 </resources>
