@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.william.myapplication.RedirectActivity">
+    tools:context="com.example.william.myapplication.RedirectActivity"
+    android:orientation="vertical">
 
     <WebView
         android:layout_width="match_parent"
