@@ -616,7 +616,11 @@ public class JobDetails extends ActionBarActivity {
                             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                             mapIntent.setPackage("com.google.android.apps.maps");
                             if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
-                                context.startActivity(mapIntent);
+                                try {
+                                    context.startActivity(mapIntent);
+                                }catch (Exception e){
+                                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }else{
                                 Toast.makeText(context, "Google Maps not found!", Toast.LENGTH_SHORT).show();
                             }
