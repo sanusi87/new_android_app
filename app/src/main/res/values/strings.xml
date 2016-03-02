@@ -294,6 +294,6 @@
     <string name="jenjobs_partner">Jenjobs\' Partner</string>
     <string name="apply_on_partner_site">Apply on partner\'s site</string>
     <string name="share">Share</string>
-    <string name="share_description">%1$s posted by %2$s</string>
+    <string name="share_description">%1$s posted by %2$s, please visit http://www.jenjobs.com/job/job-detail?jid=%3$d for more info.</string>
     <string name="email_is_required">Email is required!</string>
 </resources>
