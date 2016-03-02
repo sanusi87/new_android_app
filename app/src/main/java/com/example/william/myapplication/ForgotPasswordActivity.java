@@ -36,40 +36,51 @@ public class ForgotPasswordActivity extends ActionBarActivity {
             public void onClick(View v) {
                 if( isOnline ){
                     String emailAddress = emailView.getText().toString();
-                    String[] params = {Jenjobs.FORGOT_PASSWORD_URL, emailAddress};
-                    //new ForgotPasswordTask().execute(params);
-                    PostRequest p = new PostRequest();
-                    p.setResultListener(new PostRequest.ResultListener() {
-                        @Override
-                        public void processResult(JSONObject result) {
-                            if( result != null ){
-                                try {
-                                    String statusText = result.getString("status_text");
-                                    Toast.makeText(getApplicationContext(), statusText, Toast.LENGTH_SHORT).show();
+                    if( emailAddress.length() == 0 ){
+                        Toast.makeText(getApplicationContext(), R.string.email_is_required, Toast.LENGTH_LONG).show();
+                    }else{
+                        JSONObject obj = new JSONObject();
+                        try {
+                            obj.put("email", emailAddress);
+                            String[] params = {Jenjobs.FORGOT_PASSWORD_URL, obj.toString()};
 
-                                    // log request for counting
-                                    tableForgotPassword.logRequest();
-                                } catch (JSONException e) {
-                                    Toast.makeText(getApplicationContext(), "Response error!", Toast.LENGTH_SHORT).show();
-                                }
-                            }else{
-                                Toast.makeText(getApplicationContext(), "No response received!", Toast.LENGTH_SHORT).show();
-                            }
-
-                            // enable button after 5s
-                            (new Handler()).postDelayed(new Runnable() {
+                            PostRequest p = new PostRequest();
+                            p.setResultListener(new PostRequest.ResultListener() {
                                 @Override
-                                public void run() {
-                                    forgotButton.setEnabled(true);
-                                    forgotButton.setClickable(true);
-                                }
-                            }, 5000);
-                        }
-                    });
-                    p.execute(params);
+                                public void processResult(JSONObject result) {
+                                    //Log.e("jsonres", ""+result);
+                                    if( result != null ){
+                                        try {
+                                            String statusText = result.getString("status_text");
+                                            Toast.makeText(getApplicationContext(), statusText, Toast.LENGTH_SHORT).show();
 
-                    forgotButton.setEnabled(false);
-                    forgotButton.setClickable(false);
+                                            // log request for counting
+                                            tableForgotPassword.logRequest();
+                                        } catch (JSONException e) {
+                                            Toast.makeText(getApplicationContext(), "Response error!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }else{
+                                        Toast.makeText(getApplicationContext(), "No response received!", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    // enable button after 5s
+                                    (new Handler()).postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            forgotButton.setEnabled(true);
+                                            forgotButton.setClickable(true);
+                                        }
+                                    }, 5000);
+                                }
+                            });
+                            p.execute(params);
+
+                            forgotButton.setEnabled(false);
+                            forgotButton.setClickable(false);
+                        } catch (JSONException e) {
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }else{
                     Toast.makeText(getApplicationContext(), R.string.offline_notification, Toast.LENGTH_LONG).show();
                 }
