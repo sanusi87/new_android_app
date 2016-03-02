@@ -65,6 +65,7 @@ public class JobDetails extends ActionBarActivity {
     static Context context;
     static boolean isOnline;
     private MenuItem shareMenuItem;
+    private boolean isBookmarked = false;
 
     private ShareActionProvider mShareActionProvider;
 
@@ -293,12 +294,6 @@ public class JobDetails extends ActionBarActivity {
         TextView notice = (TextView)ll.findViewById(R.id.noticeText);
         notice.setText(R.string.login_or_register_to_apply);
 
-        // hide apply, show login+register
-//        if( accessToken == null ){
-//            ll.setVisibility(View.VISIBLE);
-//            applyButton.setVisibility(View.GONE);
-//        }
-
         // check for application
         if( jobPostingId > 0 ){
             Cursor application = tableApplication.getApplication(jobPostingId);
@@ -410,6 +405,7 @@ public class JobDetails extends ActionBarActivity {
         Cursor bookmarkList = tableBookmark.getBookmark(jobPostingId);
         if( bookmarkList.getCount() > 0) {
             bookmarkItem.setIcon(R.drawable.ic_bookmark_white_48dp);
+            isBookmarked = true;
         }
         bookmarkList.close();
 
@@ -443,13 +439,14 @@ public class JobDetails extends ActionBarActivity {
                     _bookmark.setAccessToken(accessToken);
 
                     // if already bookmark
-                    if( item.getIcon().equals(context.getResources().getDrawable(R.drawable.ic_bookmark_white_48dp)) ){
+                    if( isBookmarked ){
                         item.setIcon(R.drawable.ic_bookmark_border_white_48dp);
                         _bookmark.deleteBookmark(jobPostingId);
                     }else{
                         item.setIcon(R.drawable.ic_bookmark_white_48dp);
                         _bookmark.saveBookmark(jobPostingId);
                     }
+                    isBookmarked = !isBookmarked;
                 }
                 return true;
             case R.id.share:

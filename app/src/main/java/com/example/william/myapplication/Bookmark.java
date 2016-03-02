@@ -2,6 +2,7 @@ package com.example.william.myapplication;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -23,47 +24,51 @@ public class Bookmark {
     }
 
     public void saveBookmark( final int postId ){
-        // download job posting
-        GetRequest g = new GetRequest();
-        g.setResultListener(new GetRequest.ResultListener() {
-            @Override
-            public void processResultArray(JSONArray result) {}
+        Cursor bookmarkList = tableBookmark.getBookmark(postId);
+        if( bookmarkList.getCount() == 0) {
+            // download job posting
+            GetRequest g = new GetRequest();
+            g.setResultListener(new GetRequest.ResultListener() {
+                @Override
+                public void processResultArray(JSONArray result) {}
 
-            @Override
-            public void processResult(JSONObject success) {
-                if( success != null && success.toString().length() > 0 ){
-                    ContentValues cv2 = new ContentValues();
-                    try {
-                        // save job
-                        cv2.put("id", postId);
-                        cv2.put("title", success.getString("title"));
-                        cv2.put("company", success.getString("company"));
-                        cv2.put("job_data", success.toString());
-                        cv2.put("date_closed", success.getString("date_closed"));
-                        tableJob.addJob(cv2);
+                @Override
+                public void processResult(JSONObject success) {
+                    if( success != null && success.toString().length() > 0 ){
+                        ContentValues cv2 = new ContentValues();
+                        try {
+                            // save job
+                            cv2.put("id", postId);
+                            cv2.put("title", success.getString("title"));
+                            cv2.put("company", success.getString("company"));
+                            cv2.put("job_data", success.toString());
+                            cv2.put("date_closed", success.getString("date_closed"));
+                            tableJob.addJob(cv2);
 
-                        // save bookmark
-                        ContentValues cv = new ContentValues();
-                        cv.put("title", success.getString("title"));
-                        cv.put("post_id", postId);
-                        cv.put("date_added", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
-                        cv.put("date_closed", success.getString("date_closed"));
-                        tableBookmark.addBookmark(cv);
+                            // save bookmark
+                            ContentValues cv = new ContentValues();
+                            cv.put("title", success.getString("title"));
+                            cv.put("post_id", postId);
+                            cv.put("date_added", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
+                            cv.put("date_closed", success.getString("date_closed"));
+                            tableBookmark.addBookmark(cv);
 
-                        // post to server
-                        JSONObject obj = new JSONObject();
-                        obj.put("post_id", postId);
-                        String[] param = {Jenjobs.BOOKMARK_URL + "?access-token=" + accessToken,obj.toString()};
-                        PostRequest postRequest = new PostRequest();
-                        postRequest.execute(param);
-                    } catch (JSONException e) {
-                        Log.e("bookmark", e.getMessage());
+                            // post to server
+                            JSONObject obj = new JSONObject();
+                            obj.put("post_id", postId);
+                            String[] param = {Jenjobs.BOOKMARK_URL + "?access-token=" + accessToken,obj.toString()};
+                            PostRequest postRequest = new PostRequest();
+                            postRequest.execute(param);
+                        } catch (JSONException e) {
+                            Log.e("bookmark", e.getMessage());
+                        }
                     }
                 }
-            }
-        });
-        String[] args = {Jenjobs.JOB_DETAILS+"/"+postId};
-        g.execute(args);
+            });
+            String[] args = {Jenjobs.JOB_DETAILS+"/"+postId};
+            g.execute(args);
+        }
+        bookmarkList.close();
     }
 
     public void deleteBookmark( int postId ){
