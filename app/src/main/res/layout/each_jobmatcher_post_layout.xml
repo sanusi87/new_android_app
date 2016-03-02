@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     style="@style/AppThemePadding10">
 
-
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -20,21 +21,20 @@
             android:layout_weight="1" />
 
         <ImageButton
-            android:layout_width="16dp"
+            android:layout_width="20dp"
             android:layout_height="match_parent"
             android:id="@+id/bookmarkButton"
             android:contentDescription="@string/no_value"
-            android:src="@drawable/ic_turned_in_not_black_24dp"
+            android:src="@drawable/ic_bookmark_border_black_48dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:maxWidth="50dp"
             android:background="@android:color/transparent" />
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+    <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:id="@+id/jobDetailsContainer">
         <TextView
             android:layout_width="wrap_content"
@@ -49,12 +49,14 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/salary"
-            android:id="@+id/salary" />
+            android:id="@+id/salary"
+            android:textColor="@color/muted_text" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -72,16 +74,18 @@
                     android:paddingRight="-4dp"
                     android:paddingTop="1dp"
                     android:paddingBottom="1dp"
-                    android:background="@android:color/transparent" />
+                    android:background="@android:color/transparent"
+                    android:layout_centerVertical="true" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/no_value"
+                    android:text="@string/location"
                     android:id="@+id/job_location"
                     android:layout_toEndOf="@+id/locationIcon"
                     android:layout_marginStart="5dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -104,11 +108,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/no_value"
+                    android:text="@string/job_type"
                     android:id="@+id/job_type"
                     android:layout_toEndOf="@+id/jobTypeIcon"
                     android:layout_marginStart="5dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -131,11 +136,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/no_value"
+                    android:text="@string/date_closed"
                     android:id="@+id/date_closed"
                     android:layout_toEndOf="@+id/expiredIcon"
                     android:layout_marginStart="5dp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="13sp" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -168,11 +174,12 @@
             android:layout_height="match_parent"
             android:id="@+id/moreItem"
             android:visibility="gone">
+
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/no_value"
+                android:text="@string/spec"
                 android:id="@+id/job_spec"
                 android:textSize="12sp" />
         </LinearLayout>

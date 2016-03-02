@@ -1,12 +1,10 @@
 package com.example.william.myapplication;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +17,6 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -42,8 +38,8 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
         tableBookmark = new TableBookmark(context);
         tableJob = new TableJob(context);
 
-        bookmark = context.getResources().getDrawable(R.drawable.ic_turned_in_not_black_24dp);
-        bookmarked = context.getResources().getDrawable(R.drawable.ic_turned_in_black_24dp);
+        bookmark = context.getResources().getDrawable(R.drawable.ic_bookmark_border_black_48dp);
+        bookmarked = context.getResources().getDrawable(R.drawable.ic_bookmark_black_48dp);
 
         expandedItem = new ArrayList<>();
     }
@@ -167,70 +163,15 @@ public class JobSearchAdapter extends BaseAdapter implements ListAdapter{
                     if( accessToken == null || !Jenjobs.isOnline(context) ){
                         Toast.makeText(context, "Please login or register to use this feature", Toast.LENGTH_SHORT).show();
                     }else{
+                        Bookmark _bookmark = new Bookmark(context);
+                        _bookmark.setAccessToken(accessToken);
+
                         if(bookmarkButton.getDrawable() == bookmarked){
                             bookmarkButton.setImageDrawable(bookmark);
-
-                            // delete bookmark
-                            tableBookmark.deleteBookmark(postId);
-
-                            // delete job
-                            tableJob.deleteJob(postId);
-
-                            // post to server
-                            String[] param = {Jenjobs.BOOKMARK_URL + "/"+postId+"?access-token=" + accessToken,"{}"};
-                            Log.e("url-delete", Jenjobs.BOOKMARK_URL + "/"+postId+"?access-token=" + accessToken);
-                            new DeleteRequest().execute(param);
+                            _bookmark.deleteBookmark(postId);
                         }else{
                             bookmarkButton.setImageDrawable(bookmarked);
-
-                            // save bookmark
-                            ContentValues cv = new ContentValues();
-                            cv.put("title", postTitle);
-                            cv.put("post_id", postId);
-                            cv.put("date_added", Jenjobs.date(null, "yyyy-MM-dd hh:mm:ss", null));
-                            cv.put("date_closed", dateClosed);
-                            tableBookmark.addBookmark(cv);
-
-                            // save job
-                            GetRequest g = new GetRequest();
-                            g.setResultListener(new GetRequest.ResultListener() {
-                                @Override
-                                public void processResultArray(JSONArray result) {}
-
-                                @Override
-                                public void processResult(JSONObject success) {
-                                    //Log.e("err", ""+success);
-                                    if( success != null && success.toString().length() > 0 ){
-                                        ContentValues cv2 = new ContentValues();
-                                        cv2.put("id", postId);
-                                        cv2.put("title", postTitle);
-                                        cv2.put("company", company);
-                                        cv2.put("job_data", success.toString());
-                                        cv2.put("date_closed", dateClosed);
-                                        tableJob.addJob(cv2);
-                                    }
-                                }
-                            });
-                            String[] args = {Jenjobs.JOB_DETAILS+"/"+postId};
-                            g.execute(args);
-
-                            // post to server
-                            JSONObject obj = new JSONObject();
-                            try {
-                                obj.put("post_id", postId);
-                                String[] param = {Jenjobs.BOOKMARK_URL + "?access-token=" + accessToken,obj.toString()};
-                                //Log.e("url-post", Jenjobs.BOOKMARK_URL + "/"+postId+"?access-token=" + accessToken);
-                                PostRequest postRequest = new PostRequest();
-                                postRequest.setResultListener(new PostRequest.ResultListener() {
-                                    @Override
-                                    public void processResult(JSONObject success) {
-                                        Log.e("bookmarked", ""+success);
-                                    }
-                                });
-                                postRequest.execute(param);
-                            } catch (JSONException e) {
-                                Log.e("err", e.getMessage());
-                            }
+                            _bookmark.saveBookmark(postId);
                         }
                     }
                 }

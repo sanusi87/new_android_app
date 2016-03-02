@@ -21,16 +21,15 @@
             android:layout_weight="1" />
 
         <ImageButton
-            android:layout_width="16dp"
+            android:layout_width="20dp"
             android:layout_height="match_parent"
             android:id="@+id/bookmarkButton"
             android:contentDescription="@string/no_value"
-            android:src="@drawable/ic_turned_in_not_black_24dp"
+            android:src="@drawable/ic_bookmark_border_black_48dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:maxWidth="50dp"
             android:background="@android:color/transparent" />
-
     </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent"

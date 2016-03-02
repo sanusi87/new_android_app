@@ -44,8 +44,8 @@ public class MatchedJobsAdapter extends BaseAdapter implements ListAdapter{
         this.profileId = jobmatcherProfileId;
         jobs = new ArrayList<>();
         expandedItem = new ArrayList<>();
-        bookmark = context.getResources().getDrawable(R.drawable.ic_turned_in_not_black_24dp);
-        bookmarked = context.getResources().getDrawable(R.drawable.ic_turned_in_black_24dp);
+        bookmark = context.getResources().getDrawable(R.drawable.ic_bookmark_border_black_48dp);
+        bookmarked = context.getResources().getDrawable(R.drawable.ic_bookmark_black_48dp);
         tableBookmark = new TableBookmark(context);
         tableJob = new TableJob(context);
 

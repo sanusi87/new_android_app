@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,18 +49,23 @@ public class JobDetails extends ActionBarActivity {
     LinearLayout noItem;
     SharedPreferences sharedPref;
     String accessToken;
-    TableProfile tableProfile;
-    TableApplication tableApplication;
-    TableJob tableJob;
     LinearLayout tabButton;
     ViewPager mViewPager;
     SectionsPagerAdapter mSectionsPagerAdapter;
+
+    TableProfile tableProfile;
+    TableApplication tableApplication;
+    TableJob tableJob;
+    TableBookmark tableBookmark;
 
     LinearLayout ll;
     LinearLayout applyButtonContainer;
 
     static Context context;
     static boolean isOnline;
+    private MenuItem shareMenuItem;
+
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +86,7 @@ public class JobDetails extends ActionBarActivity {
         tableProfile = new TableProfile(this);
         tableApplication = new TableApplication(this);
         tableJob = new TableJob(this);
+        tableBookmark = new TableBookmark(this);
         // -----
 
         applyButtonContainer = (LinearLayout)findViewById(R.id.applyButtonContainer);
@@ -208,7 +215,7 @@ public class JobDetails extends ActionBarActivity {
                     } else {
                         ArrayList<String> errors = tableProfile.isProfileComplete();
                         if (errors.size() == 0) {
-                            // TODO - save to local db (applicationTable)
+                            // save to local db (applicationTable)
                             ContentValues cv = new ContentValues();
                             cv.put("post_id", jobPostingId);
                             cv.put("status", TableApplication.STATUS_UNPROCESSED);
@@ -218,7 +225,7 @@ public class JobDetails extends ActionBarActivity {
                             tableApplication.addApplication(cv);
 
                             // attach invitation together with apply POST
-                            // TODO - handle invitation in apply POST request
+                            // handle invitation in apply POST request
                             JSONObject obj = new JSONObject();
                             if (invitationId > 0) {
                                 try {
@@ -347,6 +354,10 @@ public class JobDetails extends ActionBarActivity {
                         applyButton.setVisibility(View.GONE);
                     }
                 }
+
+                // show share menu
+                setShareIntent(jobDetails.getString("title"), jobDetails.getString("company"));
+                shareMenuItem.setVisible(true);
             } catch (JSONException e) {
                 Toast.makeText(context, "Job posting not found!", Toast.LENGTH_SHORT).show();
             }
@@ -372,6 +383,9 @@ public class JobDetails extends ActionBarActivity {
                             applyButton.setVisibility(View.GONE);
                         }
                     }
+
+                    setShareIntent(jobDetails.getString("title"), jobDetails.getString("company"));
+                    shareMenuItem.setVisible(true);
                 } catch (JSONException e) {
                     Log.e("err", e.getMessage());
                 }
@@ -389,8 +403,29 @@ public class JobDetails extends ActionBarActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.job_details, menu);
-        // TODO - change this to show(true)/hide(false) menu
-        return false;
+        // change this to show(true)/hide(false) menu
+
+        MenuItem bookmarkItem = menu.findItem(R.id.bookmark);
+        Cursor bookmarkList = tableBookmark.getBookmark(jobPostingId);
+        if( bookmarkList.getCount() > 0) {
+            bookmarkItem.setIcon(R.drawable.ic_bookmark_white_48dp);
+        }
+        bookmarkList.close();
+
+        MenuItem shareItem = menu.findItem(R.id.share);
+        mShareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
+        shareMenuItem = shareItem;
+        shareMenuItem.setVisible(false);
+
+        return true;
+    }
+
+    private void setShareIntent( String title, String company ){
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, String.format(getResources().getString(R.string.share_description), title, company));
+        sendIntent.setType("text/plain");
+        mShareActionProvider.setShareIntent(sendIntent);
     }
 
     @Override
@@ -398,6 +433,23 @@ public class JobDetails extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.bookmark:
                 // TODO - bookmarkThisJob();
+                if( accessToken == null || !Jenjobs.isOnline(context) ){
+                    Toast.makeText(context, "Please login or register to use this feature", Toast.LENGTH_SHORT).show();
+                }else{
+                    Bookmark _bookmark = new Bookmark(context);
+                    _bookmark.setAccessToken(accessToken);
+
+                    // if already bookmark
+                    if( item.getIcon().equals(context.getResources().getDrawable(R.drawable.ic_bookmark_white_48dp)) ){
+                        item.setIcon(R.drawable.ic_bookmark_border_white_48dp);
+                        _bookmark.deleteBookmark(jobPostingId);
+                    }else{
+                        item.setIcon(R.drawable.ic_bookmark_white_48dp);
+                        _bookmark.saveBookmark(jobPostingId);
+                    }
+                }
+                return true;
+            case R.id.share:
                 return true;
             case android.R.id.home:
                 finish();
@@ -583,7 +635,7 @@ public class JobDetails extends ActionBarActivity {
                     ((ViewGroup)v.findViewById(R.id.companyWebsite).getParent()).setVisibility(View.GONE);
                 }
 
-                if( companyDetails.optString("facebook_page") != null 
+                if( companyDetails.optString("facebook_page") != null
                         && !companyDetails.optString("facebook_page").equals("null")
                         && companyDetails.getString("facebook_page").length() > 0 ){
                     ((TextView)v.findViewById(R.id.companyFacebookPage)).setText(companyDetails.optString("facebook_page"));
