@@ -182,13 +182,13 @@
                 android:text="@string/job_description"
                 android:id="@+id/job_description"
                 android:textColor="@color/dark_gray"
-                android:background="@drawable/border_left"
                 android:textSize="12sp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
-                android:layout_margin="5dp" />
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/border_left" />
 
             <TextView
                 android:layout_width="wrap_content"
