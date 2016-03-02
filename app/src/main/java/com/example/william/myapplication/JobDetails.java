@@ -12,8 +12,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -28,7 +30,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -387,7 +388,7 @@ public class JobDetails extends ActionBarActivity {
                     setShareIntent(jobDetails.getString("title"), jobDetails.getString("company"));
                     shareMenuItem.setVisible(true);
                 } catch (JSONException e) {
-                    Log.e("err", e.getMessage());
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }else{
                 // if network error
@@ -413,7 +414,9 @@ public class JobDetails extends ActionBarActivity {
         bookmarkList.close();
 
         MenuItem shareItem = menu.findItem(R.id.share);
-        mShareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
+        shareItem.setIcon(R.drawable.ic_share_white_48dp);
+        mShareActionProvider = new ShareActionProvider(context);
+        MenuItemCompat.setActionProvider(shareItem, mShareActionProvider);
         shareMenuItem = shareItem;
         shareMenuItem.setVisible(false);
 
