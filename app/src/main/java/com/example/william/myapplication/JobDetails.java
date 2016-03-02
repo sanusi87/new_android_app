@@ -422,7 +422,7 @@ public class JobDetails extends ActionBarActivity {
     private void setShareIntent( String title, String company ){
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, String.format(getResources().getString(R.string.share_description), title, company));
+        sendIntent.putExtra(Intent.EXTRA_TEXT, String.format(getResources().getString(R.string.share_description), title, company, jobPostingId));
         sendIntent.setType("text/plain");
         mShareActionProvider.setShareIntent(sendIntent);
     }
