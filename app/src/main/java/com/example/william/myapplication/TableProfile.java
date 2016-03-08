@@ -12,7 +12,7 @@ public class TableProfile extends SQLiteOpenHelper{
 
     public static final String TABLE_NAME = "profile";
 	
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableProfile.TABLE_NAME+"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //0
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME+"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + //0
             "_id INTEGER, " + //1
             "email TEXT, " + //2
             "username TEXT, " + //3
@@ -42,7 +42,8 @@ public class TableProfile extends SQLiteOpenHelper{
             "updated_at NUMERIC," + //27
             "resume_uri TEXT," +
             "photo_uri TEXT);";
-    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableProfile.TABLE_NAME+"'";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
+    public static String SQL_EMPTY_TABLE = "DELETE FROM '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
     private Context context;
@@ -192,7 +193,7 @@ public class TableProfile extends SQLiteOpenHelper{
     public Profile getProfile(){
         Profile profile = new Profile();
 
-        Cursor c = db.rawQuery("SELECT * FROM "+TableProfile.TABLE_NAME, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME, null);
         c.moveToFirst();
         while( !c.isAfterLast() ){
             String name = c.getString(4);
@@ -236,12 +237,12 @@ public class TableProfile extends SQLiteOpenHelper{
     }
 
     public Long addProfile(ContentValues cv){
-        return db.insert(TableProfile.TABLE_NAME, null, cv);
+        return db.insert(TABLE_NAME, null, cv);
     }
 
     public boolean updateProfile(ContentValues cv, int existingID){
         String[] _id = {String.valueOf(existingID)};
-        int affectedRows = db.update(TableProfile.TABLE_NAME, cv, "_id=?", _id);
+        int affectedRows = db.update(TABLE_NAME, cv, "_id=?", _id);
         return affectedRows > 0;
     }
 

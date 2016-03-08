@@ -25,6 +25,7 @@ public class TableBookmark extends SQLiteOpenHelper{
             "date_added NUMERIC," +
             "date_closed NUMERIC);";
     public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
+    public static String SQL_EMPTY_TABLE = "DELETE FROM '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
     private Context context;

@@ -9,8 +9,9 @@ import java.util.ArrayList;
 
 public class TableCountry extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "country";
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableCountry.TABLE_NAME+"' (id INTEGER(4), name TEXT, dial_code TEXT);";
-    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableCountry.TABLE_NAME+"'";
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME+"' (id INTEGER(4), name TEXT, dial_code TEXT);";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
+    public static String SQL_EMPTY_TABLE = "DELETE FROM '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
     public TableCountry(Context context){
@@ -273,7 +274,7 @@ public class TableCountry extends SQLiteOpenHelper{
 
     public ArrayList<Country> getCountries(){
         ArrayList<Country> countries = new ArrayList<>();
-        Cursor c = db.rawQuery("SELECT * FROM "+TableCountry.TABLE_NAME, null);
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME, null);
         c.moveToFirst();
         while( !c.isAfterLast() ){
             int countryId = c.getInt(0);
@@ -286,7 +287,7 @@ public class TableCountry extends SQLiteOpenHelper{
     }
 
     public Country findCountryById(int country_id) {
-        Cursor c = db.rawQuery("SELECT * FROM " + TableCountry.TABLE_NAME + " WHERE id=?", new String[]{String.valueOf(country_id)});
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE id=?", new String[]{String.valueOf(country_id)});
         c.moveToFirst();
         if( !c.isAfterLast() ){
             Country cc = new Country(c.getInt(0), c.getString(1), c.getString(2));

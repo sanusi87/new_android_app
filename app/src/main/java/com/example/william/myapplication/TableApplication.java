@@ -31,7 +31,7 @@ public class TableApplication extends SQLiteOpenHelper {
     public static final int STATUS_HIRED = 11;
 
     public static final String TABLE_NAME = "application";
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableApplication.TABLE_NAME
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME
             +"' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "_id INTEGER, " +
             "post_id INTEGER, " +
@@ -40,7 +40,8 @@ public class TableApplication extends SQLiteOpenHelper {
             "date_updated NUMERIC," +
             "title TEXT," +
             "closed INTEGER(1));";
-    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableApplication.TABLE_NAME+"'";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
+    public static String SQL_EMPTY_TABLE = "DELETE FROM '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
     private Context context;
@@ -63,7 +64,7 @@ public class TableApplication extends SQLiteOpenHelper {
     }
 
     public Cursor getApplication(int post_id){
-        String strSQL = "SELECT * FROM "+TableApplication.TABLE_NAME;
+        String strSQL = "SELECT * FROM "+TABLE_NAME;
         String[] args = null;
         if( post_id > 0 ){
             strSQL += " WHERE post_id=?";
@@ -73,13 +74,13 @@ public class TableApplication extends SQLiteOpenHelper {
     }
 
     public Cursor getActiveApplication(){
-        String strSQL = "SELECT * FROM "+TableApplication.TABLE_NAME+" WHERE (status != ? AND status != ?) AND closed=0";
+        String strSQL = "SELECT * FROM "+TABLE_NAME+" WHERE (status != ? AND status != ?) AND closed=0";
         String[] args = {String.valueOf(STATUS_WITHDRAWN), String.valueOf(STATUS_HIRED)};
         return db.rawQuery(strSQL, args);
     }
 
     public boolean isDifferentApplicationStatus(int postId, int newStatus){
-        String string = "SELECT status,post_id FROM "+TableApplication.TABLE_NAME+" WHERE post_id=?";
+        String string = "SELECT status,post_id FROM "+TABLE_NAME+" WHERE post_id=?";
         String[] args = {String.valueOf(postId)};
         Cursor c = db.rawQuery(string, args);
 
@@ -94,19 +95,19 @@ public class TableApplication extends SQLiteOpenHelper {
     }
 
     public Long addApplication(ContentValues cv2){
-        return db.insert(TableApplication.TABLE_NAME, null, cv2);
+        return db.insert(TABLE_NAME, null, cv2);
     }
 
     public boolean updateApplication(ContentValues cv2, int existingID){
         String[] _id = {String.valueOf(existingID)};
-        int affectedRows = db.update(TableApplication.TABLE_NAME, cv2, "post_id=?", _id);
+        int affectedRows = db.update(TABLE_NAME, cv2, "post_id=?", _id);
         return affectedRows > 0;
     }
 
     public boolean deleteApplication(int id){
         String _id = String.valueOf(id);
         String[] param = {_id};
-        int affectedRows = db.delete(TableApplication.TABLE_NAME, "post_id=?", param);
+        int affectedRows = db.delete(TABLE_NAME, "post_id=?", param);
         return affectedRows > 0;
     }
 

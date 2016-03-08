@@ -20,7 +20,7 @@ public class TableEducation extends SQLiteOpenHelper{
     "date_graduated": "0000-00-00",
     "info": "dddd"
     * */
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableEducation.TABLE_NAME
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME
             +"' (" +
             "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
             "_id INTEGER, "+
@@ -34,7 +34,8 @@ public class TableEducation extends SQLiteOpenHelper{
             "date_graduated NUMERIC," +
             "date_added NUMERIC," +
             "date_updated NUMERIC);";
-    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableEducation.TABLE_NAME+"'";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
+    public static String SQL_EMPTY_TABLE = "DELETE FROM '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
 
@@ -55,28 +56,28 @@ public class TableEducation extends SQLiteOpenHelper{
     }
 
     public Cursor getEducation(){
-        return db.rawQuery("SELECT * FROM "+TableEducation.TABLE_NAME, null);
+        return db.rawQuery("SELECT * FROM "+TABLE_NAME, null);
     }
 
     public Long addEducation(ContentValues cv2){
-        return db.insert(TableEducation.TABLE_NAME, null, cv2);
+        return db.insert(TABLE_NAME, null, cv2);
     }
 
     public boolean updateEducation(ContentValues cv2, int existingID){
         String[] _id = {String.valueOf(existingID)};
-        int affectedRows = db.update(TableEducation.TABLE_NAME, cv2, "id=?", _id);
+        int affectedRows = db.update(TABLE_NAME, cv2, "id=?", _id);
         return affectedRows > 0;
     }
 
     public boolean deleteEducation(int id){
         String _id = String.valueOf(id);
         String[] param = {_id};
-        int affectedRows = db.delete(TableEducation.TABLE_NAME, "id=?", param);
+        int affectedRows = db.delete(TABLE_NAME, "id=?", param);
         return affectedRows > 0;
     }
 
     public Cursor getEducationById(int id) {
         String[] _id = {String.valueOf(id)};
-        return db.rawQuery("SELECT * FROM "+TableEducation.TABLE_NAME+" WHERE id=?", _id);
+        return db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE id=?", _id);
     }
 }

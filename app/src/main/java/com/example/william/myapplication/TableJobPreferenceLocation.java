@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class TableJobPreferenceLocation extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "job_preference_location";
-    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TableJobPreferenceLocation.TABLE_NAME+"' (city_id NUMERIC, " +
+    public static String SQL_CREATE_ENTRIES = "CREATE TABLE '"+TABLE_NAME+"' (city_id NUMERIC, " +
             "city_name TEXT, " +
             "state_id NUMERIC, " +
             "state_name TEXT, " +
@@ -16,7 +16,8 @@ public class TableJobPreferenceLocation extends SQLiteOpenHelper {
             "country_name TEXT, " +
             "keyword TEXT, " +
             "date_updated NUMERIC)";
-    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TableJobPreferenceLocation.TABLE_NAME+"'";
+    public static String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS '"+TABLE_NAME+"'";
+    public static String SQL_EMPTY_TABLE = "DELETE FROM '"+TABLE_NAME+"'";
 
     public SQLiteDatabase db;
 
@@ -26,29 +27,21 @@ public class TableJobPreferenceLocation extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-
-    }
+    public void onCreate(SQLiteDatabase db){}
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){}
 
     public void truncate(){
-        db.execSQL("DELETE FROM "+TableJobPreferenceLocation.TABLE_NAME);
+        db.execSQL("DELETE FROM "+TABLE_NAME);
     }
 
     public boolean insertJobPreference(ContentValues cv){
-        Long affectedRows = db.insert(TableJobPreferenceLocation.TABLE_NAME, null, cv);
-        if( affectedRows > 0 ){
-            return true;
-        }
-        return false;
+        Long affectedRows = db.insert(TABLE_NAME, null, cv);
+        return affectedRows > 0;
     }
 
     public Cursor getJobPreference() {
-        Cursor c = db.rawQuery("SELECT * FROM "+TableJobPreferenceLocation.TABLE_NAME, null);
-        return c;
+        return db.rawQuery("SELECT * FROM "+TABLE_NAME, null);
     }
 }
