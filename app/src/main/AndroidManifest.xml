@@ -56,7 +56,8 @@
 
         <activity
             android:name=".ProfileActivity"
-            android:label="@string/title_activity_profile" />
+            android:label="@string/title_activity_profile"
+            android:configChanges="orientation|keyboardHidden" />
         <activity
             android:name=".RegisterActivity"
             android:label="@string/register_text"
@@ -137,7 +138,8 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".JobDetails"
-            android:label="@string/title_activity_job_details2" />
+            android:label="@string/title_activity_job_details2"
+            android:configChanges="orientation|keyboardHidden" />
         <activity
             android:name=".SelectKeywordFilter"
             android:theme="@android:style/Theme.Dialog" />
