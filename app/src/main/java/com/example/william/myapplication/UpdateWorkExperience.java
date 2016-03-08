@@ -182,9 +182,12 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 selectedIndustry.setText(__industryName);
 
                 int __jobTypeId = w.getInt(6);
-                String __jobTypeName = (String) listOfJobType.get(__jobTypeId);
-                _jobType = new JobType(__jobTypeId, __jobTypeName);
-                selectedJobType.setText(__jobTypeName);
+                if( __jobTypeId > 0 ){
+                    String __jobTypeName = (String) listOfJobType.get(__jobTypeId);
+                    _jobType = new JobType(__jobTypeId, __jobTypeName);
+                    selectedJobType.setText(__jobTypeName);
+                }
+
 
                 String startDate = w.getString(12);
                 String _selectedMonth = Jenjobs.date(startDate, "MMMM", "dd-MM-yyyy");
