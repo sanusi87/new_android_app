@@ -62,8 +62,9 @@ public class JobSearchMain extends ActionBarActivity {
         setContentView(R.layout.activity_job_search_main);
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-        tableJobSpec = new TableJobSpec(this);
-        tableJobRole = new TableJobRole(this);
+        TableProfile tableProfile = new TableProfile(getApplicationContext());
+        tableJobSpec = new TableJobSpec(getApplicationContext());
+        tableJobRole = new TableJobRole(getApplicationContext());
 
         loginButton = (Button) findViewById(R.id.login_button);
         registerButton = (Button) findViewById(R.id.register_button);

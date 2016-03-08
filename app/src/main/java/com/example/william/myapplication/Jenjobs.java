@@ -694,8 +694,13 @@ public class Jenjobs {
                 Calendar cal = Calendar.getInstance();
                 theDate = cal.getTime();
             }else{
-                SimpleDateFormat inputFormatter = new SimpleDateFormat(inputFormat, Locale.getDefault());
-                theDate = inputFormatter.parse(currentDate);
+                if( currentDate.equals("null") ){
+                    Calendar cal = Calendar.getInstance();
+                    theDate = cal.getTime();
+                }else{
+                    SimpleDateFormat inputFormatter = new SimpleDateFormat(inputFormat, Locale.getDefault());
+                    theDate = inputFormatter.parse(currentDate);
+                }
             }
             newDate = outputFormatter.format(theDate);
         } catch (java.text.ParseException e) {
