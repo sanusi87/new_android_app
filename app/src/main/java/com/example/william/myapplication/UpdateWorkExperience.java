@@ -196,7 +196,7 @@ public class UpdateWorkExperience extends ActionBarActivity {
                 yearStart.setSelection( yearAdapter.getPosition( _selectedYear ) );
 
                 String endDate = w.getString( 13 );
-                if( endDate != null && !endDate.equals("null") ){
+                if( endDate != null && !endDate.equals("null") && !endDate.matches("^0000\\-00\\-00") ){
                     String __selectedMonth = Jenjobs.date(endDate, "MMMM", "dd-MM-yyyy");
                     String __selectedYear = endDate.substring(0,4);
                     monthEnd.setSelection( monthAdapter.getPosition( __selectedMonth ) );
