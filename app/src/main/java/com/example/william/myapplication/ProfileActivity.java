@@ -823,7 +823,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                     String durationRange = Jenjobs.date(dateStart, null, "yyyy-MM-dd")+" - ";
                     String durationCount;
-                    if( dateResign.length() == 0 || dateResign.equals("null") ){
+
+                    if( dateResign.length() == 0 || dateResign.equals("null") || dateResign.matches("^0000\\-00\\-00$") ){
                         durationRange += "Present";
                         durationCount = Jenjobs.calculateDuration( dateStart, Jenjobs.date(null, null, "yyyy-MM-dd") );
                     }else{
@@ -1413,7 +1414,8 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                     String durationRange = Jenjobs.date(dateStart, "MMM yyyy", "yyyy-MM-dd") + " - ";
                     String durationCount;
-                    if (dateResign.length() == 0) {
+
+                    if ( dateResign.length() == 0 || dateResign.equals("null") || dateResign.matches("^0000\\-00\\-00$") ) {
                         durationRange += "Present";
                         durationCount = Jenjobs.calculateDuration(dateStart, Jenjobs.date(null, null, "yyyy-MM-dd"));
                     } else {
@@ -1751,7 +1753,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                         });
                         postRequest.execute(params);
                     } catch (JSONException e) {
-                        Log.e("exception", e.getMessage());
+                        //Log.e("exception", e.getMessage());
                         Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }else{
@@ -1847,7 +1849,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
 
                         tableProfile.addProfile(cv);
                         js_profile_id = cv.getAsInteger("_id");
-                        Log.e("js_profile_id", String.valueOf(js_profile_id));
+                        //Log.e("js_profile_id", String.valueOf(js_profile_id));
 
                         SharedPreferences.Editor spEdit = sharedPref.edit();
                         spEdit.putInt("js_profile_id", js_profile_id);
@@ -1987,8 +1989,10 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
                                 cv.put("position", s.optString("position"));
                                 cv.put("company", s.optString("company"));
 
-                                if( s.optString("job_type") != null ){
+                                //Log.e("job_type", ""+s.optString("job_type"));
+                                if( s.optString("job_type") != null && !s.optString("job_type").equals("null") ){
                                     JSONObject jobType = new JSONObject(s.optString("job_type"));
+                                    //Log.e("job_type2", ""+jobType);
                                     cv.put("job_type_id", jobType.optInt("id") > 0 ? jobType.optInt("id") : 0 );
                                 }
 
