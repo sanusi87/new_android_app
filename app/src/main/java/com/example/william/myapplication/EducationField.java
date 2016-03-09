@@ -27,11 +27,8 @@ public class EducationField implements Serializable{
             return false;
         }
 
-        if (this.id != other.id) {
-            return false;
-        }
+        return this.id == other.id;
 
-        return true;
     }
 
     @Override
