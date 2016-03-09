@@ -41,7 +41,8 @@ public class JobSearchFilter extends ActionBarActivity {
     //private TextView selectedJobRole;
     private TextView selectedJobType;
     private TextView selectedKeywordFilter;
-    private TextView enteredKeyword;
+    //private TextView enteredKeyword;
+    private EditText enteredKeyword;
 
     private CheckBox directEmployerCb;
     private CheckBox recruitmentAgencyCb;
@@ -105,7 +106,8 @@ public class JobSearchFilter extends ActionBarActivity {
         selectedJobSpec = (TextView)findViewById(R.id.selectedSpec);
         //selectedJobRole = (TextView)findViewById(R.id.selectedRole);
         selectedJobType = (TextView)findViewById(R.id.selectedJobType);
-        enteredKeyword = (TextView)findViewById(R.id.enteredKeyword);
+        //enteredKeyword = (TextView)findViewById(R.id.enteredKeyword);
+        enteredKeyword = (EditText)findViewById(R.id.enteredKeyword);
         selectedKeywordFilter = (TextView)findViewById(R.id.selectedKeywordFilter);
 
         TextView directEmployer = (TextView) findViewById(R.id.direct_employer);
@@ -427,7 +429,10 @@ public class JobSearchFilter extends ActionBarActivity {
             intent.putExtra("recruitment_agency", postedRecruitmentAgency);
 
             setResult(Activity.RESULT_OK, intent);
+            //intent.setClass(getApplicationContext(), JobSearchActivity.class);
+            //startActivity(intent);
             finish();
+
         }else if( clickedItem == R.id.clear_filter ){
             CharSequence noValue = getText(R.string.no_value);
             // reset values
