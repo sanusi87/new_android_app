@@ -4,12 +4,12 @@
     tools:context=".AboutJobSearch"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/scrollView3"
-    style="@style/AppThemePadding10">
+    android:id="@+id/scrollView3">
 
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        style="@style/AppThemePadding10">
 
         <ImageView
             android:layout_width="300dp"
@@ -17,9 +17,8 @@
             android:id="@+id/imageView"
             android:contentDescription="@string/no_value"
             android:src="@drawable/jenjobs_logo"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:layout_gravity="center_horizontal" />
 
         <LinearLayout
             android:orientation="vertical"
