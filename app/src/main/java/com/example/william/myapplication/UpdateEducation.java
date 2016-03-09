@@ -253,7 +253,7 @@ public class UpdateEducation extends ActionBarActivity {
                 }
 
                 if( selectedEducationField.getText().toString().equals(getResources().getString(R.string.no_value)) ){
-                    errors.add("Please select field of education.");
+                    errors.add("Please select field of study.");
                 }
 
                 if( selectedGraduationYear.getText().toString().equals(getResources().getString(R.string.no_value)) ){
