@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.william.myapplication"
+    package="jen.jobs.application"
     android:installLocation="internalOnly">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->

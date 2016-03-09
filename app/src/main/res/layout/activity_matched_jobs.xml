@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.example.william.myapplication.MatchedJobs"
+    tools:context="jen.jobs.application.MatchedJobs"
     android:orientation="vertical">
 
     <LinearLayout

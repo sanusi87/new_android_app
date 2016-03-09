@@ -1,4 +1,4 @@
-package com.example.william.myapplication;
+package com.example.william.application;
 
 import org.junit.Test;
 

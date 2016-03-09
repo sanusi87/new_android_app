@@ -1,0 +1,62 @@
+package jen.jobs.application;
+
+import android.os.AsyncTask;
+import android.util.Log;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class DeleteRequest extends AsyncTask<String, Void, JSONObject> {
+    public DeleteRequest(){}
+
+    @Override
+    protected JSONObject doInBackground(String... params) {
+        JSONObject _response = null;
+        HttpClient httpclient = new DefaultHttpClient();
+
+        //Log.e("deleteUrl", params[0]);
+        HttpDelete httpDelete = new HttpDelete( params[0] );
+        httpDelete.addHeader("Content-Type", "application/json");
+        httpDelete.addHeader("Accept", "application/json");
+
+        try {
+            HttpResponse _http_response = httpclient.execute(httpDelete);;
+            HttpEntity _entity = _http_response.getEntity();
+            InputStream is = _entity.getContent();
+            String responseString = JenHttpRequest.readInputStreamAsString(is);
+
+            _response = JenHttpRequest.decodeJsonObjectString(responseString);
+        } catch (IOException e) {
+            Log.e("deleteExc", e.getMessage());
+        }
+
+        return _response;
+    }
+
+    @Override
+    protected void onPostExecute(JSONObject result) {
+        if( result != null ){
+            //Log.e("deleted?", result.toString());
+        }
+        if( resultListener != null ){
+            resultListener.processResult(result);
+        }
+    }
+
+    public interface ResultListener {
+        void processResult(JSONObject success); // available listener method
+    }
+
+    private ResultListener resultListener;
+    public DeleteRequest setResultListener(ResultListener resultListener){
+        this.resultListener = resultListener;
+        return this;
+    }
+}
