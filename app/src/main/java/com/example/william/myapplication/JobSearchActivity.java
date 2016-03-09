@@ -3,16 +3,26 @@ package com.example.william.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,17 +46,20 @@ public class JobSearchActivity extends ActionBarActivity {
         setContentView(R.layout.job_layout);
         setTitle("Job Search");
 
-        if( getSupportActionBar() != null ){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if( actionBar != null ){
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         context = getApplicationContext();
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
+        boolean showTutorial = sharedPref.getBoolean("job_search_tutorial", true);
 
         ProgressBar loading = (ProgressBar) findViewById(R.id.progressBar4);
         ListView lv = (ListView) findViewById(R.id.job_list_view);
         JobSearchAdapter jobSearchAdapter = new JobSearchAdapter(this);
+        jobSearchAdapter.setAccessToken(accessToken);
 
         jobSearch = new JobSearch(jobSearchAdapter);
         jobSearch.setLoading( loading );
@@ -209,6 +222,21 @@ public class JobSearchActivity extends ActionBarActivity {
                 previousLastPosition = 0;
             }
         });
+
+        if( showTutorial ){
+            final LinearLayout tutorial = (LinearLayout)findViewById(R.id.tutorial);
+            tutorial.setVisibility(View.VISIBLE);
+            findViewById(R.id.dismissTutorial).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tutorial.setVisibility(View.GONE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putBoolean("job_search_tutorial", false);
+                    editor.apply();
+                }
+            });
+        }
+
     }
 
     @Override
@@ -217,8 +245,8 @@ public class JobSearchActivity extends ActionBarActivity {
         inflater.inflate(R.menu.job_fragment_menu, menu);
 
         if( accessToken == null ){
-            menu.getItem(1).setVisible(false);
-            menu.getItem(2).setVisible(false);
+            menu.findItem(R.id.filter_job_button).setVisible(false);
+            menu.findItem(R.id.save_filter_button).setVisible(false);
         }
 
         return true;
