@@ -257,7 +257,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
             startActivity(intent);
             //finish(); // -- do not set this if you wanted to return
         }else if( selectedItem == JOB_FRAGMENT ){
-            Intent intent = new Intent(this, JobSearchActivity.class);
+            Intent intent = new Intent(this, JobSearchMain.class);
             startActivity(intent);
         }else{
             // update the main content by replacing fragments
