@@ -174,11 +174,19 @@ public class JobSearchMain extends ActionBarActivity {
         // check for sharedPreference data
         String accessToken = sharedPref.getString("access_token", null);
         if( accessToken != null ){
+            loginButton.setText(R.string.my_profile);
+            registerButton.setVisibility(View.GONE);
+            forgotButton.setVisibility(View.GONE);
+        }
+
+        /*
+        if( accessToken != null ){
             Intent intent = new Intent();
             intent.setClass(getApplicationContext(), ProfileActivity.class);
             startActivity(intent);
             finish();
         }
+        */
     }
 
     @Override
