@@ -512,7 +512,6 @@ public class MainService extends Service{
         int m = r.nextInt(58)+1; // randomize minute, minimum 1
         int h = r.nextInt(12); // randomize hour
         if( h < 8 ){ h = 8; }
-        Log.e("alarm on", ""+h+":"+m);
 
         Long alarmInterval = AlarmManager.INTERVAL_DAY;
         //Long alarmInterval = (long)(1000 * 60 * 3); // 3 minute
@@ -529,10 +528,14 @@ public class MainService extends Service{
             calendar.set(Calendar.MINUTE, m);
             calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
         }
-
         Intent _intent = createIntent( alertNotification );
-        PendingIntent alarmIntent = PendingIntent.getService(context, alarmID, _intent, 0);
-        alarm.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), alarmInterval, alarmIntent);
+
+        boolean alarmUp = (PendingIntent.getBroadcast(context, alarmID, _intent, PendingIntent.FLAG_NO_CREATE) != null);
+        if( !alarmUp ){
+            Log.e("alarm on", ""+h+":"+m);
+            PendingIntent alarmIntent = PendingIntent.getService(context, alarmID, _intent, 0);
+            alarm.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), alarmInterval, alarmIntent);
+        }
     }
 
     public void stopAlarm( int searchProfileId, String alertNotification ){
