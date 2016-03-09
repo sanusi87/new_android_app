@@ -1,51 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context=".AboutJobSearch"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/scrollView3"
     style="@style/AppThemePadding10">
 
-    <ImageView
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:id="@+id/imageView"
-        android:contentDescription="@string/no_value"
-        android:src="@drawable/jenjobs_logo"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:scaleType="fitCenter" />
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/about" />
+        android:orientation="vertical">
 
-    <View style="@style/AppThemeSeparator" />
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="150dp"
+            android:id="@+id/imageView"
+            android:contentDescription="@string/no_value"
+            android:src="@drawable/jenjobs_logo"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:scaleType="fitCenter" />
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/about" />
+            <View style="@style/AppThemeSeparator" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:autoText="false"
+                android:id="@+id/aboutUs"
+                android:text="@string/no_value" />
+        </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/lorem_ipsum"
-        android:autoText="false" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/who_we_are" />
+            <View style="@style/AppThemeSeparator" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:autoText="false"
+                android:id="@+id/whoWeAre"
+                android:text="@string/no_value" />
+        </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/about_desc"
-        android:layout_marginTop="20dp" />
-
-    <View style="@style/AppThemeSeparator" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/lorem_ipsum" />
-
-</LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/what_we_do" />
+            <View style="@style/AppThemeSeparator" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:autoText="false"
+                android:id="@+id/whatWeDo"
+                android:text="@string/no_value" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

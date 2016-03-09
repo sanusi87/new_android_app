@@ -227,9 +227,9 @@
     <string name="title_activity_employer_profile">Employer Profile</string>
     <string name="company_info">Company Info</string>
     <string name="company_location">Company Location</string>
-    <string name="about">About</string>
+    <string name="about">About Us</string>
     <string name="about_desc">Posting job ads</string>
-    <string name="about_job_posting">About JenJOBS Job Search</string>
+    <string name="about_job_posting">About JenJOBS.com Job Search</string>
     <string name="bookmarked_on">Bookmarked on</string>
     <string name="identityCardNumber">Identity Card Number</string>
     <string name="clear_filter">Clear Filter</string>
@@ -296,4 +296,9 @@
     <string name="share">Share</string>
     <string name="share_description">%1$s posted by %2$s, please visit http://www.jenjobs.com/job/job-detail?jid=%3$d for more info.</string>
     <string name="email_is_required">Email is required!</string>
+    <string name="about_us">&lt;p&gt;&lt;b&gt;JenJOBS.com&lt;/b&gt; is a leading Malaysian e-recruitment platform designed to match quality jobseekers to prospective employers:&lt;br /&gt;&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;b&gt;Employers&lt;/b&gt; post job advertisements and search for candidates&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;b&gt;Jobseekers&lt;/b&gt; search and apply for their dream jobs&lt;br /&gt;&lt;br /&gt;&lt;b&gt;Our Vision&lt;/b&gt; - To help jobseekers find their dream jobs and employers find the right candidates.&lt;br /&gt;&lt;br /&gt;&lt;b&gt;Our Mission&lt;/b&gt; - Providing recruiters with a more cost-efficient search platform that is innovative, user-friendly and which incorporates the latest technology.&lt;br /&gt;&lt;br /&gt;&lt;b&gt;Our Goal&lt;/b&gt; - To expedite the hiring process via more accurate matches between jobseekers and employers.&lt;/p&gt;</string>
+    <string name="who_we_are">Who We Are</string>
+    <string name="who_we_are_text">&lt;p&gt;&lt;b&gt;JenJOBS.com&lt;/b&gt; has been operational since 2006 and is owned by Agensi Pekerjaan JEN Software Professional Sdn Bhd an award-winning company established since 1991. JEN Software Professional Sdn Bhd has won the Enterprise 50 Award for three consecutive years.&lt;/p&gt;</string>
+    <string name="what_we_do">What We Do</string>
+    <string name="what_we_do_text">&lt;p&gt;We offer the following services;&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#042; Permanent Recruitment specialising in IT&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#042; Contract &amp; Payroll Administration&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#042; Online Job Posting Advertisements&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#042; Online Resume Search Database&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#042; Online Advertising&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#042; Email Direct Marketing&lt;/p&gt;</string>
 </resources>

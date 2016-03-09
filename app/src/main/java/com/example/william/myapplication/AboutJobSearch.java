@@ -2,9 +2,11 @@ package com.example.william.myapplication;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class AboutJobSearch extends ActionBarActivity {
 
@@ -17,6 +19,15 @@ public class AboutJobSearch extends ActionBarActivity {
         if( getSupportActionBar() != null ){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        TextView tv = (TextView)findViewById(R.id.aboutUs);
+        tv.setText(Html.fromHtml(getString(R.string.about_us)));
+
+        TextView tv2 = (TextView)findViewById(R.id.whoWeAre);
+        tv2.setText(Html.fromHtml(getString(R.string.who_we_are_text)));
+
+        TextView tv3 = (TextView)findViewById(R.id.whatWeDo);
+        tv3.setText(Html.fromHtml(getString(R.string.what_we_do_text)));
     }
 
     @Override
