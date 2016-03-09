@@ -46,6 +46,7 @@
                 android:text="@string/keyword"
                 style="@style/AppThemeBaseLabel" />
 
+            <!--
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,6 +54,15 @@
                 android:text="@string/no_value"
                 android:id="@+id/enteredKeyword"
                 style="@style/AppThemeBaseTextValue" />
+            -->
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/enteredKeyword"
+                style="@style/AppThemeBaseTextInput"
+                android:focusable="true"
+                android:inputType="text"
+                android:hint="@string/keyword" />
 
         </LinearLayout>
 
