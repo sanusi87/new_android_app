@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.app.Activity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +18,7 @@ public class SettingsSection {
 
     private View rootView;
     private Context context;
+    private Activity activity;
     private String accessToken;
     private boolean isOnline = false;
 
@@ -27,6 +29,10 @@ public class SettingsSection {
 
     public void setAccessToken(String accessToken){
         this.accessToken = accessToken;
+    }
+
+    public void setActivity(Activity a){
+        this.activity = a;
     }
 
     public void setIsOnline(boolean online){
@@ -192,7 +198,7 @@ public class SettingsSection {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, UpdatePassword.class);
-                context.startActivity(intent);
+                activity.startActivity(intent);
             }
         });
     }
