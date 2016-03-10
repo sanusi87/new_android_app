@@ -301,4 +301,8 @@
     <string name="who_we_are_text">&lt;p&gt;&lt;b&gt;JenJOBS.com&lt;/b&gt; has been operational since 2006 and is owned by Agensi Pekerjaan JEN Software Professional Sdn Bhd an award-winning company established since 1991. JEN Software Professional Sdn Bhd has won the Enterprise 50 Award for three consecutive years.&lt;/p&gt;</string>
     <string name="what_we_do">What We Do</string>
     <string name="what_we_do_text">&lt;p&gt;We offer the following services;&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#042; Permanent Recruitment specialising in IT&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#042; Contract &amp; Payroll Administration&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#042; Online Job Posting Advertisements&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#042; Online Resume Search Database&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#042; Online Advertising&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#042; Email Direct Marketing&lt;/p&gt;</string>
+    <string name="update_password">Update Password</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="repeat_new_password">Repeat New Password</string>
 </resources>
