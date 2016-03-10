@@ -530,10 +530,9 @@ public class MainService extends Service{
         }
         Intent _intent = createIntent( alertNotification );
 
-        boolean alarmUp = (PendingIntent.getBroadcast(context, alarmID, _intent, PendingIntent.FLAG_NO_CREATE) != null);
+        boolean alarmUp = PendingIntent.getService(context, alarmID, _intent, PendingIntent.FLAG_NO_CREATE) != null;
         if( !alarmUp ){
-            Log.e("alarm on", ""+h+":"+m);
-            PendingIntent alarmIntent = PendingIntent.getService(context, alarmID, _intent, 0);
+            PendingIntent alarmIntent = PendingIntent.getService(context, alarmID, _intent, PendingIntent.FLAG_NO_CREATE);
             alarm.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), alarmInterval, alarmIntent);
         }
     }
