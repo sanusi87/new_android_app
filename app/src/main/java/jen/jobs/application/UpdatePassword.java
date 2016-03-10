@@ -33,7 +33,7 @@ public class UpdatePassword extends ActionBarActivity {
         final EditText newPassword = (EditText)findViewById(R.id.newPassword);
         final EditText newPasswordRepeat = (EditText)findViewById(R.id.newPasswordRepeat);
 
-        Button saveButton = (Button)findViewById(R.id.saveButton);
+        final Button saveButton = (Button)findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,6 +51,9 @@ public class UpdatePassword extends ActionBarActivity {
                 }
 
                 if( errors.size() == 0 ){
+                    saveButton.setEnabled(false);
+                    saveButton.setClickable(false);
+
                     JSONObject obj = new JSONObject();
                     try {
                         obj.put("password", currentPassword.getText().toString());
@@ -70,11 +73,16 @@ public class UpdatePassword extends ActionBarActivity {
                                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                                     }
                                 }
+
+                                saveButton.setEnabled(true);
+                                saveButton.setClickable(true);
                             }
                         });
                         p.execute(param);
                     } catch (JSONException e) {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        saveButton.setEnabled(true);
+                        saveButton.setClickable(true);
                     }
                 }else{
                     Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_LONG).show();
