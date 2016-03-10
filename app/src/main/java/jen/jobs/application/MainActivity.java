@@ -121,7 +121,7 @@ public class MainActivity extends Activity {
                                                 toggleButtonState(true);
                                             }
                                         } catch (JSONException e) {
-                                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), "Login failed! Wrong username and password combination.", Toast.LENGTH_LONG).show();
                                         }
                                     }else{
                                         Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_LONG).show();
