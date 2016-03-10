@@ -216,7 +216,7 @@ public class JobSearchActivity extends ActionBarActivity {
             }
         });
 
-        if( showTutorial ){
+        if( showTutorial && accessToken != null ){
             final LinearLayout tutorial = (LinearLayout)findViewById(R.id.tutorial);
             tutorial.setVisibility(View.VISIBLE);
             findViewById(R.id.dismissTutorial).setOnClickListener(new View.OnClickListener() {
