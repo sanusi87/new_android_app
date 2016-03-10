@@ -636,6 +636,7 @@ public class ProfileActivity extends ActionBarActivity implements NavigationDraw
         private void setupSettingsFragment(View rootView) {
             SettingsSection settingsSection = new SettingsSection(context, rootView);
             settingsSection.setAccessToken(accessToken);
+            settingsSection.setActivity(activity);
             settingsSection.setIsOnline(isOnline);
             settingsSection.render();
         }
