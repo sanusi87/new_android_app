@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,10 @@ public class UpdatePassword extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_password);
         setTitle(R.string.update_password);
+
+        if( getSupportActionBar() != null ){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
@@ -89,5 +94,14 @@ public class UpdatePassword extends ActionBarActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int clickedItem = item.getItemId();
+        if( clickedItem == android.R.id.home ){
+            finish();
+        }
+        return true;
     }
 }
