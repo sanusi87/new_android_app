@@ -62,8 +62,8 @@ public class UpdatePassword extends ActionBarActivity {
                     JSONObject obj = new JSONObject();
                     try {
                         obj.put("password", currentPassword.getText().toString());
-                        obj.put("newPassword", newPassword.getText().toString());
-                        obj.put("newPasswordRepeat", newPasswordRepeat.getText().toString());
+                        obj.put("new_password", newPassword.getText().toString());
+                        obj.put("new_password_repeat", newPasswordRepeat.getText().toString());
 
                         String[] param = {Jenjobs.CHANGE_PASSWORD_URL + "?access-token=" + accessToken,obj.toString()};
                         PostRequest p = new PostRequest();
