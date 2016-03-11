@@ -305,4 +305,6 @@
     <string name="current_password">Current Password</string>
     <string name="new_password">New Password</string>
     <string name="repeat_new_password">Repeat New Password</string>
+    <string name="error_complete_resume">Please complete your Online Resume.</string>
+    <string name="error_login_register_required">Please login or register to use this feature</string>
 </resources>
