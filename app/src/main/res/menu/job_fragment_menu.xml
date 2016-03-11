@@ -6,7 +6,7 @@
     <item
         android:id="@+id/filter_job_button"
         android:title="@string/filter_job"
-        android:icon="@drawable/ic_filter_outline"
+        android:icon="@drawable/ic_search_white_24dp"
         app:showAsAction="ifRoom" />
 
     <item
