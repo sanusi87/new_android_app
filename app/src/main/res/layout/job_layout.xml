@@ -69,38 +69,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="10dp"
                 android:padding="10dp"
-                android:background="#e5e5e5">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:id="@+id/imageView3"
-                    android:contentDescription="@string/no_value"
-                    android:src="@drawable/ic_save_white_48dp"
-                    android:tint="#333333"
-                    android:layout_marginRight="5dp"
-                    android:layout_gravity="center_vertical" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Press this icon to save your job search. We will notify you once we found jobs matching your search profile(s)."
-                    android:id="@+id/textView2"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@android:color/black" />
-            </LinearLayout>
-            <View style="@style/AppThemeSeparator"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="10dp" />
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:padding="10dp"
-                android:background="#e5e5e5">
+                android:background="#333333"
+                android:layout_marginBottom="10dp">
 
                 <ImageView
                     android:layout_width="32dp"
@@ -108,17 +79,44 @@
                     android:id="@+id/imageView4"
                     android:contentDescription="@string/no_value"
                     android:src="@drawable/ic_filter_outline"
-                    android:tint="#333333"
+                    android:tint="@android:color/white"
                     android:layout_marginRight="5dp"
                     android:layout_gravity="center_vertical" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Press this icon to open an andvance search activity."
+                    android:text="Press this icon to open an advance search activity."
                     android:id="@+id/textView3"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="10dp"
+                android:background="#333333">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:id="@+id/imageView3"
+                    android:contentDescription="@string/no_value"
+                    android:src="@drawable/ic_save_white_48dp"
+                    android:tint="@android:color/white"
+                    android:layout_marginRight="5dp"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Press this icon to save your job search. We will notify you once we have jobs that matches your search profile(s)."
+                    android:id="@+id/textView2"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@android:color/white" />
             </LinearLayout>
 
         </LinearLayout>

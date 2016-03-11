@@ -216,20 +216,24 @@ public class JobSearchActivity extends ActionBarActivity {
             }
         });
 
-        if( showTutorial && accessToken != null ){
-            final LinearLayout tutorial = (LinearLayout)findViewById(R.id.tutorial);
-            tutorial.setVisibility(View.VISIBLE);
-            findViewById(R.id.dismissTutorial).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    tutorial.setVisibility(View.GONE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putBoolean("job_search_tutorial", false);
-                    editor.apply();
-                }
-            });
+        // tutorial
+        final LinearLayout tutorial = (LinearLayout)findViewById(R.id.tutorial);
+        if( accessToken != null ){
+            if( showTutorial ){
+                tutorial.setVisibility(View.VISIBLE);
+            }
         }
 
+        findViewById(R.id.dismissTutorial).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            tutorial.setVisibility(View.GONE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean("job_search_tutorial", false);
+            editor.apply();
+            }
+        });
+        // end tutorial
     }
 
     @Override
