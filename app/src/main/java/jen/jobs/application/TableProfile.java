@@ -280,7 +280,7 @@ public class TableProfile extends SQLiteOpenHelper{
             }
 
             if( profile.js_jobseek_status_id == 0 ){
-                errors.add("Please update your jobseeking infomation!");
+                errors.add("Please update your jobseeking information!");
             }
 
             // work exp
@@ -301,11 +301,11 @@ public class TableProfile extends SQLiteOpenHelper{
             edus.close();
 
             // skills
-            Cursor skills = tableSkill.getSkill();
-            if( skills.getCount() == 0 ){
-                errors.add("Please add your skills!");
-            }
-            skills.close();
+//            Cursor skills = tableSkill.getSkill();
+//            if( skills.getCount() == 0 ){
+//                errors.add("Please add your skills!");
+//            }
+//            skills.close();
 
             // languages
             Cursor languages = tableLanguage.getLanguage(null);
