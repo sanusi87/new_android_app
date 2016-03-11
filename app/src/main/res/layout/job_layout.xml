@@ -54,8 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/tutorial"
-        android:background="#aaffffff"
-        android:visibility="gone">
+        android:background="#aaffffff">
 
         <LinearLayout
             android:orientation="vertical"
@@ -71,14 +70,15 @@
                 android:layout_gravity="center_vertical"
                 android:padding="10dp"
                 android:background="#333333"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:id="@+id/advanceSearch">
 
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:id="@+id/imageView4"
                     android:contentDescription="@string/no_value"
-                    android:src="@drawable/ic_filter_outline"
+                    android:src="@drawable/ic_search_white_24dp"
                     android:tint="@android:color/white"
                     android:layout_marginRight="5dp"
                     android:layout_gravity="center_vertical" />
@@ -98,7 +98,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:padding="10dp"
-                android:background="#333333">
+                android:background="#333333"
+                android:id="@+id/jobMatcher">
 
                 <ImageView
                     android:layout_width="32dp"
