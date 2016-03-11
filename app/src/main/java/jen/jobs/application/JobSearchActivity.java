@@ -218,10 +218,8 @@ public class JobSearchActivity extends ActionBarActivity {
 
         // tutorial
         final LinearLayout tutorial = (LinearLayout)findViewById(R.id.tutorial);
-        if( accessToken != null ){
-            if( showTutorial ){
-                tutorial.setVisibility(View.VISIBLE);
-            }
+        if( showTutorial ){
+            tutorial.setVisibility(View.VISIBLE);
         }
 
         findViewById(R.id.dismissTutorial).setOnClickListener(new View.OnClickListener() {
@@ -241,10 +239,10 @@ public class JobSearchActivity extends ActionBarActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.job_fragment_menu, menu);
 
-        if( accessToken == null ){
-            menu.findItem(R.id.filter_job_button).setVisible(false);
-            menu.findItem(R.id.save_filter_button).setVisible(false);
-        }
+//        if( accessToken == null ){
+//            menu.findItem(R.id.filter_job_button).setVisible(false);
+//            menu.findItem(R.id.save_filter_button).setVisible(false);
+//        }
 
         return true;
     }
@@ -265,13 +263,17 @@ public class JobSearchActivity extends ActionBarActivity {
             startActivity(intent);
             return true;
         }else if( clickedItem == R.id.save_filter_button ){
-            if( !searchParameters.isEmpty() ){
-                Intent intent = new Intent();
-                intent.setClass(getApplicationContext(), JobSearchProfileForm.class);
-                intent.putExtra("searchParameter", searchParameters);
-                startActivity(intent);
+            if( accessToken != null ){
+                if( !searchParameters.isEmpty() ){
+                    Intent intent = new Intent();
+                    intent.setClass(getApplicationContext(), JobSearchProfileForm.class);
+                    intent.putExtra("searchParameter", searchParameters);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(context, "Please update your search parameter first.", Toast.LENGTH_LONG).show();
+                }
             }else{
-                Toast.makeText(context, "Please update your search parameter first.", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.error_login_register_required, Toast.LENGTH_LONG).show();
             }
             return true;
         }else if( clickedItem == R.id.job_search_profile_list ){
