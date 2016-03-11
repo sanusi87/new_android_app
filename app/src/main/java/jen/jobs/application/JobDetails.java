@@ -279,6 +279,8 @@ public class JobDetails extends ActionBarActivity {
                                 tableJob.addJob(cv2);
                             }
                             jobs.close();
+                        } else if( errors.size() > 5 ){
+                            Toast.makeText(getApplicationContext(), R.string.error_complete_resume, Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getApplicationContext(), TextUtils.join(". ", errors), Toast.LENGTH_LONG).show();
                         }
@@ -433,7 +435,7 @@ public class JobDetails extends ActionBarActivity {
             case R.id.bookmark:
                 // TODO - bookmarkThisJob();
                 if( accessToken == null || !Jenjobs.isOnline(context) ){
-                    Toast.makeText(context, "Please login or register to use this feature", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.error_login_register_required, Toast.LENGTH_SHORT).show();
                 }else{
                     Bookmark _bookmark = new Bookmark(context);
                     _bookmark.setAccessToken(accessToken);
