@@ -72,8 +72,11 @@ public class UpdatePassword extends ActionBarActivity {
                             public void processResult(JSONObject success) {
                                 if( success != null ){
                                     try {
+                                        int errorCode = success.getInt("code");
                                         Toast.makeText(getApplicationContext(), success.getString("text"), Toast.LENGTH_LONG).show();
-                                        finish();
+                                        if( errorCode == 1 ){
+                                            finish();
+                                        }
                                     } catch (JSONException e) {
                                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                                     }
