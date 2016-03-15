@@ -54,7 +54,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/tutorial"
-        android:background="#aaffffff">
+        android:background="#aaffffff"
+        android:visibility="gone">
 
         <LinearLayout
             android:orientation="vertical"
