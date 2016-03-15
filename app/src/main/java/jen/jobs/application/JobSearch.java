@@ -89,7 +89,7 @@ public class JobSearch {
                 }
             });
             String[] args = {getSearchUrl()};
-            Log.e("search", args[0]);
+            //Log.e("search", args[0]);
             gr.execute(args);
         }else{
             adapter.notifyDataSetChanged();
