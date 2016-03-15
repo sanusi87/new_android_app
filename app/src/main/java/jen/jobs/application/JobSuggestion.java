@@ -120,6 +120,9 @@ public class JobSuggestion extends ActionBarActivity{
         this.menu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.job_suggestion, menu);
+
+        menu.findItem(R.id.about_job_matcher).setVisible(false); // remove this menu item
+
         return true;
     }
 
