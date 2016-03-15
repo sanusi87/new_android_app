@@ -32,6 +32,7 @@ public class JobSearchActivity extends ActionBarActivity {
     private Context context;
     SharedPreferences sharedPref;
     static String accessToken = null;
+    boolean showTutorial;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class JobSearchActivity extends ActionBarActivity {
         context = getApplicationContext();
         sharedPref = this.getSharedPreferences(MainActivity.JENJOBS_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         accessToken = sharedPref.getString("access_token", null);
-        boolean showTutorial = sharedPref.getBoolean("job_search_tutorial", true);
+        showTutorial = sharedPref.getBoolean("job_search_tutorial", true);
 
         ProgressBar loading = (ProgressBar) findViewById(R.id.progressBar4);
         ListView lv = (ListView) findViewById(R.id.job_list_view);
@@ -220,6 +221,8 @@ public class JobSearchActivity extends ActionBarActivity {
         final LinearLayout tutorial = (LinearLayout)findViewById(R.id.tutorial);
         if( showTutorial ){
             tutorial.setVisibility(View.VISIBLE);
+        }else{
+            tutorial.setVisibility(View.GONE);
         }
 
         findViewById(R.id.dismissTutorial).setOnClickListener(new View.OnClickListener() {
@@ -229,6 +232,8 @@ public class JobSearchActivity extends ActionBarActivity {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("job_search_tutorial", false);
             editor.apply();
+
+            showTutorial = false;
             }
         });
         // end tutorial
