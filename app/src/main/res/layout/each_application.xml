@@ -99,5 +99,4 @@
         </LinearLayout>
     </LinearLayout>
 
-    <View style="@style/AppThemeSeparator" />
 </LinearLayout>
